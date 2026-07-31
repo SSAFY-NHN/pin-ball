@@ -2,14 +2,6 @@ using System;
 
 using UnityEngine;
 
-public enum SceneName
-{
-    Developer,
-    Title,
-    Game,
-    Empty
-}
-
 public sealed class SceneManager : AppService
 {
     [SerializeField] private BlackBlur blackScreen;
@@ -17,52 +9,52 @@ public sealed class SceneManager : AppService
 
     [SerializeField] private float transitionDuration = 2f;
 
-    private bool isTransitioning;
+    private bool _isTransitioning;
 
-    public void Load(SceneName sceneName)
+    public void Load(ESceneName eSceneName)
     {
-        if (isTransitioning) return;
+        if (_isTransitioning) return;
 
-        isTransitioning = true;
+        _isTransitioning = true;
 
         soundManager.FadeOutBGM(transitionDuration);
 
         blackScreen.FadeInOut(
             transitionDuration,
-            () => OnScreenCovered(sceneName));
+            () => OnScreenCovered(eSceneName));
     }
 
-    private void OnScreenCovered(SceneName sceneName)
+    private void OnScreenCovered(ESceneName eSceneName)
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(GetSceneName(sceneName));
+        UnityEngine.SceneManagement.SceneManager.LoadScene(GetSceneName(eSceneName));
 
-        PlaySceneBgm(sceneName);
+        PlaySceneBgm(eSceneName);
 
-        isTransitioning = false;
+        _isTransitioning = false;
     }
 
-    private static string GetSceneName(SceneName sceneName)
+    private static string GetSceneName(ESceneName eSceneName)
     {
-        return sceneName switch
+        return eSceneName switch
         {
-            SceneName.Developer => "Developer",
-            SceneName.Title => "Title",
-            SceneName.Game => "Game",
-            SceneName.Empty => "Empty",
+            ESceneName.Developer => "Developer",
+            ESceneName.Title => "Title",
+            ESceneName.Game => "Game",
+            ESceneName.Empty => "Empty",
 
             _ => throw new ArgumentOutOfRangeException(
-                nameof(sceneName),
-                sceneName,
+                nameof(eSceneName),
+                eSceneName,
                 null)
         };
     }
 
-    private void PlaySceneBgm(SceneName sceneName)
+    private void PlaySceneBgm(ESceneName eSceneName)
     {
-        string bgmKey = sceneName switch
+        string bgmKey = eSceneName switch
         {
-            SceneName.Title => "Title",
-            SceneName.Game => "InGame",
+            ESceneName.Title => "Title",
+            ESceneName.Game => "InGame",
             _ => null
         };
 

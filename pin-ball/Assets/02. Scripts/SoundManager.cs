@@ -112,7 +112,7 @@ public class SoundManager : AppService
             });
     }
 
-    public void FadeInBGM(float duration) => FadeBGM(0.2f, duration);
+    public void FadeInBGM(float duration) => FadeBGM(_bgmVolume, duration);
     public void FadeOutBGM(float duration) => FadeBGM(0f, duration);
     #endregion
 
@@ -132,9 +132,8 @@ public class SoundManager : AppService
         src.playOnAwake = false;
         src.clip = clip;
         src.loop = false;
-        src.outputAudioMixerGroup =
-            _mixer.FindMatchingGroups("SFX")[0];
-        src.volume = 0.2f;
+        src.outputAudioMixerGroup = _sfxMixerGroup;
+        src.volume = _sfxVolume;
         src.Play();
 
         _activeSfx.Add(src);
@@ -177,7 +176,8 @@ public class SoundManager : AppService
     private AudioSource CreateSfxSource()
     {
         var src = _sfxPlayer.AddComponent<AudioSource>();
-        _activeSfx.Add(src);
+        src.playOnAwake = false;
+        src.outputAudioMixerGroup = _sfxMixerGroup;
         return src;
     }
     
@@ -189,7 +189,7 @@ public class SoundManager : AppService
         source.Stop();
         source.clip = null;
         source.loop = false;
-        source.volume = 0.2f;
+        source.volume = _sfxVolume;
 
         _sfxPool.Enqueue(source);
     }
@@ -199,7 +199,7 @@ public class SoundManager : AppService
 
     public void ToggleMute(bool mute)
     {
-        _bgmPlayer.volume = mute ? 0f : 0.2f;
+        _bgmPlayer.volume = mute ? 0f : _bgmVolume;
     }
     public void ToggleMute(EVolumeType type)
     {
