@@ -38,30 +38,14 @@ public sealed class SceneManager : AppService
     {
         return eSceneName switch
         {
-            ESceneName.Developer => "Developer",
-            ESceneName.Title => "Title",
-            ESceneName.Game => "Game",
+            ESceneName.Developer => "00 .Developer",
+            ESceneName.Title => "01. Title",
+            ESceneName.Game => "02. Game",
             ESceneName.Empty => "Empty",
 
             _ => throw new ArgumentOutOfRangeException(
                 nameof(eSceneName),
                 eSceneName,
-                null)
-        };
-    }
-
-    private string GetActiveScene()
-    {
-        return _activeScene switch
-        {
-            ESceneName.Developer => "Developer",
-            ESceneName.Title => "Title",
-            ESceneName.Game => "Game",
-            ESceneName.Empty => "Empty",
-
-            _ => throw new ArgumentOutOfRangeException(
-                nameof(_activeScene),
-                _activeScene,
                 null)
         };
     }
