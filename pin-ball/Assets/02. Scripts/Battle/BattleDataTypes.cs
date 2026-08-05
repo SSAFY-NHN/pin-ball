@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public struct BattleActorStats
+public struct BattleUnitStats
 {
     [Min(1f)] public float MaxHp;
     [Min(0f)] public float AttackDamage;
@@ -27,9 +27,7 @@ public struct BattleUnitModifier
 public class BattleUnitSpawnData
 {
     public string UnitId = "Unit";
-    public GameObject Prefab;
-    public Vector2 SpawnPosition = new(-4f, 0f);
-    public BattleActorStats BaseStats;
+    public BattleUnitStats BaseStats;
     public BattleUnitModifier Modifier;
 }
 
@@ -37,10 +35,7 @@ public class BattleUnitSpawnData
 public class BattleEnemySpawnData
 {
     public string EnemyId = "Enemy";
-    public GameObject Prefab;
-    public Vector2 SpawnPosition = new(4f, 0f);
-    public BattleActorStats Stats;
-    [Min(1)] public int DefenseDamage = 1;
+    public BattleUnitStats Stats;
 }
 
 [Serializable]
