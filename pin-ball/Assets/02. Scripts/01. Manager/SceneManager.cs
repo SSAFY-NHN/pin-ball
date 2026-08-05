@@ -10,6 +10,7 @@ public sealed class SceneManager : AppService
     [SerializeField] private float transitionDuration = 2f;
 
     private bool _isTransitioning;
+    private ESceneName _activeScene;
 
     public void Load(ESceneName eSceneName)
     {
@@ -33,7 +34,7 @@ public sealed class SceneManager : AppService
         _isTransitioning = false;
     }
 
-    private static string GetSceneName(ESceneName eSceneName)
+    private string GetSceneName(ESceneName eSceneName)
     {
         return eSceneName switch
         {
@@ -45,6 +46,22 @@ public sealed class SceneManager : AppService
             _ => throw new ArgumentOutOfRangeException(
                 nameof(eSceneName),
                 eSceneName,
+                null)
+        };
+    }
+
+    private string GetActiveScene()
+    {
+        return _activeScene switch
+        {
+            ESceneName.Developer => "Developer",
+            ESceneName.Title => "Title",
+            ESceneName.Game => "Game",
+            ESceneName.Empty => "Empty",
+
+            _ => throw new ArgumentOutOfRangeException(
+                nameof(_activeScene),
+                _activeScene,
                 null)
         };
     }
