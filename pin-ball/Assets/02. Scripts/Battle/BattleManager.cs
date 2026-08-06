@@ -13,6 +13,7 @@ public class BattleManager : AppService, IItemEventListener
     [SerializeField, Min(0)] public int startingGold;
     
     public BattleWaveData CurrentWave => waveList[_currentWaveIndex];
+    public int Gold => _gold;
     
     public event Action<EWaveState> OnStateChanged;
     public event Action<int> OnWaveChanged;

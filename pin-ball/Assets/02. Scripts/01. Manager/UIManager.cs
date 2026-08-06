@@ -79,10 +79,10 @@ public class UIManager : AppService
         
         foreach (var peek in _uiStack)
         {
-            peek.Hide(false);
+            peek.Hide();
         }
      
-        panel.Show(true);
+        panel.Show();
         _uiStack.Push(panel);
     }
     
@@ -91,7 +91,7 @@ public class UIManager : AppService
         if (_uiStack.Count == 0 || _uiStack.Peek() != panel) return;
 
         _uiStack.Pop();
-        panel.Hide(true);
+        panel.Hide();
 
         if (_uiStack.Count > 0)
         {
@@ -99,13 +99,13 @@ public class UIManager : AppService
             {
                 foreach (var peek in _uiStack)
                 {
-                    peek.Show(false);
+                    peek.Show();
                 }
             }
             else
             {
                 var newPanel = _uiStack.Peek();
-                newPanel.Show(false);
+                newPanel.Show();
             }
         }
     }

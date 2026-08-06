@@ -3,6 +3,7 @@ using UnityEngine;
 public abstract class UIBase : MonoBehaviour
 {
     public virtual bool IsDefaultPanel => false;
+    protected virtual GameObject Panel => gameObject;
 
     private UIManager _manager;
 
@@ -22,6 +23,6 @@ public abstract class UIBase : MonoBehaviour
 
     public virtual void ClosePanel() => _manager.PopPanel(this);
     
-    public virtual void Show(bool isNew) => gameObject.SetActive(true);
-    public virtual void Hide(bool isNew) => gameObject.SetActive(false);
+    public virtual void Show() => Panel.SetActive(true);
+    public virtual void Hide() => Panel.SetActive(false);
 }

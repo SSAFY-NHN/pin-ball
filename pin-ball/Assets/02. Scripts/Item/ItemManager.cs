@@ -17,15 +17,25 @@ public class ItemManager : AppService
     private readonly Queue<EItem> _eventQueue = new();
 
     private bool _isDispatching;
+    private bool _isInitialized;
 
     private void Start()
     {
+        InitializeItems();
+    }
+
+    private void InitializeItems()
+    {
+        if (_isInitialized) return;
+
         var titleData = App.Get<TitleData>();
         foreach (var data in titleData.Item)
         {
             var item = new Item(data.Value, null);
             _items.Add(item.Key, item);
         }
+
+        _isInitialized = true;
     }
     
     private void Update()
@@ -147,11 +157,23 @@ public class ItemManager : AppService
 
     public bool TryGetItem(EItem item, out Item result)
     {
+        InitializeItems();
         return _items.TryGetValue(item, out result);
+    }
+
+    public void GetItems(List<Item> result)
+    {
+        if (result == null) return;
+
+        InitializeItems();
+        result.Clear();
+        result.AddRange(_items.Values);
     }
 
     private void Dispatch(EItem item)
     {
+        InitializeItems();
+
         if (!_items.TryGetValue(item, out var itemData))
         {
             Debug.LogError($"아이템 데이터를 찾을 수 없습니다: {item}");
