@@ -3,66 +3,51 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(CanvasGroup))]
-public class ShopItemTooltip : MonoBehaviour
+public class ItemTooltip : MonoBehaviour
 {
-    [SerializeField] private RectTransform tooltipRect;
+    [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI descriptionText;
-    [SerializeField] private Canvas canvas;
-    [SerializeField] private Vector2 cursorOffset = new(18f, -18f);
+    [SerializeField] private Vector2 cursorOffset = new(75f, 50f);
 
-    private ShopItemSlot _owner;
-
+    private ItemSlot _owner;
+    
+    private Canvas _canvas;
+    private RectTransform _tooltipRect;
+    
     private void Awake()
     {
-        if (tooltipRect == null)
-        {
-            tooltipRect = transform as RectTransform;
-        }
-
-        if (canvas == null)
-        {
-            canvas = GetComponentInParent<Canvas>();
-        }
-
+        _canvas = GetComponentInParent<Canvas>();
+        _tooltipRect = transform as RectTransform;
+        
         var canvasGroup = GetComponent<CanvasGroup>();
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;
         gameObject.SetActive(false);
     }
 
-    public void Show(ShopItemSlot owner, string description, Vector2 screenPosition)
+    public void Show(ItemSlot owner, string name, string description, Vector2 screenPosition)
     {
-        if (owner == null || tooltipRect == null || descriptionText == null || canvas == null)
-        {
-            return;
-        }
-
         _owner = owner;
+        nameText.text = name;
         descriptionText.text = description;
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
 
         Canvas.ForceUpdateCanvases();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(tooltipRect);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(_tooltipRect);
         SetPosition(screenPosition);
     }
 
-    public void Move(ShopItemSlot owner, Vector2 screenPosition)
+    public void Move(ItemSlot owner, Vector2 screenPosition)
     {
-        if (_owner != owner || !gameObject.activeSelf)
-        {
-            return;
-        }
+        if (_owner != owner || !gameObject.activeSelf) return;
 
         SetPosition(screenPosition);
     }
 
-    public void Hide(ShopItemSlot owner)
+    public void Hide(ItemSlot owner)
     {
-        if (_owner != owner)
-        {
-            return;
-        }
+        if (_owner != owner) return;
 
         _owner = null;
         gameObject.SetActive(false);
@@ -70,10 +55,10 @@ public class ShopItemTooltip : MonoBehaviour
 
     private void SetPosition(Vector2 screenPosition)
     {
-        var canvasRect = canvas.transform as RectTransform;
-        var eventCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay
+        var canvasRect = _canvas.transform as RectTransform;
+        var eventCamera = _canvas.renderMode == RenderMode.ScreenSpaceOverlay
             ? null
-            : canvas.worldCamera;
+            : _canvas.worldCamera;
 
         if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 canvasRect,
@@ -85,8 +70,8 @@ public class ShopItemTooltip : MonoBehaviour
         }
 
         var canvasBounds = canvasRect.rect;
-        var tooltipBounds = tooltipRect.rect;
-        var pivot = tooltipRect.pivot;
+        var tooltipBounds = _tooltipRect.rect;
+        var pivot = _tooltipRect.pivot;
 
         var left = tooltipBounds.width * pivot.x;
         var right = tooltipBounds.width * (1f - pivot.x);
@@ -102,6 +87,6 @@ public class ShopItemTooltip : MonoBehaviour
             canvasBounds.yMin + bottom,
             canvasBounds.yMax - top);
 
-        tooltipRect.position = canvasRect.TransformPoint(localPosition);
+        _tooltipRect.position = canvasRect.TransformPoint(localPosition);
     }
 }

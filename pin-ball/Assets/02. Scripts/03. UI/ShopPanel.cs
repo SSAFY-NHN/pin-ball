@@ -7,20 +7,17 @@ using TMPro;
 public class ShopPanel : UIBase
 {
     public override bool IsDefaultPanel => true;
-    private const int DefaultShopItemCount = 3;
-
-    [Header("Item")]
-    [SerializeField] private ShopItemSlot[] itemSlots;
-
+    private int DefaultShopItemCount => _itemSlots.Length;
+    
     [Header("Reroll")]
     [SerializeField] private Button rerollButton;
     [SerializeField] private TextMeshProUGUI rerollCostText;
     [SerializeField, Min(0)] private int rerollCost;
 
     private readonly List<Item> _candidateItems = new();
-
     private ItemManager _itemManager;
     private BattleManager _battleManager;
+    private ShopSlot[] _itemSlots;
 
     public override void Initialize(UIManager manager)
     {
@@ -38,6 +35,8 @@ public class ShopPanel : UIBase
                 ? "무료"
                 : rerollCost.ToString();
         }
+        
+        _itemSlots = GetComponentsInChildren<ShopSlot>();
 
         ValidateItemSlots();
         RerollItems();
@@ -59,11 +58,11 @@ public class ShopPanel : UIBase
         BuildCandidateItems();
         ShuffleCandidates();
 
-        if (itemSlots == null) return;
+        if (_itemSlots == null) return;
 
-        for (var i = 0; i < itemSlots.Length; i++)
+        for (var i = 0; i < _itemSlots.Length; i++)
         {
-            var slot = itemSlots[i];
+            var slot = _itemSlots[i];
             if (slot == null) continue;
 
             if (i < DefaultShopItemCount && i < _candidateItems.Count)
@@ -126,9 +125,9 @@ public class ShopPanel : UIBase
     private void RefreshPurchaseStates()
     {
         if (_battleManager == null || _itemManager == null) return;
-        if (itemSlots == null) return;
+        if (_itemSlots == null) return;
 
-        foreach (var slot in itemSlots)
+        foreach (var slot in _itemSlots)
         {
             if (slot == null) continue;
 
@@ -146,7 +145,7 @@ public class ShopPanel : UIBase
 
     private void ValidateItemSlots()
     {
-        if (itemSlots == null || itemSlots.Length != DefaultShopItemCount)
+        if (_itemSlots == null || _itemSlots.Length != DefaultShopItemCount)
         {
             Debug.LogWarning(
                 $"[ShopPanel] Item Slot은 {DefaultShopItemCount}개를 등록해야 합니다.");

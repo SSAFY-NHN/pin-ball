@@ -11,6 +11,8 @@ public interface IItemEventListener
 
 public class ItemManager : AppService
 {
+    public event Action<Item> OnItemAcquired;
+
     private readonly Dictionary<EItem, Item> _items = new();
     private readonly HashSet<EItem> _activeItems = new();
     private readonly Dictionary<EItem, List<IItemEventListener>> _subscribers = new();
@@ -37,7 +39,7 @@ public class ItemManager : AppService
 
         _isInitialized = true;
     }
-    
+
     private void Update()
     {
         DispatchQueuedEvents();
@@ -94,15 +96,27 @@ public class ItemManager : AppService
     /// </summary>
     public void Raise(EItem item)
     {
-        _activeItems.Add(item);
+        NotifyItemAcquired(item);
         _eventQueue.Enqueue(item);
     }
 
     /// <summary>아이템 이벤트를 큐를 거치지 않고 즉시 전달한다.</summary>
     public void RaiseImmediate(EItem item)
     {
-        _activeItems.Add(item);
+        NotifyItemAcquired(item);
         Dispatch(item);
+    }
+    
+    private void NotifyItemAcquired(EItem item)
+    {
+        InitializeItems();
+
+        if (!_activeItems.Add(item)) return;
+
+        if (_items.TryGetValue(item, out var itemData))
+        {
+            OnItemAcquired?.Invoke(itemData);
+        }
     }
 
     /// <summary>지정한 초가 지난 뒤 아이템 이벤트를 큐에 넣는다.</summary>
@@ -168,6 +182,22 @@ public class ItemManager : AppService
         InitializeItems();
         result.Clear();
         result.AddRange(_items.Values);
+    }
+
+    public void GetActiveItems(List<Item> result)
+    {
+        if (result == null) return;
+
+        InitializeItems();
+        result.Clear();
+
+        foreach (var item in _items.Values)
+        {
+            if (_activeItems.Contains(item.Key))
+            {
+                result.Add(item);
+            }
+        }
     }
 
     private void Dispatch(EItem item)
