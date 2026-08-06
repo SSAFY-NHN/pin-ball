@@ -6,10 +6,11 @@ using UnityEngine.Serialization;
 public class ItemData
 {
     public string id;
+    public int key;
     public int type;
-    public int value1;
-    public int value2;
-    public int value3;
+    public float value1;
+    public float value2;
+    public float value3;
     public int cost;
     public string name;
     public string desc;
