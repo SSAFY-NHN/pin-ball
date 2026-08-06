@@ -5,13 +5,13 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 
-public class ShopItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerMoveHandler, IPointerExitHandler
+public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerMoveHandler, IPointerExitHandler
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI costText;
     [SerializeField] private Button purchaseButton;
-    [SerializeField] private ShopItemTooltip tooltip;
+    [SerializeField] private ShopTooltip tooltip;
 
     [SerializeField] private Color availableCostColor = Color.white;
     [SerializeField] private Color unavailableCostColor = Color.red;
