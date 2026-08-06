@@ -61,24 +61,6 @@ public class ShopPanel : UIBase
         RefreshPurchaseStates();
     }
 
-    private void OnDestroy()
-    {
-        if (_battleManager != null)
-        {
-            _battleManager.OnGoldChanged -= OnGoldChanged;
-        }
-
-        if (rerollButton != null)
-        {
-            rerollButton.onClick.RemoveListener(OnRerollButtonClicked);
-        }
-
-        if (closeButton != null)
-        {
-            closeButton.onClick.RemoveListener(ClosePanel);
-        }
-    }
-
     private void OnRerollButtonClicked()
     {
         if (rerollCost > 0 && !_battleManager.TrySpendGold(rerollCost))
@@ -122,8 +104,7 @@ public class ShopPanel : UIBase
         _itemManager.GetItems(_candidateItems);
         _candidateItems.RemoveAll(item =>
             item == null ||
-            _itemManager.HasItem(item.Key) ||
-            !IsImplementedItem(item.Key));
+            _itemManager.HasItem(item.Key));
     }
 
     private void ShuffleCandidates()
@@ -190,10 +171,4 @@ public class ShopPanel : UIBase
         }
     }
 
-    private static bool IsImplementedItem(EItem item)
-    {
-        return item != EItem.TargetMagnet
-               && item != EItem.FocusedPocket
-               && item != EItem.SwapLever;
-    }
 }
