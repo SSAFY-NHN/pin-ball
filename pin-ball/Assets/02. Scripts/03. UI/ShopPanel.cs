@@ -7,7 +7,6 @@ using TMPro;
 public class ShopPanel : UIBase
 {
     public override bool IsDefaultPanel => true;
-    protected override GameObject Panel => panel;
     private const int DefaultShopItemCount = 3;
 
     [Header("Item")]
@@ -17,11 +16,6 @@ public class ShopPanel : UIBase
     [SerializeField] private Button rerollButton;
     [SerializeField] private TextMeshProUGUI rerollCostText;
     [SerializeField, Min(0)] private int rerollCost;
-
-    [Header("Panel")]
-    [SerializeField] private GameObject panel;
-    [SerializeField] private Button openButton;
-    [SerializeField] private Button closeButton;
 
     private readonly List<Item> _candidateItems = new();
 
@@ -37,9 +31,6 @@ public class ShopPanel : UIBase
         _battleManager.OnGoldChanged += OnGoldChanged;
 
         rerollButton.onClick.AddListener(OnRerollButtonClicked);
-
-        openButton.onClick.AddListener(Show);
-        closeButton.onClick.AddListener(Hide);
         
         if (rerollCostText != null)
         {
@@ -50,15 +41,6 @@ public class ShopPanel : UIBase
 
         ValidateItemSlots();
         RerollItems();
-
-        Hide();
-    }
-
-    public override void Show()
-    {
-        base.Show();
-        
-        RefreshPurchaseStates();
     }
 
     private void OnRerollButtonClicked()

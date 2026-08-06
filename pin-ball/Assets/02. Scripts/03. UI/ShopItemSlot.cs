@@ -1,17 +1,20 @@
 using System;
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 
-public class ShopItemSlot : MonoBehaviour
+public class ShopItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerMoveHandler, IPointerExitHandler
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private TextMeshProUGUI nameText;
-    [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private TextMeshProUGUI costText;
-    [SerializeField] private TextMeshProUGUI stateText;
     [SerializeField] private Button purchaseButton;
+    [SerializeField] private ShopItemTooltip tooltip;
+
+    [SerializeField] private Color availableCostColor = Color.white;
+    [SerializeField] private Color unavailableCostColor = Color.red;
 
     public Item Item { get; private set; }
 
@@ -22,12 +25,9 @@ public class ShopItemSlot : MonoBehaviour
         purchaseButton.onClick.AddListener(OnPurchaseButtonClicked);
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
-        if (purchaseButton != null)
-        {
-            purchaseButton.onClick.RemoveListener(OnPurchaseButtonClicked);
-        }
+        tooltip?.Hide(this);
     }
 
     public void SetItem(Item item, Action<Item> onPurchase)
@@ -36,14 +36,10 @@ public class ShopItemSlot : MonoBehaviour
         _onPurchase = onPurchase;
 
         nameText.text = item?.Name ?? string.Empty;
-        descriptionText.text = item?.Description ?? string.Empty;
         costText.text = item != null ? item.Cost.ToString() : string.Empty;
 
-        if (iconImage != null)
-        {
-            iconImage.sprite = item?.Icon;
-            iconImage.enabled = item?.Icon != null;
-        }
+        iconImage.sprite = item?.Icon;
+        iconImage.enabled = item?.Icon != null;
     }
 
     public void RefreshState(int currentGold, bool isPurchased)
@@ -51,25 +47,13 @@ public class ShopItemSlot : MonoBehaviour
         if (Item == null)
         {
             purchaseButton.interactable = false;
-            SetStateText(string.Empty);
+            costText.color = unavailableCostColor;
             return;
         }
 
-        purchaseButton.interactable =
-            !isPurchased && currentGold >= Item.Cost;
-
-        if (isPurchased)
-        {
-            SetStateText("구매 완료");
-        }
-        else if (currentGold < Item.Cost)
-        {
-            SetStateText("골드 부족");
-        }
-        else
-        {
-            SetStateText(string.Empty);
-        }
+        var canPurchase = !isPurchased && currentGold >= Item.Cost;
+        purchaseButton.interactable = canPurchase;
+        costText.color = canPurchase ? availableCostColor : unavailableCostColor;
     }
 
     public void Clear()
@@ -78,8 +62,12 @@ public class ShopItemSlot : MonoBehaviour
         _onPurchase = null;
 
         if (nameText != null) nameText.text = string.Empty;
-        if (descriptionText != null) descriptionText.text = string.Empty;
-        if (costText != null) costText.text = string.Empty;
+        if (costText != null)
+        {
+            costText.text = string.Empty;
+            costText.color = availableCostColor;
+        }
+
         if (iconImage != null)
         {
             iconImage.sprite = null;
@@ -87,21 +75,30 @@ public class ShopItemSlot : MonoBehaviour
         }
 
         purchaseButton.interactable = false;
-        SetStateText(string.Empty);
+        tooltip.Hide(this);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (Item == null) return;
+
+        tooltip.Show(this, Item.Description, eventData.position);
+    }
+
+    public void OnPointerMove(PointerEventData eventData)
+    {
+        tooltip.Move(this, eventData.position);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        tooltip.Hide(this);
     }
 
     private void OnPurchaseButtonClicked()
     {
         if (Item == null) return;
 
-        _onPurchase?.Invoke(Item);
-    }
-
-    private void SetStateText(string value)
-    {
-        if (stateText != null)
-        {
-            stateText.text = value;
-        }
+        _onPurchase.Invoke(Item);
     }
 }

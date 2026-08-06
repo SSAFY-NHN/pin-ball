@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class BattleStatusPanel : UIBase
+public class StatusPanel : UIBase
 {
     [SerializeField] private TextMeshProUGUI waveText;
     [SerializeField] private TextMeshProUGUI playerHpText;
