@@ -5,7 +5,7 @@ using UnityEngine;
 //금지: 웨이브 상태 변경, 골드 지급, UI 갱신
 public abstract class UnitBase : MonoBehaviour
 {
-    public virtual EBattleTeam Team { get; protected set; }
+    public abstract EBattleTeam Team { get; }
     public EBattleUnitState State => _state;
     public float CurrentHp { get; private set; }
     public float MaxHp => _stats.MaxHp;
@@ -20,6 +20,7 @@ public abstract class UnitBase : MonoBehaviour
     private SpriteRenderer _renderer;
     private float _nextAttackTime;
     private float _hitUntilTime;
+    private BattleUnitStats _initialStats;
 
     protected virtual Color IdleColor => new(0.8f, 0.8f, 0.8f, 1f);
     private static readonly Color AttackColor = Color.white;
@@ -30,6 +31,7 @@ public abstract class UnitBase : MonoBehaviour
     {
         _unitManager = App.Get<UnitManager>();
         _stats = stats;
+        _initialStats = stats;
 
         _state = EBattleUnitState.Idle;
         CurrentHp = stats.MaxHp;
@@ -75,6 +77,19 @@ public abstract class UnitBase : MonoBehaviour
         {
             Die();
         }
+    }
+
+    public void ApplyItemModifiers(float attackMultiplier, float attackRateMultiplier, float hpMultiplier)
+    {
+        if (Team != EBattleTeam.Ally) return;
+
+        var previousMaxHp = Mathf.Max(0.01f, _stats.MaxHp);
+        var hpRatio = Mathf.Clamp01(CurrentHp / previousMaxHp);
+
+        _stats.AttackDamage = _initialStats.AttackDamage * attackMultiplier;
+        _stats.AttackRate = _initialStats.AttackRate * attackRateMultiplier;
+        _stats.MaxHp = _initialStats.MaxHp * hpMultiplier;
+        CurrentHp = _stats.MaxHp * hpRatio;
     }
 
     protected bool TryKeepOrAcquireTarget()

@@ -12,6 +12,7 @@ public interface IItemEventListener
 public class ItemManager : AppService
 {
     private readonly Dictionary<EItem, Item> _items = new();
+    private readonly HashSet<EItem> _activeItems = new();
     private readonly Dictionary<EItem, List<IItemEventListener>> _subscribers = new();
     private readonly Queue<EItem> _eventQueue = new();
 
@@ -47,9 +48,17 @@ public class ItemManager : AppService
             _subscribers.Add(item, listeners);
         }
 
-        if (!listeners.Contains(listener))
+        var isNewListener = !listeners.Contains(listener);
+        if (isNewListener)
         {
             listeners.Add(listener);
+        }
+
+        if (isNewListener &&
+            _activeItems.Contains(item) &&
+            _items.TryGetValue(item, out var activeItem))
+        {
+            listener.OnItemEvent(activeItem);
         }
     }
 
@@ -75,12 +84,14 @@ public class ItemManager : AppService
     /// </summary>
     public void Raise(EItem item)
     {
+        _activeItems.Add(item);
         _eventQueue.Enqueue(item);
     }
 
     /// <summary>아이템 이벤트를 큐를 거치지 않고 즉시 전달한다.</summary>
     public void RaiseImmediate(EItem item)
     {
+        _activeItems.Add(item);
         Dispatch(item);
     }
 
@@ -125,11 +136,28 @@ public class ItemManager : AppService
     {
         _subscribers.Clear();
         _eventQueue.Clear();
+        _activeItems.Clear();
         StopAllCoroutines();
+    }
+
+    public bool HasItem(EItem item)
+    {
+        return _activeItems.Contains(item);
+    }
+
+    public bool TryGetItem(EItem item, out Item result)
+    {
+        return _items.TryGetValue(item, out result);
     }
 
     private void Dispatch(EItem item)
     {
+        if (!_items.TryGetValue(item, out var itemData))
+        {
+            Debug.LogError($"아이템 데이터를 찾을 수 없습니다: {item}");
+            return;
+        }
+
         if (!_subscribers.TryGetValue(item, out var listeners))
         {
             return;
@@ -149,7 +177,7 @@ public class ItemManager : AppService
 
             try
             {
-                listener.OnItemEvent(_items[item]);
+                listener.OnItemEvent(itemData);
             }
             catch (Exception exception)
             {

@@ -6,7 +6,7 @@ using UnityEngine;
 //소유: 웨이브 인덱스, 플레이어 HP, 골드, EWaveState
 //책임: 시작/종료 결정, 보상 지급, 패배 판정, UI 이벤트 발행
 //금지: 유닛 탐색/이동/공격, Instantiate 직접 처리
-public class BattleManager : AppService
+public class BattleManager : AppService, IItemEventListener
 {
     [Header("Player")]
     [SerializeField, Min(1)] public int playerMaxHp = 20;
@@ -25,6 +25,8 @@ public class BattleManager : AppService
     private int _currentWaveIndex;
     private int _playerHp;
     private int _gold;
+    private int _barrierDamageReduction;
+    private int _minimumBarrierDamage = 1;
     
     [Header("Wave Input (Temporary)")]
     [SerializeField] private List<BattleWaveData> waveList = new()
@@ -77,6 +79,8 @@ public class BattleManager : AppService
     {
         _unitManager = App.Get<UnitManager>();
 
+        App.Get<ItemManager>().Subscribe(EItem.BarrierReinforcement, this);
+
         OnStateChanged?.Invoke(_state);
         OnHpChanged?.Invoke(_playerHp);
         OnGoldChanged?.Invoke(_gold);
@@ -116,11 +120,26 @@ public class BattleManager : AppService
         return true;
     }
 
+    public void AddGold(int amount)
+    {
+        if (amount <= 0) return;
+
+        _gold += amount;
+        OnGoldChanged?.Invoke(_gold);
+    }
+
+    public void OnItemEvent(Item item)
+    {
+        _barrierDamageReduction = Mathf.RoundToInt(item.Value1);
+        _minimumBarrierDamage = Mathf.Max(1, Mathf.RoundToInt(item.Value2));
+    }
+
     private void DefeatWave()
     {
         if (_state is not EWaveState.Active) return;
         
-        _playerHp = Mathf.Max(0, _playerHp - Mathf.Max(1, 10)); // TODO: 데미지 데이터와 연결
+        var damage = Mathf.Max(_minimumBarrierDamage, 10 - _barrierDamageReduction);
+        _playerHp = Mathf.Max(0, _playerHp - damage); // TODO: 데미지 데이터와 연결
         OnHpChanged?.Invoke(_playerHp);
 
         ChangeState(_playerHp <= 0 ? EWaveState.Defeat : EWaveState.Pending);
@@ -157,5 +176,15 @@ public class BattleManager : AppService
 
         _state = nextState;
         OnStateChanged?.Invoke(_state);
+    }
+
+    protected override void OnDestroy()
+    {
+        if (App.TryGet<ItemManager>(out var itemManager))
+        {
+            itemManager.Unsubscribe(EItem.BarrierReinforcement, this);
+        }
+
+        base.OnDestroy();
     }
 }
