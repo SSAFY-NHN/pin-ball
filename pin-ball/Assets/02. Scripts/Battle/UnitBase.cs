@@ -17,12 +17,12 @@ public abstract class UnitBase : MonoBehaviour
     protected EBattleUnitState _state;
 
     [SerializeField] private TextMesh _stateLabel;
-    private Renderer _renderer;
+    private SpriteRenderer _renderer;
     private float _nextAttackTime;
     private float _hitUntilTime;
 
     protected virtual Color IdleColor => new(0.8f, 0.8f, 0.8f, 1f);
-    private static readonly Color AttackColor = new(1f, 0.95f, 0.25f, 1f);
+    private static readonly Color AttackColor = Color.white;
     private static readonly Color HitColor = new(1f, 0.2f, 0.2f, 1f);
     private static readonly Color DeadColor = new(0.3f, 0.3f, 0.3f, 1f);
 
@@ -37,7 +37,7 @@ public abstract class UnitBase : MonoBehaviour
         _hitUntilTime = 0f;
         _currentTarget = null;
 
-        _renderer = GetComponentInChildren<Renderer>();
+        _renderer = GetComponentInChildren<SpriteRenderer>();
 
         UpdateLabel();
         UpdateVisual();
@@ -181,6 +181,6 @@ public abstract class UnitBase : MonoBehaviour
             _ => IdleColor
         };
 
-        _renderer.material.color = baseColor;
+        _renderer.color = baseColor;
     }
 }

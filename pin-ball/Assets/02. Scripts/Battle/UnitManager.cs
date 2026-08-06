@@ -78,15 +78,16 @@ public class UnitManager : AppService
             return;
         }
 
-        foreach (var enemyData in wave.Enemies)
+        for (var spawnIndex = 0; spawnIndex < wave.Enemies.Count; spawnIndex++)
         {
+            var enemyData = wave.Enemies[spawnIndex];
             if (enemyData == null || !IsValidStats(enemyData.Stats))
             {
                 Debug.LogWarning("[WaveBattleManager] Invalid enemy data skipped.");
                 continue;
             }
 
-            var enemy = _spawner.SpawnEnemy(enemyData);
+            var enemy = _spawner.SpawnEnemy(enemyData, spawnIndex);
             if (enemy != null)
             {
                 AddEnemy(enemy);
