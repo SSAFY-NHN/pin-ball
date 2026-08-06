@@ -41,3 +41,38 @@ public enum EPinballState
     Idle,
     Launched,
 }
+
+public enum EItemCategory
+{
+    Ball = 0,
+    Board = 1,
+    Battle = 2
+}
+
+public enum EItem
+{
+    PrecisionAimRail = 0,
+    WeightedCore,
+    ElasticCoating,
+    RecoveryInsurance,
+    GoldenBall,
+    AutoBallFeeder,
+    TargetMagnet,
+    SplitCapsule,
+
+    ReinforcedBumper,
+    GoldenBumper,
+    WidePocket,
+    FocusedPocket,
+    SafetyNet,
+    SwapLever,
+    ChargedPin,
+    OverloadBumper,
+
+    AttackManual,
+    BattleClock,
+    FieldArmor,
+    DuplicationSeal,
+    DiversityEmblem,
+    BarrierReinforcement,
+}

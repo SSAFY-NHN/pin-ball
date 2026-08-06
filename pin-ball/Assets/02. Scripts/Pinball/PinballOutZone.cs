@@ -15,6 +15,6 @@ public class PinballOutZone : MonoBehaviour
         var ball = other.GetComponent<Pinball>();
         if (ball == null) return;
 
-        _pinballManager.ReleaseBall(ball);
+        _pinballManager.OnMissedBall(ball);
     }
 }
