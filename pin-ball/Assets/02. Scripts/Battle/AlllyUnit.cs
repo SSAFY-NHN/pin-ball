@@ -3,7 +3,7 @@ using UnityEngine;
 public class AllyUnit : UnitBase
 {
     public override EBattleTeam Team => EBattleTeam.Ally;
-    protected override Color IdleColor => new(0.3f, 0.8f, 1f, 1f);
+    protected override Color IdleColor => Color.white;
     
     protected override void Tick()
     {

@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyUnit : UnitBase
 {
     public override EBattleTeam Team => EBattleTeam.Enemy;
-    protected override Color IdleColor => new(1f, 0.45f, 0.45f, 1f);
+    protected override Color IdleColor => Color.white;
 
     protected override void Tick()
     {
