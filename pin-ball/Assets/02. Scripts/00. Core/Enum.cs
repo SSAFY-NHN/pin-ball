@@ -35,3 +35,9 @@ public enum EBattleUnitState
     Hit,
     Dead
 }
+
+public enum EPinballState
+{
+    Idle,
+    Launched,
+}

@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.Serialization;
 
 //소유: activeAllies, activeEnemies
 //책임: 전투 중 목록 관리, 죽음/제거 반영, 웨이브 클리어 조건 계산
@@ -13,51 +15,26 @@ public class UnitManager : AppService
     public int RemainingAllyCount => _activeAllies.Count;
     public int RemainingEnemyCount => _activeEnemies.Count;
     
-    [Header("Placement Input (Temporary)")]
-    [SerializeField] private List<BattleUnitSpawnData> placedAllyList = new()
-    {
-        new BattleUnitSpawnData
-        {
-            UnitId = "DefaultAlly",
-            BaseStats = new BattleUnitStats
-            {
-                MaxHp = 24f,
-                AttackDamage = 5f,
-                AttackRate = 1.2f,
-                AttackRange = 1.6f,
-                MoveSpeed = 3.2f
-            },
-            Modifier = new BattleUnitModifier
-            {
-                MergeTier = 1,
-                MergeAttackBonusPerTier = 0.2f,
-                MergeHpBonusPerTier = 0.25f,
-                EquipmentAttackBonus = 2f,
-                EquipmentHpBonus = 4f
-            }
-        }
-    };
-    
-    [SerializeField] private UnitSpawner _spawner;
-
     private BattleManager _battleManager;
+    private UnitSpawner _spawner;
 
     private void Start()
     {
         _battleManager = App.Get<BattleManager>();
         _battleManager.OnStateChanged += OnStateChanged;
+        _spawner = GetComponent<UnitSpawner>();
     }
-    
+
     private void OnStateChanged(EWaveState state)
     {
         if (state is EWaveState.Active)
         {
-            ClearAllUnits();
-            SpawnPlacedAllies();
+            ClearAllEnemies();
+            CleanupDestroyedUnits();
             SpawnEnemies(_battleManager.CurrentWave);
         }
     }
-    
+
     private bool TryBuildUnitStats(BattleUnitSpawnData data, out BattleUnitStats finalStats)
     {
         finalStats = data.BaseStats;
@@ -85,27 +62,13 @@ public class UnitManager : AppService
                && stats.MoveSpeed >= 0f;
     }
     
-    private void SpawnPlacedAllies()
+    public void SpawnAlly(BattleUnitSpawnData unitData)
     {
-        foreach (var data in placedAllyList)
-        {
-            if (data == null)
-            {
-                continue;
-            }
+        if (unitData == null) return;
+        if (!TryBuildUnitStats(unitData, out var finalStats)) return;
 
-            if (!TryBuildUnitStats(data, out var finalStats))
-            {
-                Debug.LogWarning($"[WaveBattleManager] Invalid unit data skipped: {data.UnitId}");
-                continue;
-            }
-
-            var ally = _spawner.SpawnAlly(data, finalStats);
-            if (ally != null)
-            {
-                AddAlly(ally);
-            }
-        }
+        var spawnedUnit = _spawner.SpawnAlly(unitData, finalStats);
+        AddAlly(spawnedUnit);
     }
 
     private void SpawnEnemies(BattleWaveData wave)
@@ -130,18 +93,16 @@ public class UnitManager : AppService
             }
         }
     }
-    
+
     public void AddAlly(UnitBase ally)
     {
         if (ally == null) return;
-
         _activeAllies.Add(ally);
     }
 
     public void AddEnemy(UnitBase enemy)
     {
         if (enemy == null) return;
-
         _activeEnemies.Add(enemy);
     }
 
@@ -158,23 +119,15 @@ public class UnitManager : AppService
             _activeEnemies.Remove(unit);
         }
     }
-    
+
     public void CleanupDestroyedUnits()
     {
         _activeAllies.RemoveAll(unit => unit == null || !unit.IsAlive);
         _activeEnemies.RemoveAll(unit => unit == null || !unit.IsAlive);
     }
 
-    private void ClearAllUnits()
+    private void ClearAllEnemies()
     {
-        foreach (var ally in _activeAllies)
-        {
-            if (ally != null)
-            {
-                ally.ForceRemove();
-            }
-        }
-
         foreach (var enemy in _activeEnemies)
         {
             if (enemy != null)
@@ -183,10 +136,9 @@ public class UnitManager : AppService
             }
         }
 
-        _activeAllies.Clear();
         _activeEnemies.Clear();
     }
-    
+
     public UnitBase FindClosestAliveEnemy(Vector3 fromPosition, float maxDistance)
     {
         return FindClosest(fromPosition, maxDistance, _activeEnemies);

@@ -76,7 +76,7 @@ public class BattleManager : AppService
     private void Start()
     {
         _unitManager = App.Get<UnitManager>();
-        
+
         OnStateChanged?.Invoke(_state);
         OnHpChanged?.Invoke(_playerHp);
         OnGoldChanged?.Invoke(_gold);
@@ -102,6 +102,18 @@ public class BattleManager : AppService
         if (_state is not EWaveState.Pending) return;
         
         ChangeState(EWaveState.Active);
+    }
+
+    public bool TrySpendGold(int amount)
+    {
+        var clampedAmount = Mathf.Max(0, amount);
+        if (clampedAmount <= 0) return true;
+
+        if (_gold < clampedAmount) return false;
+
+        _gold -= clampedAmount;
+        OnGoldChanged?.Invoke(_gold);
+        return true;
     }
 
     private void DefeatWave()
