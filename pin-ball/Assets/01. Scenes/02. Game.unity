@@ -2016,23 +2016,9 @@ MonoBehaviour:
     WaveClearGoldReward: 10
     Enemies:
     - EnemyId: Enemy A
-      Stats:
-        MaxHp: 18
-        AttackDamage: 3
-        Defense: 0
-        AttackRate: 1
-        AttackRange: 1.2
-        MoveSpeed: 2
-        MaxMana: 0
+      Count: 2
     - EnemyId: Enemy B
-      Stats:
-        MaxHp: 20
-        AttackDamage: 3
-        Defense: 0
-        AttackRate: 1
-        AttackRange: 1.2
-        MoveSpeed: 2
-        MaxMana: 0
+      Count: 1
 --- !u!4 &492424497
 Transform:
   m_ObjectHideFlags: 0
@@ -8905,10 +8891,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0.00015822053
-    width: 1
-    height: 0.99968356
+    x: 0.00022312999
+    y: 0
+    width: 0.99955374
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
