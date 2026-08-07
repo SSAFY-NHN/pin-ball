@@ -6,6 +6,7 @@ public class WavePanel : UIBase
     public override bool IsDefaultPanel => true;
     
     [SerializeField] private Button startButton;
+    [SerializeField] private Button launchButton;
     
     private BattleManager _battleManager;
     private PinballManager _pinballManager;
@@ -21,6 +22,7 @@ public class WavePanel : UIBase
         _pinballManager.OnStateChanged += OnPinballStateChanged;
 
         startButton.onClick.AddListener(_battleManager.StartWave);
+        launchButton.onClick.AddListener(_pinballManager.LaunchBall);
     }
     
     private void OnBattleStateChanged(EWaveState state)
