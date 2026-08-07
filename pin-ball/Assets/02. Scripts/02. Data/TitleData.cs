@@ -21,10 +21,13 @@ public class TitleData : AppService
     public Dictionary<string, ItemData> Item { get; private set; } = new();
     public Dictionary<string, AllyUnitData> AllyUnit { get; private set; } = new();
     public AllyCommonData AllyCommon { get; private set; }
+    public Dictionary<string, EnemyUnitData> EnemyUnit { get; private set; } = new();
+    public EnemyCommonData EnemyCommon { get; private set; }
    
     #region Data Path
     private const string ITEM_PATH = "Data/ItemData";
     private const string ALLY_UNIT_PATH = "Data/AllyUnitData";
+    private const string ENEMY_UNIT_PATH = "Data/EnemyUnitData";
     #endregion
 
     protected override void Awake()
@@ -43,21 +46,34 @@ public class TitleData : AppService
         }
 
         var allyData = DataLoader.LoadObject<AllyUnitDataCollection>(ALLY_UNIT_PATH);
-        if (allyData == null)
+        if (allyData != null)
         {
-            return;
+            AllyCommon = allyData.common;
+            foreach (var data in allyData.units)
+            {
+                AllyUnit.Add(data.id, data);
+            }
         }
 
-        AllyCommon = allyData.common;
-        foreach (var data in allyData.units)
+        var enemyData = DataLoader.LoadObject<EnemyUnitDataCollection>(ENEMY_UNIT_PATH);
+        if (enemyData != null)
         {
-            AllyUnit.Add(data.id, data);
+            EnemyCommon = enemyData.common;
+            foreach (var data in enemyData.units)
+            {
+                EnemyUnit.Add(data.id, data);
+            }
         }
     }
 
     public bool TryGetAllyUnit(string id, out AllyUnitData result)
     {
         return AllyUnit.TryGetValue(id, out result);
+    }
+
+    public bool TryGetEnemyUnit(string id, out EnemyUnitData result)
+    {
+        return EnemyUnit.TryGetValue(id, out result);
     }
 }
 

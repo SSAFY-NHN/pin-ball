@@ -12,7 +12,11 @@ public abstract class UnitBase : MonoBehaviour
     public float CurrentHp { get; private set; }
     public float MaxHp => _stats.MaxHp;
     public float AttackDamage => _stats.AttackDamage;
+    public float CurrentDefense => _stats.Defense * _defenseMultiplier;
+    public float HpRatio => MaxHp > 0f ? Mathf.Clamp01(CurrentHp / MaxHp) : 0f;
     public bool IsAlive => _state != EBattleUnitState.Dead;
+    public bool IsStunned => Time.time < _stunnedUntil;
+    public float LastDamagedTime { get; private set; }
 
     protected BattleUnitStats _stats;
     protected UnitBase _currentTarget;
@@ -37,6 +41,10 @@ public abstract class UnitBase : MonoBehaviour
     private float _damageReduction;
     private float _damageReductionUntil;
     private float _knockbackImmuneUntil;
+    private float _attackDamageMultiplier = 1f;
+    private float _attackDamageMultiplierUntil;
+    private float _defenseMultiplier = 1f;
+    private float _defenseMultiplierUntil;
     private int _damageOverTimeVersion;
 
     protected virtual Color IdleColor => new(0.8f, 0.8f, 0.8f, 1f);
@@ -89,12 +97,16 @@ public abstract class UnitBase : MonoBehaviour
 
     protected abstract void Tick();
 
-    public void TakeDamage(float damage, float armorIgnoreRatio = 0f)
+    public void TakeDamage(
+        float damage,
+        float armorIgnoreRatio = 0f,
+        UnitBase source = null)
     {
         if (!IsAlive || damage <= 0f) return;
-        
+
+        damage = ModifyIncomingDamage(damage, source);
         var effectiveDefense =
-            _stats.Defense * (1f - Mathf.Clamp01(armorIgnoreRatio));
+            CurrentDefense * (1f - Mathf.Clamp01(armorIgnoreRatio));
         var finalDamage = Mathf.Floor(
             damage * 100f / (100f + effectiveDefense));
 
@@ -113,6 +125,7 @@ public abstract class UnitBase : MonoBehaviour
         if (finalDamage <= 0f) return;
 
         CurrentHp -= finalDamage;
+        LastDamagedTime = Time.time;
         _state = EBattleUnitState.Hit;
         _hitUntilTime = Time.time + 0.08f;
         OnDamaged();
@@ -144,8 +157,39 @@ public abstract class UnitBase : MonoBehaviour
             Time.time + duration);
     }
 
+    public void ApplyAttackDamageMultiplier(float multiplier, float duration)
+    {
+        _attackDamageMultiplier = Mathf.Max(0f, multiplier);
+        _attackDamageMultiplierUntil = Mathf.Max(
+            _attackDamageMultiplierUntil,
+            Time.time + duration);
+    }
+
+    public void ApplyDefenseMultiplier(float multiplier, float duration)
+    {
+        _defenseMultiplier = Mathf.Max(0f, multiplier);
+        _defenseMultiplierUntil = Mathf.Max(
+            _defenseMultiplierUntil,
+            Time.time + duration);
+    }
+
+    public void ApplyPermanentSpeedMultiplier(
+        float moveSpeedMultiplier,
+        float attackRateMultiplier)
+    {
+        _stats.MoveSpeed *= Mathf.Max(0f, moveSpeedMultiplier);
+        _stats.AttackRate *= Mathf.Max(0.01f, attackRateMultiplier);
+        _initialStats.MoveSpeed = _stats.MoveSpeed;
+        _initialStats.AttackRate = _stats.AttackRate;
+    }
+
     public void ApplyMoveSpeedMultiplier(float multiplier, float duration)
     {
+        if (multiplier < 1f)
+        {
+            duration = ModifyCrowdControlDuration(duration);
+        }
+
         _moveSpeedMultiplier = Mathf.Max(0f, multiplier);
         _moveSpeedMultiplierUntil = Mathf.Max(
             _moveSpeedMultiplierUntil,
@@ -167,6 +211,7 @@ public abstract class UnitBase : MonoBehaviour
 
     public void ApplyStun(float duration)
     {
+        duration = ModifyCrowdControlDuration(duration);
         _stunnedUntil = Mathf.Max(_stunnedUntil, Time.time + duration);
     }
 
@@ -227,6 +272,21 @@ public abstract class UnitBase : MonoBehaviour
 
     protected virtual void OnBasicAttackHit(UnitBase target)
     {
+    }
+
+    protected virtual float GetBasicAttackDamage(UnitBase target)
+    {
+        return _stats.AttackDamage * _attackDamageMultiplier;
+    }
+
+    protected virtual float ModifyIncomingDamage(float damage, UnitBase source)
+    {
+        return damage;
+    }
+
+    protected virtual float ModifyCrowdControlDuration(float duration)
+    {
+        return duration;
     }
 
     protected virtual void OnDamaged()
@@ -307,7 +367,7 @@ public abstract class UnitBase : MonoBehaviour
         float attackRate = Mathf.Max(0.01f, _stats.AttackRate * _attackRateMultiplier);
         _nextAttackTime = Time.time + 1f / attackRate;
         _state = EBattleUnitState.Attacking;
-        _currentTarget.TakeDamage(_stats.AttackDamage);
+        _currentTarget.TakeDamage(GetBasicAttackDamage(_currentTarget), 0f, this);
         OnBasicAttackHit(_currentTarget);
     }
 
@@ -326,6 +386,16 @@ public abstract class UnitBase : MonoBehaviour
         if (Time.time >= _damageReductionUntil)
         {
             _damageReduction = 0f;
+        }
+
+        if (Time.time >= _attackDamageMultiplierUntil)
+        {
+            _attackDamageMultiplier = 1f;
+        }
+
+        if (Time.time >= _defenseMultiplierUntil)
+        {
+            _defenseMultiplier = 1f;
         }
 
         if (Time.time >= _shieldUntil)

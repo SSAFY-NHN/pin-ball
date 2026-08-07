@@ -40,27 +40,37 @@ public class UnitSpawner : MonoBehaviour
         return unit;
     }
 
-    public UnitBase SpawnEnemy(BattleEnemySpawnData data, int spawnIndex)
+    public EnemyUnit SpawnEnemy(
+        EnemyUnitData data,
+        BattleUnitStats stats,
+        int spawnIndex,
+        Vector3? spawnPosition = null)
     {
         if (data == null)
         {
             return null;
         }
 
-        return Spawn(
+        var unit = Spawn(
             EBattleTeam.Enemy,
-            data.EnemyId,
-            data.Stats,
-            spawnIndex);
+            data.id,
+            stats,
+            spawnIndex,
+            spawnPosition) as EnemyUnit;
+
+        unit?.SetData(data);
+        return unit;
     }
 
     private UnitBase Spawn(
         EBattleTeam team,
         string unitId,
         BattleUnitStats stats,
-        int spawnIndex)
+        int spawnIndex,
+        Vector3? overridePosition = null)
     {
-        var position = team == EBattleTeam.Ally ? allySpawnPoint.position : enemySpawnPoint.position;
+        var position = overridePosition ??
+            (team == EBattleTeam.Ally ? allySpawnPoint.position : enemySpawnPoint.position);
         position.x += Random.Range(-0.15f, 0.15f);
         position.y += GetFormationOffset(spawnIndex);
         

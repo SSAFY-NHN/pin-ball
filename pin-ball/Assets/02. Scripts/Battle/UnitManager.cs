@@ -26,6 +26,7 @@ public class UnitManager : AppService, IItemEventListener
     private float _duplicationChance;
     private int _duplicationTier;
     private int _duplicationCount;
+    private int _enemySpawnIndex;
 
     private void Start()
     {
@@ -144,20 +145,63 @@ public class UnitManager : AppService, IItemEventListener
             return;
         }
 
-        for (var spawnIndex = 0; spawnIndex < wave.Enemies.Count; spawnIndex++)
+        _enemySpawnIndex = 0;
+        for (var entryIndex = 0; entryIndex < wave.Enemies.Count; entryIndex++)
         {
-            var enemyData = wave.Enemies[spawnIndex];
-            if (enemyData == null || !IsValidStats(enemyData.Stats))
+            var spawnData = wave.Enemies[entryIndex];
+            if (spawnData == null)
             {
-                Debug.LogWarning("[WaveBattleManager] Invalid enemy data skipped.");
                 continue;
             }
 
-            var enemy = _spawner.SpawnEnemy(enemyData, spawnIndex);
-            if (enemy != null)
+            for (var count = 0; count < Mathf.Max(1, spawnData.Count); count++)
             {
-                AddEnemy(enemy);
+                SpawnEnemy(spawnData.EnemyId, null);
             }
+        }
+    }
+
+    private EnemyUnit SpawnEnemy(string enemyId, Vector3? spawnPosition)
+    {
+        if (_titleData == null ||
+            _titleData.EnemyCommon == null ||
+            !_titleData.TryGetEnemyUnit(enemyId, out var enemyData))
+        {
+            Debug.LogWarning($"[UnitManager] Enemy data not found: {enemyId}");
+            return null;
+        }
+
+        int wave = _battleManager != null
+            ? _battleManager.CurrentWaveNumber
+            : _titleData.EnemyCommon.BaseWave;
+        var stats = enemyData.CreateStats(wave, _titleData.EnemyCommon);
+        if (!IsValidStats(stats))
+        {
+            Debug.LogWarning($"[UnitManager] Invalid enemy stats: {enemyId}");
+            return null;
+        }
+
+        var enemy = _spawner.SpawnEnemy(
+            enemyData,
+            stats,
+            _enemySpawnIndex++,
+            spawnPosition);
+        AddEnemy(enemy);
+        return enemy;
+    }
+
+    public void SpawnEnemyReinforcement(
+        string enemyId,
+        int count,
+        Vector3 center)
+    {
+        for (var i = 0; i < Mathf.Max(0, count); i++)
+        {
+            var offset = new Vector3(
+                UnityEngine.Random.Range(-0.5f, 0.5f),
+                UnityEngine.Random.Range(-0.5f, 0.5f),
+                0f);
+            SpawnEnemy(enemyId, center + offset);
         }
     }
 
@@ -217,6 +261,74 @@ public class UnitManager : AppService, IItemEventListener
     public UnitBase FindClosestAliveAlly(Vector3 fromPosition, float maxDistance)
     {
         return FindClosest(fromPosition, maxDistance, _activeAllies);
+    }
+
+    public UnitBase FindFarthestAliveAlly(Vector3 fromPosition)
+    {
+        UnitBase result = null;
+        float farthestDistance = float.MinValue;
+
+        foreach (var ally in _activeAllies)
+        {
+            if (ally == null || !ally.IsAlive) continue;
+
+            float distance = Vector2.Distance(fromPosition, ally.transform.position);
+            if (distance > farthestDistance)
+            {
+                result = ally;
+                farthestDistance = distance;
+            }
+        }
+
+        return result;
+    }
+
+    public UnitBase FindHighestHpAliveAlly()
+    {
+        UnitBase result = null;
+        float highestHp = float.MinValue;
+
+        foreach (var ally in _activeAllies)
+        {
+            if (ally == null || !ally.IsAlive) continue;
+
+            if (ally.CurrentHp > highestHp)
+            {
+                result = ally;
+                highestHp = ally.CurrentHp;
+            }
+        }
+
+        return result;
+    }
+
+    public void ApplyEnemySpeedBuff(
+        float moveSpeedMultiplier,
+        float attackRateMultiplier)
+    {
+        foreach (var enemy in _activeEnemies)
+        {
+            if (enemy == null || !enemy.IsAlive) continue;
+
+            enemy.ApplyPermanentSpeedMultiplier(
+                moveSpeedMultiplier,
+                attackRateMultiplier);
+        }
+    }
+
+    public int CalculateRemainingBreachDamage()
+    {
+        int damage = 0;
+
+        foreach (var enemy in _activeEnemies)
+        {
+            if (enemy is EnemyUnit enemyUnit && enemyUnit.IsAlive)
+            {
+                damage += enemyUnit.BreachDamage;
+            }
+        }
+
+        return damage;
     }
 
     public void GetAliveEnemiesInRadius(

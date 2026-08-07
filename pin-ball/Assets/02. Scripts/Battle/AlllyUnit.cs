@@ -112,7 +112,10 @@ public class AllyUnit : UnitBase
     {
         if (_currentTarget == null) return;
 
-        _currentTarget.TakeDamage(AttackDamage * Percent(Value(0, 1)));
+        _currentTarget.TakeDamage(
+            AttackDamage * Percent(Value(0, 1)),
+            0f,
+            this);
         _unitManager.GetAliveEnemiesInRadius(
             _currentTarget.transform.position,
             Value(1, 1),
@@ -135,7 +138,10 @@ public class AllyUnit : UnitBase
 
         foreach (var enemy in _targets)
         {
-            enemy.TakeDamage(AttackDamage * Percent(Value(0, 2)));
+            enemy.TakeDamage(
+                AttackDamage * Percent(Value(0, 2)),
+                0f,
+                this);
         }
 
         float healRatio = Mathf.Min(
@@ -158,7 +164,10 @@ public class AllyUnit : UnitBase
 
         foreach (var enemy in _targets)
         {
-            enemy.TakeDamage(AttackDamage * Percent(Value(0, 2)));
+            enemy.TakeDamage(
+                AttackDamage * Percent(Value(0, 2)),
+                0f,
+                this);
             enemy.ApplyMoveSpeedMultiplier(
                 1f - Percent(Value(1, 2)),
                 Value(1, 1));
@@ -183,7 +192,8 @@ public class AllyUnit : UnitBase
         {
             _targets[i].TakeDamage(
                 AttackDamage * Percent(Value(i, 1)),
-                armorIgnore);
+                armorIgnore,
+                this);
         }
     }
 
@@ -201,7 +211,8 @@ public class AllyUnit : UnitBase
         {
             enemy.TakeDamage(
                 AttackDamage * Percent(Value(0, 2)),
-                armorIgnore);
+                armorIgnore,
+                this);
             enemy.ApplyDamageOverTime(
                 AttackDamage * Percent(Value(1, 2)),
                 Mathf.Max(1f, Value(1, 3)),
@@ -223,7 +234,8 @@ public class AllyUnit : UnitBase
         {
             enemy.TakeDamage(
                 AttackDamage * Percent(Value(0, 2)),
-                armorIgnore);
+                armorIgnore,
+                this);
             enemy.ApplyStun(Value(1, 1));
             enemy.ApplySlowAfterDelay(
                 1f - Percent(Value(2, 2)),
@@ -251,7 +263,10 @@ public class AllyUnit : UnitBase
         int hitCount = Mathf.Min(maxTargets, _targets.Count);
         for (var i = 0; i < hitCount; i++)
         {
-            _targets[i].TakeDamage(AttackDamage * Percent(Value(2, 1)));
+            _targets[i].TakeDamage(
+                AttackDamage * Percent(Value(2, 1)),
+                0f,
+                this);
             _targets[i].ApplyKnockback(direction, Value(1, 1));
         }
 
@@ -272,7 +287,10 @@ public class AllyUnit : UnitBase
 
         foreach (var enemy in _targets)
         {
-            enemy.TakeDamage(AttackDamage * Percent(Value(1, 1)));
+            enemy.TakeDamage(
+                AttackDamage * Percent(Value(1, 1)),
+                0f,
+                this);
             enemy.ApplyStun(Value(2, 1));
         }
 
