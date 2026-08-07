@@ -62,6 +62,11 @@ public class UnitSpawner : MonoBehaviour
         return unit;
     }
 
+    internal void ResetAllySpawnOrder()
+    {
+        _allySpawnIndex = 0;
+    }
+
     private UnitBase Spawn(
         EBattleTeam team,
         string unitId,

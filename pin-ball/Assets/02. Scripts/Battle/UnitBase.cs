@@ -436,6 +436,9 @@ public abstract class UnitBase : MonoBehaviour
 
     public void ForceRemove()
     {
+        if (!IsAlive) return;
+
+        gameObject.SetActive(false);
         Die();
     }
 
