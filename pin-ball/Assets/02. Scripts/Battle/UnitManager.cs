@@ -28,12 +28,17 @@ public class UnitManager : AppService, IItemEventListener
     private int _duplicationCount;
     private int _enemySpawnIndex;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        _spawner = GetComponent<UnitSpawner>();
+    }
+
     private void Start()
     {
         _battleManager = App.Get<BattleManager>();
         _titleData = App.Get<TitleData>();
         _battleManager.OnStateChanged += OnStateChanged;
-        _spawner = GetComponent<UnitSpawner>();
 
         var itemManager = App.Get<ItemManager>();
         itemManager.Subscribe(EItem.AttackManual, this);
@@ -50,7 +55,10 @@ public class UnitManager : AppService, IItemEventListener
             ClearAllEnemies();
             CleanupDestroyedUnits();
             SpawnEnemies(_battleManager.CurrentWave);
+            return;
         }
+
+        ClearBattleUnits();
     }
 
     private bool TryBuildUnitStats(BattleUnitSpawnData data, out BattleUnitStats finalStats)
@@ -241,16 +249,28 @@ public class UnitManager : AppService, IItemEventListener
 
     private void ClearAllEnemies()
     {
-        for (var i = _activeEnemies.Count - 1; i >= 0; i--)
+        ClearUnits(_activeEnemies);
+    }
+
+    public void ClearBattleUnits()
+    {
+        ClearUnits(_activeAllies);
+        ClearUnits(_activeEnemies);
+        _spawner?.ResetAllySpawnOrder();
+    }
+
+    private static void ClearUnits(List<UnitBase> units)
+    {
+        for (var i = units.Count - 1; i >= 0; i--)
         {
-            var enemy = _activeEnemies[i];
-            if (enemy != null)
+            var unit = units[i];
+            if (unit != null)
             {
-                enemy.ForceRemove();
+                unit.ForceRemove();
             }
         }
 
-        _activeEnemies.Clear();
+        units.Clear();
     }
 
     public UnitBase FindClosestAliveEnemy(Vector3 fromPosition, float maxDistance)

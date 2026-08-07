@@ -44,6 +44,8 @@ public class BattleEnemySpawnData
 public class BattleWaveData
 {
     public string WaveName = "Wave";
-    [Min(0)] public int WaveClearGoldReward = 5; // TODO: JSON 웨이브 보상 데이터로 교체
+    [Min(0)] public int RetryGoldReward = 5;
+    [Min(0)] public int WaveClearGoldReward = 10;
+    [Min(0)] public int FinalClearGoldReward = 20;
     public List<BattleEnemySpawnData> Enemies = new();
 }

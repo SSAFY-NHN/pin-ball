@@ -12,14 +12,25 @@ public class BattleManager : AppService, IItemEventListener
     [SerializeField, Min(1)] public int playerMaxHp = 20;
     [SerializeField, Min(0)] public int startingGold;
     
-    public BattleWaveData CurrentWave => waveList[_currentWaveIndex];
+    public BattleWaveData CurrentWave => HasValidCurrentWave
+        ? waveList[_currentWaveIndex]
+        : null;
     public int CurrentWaveNumber => _currentWaveIndex + 1;
+    public int TotalWaveCount => waveList?.Count ?? 0;
     public int Gold => _gold;
+    public EWaveState State => _state;
+    public bool IsPreparationPhase => _state == EWaveState.Pending;
+    public bool HasValidCurrentWave =>
+        waveList != null &&
+        _currentWaveIndex >= 0 &&
+        _currentWaveIndex < waveList.Count &&
+        waveList[_currentWaveIndex] != null;
     
     public event Action<EWaveState> OnStateChanged;
     public event Action<int> OnWaveChanged;
     public event Action<int> OnHpChanged;
     public event Action<int> OnGoldChanged;
+    public event Action<string> OnActionRejected;
 
     private UnitManager _unitManager;
     
@@ -36,7 +47,9 @@ public class BattleManager : AppService, IItemEventListener
         new BattleWaveData
         {
             WaveName = "Wave 1",
+            RetryGoldReward = 5,
             WaveClearGoldReward = 10,
+            FinalClearGoldReward = 20,
             Enemies = new List<BattleEnemySpawnData>
             {
                 new BattleEnemySpawnData
@@ -116,11 +129,33 @@ public class BattleManager : AppService, IItemEventListener
         }
     }
     
+    public bool TryStartWave()
+    {
+        if (!IsPreparationPhase)
+        {
+            RejectAction("전투 준비 단계에서만 웨이브를 시작할 수 있습니다.");
+            return false;
+        }
+
+        if (!HasValidCurrentWave)
+        {
+            RejectAction("시작할 웨이브 데이터가 없습니다.");
+            return false;
+        }
+
+        if (_unitManager == null || _unitManager.RemainingAllyCount <= 0)
+        {
+            RejectAction("아군 유닛을 한 명 이상 준비해야 합니다.");
+            return false;
+        }
+
+        ChangeState(EWaveState.Active);
+        return true;
+    }
+
     public void StartWave()
     {
-        if (_state is not EWaveState.Pending) return;
-        
-        ChangeState(EWaveState.Active);
+        TryStartWave();
     }
 
     public bool TrySpendGold(int amount)
@@ -133,6 +168,12 @@ public class BattleManager : AppService, IItemEventListener
         _gold -= clampedAmount;
         OnGoldChanged?.Invoke(_gold);
         return true;
+    }
+
+    public bool TrySpendPreparationGold(int amount)
+    {
+        if (!IsPreparationPhase) return false;
+        return TrySpendGold(amount);
     }
 
     public void AddGold(int amount)
@@ -160,23 +201,40 @@ public class BattleManager : AppService, IItemEventListener
         _playerHp = Mathf.Max(0, _playerHp - damage);
         OnHpChanged?.Invoke(_playerHp);
 
-        ChangeState(_playerHp <= 0 ? EWaveState.Defeat : EWaveState.Pending);
+        var wave = CurrentWave;
+        _unitManager.ClearBattleUnits();
+
+        if (_playerHp <= 0)
+        {
+            ChangeState(EWaveState.Defeat);
+            return;
+        }
+
+        AddGold(wave != null ? wave.RetryGoldReward : 0);
+        ChangeState(EWaveState.Pending);
     }
 
     private void CompleteWave()
     {
         if (_state is not EWaveState.Active) return;
 
+        var wave = CurrentWave;
+        _unitManager.ClearBattleUnits();
+
+        if (wave == null)
+        {
+            ChangeState(EWaveState.Defeat);
+            return;
+        }
+
         if (_currentWaveIndex + 1 >= waveList.Count)
         {
+            AddGold(wave.FinalClearGoldReward);
             ChangeState(EWaveState.Victory);
         }
         else
         {
-            var wave = waveList[_currentWaveIndex];
-            
-            _gold += Mathf.Max(0, wave.WaveClearGoldReward);
-            OnGoldChanged?.Invoke(_gold);
+            AddGold(wave.WaveClearGoldReward);
             
             _currentWaveIndex++;
             OnWaveChanged?.Invoke(_currentWaveIndex);
@@ -194,6 +252,12 @@ public class BattleManager : AppService, IItemEventListener
 
         _state = nextState;
         OnStateChanged?.Invoke(_state);
+    }
+
+    private void RejectAction(string message)
+    {
+        Debug.LogWarning($"[BattleManager] {message}");
+        OnActionRejected?.Invoke(message);
     }
 
     protected override void OnDestroy()
