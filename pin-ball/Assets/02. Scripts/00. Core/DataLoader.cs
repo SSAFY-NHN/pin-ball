@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class DataLoader
 {
+    public static T LoadObject<T>(string dataPath)
+    {
+        var json = Resources.Load<TextAsset>(dataPath);
+        return json ? JsonUtility.FromJson<T>(json.text) : default;
+    }
+
     public static T[] LoadData<T>(string dataPath)
     {
         var json = Resources.Load<TextAsset>(dataPath);

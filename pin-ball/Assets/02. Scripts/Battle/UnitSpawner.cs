@@ -17,6 +17,8 @@ public class UnitSpawner : MonoBehaviour
 
     public UnitBase SpawnAlly(
         BattleUnitSpawnData data,
+        AllyUnitData allyData,
+        AllyCommonData commonData,
         BattleUnitStats stats)
     {
         if (data == null)
@@ -24,11 +26,18 @@ public class UnitSpawner : MonoBehaviour
             return null;
         }
 
-        return Spawn(
+        var unit = Spawn(
             EBattleTeam.Ally,
             data.UnitId,
             stats,
             _allySpawnIndex++);
+
+        if (unit is AllyUnit ally)
+        {
+            ally.SetData(data.UnitId, data.Level, allyData?.skill, commonData);
+        }
+
+        return unit;
     }
 
     public UnitBase SpawnEnemy(BattleEnemySpawnData data, int spawnIndex)
