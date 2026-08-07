@@ -42,7 +42,10 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerMoveHandler
         iconImage.enabled = item?.Icon != null;
     }
 
-    public void RefreshState(int currentGold, bool isPurchased)
+    public void RefreshState(
+        int currentGold,
+        bool isPurchased,
+        bool isPreparationPhase)
     {
         if (Item == null)
         {
@@ -51,7 +54,10 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerMoveHandler
             return;
         }
 
-        var canPurchase = !isPurchased && currentGold >= Item.Cost;
+        var canPurchase =
+            isPreparationPhase &&
+            !isPurchased &&
+            currentGold >= Item.Cost;
         purchaseButton.interactable = canPurchase;
         costText.color = canPurchase ? availableCostColor : unavailableCostColor;
     }
@@ -99,6 +105,14 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerMoveHandler
     {
         if (Item == null) return;
 
-        _onPurchase.Invoke(Item);
+        _onPurchase?.Invoke(Item);
+    }
+
+    private void OnDestroy()
+    {
+        if (purchaseButton != null)
+        {
+            purchaseButton.onClick.RemoveListener(OnPurchaseButtonClicked);
+        }
     }
 }

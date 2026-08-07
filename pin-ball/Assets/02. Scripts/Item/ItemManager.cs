@@ -169,6 +169,17 @@ public class ItemManager : AppService
         return _activeItems.Contains(item);
     }
 
+    public bool TryPurchase(Item item)
+    {
+        if (item == null || HasItem(item.Key)) return false;
+
+        var battleManager = App.Get<BattleManager>();
+        if (!battleManager.TrySpendPreparationGold(item.Cost)) return false;
+
+        Raise(item.Key);
+        return true;
+    }
+
     public bool TryGetItem(EItem item, out Item result)
     {
         InitializeItems();

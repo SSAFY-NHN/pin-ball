@@ -26,6 +26,7 @@ public class ShopPanel : UIBase
         _itemManager = App.Get<ItemManager>();
         _battleManager = App.Get<BattleManager>();
         _battleManager.OnGoldChanged += OnGoldChanged;
+        _battleManager.OnStateChanged += OnBattleStateChanged;
 
         rerollButton.onClick.AddListener(OnRerollButtonClicked);
         
@@ -44,7 +45,14 @@ public class ShopPanel : UIBase
 
     private void OnRerollButtonClicked()
     {
-        if (rerollCost > 0 && !_battleManager.TrySpendGold(rerollCost))
+        if (!_battleManager.IsPreparationPhase)
+        {
+            RefreshPurchaseStates();
+            return;
+        }
+
+        if (rerollCost > 0 &&
+            !_battleManager.TrySpendPreparationGold(rerollCost))
         {
             RefreshPurchaseStates();
             return;
@@ -101,23 +109,16 @@ public class ShopPanel : UIBase
 
     private void OnPurchaseButtonClicked(Item item)
     {
-        if (item == null || _itemManager.HasItem(item.Key))
-        {
-            RefreshPurchaseStates();
-            return;
-        }
-
-        if (!_battleManager.TrySpendGold(item.Cost))
-        {
-            RefreshPurchaseStates();
-            return;
-        }
-
-        _itemManager.Raise(item.Key);
+        _itemManager.TryPurchase(item);
         RefreshPurchaseStates();
     }
 
     private void OnGoldChanged(int _)
+    {
+        RefreshPurchaseStates();
+    }
+
+    private void OnBattleStateChanged(EWaveState _)
     {
         RefreshPurchaseStates();
     }
@@ -133,13 +134,17 @@ public class ShopPanel : UIBase
 
             var item = slot.Item;
             var isPurchased = item != null && _itemManager.HasItem(item.Key);
-            slot.RefreshState(_battleManager.Gold, isPurchased);
+            slot.RefreshState(
+                _battleManager.Gold,
+                isPurchased,
+                _battleManager.IsPreparationPhase);
         }
 
         if (rerollButton != null)
         {
             rerollButton.interactable =
-                rerollCost <= 0 || _battleManager.Gold >= rerollCost;
+                _battleManager.IsPreparationPhase &&
+                (rerollCost <= 0 || _battleManager.Gold >= rerollCost);
         }
     }
 
@@ -149,6 +154,20 @@ public class ShopPanel : UIBase
         {
             Debug.LogWarning(
                 $"[ShopPanel] Item Slot은 {DefaultShopItemCount}개를 등록해야 합니다.");
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (_battleManager != null)
+        {
+            _battleManager.OnGoldChanged -= OnGoldChanged;
+            _battleManager.OnStateChanged -= OnBattleStateChanged;
+        }
+
+        if (rerollButton != null)
+        {
+            rerollButton.onClick.RemoveListener(OnRerollButtonClicked);
         }
     }
 
