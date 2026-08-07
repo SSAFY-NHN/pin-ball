@@ -5,23 +5,8 @@ public class PinballGoal : MonoBehaviour
 {
     [SerializeField] private BattleUnitSpawnData unitData = new()
     {
-        UnitId = "DefaultAlly",
-        BaseStats = new BattleUnitStats
-        {
-            MaxHp = 24f,
-            AttackDamage = 5f,
-            AttackRate = 1.2f,
-            AttackRange = 1.6f,
-            MoveSpeed = 3.2f
-        },
-        Modifier = new BattleUnitModifier
-        {
-            MergeTier = 1,
-            MergeAttackBonusPerTier = 0.2f,
-            MergeHpBonusPerTier = 0.25f,
-            EquipmentAttackBonus = 2f,
-            EquipmentHpBonus = 4f
-        }
+        UnitId = "warrior",
+        Level = 1
     };
 
     public BattleUnitSpawnData UnitData => unitData;
@@ -32,6 +17,15 @@ public class PinballGoal : MonoBehaviour
 
     private void Awake()
     {
+        if (unitData == null)
+        {
+            unitData = new BattleUnitSpawnData();
+        }
+        else if (unitData.UnitId == "DefaultAlly")
+        {
+            unitData.UnitId = "warrior";
+        }
+
         _collider = GetComponent<BoxCollider2D>();
         _collider.isTrigger = true;
         _baseWidth = _collider.size.x;

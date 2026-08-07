@@ -13,6 +13,7 @@ public class BattleManager : AppService, IItemEventListener
     [SerializeField, Min(0)] public int startingGold;
     
     public BattleWaveData CurrentWave => waveList[_currentWaveIndex];
+    public int CurrentWaveNumber => _currentWaveIndex + 1;
     public int Gold => _gold;
     
     public event Action<EWaveState> OnStateChanged;
@@ -40,27 +41,13 @@ public class BattleManager : AppService, IItemEventListener
             {
                 new BattleEnemySpawnData
                 {
-                    EnemyId = "Enemy A",
-                    Stats = new BattleUnitStats
-                    {
-                        MaxHp = 18f,
-                        AttackDamage = 3f,
-                        AttackRate = 1f,
-                        AttackRange = 1.2f,
-                        MoveSpeed = 2f
-                    }
+                    EnemyId = "goblin",
+                    Count = 2
                 },
                 new BattleEnemySpawnData
                 {
-                    EnemyId = "Enemy B",
-                    Stats = new BattleUnitStats
-                    {
-                        MaxHp = 20f,
-                        AttackDamage = 3f,
-                        AttackRate = 1f,
-                        AttackRange = 1.2f,
-                        MoveSpeed = 2f
-                    }
+                    EnemyId = "wolf",
+                    Count = 1
                 }
             }
         }
@@ -70,10 +57,37 @@ public class BattleManager : AppService, IItemEventListener
     {
         base.Awake();
 
+        NormalizeLegacyWaveData();
         _state = EWaveState.Pending;
         _currentWaveIndex = 0;
         _playerHp = playerMaxHp;
         _gold = startingGold;
+    }
+
+    private void NormalizeLegacyWaveData()
+    {
+        if (waveList == null) return;
+
+        foreach (var wave in waveList)
+        {
+            if (wave?.Enemies == null) continue;
+
+            foreach (var enemy in wave.Enemies)
+            {
+                if (enemy == null) continue;
+
+                if (enemy.EnemyId == "Enemy A")
+                {
+                    enemy.EnemyId = "goblin";
+                }
+                else if (enemy.EnemyId == "Enemy B")
+                {
+                    enemy.EnemyId = "wolf";
+                }
+
+                enemy.Count = Mathf.Max(1, enemy.Count);
+            }
+        }
     }
 
     private void Start()
@@ -139,8 +153,11 @@ public class BattleManager : AppService, IItemEventListener
     {
         if (_state is not EWaveState.Active) return;
         
-        var damage = Mathf.Max(_minimumBarrierDamage, 10 - _barrierDamageReduction);
-        _playerHp = Mathf.Max(0, _playerHp - damage); // TODO: 데미지 데이터와 연결
+        int breachDamage = _unitManager.CalculateRemainingBreachDamage();
+        var damage = Mathf.Max(
+            _minimumBarrierDamage,
+            breachDamage - _barrierDamageReduction);
+        _playerHp = Mathf.Max(0, _playerHp - damage);
         OnHpChanged?.Invoke(_playerHp);
 
         ChangeState(_playerHp <= 0 ? EWaveState.Defeat : EWaveState.Pending);

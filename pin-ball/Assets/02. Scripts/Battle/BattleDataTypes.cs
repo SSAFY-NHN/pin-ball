@@ -8,9 +8,11 @@ public struct BattleUnitStats
 {
     [Min(1f)] public float MaxHp;
     [Min(0f)] public float AttackDamage;
+    [Min(0f)] public float Defense;
     [Min(0.01f)] public float AttackRate;
     [Min(0.1f)] public float AttackRange;
     [Min(0f)] public float MoveSpeed;
+    [Min(0f)] public float MaxMana;
 }
 
 [Serializable]
@@ -26,16 +28,16 @@ public struct BattleUnitModifier
 [Serializable]
 public class BattleUnitSpawnData
 {
-    public string UnitId = "Unit";
-    public BattleUnitStats BaseStats;
+    public string UnitId = "warrior";
+    [Range(1, 10)] public int Level = 1;
     public BattleUnitModifier Modifier;
 }
 
 [Serializable]
 public class BattleEnemySpawnData
 {
-    public string EnemyId = "Enemy";
-    public BattleUnitStats Stats;
+    public string EnemyId = "goblin";
+    [Min(1)] public int Count = 1;
 }
 
 [Serializable]

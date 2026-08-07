@@ -1,0 +1,302 @@
+{
+  "common": {
+    "maxLevel": 10,
+    "classLevel": 5,
+    "startMana": 0,
+    "basicAttackManaGain": 12,
+    "hitManaGain": 4,
+    "hitManaGainCooldown": 0.5
+  },
+  "units": [
+    {
+      "id": "warrior",
+      "previousJob": "",
+      "name": "전사",
+      "role": "근접 탱커",
+      "health": 180,
+      "attack": 18,
+      "defense": 10,
+      "moveSpeed": 2.5,
+      "attackSpeed": 0.85,
+      "attackRange": 1.1,
+      "mana": 0,
+      "healthGrowth": 24,
+      "attackGrowth": 3,
+      "defenseGrowth": 2,
+      "attackSpeedGrowth": 0.03
+    },
+    {
+      "id": "archer",
+      "previousJob": "",
+      "name": "궁수",
+      "role": "원거리 지속 공격",
+      "health": 110,
+      "attack": 16,
+      "defense": 4,
+      "moveSpeed": 2.8,
+      "attackSpeed": 1.1,
+      "attackRange": 5.5,
+      "mana": 0,
+      "healthGrowth": 15,
+      "attackGrowth": 3,
+      "defenseGrowth": 1,
+      "attackSpeedGrowth": 0.04
+    },
+    {
+      "id": "mage",
+      "previousJob": "",
+      "name": "마법사",
+      "role": "원거리 범위 공격",
+      "health": 95,
+      "attack": 21,
+      "defense": 3,
+      "moveSpeed": 2.5,
+      "attackSpeed": 0.72,
+      "attackRange": 5.0,
+      "mana": 0,
+      "healthGrowth": 13,
+      "attackGrowth": 4,
+      "defenseGrowth": 1,
+      "attackSpeedGrowth": 0.02
+    },
+    {
+      "id": "spearman",
+      "previousJob": "",
+      "name": "창병",
+      "role": "중거리 근접 공격",
+      "health": 150,
+      "attack": 17,
+      "defense": 7,
+      "moveSpeed": 2.7,
+      "attackSpeed": 0.95,
+      "attackRange": 2.2,
+      "mana": 0,
+      "healthGrowth": 20,
+      "attackGrowth": 3,
+      "defenseGrowth": 2,
+      "attackSpeedGrowth": 0.03
+    },
+    {
+      "id": "knight",
+      "previousJob": "warrior",
+      "name": "기사",
+      "role": "적의 공격을 끌어오는 메인 탱커",
+      "health": 292,
+      "attack": 29,
+      "defense": 22,
+      "moveSpeed": 2.4,
+      "attackSpeed": 0.89,
+      "attackRange": 1.1,
+      "mana": 60,
+      "healthGrowth": 30,
+      "attackGrowth": 3,
+      "defenseGrowth": 3,
+      "attackSpeedGrowth": 0.01,
+      "skill": {
+        "id": "shield_judgment",
+        "name": "방패 심판",
+        "description": "단일 피해 후 주변 도발\n자신에게 보호막",
+        "effects": [
+          { "effect": 0, "target": 0, "value1": 160 },
+          { "effect": 4, "target": 1, "value1": 2.5, "value2": 3 },
+          { "effect": 1, "target": 4, "value1": 5, "value2": 25 }
+        ]
+      }
+    },
+    {
+      "id": "berserker",
+      "previousJob": "warrior",
+      "name": "광전사",
+      "role": "체력을 회복하며 싸우는 근접 공격수",
+      "health": 267,
+      "attack": 34,
+      "defense": 14,
+      "moveSpeed": 2.6,
+      "attackSpeed": 1.02,
+      "attackRange": 1.2,
+      "mana": 70,
+      "healthGrowth": 24,
+      "attackGrowth": 5,
+      "defenseGrowth": 1,
+      "attackSpeedGrowth": 0.04,
+      "skill": {
+        "id": "blood_whirlwind",
+        "name": "피의 회전베기",
+        "description": "광역 피해\n적중 수에 비례한 회복\n공격속도 증가",
+        "effects": [
+          { "effect": 0, "target": 1, "value1": 1.8, "value2": 180 },
+          { "effect": 2, "target": 4, "value1": 4, "value2": 20 },
+          { "effect": 3, "target": 4, "value1": 5, "value2": 30 }
+        ]
+      }
+    },
+    {
+      "id": "ranger",
+      "previousJob": "archer",
+      "name": "레인저",
+      "role": "빠른 공격과 범위 제어",
+      "health": 175,
+      "attack": 28,
+      "defense": 9,
+      "moveSpeed": 3.0,
+      "attackSpeed": 1.28,
+      "attackRange": 5.2,
+      "mana": 70,
+      "healthGrowth": 18,
+      "attackGrowth": 3,
+      "defenseGrowth": 1,
+      "attackSpeedGrowth": 0.04,
+      "skill": {
+        "id": "arrow_rain",
+        "name": "화살비",
+        "description": "범위 피해와 이동속도 감소",
+        "effects": [
+          { "effect": 0, "target": 1, "value1": 2.5, "value2": 180 },
+          { "effect": 4, "target": 1, "value1": 5, "value2": 25 }
+        ]
+      }
+    },
+    {
+      "id": "marksman",
+      "previousJob": "archer",
+      "name": "명사수",
+      "role": "장거리 단일·관통 공격",
+      "health": 160,
+      "attack": 33,
+      "defense": 7,
+      "moveSpeed": 2.6,
+      "attackSpeed": 1.15,
+      "attackRange": 6.5,
+      "mana": 80,
+      "healthGrowth": 12,
+      "attackGrowth": 5,
+      "defenseGrowth": 1,
+      "attackSpeedGrowth": 0.02,
+      "skill": {
+        "id": "piercing_shot",
+        "name": "관통사격",
+        "description": "최대 4명 관통\n대상 순서별 피해 감소",
+        "effects": [
+          { "effect": 0, "target": 3, "value1": 260 },
+          { "effect": 0, "target": 3, "value1": 221 },
+          { "effect": 0, "target": 3, "value1": 188 },
+          { "effect": 0, "target": 3, "value1": 160 },
+          { "effect": 5, "target": 2, "value1": 30 }
+        ]
+      }
+    },
+    {
+      "id": "pyromancer",
+      "previousJob": "mage",
+      "name": "화염술사",
+      "role": "높은 범위 지속 피해",
+      "health": 144,
+      "attack": 41,
+      "defense": 6,
+      "moveSpeed": 2.4,
+      "attackSpeed": 0.75,
+      "attackRange": 5.0,
+      "mana": 80,
+      "healthGrowth": 12,
+      "attackGrowth": 6,
+      "defenseGrowth": 1,
+      "attackSpeedGrowth": 0.02,
+      "skill": {
+        "id": "explosive_fireball",
+        "name": "폭발 화염구",
+        "description": "범위 직접 피해 후 4초 화상",
+        "effects": [
+          { "effect": 0, "target": 1, "value1": 2, "value2": 220 },
+          { "effect": 6, "target": 1, "value1": 30, "value2": 120, "value3": 4 },
+          { "effect": 5, "target": 2, "value1": 30 }
+        ]
+      }
+    },
+    {
+      "id": "frost",
+      "previousJob": "mage",
+      "name": "빙결술사",
+      "role": "적 정지와 이동 방해",
+      "health": 159,
+      "attack": 36,
+      "defense": 9,
+      "moveSpeed": 2.5,
+      "attackSpeed": 0.78,
+      "attackRange": 4.8,
+      "mana": 75,
+      "healthGrowth": 17,
+      "attackGrowth": 4,
+      "defenseGrowth": 2,
+      "attackSpeedGrowth": 0.02,
+      "skill": {
+        "id": "frost_storm",
+        "name": "빙결 폭풍",
+        "description": "범위 피해\n빙결 후 이속·공속 감소",
+        "effects": [
+          { "effect": 0, "target": 1, "value1": 2.5, "value2": 130 },
+          { "effect": 4, "target": 1, "value1": 1.5 },
+          { "effect": 4, "target": 1, "value1": 4, "value2": 35 },
+          { "effect": 4, "target": 1, "value1": 4, "value2": 35 },
+          { "effect": 5, "target": 2, "value1": 30 }
+        ]
+      }
+    },
+    {
+      "id": "lancer",
+      "previousJob": "spearman",
+      "name": "돌격창병",
+      "role": "후방까지 파고드는 돌격 공격수",
+      "health": 225,
+      "attack": 33,
+      "defense": 14,
+      "moveSpeed": 3.1,
+      "attackSpeed": 1.07,
+      "attackRange": 2.4,
+      "mana": 65,
+      "healthGrowth": 20,
+      "attackGrowth": 5,
+      "defenseGrowth": 1,
+      "attackSpeedGrowth": 0.03,
+      "skill": {
+        "id": "piercing_charge",
+        "name": "꿰뚫는 돌진",
+        "description": "경로상의 적을 공격하고 밀쳐냄",
+        "effects": [
+          { "effect": 0, "target": 3, "value1": 5, "value2": 5 },
+          { "effect": 7, "target": 3, "value1": 1.5 },
+          { "effect": 7, "target": 3, "value1": 200 },
+          { "effect": 3, "target": 4 }
+        ]
+      }
+    },
+    {
+      "id": "guard",
+      "previousJob": "spearman",
+      "name": "방진수호병",
+      "role": "전열 유지와 아군 피해 감소",
+      "health": 225,
+      "attack": 28,
+      "defense": 20,
+      "moveSpeed": 2.3,
+      "attackSpeed": 0.99,
+      "attackRange": 2.5,
+      "mana": 70,
+      "healthGrowth": 32,
+      "attackGrowth": 3,
+      "defenseGrowth": 3,
+      "attackSpeedGrowth": 0.01,
+      "skill": {
+        "id": "phalanx_formation",
+        "name": "방진 전개",
+        "description": "전방 피해·기절\n주변 아군 피해 감소와 넉백 면역",
+        "effects": [
+          { "effect": 0, "target": 3, "value1": 140 },
+          { "effect": 0, "target": 3, "value1": 140 },
+          { "effect": 4, "target": 3, "value1": 1 },
+          { "effect": 3, "target": 5, "value1": 2.5, "value2": 5, "value3": 20 },
+          { "effect": 3, "target": 5, "value1": 2.5, "value2": 5 }
+        ]
+      }
+    }
+  ]
+}

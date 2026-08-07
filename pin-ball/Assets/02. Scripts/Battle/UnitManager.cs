@@ -17,6 +17,7 @@ public class UnitManager : AppService, IItemEventListener
     
     private BattleManager _battleManager;
     private UnitSpawner _spawner;
+    private TitleData _titleData;
     private float _attackMultiplier = 1f;
     private float _attackRateMultiplier = 1f;
     private float _hpMultiplier = 1f;
@@ -25,10 +26,12 @@ public class UnitManager : AppService, IItemEventListener
     private float _duplicationChance;
     private int _duplicationTier;
     private int _duplicationCount;
+    private int _enemySpawnIndex;
 
     private void Start()
     {
         _battleManager = App.Get<BattleManager>();
+        _titleData = App.Get<TitleData>();
         _battleManager.OnStateChanged += OnStateChanged;
         _spawner = GetComponent<UnitSpawner>();
 
@@ -52,7 +55,21 @@ public class UnitManager : AppService, IItemEventListener
 
     private bool TryBuildUnitStats(BattleUnitSpawnData data, out BattleUnitStats finalStats)
     {
-        finalStats = data.BaseStats;
+        finalStats = default;
+
+        if (_titleData == null ||
+            _titleData.AllyCommon == null ||
+            !_titleData.TryGetAllyUnit(data.UnitId, out var unitData))
+        {
+            Debug.LogWarning($"[UnitManager] Ally data not found: {data.UnitId}");
+            return false;
+        }
+
+        int maxLevel = Mathf.Max(1, _titleData.AllyCommon.maxLevel);
+        int classLevel = Mathf.Clamp(_titleData.AllyCommon.classLevel, 1, maxLevel);
+        int minLevel = string.IsNullOrEmpty(unitData.previousJob) ? 1 : classLevel;
+        data.Level = Mathf.Clamp(data.Level, minLevel, maxLevel);
+        finalStats = unitData.CreateStats(data.Level, classLevel);
         if (!IsValidStats(finalStats))
         {
             return false;
@@ -98,7 +115,12 @@ public class UnitManager : AppService, IItemEventListener
 
         finalStats.AttackDamage *= 1f + Mathf.Max(0f, temporaryAttackBonus);
 
-        var spawnedUnit = _spawner.SpawnAlly(unitData, finalStats);
+        _titleData.TryGetAllyUnit(unitData.UnitId, out var allyData);
+        var spawnedUnit = _spawner.SpawnAlly(
+            unitData,
+            allyData,
+            _titleData.AllyCommon,
+            finalStats);
         AddAlly(spawnedUnit);
     }
 
@@ -123,20 +145,63 @@ public class UnitManager : AppService, IItemEventListener
             return;
         }
 
-        for (var spawnIndex = 0; spawnIndex < wave.Enemies.Count; spawnIndex++)
+        _enemySpawnIndex = 0;
+        for (var entryIndex = 0; entryIndex < wave.Enemies.Count; entryIndex++)
         {
-            var enemyData = wave.Enemies[spawnIndex];
-            if (enemyData == null || !IsValidStats(enemyData.Stats))
+            var spawnData = wave.Enemies[entryIndex];
+            if (spawnData == null)
             {
-                Debug.LogWarning("[WaveBattleManager] Invalid enemy data skipped.");
                 continue;
             }
 
-            var enemy = _spawner.SpawnEnemy(enemyData, spawnIndex);
-            if (enemy != null)
+            for (var count = 0; count < Mathf.Max(1, spawnData.Count); count++)
             {
-                AddEnemy(enemy);
+                SpawnEnemy(spawnData.EnemyId, null);
             }
+        }
+    }
+
+    private EnemyUnit SpawnEnemy(string enemyId, Vector3? spawnPosition)
+    {
+        if (_titleData == null ||
+            _titleData.EnemyCommon == null ||
+            !_titleData.TryGetEnemyUnit(enemyId, out var enemyData))
+        {
+            Debug.LogWarning($"[UnitManager] Enemy data not found: {enemyId}");
+            return null;
+        }
+
+        int wave = _battleManager != null
+            ? _battleManager.CurrentWaveNumber
+            : _titleData.EnemyCommon.BaseWave;
+        var stats = enemyData.CreateStats(wave, _titleData.EnemyCommon);
+        if (!IsValidStats(stats))
+        {
+            Debug.LogWarning($"[UnitManager] Invalid enemy stats: {enemyId}");
+            return null;
+        }
+
+        var enemy = _spawner.SpawnEnemy(
+            enemyData,
+            stats,
+            _enemySpawnIndex++,
+            spawnPosition);
+        AddEnemy(enemy);
+        return enemy;
+    }
+
+    public void SpawnEnemyReinforcement(
+        string enemyId,
+        int count,
+        Vector3 center)
+    {
+        for (var i = 0; i < Mathf.Max(0, count); i++)
+        {
+            var offset = new Vector3(
+                UnityEngine.Random.Range(-0.5f, 0.5f),
+                UnityEngine.Random.Range(-0.5f, 0.5f),
+                0f);
+            SpawnEnemy(enemyId, center + offset);
         }
     }
 
@@ -196,6 +261,142 @@ public class UnitManager : AppService, IItemEventListener
     public UnitBase FindClosestAliveAlly(Vector3 fromPosition, float maxDistance)
     {
         return FindClosest(fromPosition, maxDistance, _activeAllies);
+    }
+
+    public UnitBase FindFarthestAliveAlly(Vector3 fromPosition)
+    {
+        UnitBase result = null;
+        float farthestDistance = float.MinValue;
+
+        foreach (var ally in _activeAllies)
+        {
+            if (ally == null || !ally.IsAlive) continue;
+
+            float distance = Vector2.Distance(fromPosition, ally.transform.position);
+            if (distance > farthestDistance)
+            {
+                result = ally;
+                farthestDistance = distance;
+            }
+        }
+
+        return result;
+    }
+
+    public UnitBase FindHighestHpAliveAlly()
+    {
+        UnitBase result = null;
+        float highestHp = float.MinValue;
+
+        foreach (var ally in _activeAllies)
+        {
+            if (ally == null || !ally.IsAlive) continue;
+
+            if (ally.CurrentHp > highestHp)
+            {
+                result = ally;
+                highestHp = ally.CurrentHp;
+            }
+        }
+
+        return result;
+    }
+
+    public void ApplyEnemySpeedBuff(
+        float moveSpeedMultiplier,
+        float attackRateMultiplier)
+    {
+        foreach (var enemy in _activeEnemies)
+        {
+            if (enemy == null || !enemy.IsAlive) continue;
+
+            enemy.ApplyPermanentSpeedMultiplier(
+                moveSpeedMultiplier,
+                attackRateMultiplier);
+        }
+    }
+
+    public int CalculateRemainingBreachDamage()
+    {
+        int damage = 0;
+
+        foreach (var enemy in _activeEnemies)
+        {
+            if (enemy is EnemyUnit enemyUnit && enemyUnit.IsAlive)
+            {
+                damage += enemyUnit.BreachDamage;
+            }
+        }
+
+        return damage;
+    }
+
+    public void GetAliveEnemiesInRadius(
+        Vector3 center,
+        float radius,
+        List<UnitBase> result)
+    {
+        GetAliveUnitsInRadius(center, radius, _activeEnemies, result);
+    }
+
+    public void GetAliveAlliesInRadius(
+        Vector3 center,
+        float radius,
+        List<UnitBase> result)
+    {
+        GetAliveUnitsInRadius(center, radius, _activeAllies, result);
+    }
+
+    public void GetEnemiesInLine(
+        Vector3 origin,
+        Vector3 direction,
+        float distance,
+        float halfWidth,
+        List<UnitBase> result)
+    {
+        result.Clear();
+        var normalizedDirection = direction.sqrMagnitude > 0.001f
+            ? direction.normalized
+            : Vector3.right;
+
+        foreach (var enemy in _activeEnemies)
+        {
+            if (enemy == null || !enemy.IsAlive) continue;
+
+            var offset = enemy.transform.position - origin;
+            var forwardDistance = Vector3.Dot(offset, normalizedDirection);
+            if (forwardDistance < 0f || forwardDistance > distance) continue;
+
+            var lateralOffset = offset - normalizedDirection * forwardDistance;
+            if (lateralOffset.magnitude <= halfWidth)
+            {
+                result.Add(enemy);
+            }
+        }
+
+        result.Sort((left, right) =>
+            Vector2.Distance(origin, left.transform.position).CompareTo(
+                Vector2.Distance(origin, right.transform.position)));
+    }
+
+    private static void GetAliveUnitsInRadius(
+        Vector3 center,
+        float radius,
+        List<UnitBase> candidates,
+        List<UnitBase> result)
+    {
+        result.Clear();
+        float sqrRadius = radius * radius;
+
+        foreach (var candidate in candidates)
+        {
+            if (candidate == null || !candidate.IsAlive) continue;
+
+            if ((candidate.transform.position - center).sqrMagnitude <= sqrRadius)
+            {
+                result.Add(candidate);
+            }
+        }
     }
 
     private static UnitBase FindClosest(
