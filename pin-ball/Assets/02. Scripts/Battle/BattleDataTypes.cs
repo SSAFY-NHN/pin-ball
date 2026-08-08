@@ -47,5 +47,22 @@ public class BattleWaveData
     [Min(0)] public int RetryGoldReward = 5;
     [Min(0)] public int WaveClearGoldReward = 10;
     [Min(0)] public int FinalClearGoldReward = 20;
+    public bool IsElite;
+    public bool IsBoss;
     public List<BattleEnemySpawnData> Enemies = new();
+}
+
+[Serializable]
+public class BattleRunCommonData
+{
+    [Min(0)] public int StartingGold = 800;
+    [Min(0)] public int BaseLaunchCost = 50;
+    [Min(0)] public int LaunchCostIncrease = 30;
+}
+
+[Serializable]
+public class BattleWaveDataCollection
+{
+    public BattleRunCommonData common;
+    public BattleWaveData[] waves;
 }

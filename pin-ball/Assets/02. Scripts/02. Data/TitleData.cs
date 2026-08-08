@@ -24,11 +24,17 @@ public class TitleData : AppService
     public AllyCommonData AllyCommon { get; private set; }
     public Dictionary<string, EnemyUnitData> EnemyUnit { get; private set; } = new();
     public EnemyCommonData EnemyCommon { get; private set; }
+    public BattleRunCommonData BattleRunCommon { get; private set; }
+    public IReadOnlyList<BattleWaveData> BattleWaves => _battleWaves;
+    public bool HasValidBattleRun { get; private set; }
+
+    private readonly List<BattleWaveData> _battleWaves = new();
    
     #region Data Path
     private const string ITEM_PATH = "Data/ItemData";
     private const string ALLY_UNIT_PATH = "Data/AllyUnitData";
     private const string ENEMY_UNIT_PATH = "Data/EnemyUnitData";
+    private const string BATTLE_WAVE_PATH = "Data/BattleWaveData";
     #endregion
 
     protected override void Awake()
@@ -65,6 +71,122 @@ public class TitleData : AppService
                 EnemyUnit.Add(data.id, data);
             }
         }
+
+        LoadBattleWaveData();
+    }
+
+    private void LoadBattleWaveData()
+    {
+        HasValidBattleRun = false;
+        BattleRunCommon = null;
+        _battleWaves.Clear();
+
+        var collection =
+            DataLoader.LoadObject<BattleWaveDataCollection>(BATTLE_WAVE_PATH);
+        if (collection == null || collection.common == null)
+        {
+            Debug.LogError("[TitleData] Battle wave common data is missing.");
+            return;
+        }
+
+        BattleRunCommon = collection.common;
+        if (BattleRunCommon.StartingGold < 0 ||
+            BattleRunCommon.BaseLaunchCost < 0 ||
+            BattleRunCommon.LaunchCostIncrease < 0)
+        {
+            Debug.LogError(
+                "[TitleData] Battle run economy values cannot be negative.");
+            return;
+        }
+
+        if (!ValidateBattleWaves(collection.waves)) return;
+
+        _battleWaves.AddRange(collection.waves);
+        HasValidBattleRun = true;
+    }
+
+    private bool ValidateBattleWaves(BattleWaveData[] waves)
+    {
+        if (waves == null || waves.Length != 10)
+        {
+            Debug.LogError(
+                $"[TitleData] Battle wave count must be 10: {waves?.Length ?? 0}");
+            return false;
+        }
+
+        bool isValid = true;
+        for (var waveIndex = 0; waveIndex < waves.Length; waveIndex++)
+        {
+            var wave = waves[waveIndex];
+            int waveNumber = waveIndex + 1;
+            if (wave == null)
+            {
+                Debug.LogError($"[TitleData] Wave {waveNumber} is null.");
+                isValid = false;
+                continue;
+            }
+
+            if (wave.RetryGoldReward < 0 ||
+                wave.WaveClearGoldReward < 0 ||
+                wave.FinalClearGoldReward < 0)
+            {
+                Debug.LogError(
+                    $"[TitleData] Wave {waveNumber} has a negative reward.");
+                isValid = false;
+            }
+
+            if (wave.Enemies == null || wave.Enemies.Count == 0)
+            {
+                Debug.LogError(
+                    $"[TitleData] Wave {waveNumber} has no enemies.");
+                isValid = false;
+                continue;
+            }
+
+            foreach (var enemy in wave.Enemies)
+            {
+                if (enemy == null ||
+                    string.IsNullOrEmpty(enemy.EnemyId) ||
+                    !EnemyUnit.ContainsKey(enemy.EnemyId))
+                {
+                    Debug.LogError(
+                        $"[TitleData] Wave {waveNumber} has an invalid enemy: " +
+                        $"{enemy?.EnemyId ?? "null"}");
+                    isValid = false;
+                    continue;
+                }
+
+                if (enemy.Count < 1)
+                {
+                    Debug.LogError(
+                        $"[TitleData] Wave {waveNumber} enemy count is invalid: " +
+                        $"{enemy.EnemyId}={enemy.Count}");
+                    isValid = false;
+                }
+            }
+        }
+
+        var finalWave = waves[9];
+        bool hasFinalBoss = false;
+        if (finalWave?.Enemies != null)
+        {
+            foreach (var enemy in finalWave.Enemies)
+            {
+                if (enemy?.EnemyId == "goblin_king")
+                {
+                    hasFinalBoss = true;
+                    break;
+                }
+            }
+        }
+
+        if (!hasFinalBoss)
+        {
+            Debug.LogError("[TitleData] Wave 10 must contain goblin_king.");
+            isValid = false;
+        }
+
+        return isValid;
     }
 
     public bool TryGetAllyUnit(string id, out AllyUnitData result)
