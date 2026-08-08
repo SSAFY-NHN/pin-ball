@@ -5,8 +5,6 @@
     "attackGrowthPerWave": 0.08,
     "defenseGrowthInterval": 3,
     "defenseGrowthValue": 2,
-    "rewardGrowthInterval": 5,
-    "rewardGrowthValue": 1,
     "moveSpeedGrowthPerWave": 0,
     "attackSpeedGrowthPerWave": 0
   },
