@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 [Serializable]
@@ -74,6 +75,61 @@ public class TitleData : AppService
     public bool TryGetEnemyUnit(string id, out EnemyUnitData result)
     {
         return EnemyUnit.TryGetValue(id, out result);
+    }
+
+    public bool TryGetRootAllyJob(
+        string unitId,
+        out AllyUnitData rootJob)
+    {
+        rootJob = null;
+        var visitedIds = new HashSet<string>();
+        var currentId = unitId;
+
+        while (!string.IsNullOrEmpty(currentId))
+        {
+            if (!visitedIds.Add(currentId))
+            {
+                Debug.LogError(
+                    $"[TitleData] Ally job cycle detected: {unitId}");
+                return false;
+            }
+
+            if (!AllyUnit.TryGetValue(currentId, out var currentJob))
+            {
+                Debug.LogError(
+                    $"[TitleData] Ally job not found: {currentId}");
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(currentJob.previousJob))
+            {
+                rootJob = currentJob;
+                return true;
+            }
+
+            currentId = currentJob.previousJob;
+        }
+
+        return false;
+    }
+
+    public void GetNextAllyJobs(
+        string previousJobId,
+        List<AllyUnitData> result)
+    {
+        if (result == null) return;
+
+        result.Clear();
+        foreach (var unit in AllyUnit.Values)
+        {
+            if (unit != null && unit.previousJob == previousJobId)
+            {
+                result.Add(unit);
+            }
+        }
+
+        result.Sort((left, right) =>
+            string.CompareOrdinal(left.id, right.id));
     }
 }
 
