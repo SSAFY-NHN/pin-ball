@@ -22,6 +22,8 @@ public class WavePanel : UIBase
         _battleManager = App.Get<BattleManager>();
         _battleManager.OnStateChanged += OnBattleStateChanged;
         _battleManager.OnActionRejected += OnActionRejected;
+        _battleManager.OnPreparationAvailabilityChanged +=
+            OnPreparationAvailabilityChanged;
 
         _unitManager = App.Get<UnitManager>();
         
@@ -31,7 +33,10 @@ public class WavePanel : UIBase
         startButton.onClick.AddListener(_battleManager.StartWave);
         launchButton.onClick.AddListener(_pinballManager.LaunchBall);
 
-        EnsureFeedbackText();
+        if (feedbackText == null)
+        {
+            Debug.LogError("[WavePanel] feedbackText가 설정되지 않았습니다.");
+        }
         OnBattleStateChanged(_battleManager.State);
     }
     
@@ -59,11 +64,18 @@ public class WavePanel : UIBase
         }
     }
 
+    private void OnPreparationAvailabilityChanged(bool _)
+    {
+        RefreshButtons();
+    }
+
     private void RefreshButtons()
     {
         if (_battleManager == null) return;
 
         bool isPreparation = _battleManager.IsPreparationPhase;
+        bool canUsePreparation =
+            _battleManager.CanUsePreparationActions;
         bool hasAlly =
             _unitManager != null &&
             _unitManager.RemainingAllyCount > 0;
@@ -72,14 +84,14 @@ public class WavePanel : UIBase
         {
             startButton.gameObject.SetActive(isPreparation);
             startButton.interactable =
-                isPreparation &&
+                canUsePreparation &&
                 _pinballState == EPinballState.Idle &&
                 hasAlly;
         }
 
         if (launchButton != null)
         {
-            launchButton.interactable = isPreparation;
+            launchButton.interactable = canUsePreparation;
         }
 
         if (feedbackText != null && isPreparation)
@@ -97,38 +109,14 @@ public class WavePanel : UIBase
         }
     }
 
-    private void EnsureFeedbackText()
-    {
-        if (feedbackText != null) return;
-
-        var feedbackObject = new GameObject(
-            "StartFeedback",
-            typeof(RectTransform),
-            typeof(CanvasRenderer),
-            typeof(TextMeshProUGUI));
-        feedbackObject.layer = gameObject.layer;
-        feedbackObject.transform.SetParent(transform, false);
-
-        var rectTransform = feedbackObject.GetComponent<RectTransform>();
-        rectTransform.anchorMin = new Vector2(0.5f, 0f);
-        rectTransform.anchorMax = new Vector2(0.5f, 0f);
-        rectTransform.pivot = new Vector2(0.5f, 0f);
-        rectTransform.anchoredPosition = new Vector2(0f, 72f);
-        rectTransform.sizeDelta = new Vector2(520f, 60f);
-
-        feedbackText = feedbackObject.GetComponent<TextMeshProUGUI>();
-        feedbackText.alignment = TextAlignmentOptions.Center;
-        feedbackText.color = new Color(1f, 0.35f, 0.35f);
-        feedbackText.fontSize = 28f;
-        feedbackText.raycastTarget = false;
-    }
-
     private void OnDestroy()
     {
         if (_battleManager != null)
         {
             _battleManager.OnStateChanged -= OnBattleStateChanged;
             _battleManager.OnActionRejected -= OnActionRejected;
+            _battleManager.OnPreparationAvailabilityChanged -=
+                OnPreparationAvailabilityChanged;
         }
 
         if (_pinballManager != null)

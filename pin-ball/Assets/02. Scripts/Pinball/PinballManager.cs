@@ -147,7 +147,8 @@ public class PinballManager : AppService, IItemEventListener
 
     public void LaunchBall(Vector2 position)
     {
-        if (_battleManager == null || !_battleManager.IsPreparationPhase) return;
+        if (_battleManager == null ||
+            !_battleManager.CanUsePreparationActions) return;
         if (_availableBalls.Count <= 0) return;
 
         var discountedCost = Mathf.Max(0, launchCost - _launchCostDiscount);
@@ -305,7 +306,8 @@ public class PinballManager : AppService, IItemEventListener
 
     internal void SelectGoal(PinballGoal goal)
     {
-        if (_battleManager == null || !_battleManager.IsPreparationPhase) return;
+        if (_battleManager == null ||
+            !_battleManager.CanUsePreparationActions) return;
 
         var goalIndex = _goals.IndexOf(goal);
         if (goalIndex < 0) return;
@@ -316,7 +318,8 @@ public class PinballManager : AppService, IItemEventListener
 
     internal void SelectSwapGoal(PinballGoal goal)
     {
-        if (_battleManager == null || !_battleManager.IsPreparationPhase) return;
+        if (_battleManager == null ||
+            !_battleManager.CanUsePreparationActions) return;
 
         var goalIndex = _goals.IndexOf(goal);
         if (goalIndex < 0 || _remainingSwapCount <= 0) return;

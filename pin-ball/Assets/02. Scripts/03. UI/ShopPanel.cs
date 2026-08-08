@@ -27,6 +27,8 @@ public class ShopPanel : UIBase
         _battleManager = App.Get<BattleManager>();
         _battleManager.OnGoldChanged += OnGoldChanged;
         _battleManager.OnStateChanged += OnBattleStateChanged;
+        _battleManager.OnPreparationAvailabilityChanged +=
+            OnPreparationAvailabilityChanged;
 
         rerollButton.onClick.AddListener(OnRerollButtonClicked);
         
@@ -45,7 +47,7 @@ public class ShopPanel : UIBase
 
     private void OnRerollButtonClicked()
     {
-        if (!_battleManager.IsPreparationPhase)
+        if (!_battleManager.CanUsePreparationActions)
         {
             RefreshPurchaseStates();
             return;
@@ -123,6 +125,11 @@ public class ShopPanel : UIBase
         RefreshPurchaseStates();
     }
 
+    private void OnPreparationAvailabilityChanged(bool _)
+    {
+        RefreshPurchaseStates();
+    }
+
     private void RefreshPurchaseStates()
     {
         if (_battleManager == null || _itemManager == null) return;
@@ -137,13 +144,13 @@ public class ShopPanel : UIBase
             slot.RefreshState(
                 _battleManager.Gold,
                 isPurchased,
-                _battleManager.IsPreparationPhase);
+                _battleManager.CanUsePreparationActions);
         }
 
         if (rerollButton != null)
         {
             rerollButton.interactable =
-                _battleManager.IsPreparationPhase &&
+                _battleManager.CanUsePreparationActions &&
                 (rerollCost <= 0 || _battleManager.Gold >= rerollCost);
         }
     }
@@ -163,6 +170,8 @@ public class ShopPanel : UIBase
         {
             _battleManager.OnGoldChanged -= OnGoldChanged;
             _battleManager.OnStateChanged -= OnBattleStateChanged;
+            _battleManager.OnPreparationAvailabilityChanged -=
+                OnPreparationAvailabilityChanged;
         }
 
         if (rerollButton != null)
