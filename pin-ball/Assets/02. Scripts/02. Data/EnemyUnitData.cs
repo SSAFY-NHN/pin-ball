@@ -15,10 +15,6 @@ public class EnemyCommonData
     public int defense_growth_interval;
     public int defenseGrowthValue;
     public int defense_growth_value;
-    public int rewardGrowthInterval;
-    public int reward_growth_interval;
-    public int rewardGrowthValue;
-    public int reward_growth_value;
     public float moveSpeedGrowthPerWave;
     public float move_speed_growth_per_wave;
     public float attackSpeedGrowthPerWave;
@@ -33,10 +29,6 @@ public class EnemyCommonData
         defenseGrowthInterval != 0 ? defenseGrowthInterval : defense_growth_interval;
     public int DefenseGrowthValue =>
         defenseGrowthValue != 0 ? defenseGrowthValue : defense_growth_value;
-    public int RewardGrowthInterval =>
-        rewardGrowthInterval != 0 ? rewardGrowthInterval : reward_growth_interval;
-    public int RewardGrowthValue =>
-        rewardGrowthValue != 0 ? rewardGrowthValue : reward_growth_value;
     public float MoveSpeedGrowthPerWave =>
         moveSpeedGrowthPerWave != 0f
             ? moveSpeedGrowthPerWave

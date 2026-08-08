@@ -26,9 +26,10 @@ public class PinballManager : AppService, IItemEventListener
     };
 
     public event Action<EPinballState> OnStateChanged;
+    public event Action<int> OnLaunchCostChanged;
 
-    [Header("Economy")]
-    [SerializeField, Min(0)] private int launchCost = 2;
+    public int CurrentLaunchCost => CalculateLaunchCost();
+    public bool HasAvailableBall => _availableBalls.Count > 0;
 
     [Header("Launcher")]
     [SerializeField] private Vector2 launchPosition = new(6.4f, 10f);
@@ -45,6 +46,10 @@ public class PinballManager : AppService, IItemEventListener
     private BattleManager _battleManager;
     private UnitManager _unitManager;
     private ItemManager _itemManager;
+
+    private int _baseLaunchCost = 50;
+    private int _launchCostIncrease = 30;
+    private int _successfulLaunchCount;
 
     private Vector2 _currentLaunchPosition;
     private int _selectedGoalIndex;
@@ -89,11 +94,19 @@ public class PinballManager : AppService, IItemEventListener
         _unitManager = App.Get<UnitManager>();
         _itemManager = App.Get<ItemManager>();
 
+        var runCommon = App.Get<TitleData>().BattleRunCommon;
+        if (runCommon != null)
+        {
+            _baseLaunchCost = Mathf.Max(0, runCommon.BaseLaunchCost);
+            _launchCostIncrease = Mathf.Max(0, runCommon.LaunchCostIncrease);
+        }
+
         SubscribeItems();
         _battleManager.OnStateChanged += OnBattleStateChanged;
 
         _currentLaunchPosition = launchPosition;
         PrepareBallPool();
+        NotifyLaunchCostChanged();
     }
 
     private void Update()
@@ -151,16 +164,30 @@ public class PinballManager : AppService, IItemEventListener
             !_battleManager.CanUsePreparationActions) return;
         if (_availableBalls.Count <= 0) return;
 
-        var discountedCost = Mathf.Max(0, launchCost - _launchCostDiscount);
-        var cost = launchCost >= _minimumLaunchCost
-            ? Mathf.Max(_minimumLaunchCost, discountedCost)
-            : discountedCost;
+        var cost = CurrentLaunchCost;
         if (!_battleManager.TrySpendPreparationGold(cost)) return;
 
         var ball = _availableBalls.Dequeue();
         ball.Activate(position, Vector2.down, cost, false);
         _activeBalls.Add(ball);
+        _successfulLaunchCount++;
+        NotifyLaunchCostChanged();
         OnStateChanged?.Invoke(EPinballState.Launched);
+    }
+
+    private int CalculateLaunchCost()
+    {
+        int escalatedCost =
+            _baseLaunchCost + _successfulLaunchCount * _launchCostIncrease;
+        int discountedCost = Mathf.Max(
+            0,
+            escalatedCost - _launchCostDiscount);
+        return Mathf.Max(_minimumLaunchCost, discountedCost);
+    }
+
+    private void NotifyLaunchCostChanged()
+    {
+        OnLaunchCostChanged?.Invoke(CurrentLaunchCost);
     }
 
     internal void OnBallHit(Pinball ball, EPinballObstacle obstacle)
@@ -369,6 +396,7 @@ public class PinballManager : AppService, IItemEventListener
             case EItem.AutoBallFeeder:
                 _launchCostDiscount = Mathf.RoundToInt(item.Value1);
                 _minimumLaunchCost = Mathf.RoundToInt(item.Value2);
+                NotifyLaunchCostChanged();
                 break;
             case EItem.TargetMagnet:
                 _targetMagnetDistanceMultiplier = item.Value1;
@@ -524,10 +552,12 @@ public class PinballManager : AppService, IItemEventListener
     {
         if (state != EWaveState.Pending) return;
 
+        _successfulLaunchCount = 0;
         _remainingSafetyNetCount = _safetyNetCount;
         _remainingSwapCount = _swapCount;
         _pendingSwapGoalIndex = -1;
         RefreshGoalWidths();
+        NotifyLaunchCostChanged();
     }
 
     protected override void OnDestroy()
