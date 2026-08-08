@@ -17,6 +17,10 @@ public class AllyUnit : UnitBase
     private AllySkillData _skill;
     private AllyCommonData _common;
     private float _nextHitManaTime;
+    private Camera _dragCamera;
+    private Vector3 _dragStartPosition;
+    private bool _isDragging;
+    private bool _isMergeReserved;
 
     public void SetData(
         string unitId,
@@ -29,7 +33,80 @@ public class AllyUnit : UnitBase
         _skill = skill;
         _common = common;
         _unitManager = App.Get<UnitManager>();
-        CurrentMana = Mathf.Clamp(common?.startMana ?? 0f, 0f, _stats.MaxMana);
+        _dragCamera = Camera.main;
+        _isDragging = false;
+        _isMergeReserved = false;
+        ResetMana();
+    }
+
+    public void ResetMana()
+    {
+        CurrentMana = Mathf.Clamp(
+            _common?.startMana ?? 0f,
+            0f,
+            _stats.MaxMana);
+        _nextHitManaTime = 0f;
+        _targets.Clear();
+    }
+
+    public void SetMergeReserved(bool reserved)
+    {
+        _isMergeReserved = reserved;
+        _isDragging = false;
+        gameObject.SetActive(!reserved);
+    }
+
+    private void OnMouseDown()
+    {
+        if (_isMergeReserved || _unitManager == null) return;
+        if (!_unitManager.CanDragAlly(this)) return;
+
+        _dragStartPosition = transform.position;
+        _isDragging = true;
+    }
+
+    private void OnMouseDrag()
+    {
+        if (!_isDragging) return;
+
+        if (_dragCamera == null)
+        {
+            _dragCamera = Camera.main;
+        }
+
+        if (_dragCamera == null) return;
+
+        Vector3 worldPosition =
+            _dragCamera.ScreenToWorldPoint(Input.mousePosition);
+        worldPosition.z = _dragStartPosition.z;
+        transform.position = worldPosition;
+    }
+
+    private void OnMouseUp()
+    {
+        if (!_isDragging) return;
+        _isDragging = false;
+
+        var colliders = Physics2D.OverlapPointAll(transform.position);
+        AllyUnit target = null;
+        foreach (var candidateCollider in colliders)
+        {
+            var candidate =
+                candidateCollider.GetComponentInParent<AllyUnit>();
+            if (candidate == null || candidate == this) continue;
+
+            target = candidate;
+            break;
+        }
+
+        if (target == null ||
+            !_unitManager.TryMergeAllies(
+                this,
+                target,
+                _dragStartPosition))
+        {
+            transform.position = _dragStartPosition;
+        }
     }
 
     protected override void Tick()

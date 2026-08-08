@@ -30,7 +30,14 @@ public class EnemyUnit : UnitBase
         Rank = data?.rank ?? 0;
         BreachDamage = Mathf.Max(0, data?.BreachDamage ?? 0);
         _unitManager = App.Get<UnitManager>();
+        _basicAttackCount = 0;
+        _focusedFireTarget = null;
+        _focusedFireStacks = 0;
         _nextRegenerationTime = Time.time + 1f;
+        _rageActivated = false;
+        _finalOrderActivated = false;
+        _summonPhase = 0;
+        _targets.Clear();
 
         ApplyBattleStartSkill();
     }

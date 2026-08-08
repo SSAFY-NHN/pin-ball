@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using UnityEngine;
 
 //소유: 프리팹/스폰포인트 참조
@@ -12,10 +14,15 @@ public class UnitSpawner : MonoBehaviour
     
     [SerializeField] private Transform allySpawnPoint;
     [SerializeField] private Transform enemySpawnPoint;
+    [SerializeField] private Transform allyPoolParent;
+    [SerializeField] private Transform enemyPoolParent;
 
     private int _allySpawnIndex;
+    private readonly Queue<AllyUnit> _allyPool = new();
+    private readonly Queue<EnemyUnit> _enemyPool = new();
+    private readonly HashSet<UnitBase> _pooledUnits = new();
 
-    public UnitBase SpawnAlly(
+    public AllyUnit SpawnAlly(
         BattleUnitSpawnData data,
         AllyUnitData allyData,
         AllyCommonData commonData,
@@ -26,18 +33,17 @@ public class UnitSpawner : MonoBehaviour
             return null;
         }
 
-        var unit = Spawn(
+        var ally = TakeAlly();
+        if (ally == null) return null;
+
+        ActivateUnit(
+            ally,
             EBattleTeam.Ally,
             data.UnitId,
             stats,
             _allySpawnIndex++);
-
-        if (unit is AllyUnit ally)
-        {
-            ally.SetData(data.UnitId, data.Level, allyData?.skill, commonData);
-        }
-
-        return unit;
+        ally.SetData(data.UnitId, data.Level, allyData?.skill, commonData);
+        return ally;
     }
 
     public EnemyUnit SpawnEnemy(
@@ -51,12 +57,16 @@ public class UnitSpawner : MonoBehaviour
             return null;
         }
 
-        var unit = Spawn(
+        var unit = TakeEnemy();
+        if (unit == null) return null;
+
+        ActivateUnit(
+            unit,
             EBattleTeam.Enemy,
             data.id,
             stats,
             spawnIndex,
-            spawnPosition) as EnemyUnit;
+            spawnPosition);
 
         unit?.SetData(data);
         return unit;
@@ -67,29 +77,98 @@ public class UnitSpawner : MonoBehaviour
         _allySpawnIndex = 0;
     }
 
-    private UnitBase Spawn(
+    public Vector3 GetAllyPreparationPosition(int spawnIndex)
+    {
+        var position = allySpawnPoint != null
+            ? allySpawnPoint.position
+            : transform.position;
+        position.y += GetFormationOffset(spawnIndex);
+        return position;
+    }
+
+    public void ReturnUnit(UnitBase unit)
+    {
+        if (unit == null || _pooledUnits.Contains(unit)) return;
+
+        _pooledUnits.Add(unit);
+        Transform poolParent = unit.Team == EBattleTeam.Ally
+            ? allyPoolParent
+            : enemyPoolParent;
+        unit.transform.SetParent(poolParent != null ? poolParent : transform, false);
+        unit.MarkReturnedToPool();
+
+        if (unit is AllyUnit ally)
+        {
+            _allyPool.Enqueue(ally);
+        }
+        else if (unit is EnemyUnit enemy)
+        {
+            _enemyPool.Enqueue(enemy);
+        }
+    }
+
+    private void ActivateUnit(
+        UnitBase unit,
         EBattleTeam team,
         string unitId,
         BattleUnitStats stats,
         int spawnIndex,
         Vector3? overridePosition = null)
     {
+        var spawnPoint = team == EBattleTeam.Ally
+            ? allySpawnPoint
+            : enemySpawnPoint;
         var position = overridePosition ??
-            (team == EBattleTeam.Ally ? allySpawnPoint.position : enemySpawnPoint.position);
+            (spawnPoint != null ? spawnPoint.position : transform.position);
         position.x += Random.Range(-0.15f, 0.15f);
         position.y += GetFormationOffset(spawnIndex);
         
-        var unit = Instantiate(team == EBattleTeam.Ally ? allyPrefab : enemyPrefab, 
-            position, 
-            Quaternion.identity).GetComponent<UnitBase>();
-
+        unit.transform.SetParent(null, true);
+        unit.transform.SetPositionAndRotation(position, Quaternion.identity);
+        unit.gameObject.SetActive(true);
         unit.name = $"{team}_{unitId}";
-  
         unit.Initialize(stats);
-        return unit;
     }
 
-    private static float GetFormationOffset(int spawnIndex)
+    private AllyUnit TakeAlly()
+    {
+        while (_allyPool.Count > 0)
+        {
+            var unit = _allyPool.Dequeue();
+            if (unit == null) continue;
+            _pooledUnits.Remove(unit);
+            return unit;
+        }
+
+        if (allyPrefab == null)
+        {
+            Debug.LogError("[UnitSpawner] Ally prefab이 없습니다.");
+            return null;
+        }
+
+        return Instantiate(allyPrefab).GetComponent<AllyUnit>();
+    }
+
+    private EnemyUnit TakeEnemy()
+    {
+        while (_enemyPool.Count > 0)
+        {
+            var unit = _enemyPool.Dequeue();
+            if (unit == null) continue;
+            _pooledUnits.Remove(unit);
+            return unit;
+        }
+
+        if (enemyPrefab == null)
+        {
+            Debug.LogError("[UnitSpawner] Enemy prefab이 없습니다.");
+            return null;
+        }
+
+        return Instantiate(enemyPrefab).GetComponent<EnemyUnit>();
+    }
+
+    private float GetFormationOffset(int spawnIndex)
     {
         if (spawnIndex <= 0)
         {

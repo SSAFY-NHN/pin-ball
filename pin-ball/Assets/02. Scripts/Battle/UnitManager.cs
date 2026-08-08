@@ -9,8 +9,15 @@ using UnityEngine.Serialization;
 //금지: 골드/HP/웨이브 상태 변경
 public class UnitManager : AppService, IItemEventListener
 {
+    public event Action<AllyUnitData, AllyUnitData> OnEvolutionRequested;
+
+    private readonly List<AllyUnit> _ownedAllies = new();
     private readonly List<UnitBase> _activeAllies = new();
     private readonly List<UnitBase> _activeEnemies = new();
+    private readonly HashSet<AllyUnit> _mergeReservations = new();
+    private readonly List<AllyUnitData> _evolutionCandidates = new();
+
+    public IReadOnlyList<AllyUnit> OwnedAllies => _ownedAllies;
 
     public int RemainingAllyCount => _activeAllies.Count;
     public int RemainingEnemyCount => _activeEnemies.Count;
@@ -27,6 +34,9 @@ public class UnitManager : AppService, IItemEventListener
     private int _duplicationTier;
     private int _duplicationCount;
     private int _enemySpawnIndex;
+    private AllyUnit _pendingMergeSource;
+    private AllyUnit _pendingMergeTarget;
+    private Vector3 _pendingMergePosition;
 
     protected override void Awake()
     {
@@ -52,13 +62,10 @@ public class UnitManager : AppService, IItemEventListener
     {
         if (state is EWaveState.Active)
         {
-            ClearAllEnemies();
+            ReturnAllEnemies();
             CleanupDestroyedUnits();
             SpawnEnemies(_battleManager.CurrentWave);
-            return;
         }
-
-        ClearBattleUnits();
     }
 
     private bool TryBuildUnitStats(BattleUnitSpawnData data, out BattleUnitStats finalStats)
@@ -102,23 +109,25 @@ public class UnitManager : AppService, IItemEventListener
                && stats.MoveSpeed >= 0f;
     }
     
-    public void SpawnAlly(BattleUnitSpawnData unitData)
+    public AllyUnit SpawnAlly(BattleUnitSpawnData unitData)
     {
-        SpawnAlly(unitData, 0f);
+        return SpawnAlly(unitData, 0f);
     }
 
-    public void SpawnAlly(BattleUnitSpawnData unitData, float temporaryAttackBonus)
+    public AllyUnit SpawnAlly(
+        BattleUnitSpawnData unitData,
+        float temporaryAttackBonus)
     {
         if (unitData == null)
         {
             Debug.LogWarning("[UnitManager] Ally spawn data is null.");
-            return;
+            return null;
         }
 
         if (!TryBuildUnitStats(unitData, out var finalStats))
         {
             Debug.LogWarning($"[UnitManager] Invalid ally stats: {unitData.UnitId}");
-            return;
+            return null;
         }
 
         finalStats.AttackDamage *= 1f + Mathf.Max(0f, temporaryAttackBonus);
@@ -129,7 +138,8 @@ public class UnitManager : AppService, IItemEventListener
             allyData,
             _titleData.AllyCommon,
             finalStats);
-        AddAlly(spawnedUnit);
+        AddOwnedAlly(spawnedUnit);
+        return spawnedUnit;
     }
 
     public bool TryDuplicateAlly(BattleUnitSpawnData unitData)
@@ -215,8 +225,14 @@ public class UnitManager : AppService, IItemEventListener
 
     public void AddAlly(UnitBase ally)
     {
+        AddOwnedAlly(ally as AllyUnit);
+    }
+
+    private void AddOwnedAlly(AllyUnit ally)
+    {
         if (ally == null) return;
-        _activeAllies.Add(ally);
+        if (!_ownedAllies.Contains(ally)) _ownedAllies.Add(ally);
+        if (!_activeAllies.Contains(ally)) _activeAllies.Add(ally);
         RefreshAllyItemModifiers();
     }
 
@@ -238,6 +254,7 @@ public class UnitManager : AppService, IItemEventListener
         else
         {
             _activeEnemies.Remove(unit);
+            _spawner.ReturnUnit(unit);
         }
     }
 
@@ -247,30 +264,229 @@ public class UnitManager : AppService, IItemEventListener
         _activeEnemies.RemoveAll(unit => unit == null || !unit.IsAlive);
     }
 
-    private void ClearAllEnemies()
+    public void ResolveWaveResult()
     {
-        ClearUnits(_activeEnemies);
+        ReturnAllEnemies();
+        RestoreAlliesForPreparation();
     }
 
-    public void ClearBattleUnits()
+    public void ReleaseUnit(UnitBase unit)
     {
-        ClearUnits(_activeAllies);
-        ClearUnits(_activeEnemies);
-        _spawner?.ResetAllySpawnOrder();
-    }
+        if (unit == null) return;
 
-    private static void ClearUnits(List<UnitBase> units)
-    {
-        for (var i = units.Count - 1; i >= 0; i--)
+        if (unit is AllyUnit ally)
         {
-            var unit = units[i];
+            _ownedAllies.Remove(ally);
+            _activeAllies.Remove(ally);
+            _mergeReservations.Remove(ally);
+        }
+        else
+        {
+            _activeEnemies.Remove(unit);
+        }
+
+        _spawner.ReturnUnit(unit);
+    }
+
+    private void ReturnAllEnemies()
+    {
+        var snapshot = _activeEnemies.ToArray();
+        _activeEnemies.Clear();
+        foreach (var unit in snapshot)
+        {
             if (unit != null)
             {
-                unit.ForceRemove();
+                _spawner.ReturnUnit(unit);
+            }
+        }
+    }
+
+    private void RestoreAlliesForPreparation()
+    {
+        _spawner.ResetAllySpawnOrder();
+        _activeAllies.Clear();
+
+        for (var i = 0; i < _ownedAllies.Count; i++)
+        {
+            var ally = _ownedAllies[i];
+            if (ally == null) continue;
+
+            ally.RestoreForPreparation(
+                _spawner.GetAllyPreparationPosition(i));
+            ally.ResetMana();
+            _activeAllies.Add(ally);
+        }
+
+        RefreshAllyItemModifiers();
+    }
+
+    public bool CanDragAlly(AllyUnit ally)
+    {
+        return ally != null &&
+               _battleManager != null &&
+               _battleManager.CanUsePreparationActions &&
+               _ownedAllies.Contains(ally) &&
+               !_mergeReservations.Contains(ally) &&
+               ally.IsAlive;
+    }
+
+    public bool TryMergeAllies(
+        AllyUnit source,
+        AllyUnit target,
+        Vector3 sourceOriginalPosition)
+    {
+        if (!CanDragAlly(source) || !CanDragAlly(target)) return false;
+        if (source == target ||
+            _titleData == null ||
+            _titleData.AllyCommon == null) return false;
+
+        if (!_titleData.TryGetAllyUnit(source.UnitId, out var sourceJob) ||
+            !_titleData.TryGetAllyUnit(target.UnitId, out var targetJob) ||
+            !_titleData.TryGetRootAllyJob(source.UnitId, out var sourceRoot) ||
+            !_titleData.TryGetRootAllyJob(target.UnitId, out var targetRoot) ||
+            sourceRoot.id != targetRoot.id)
+        {
+            return false;
+        }
+
+        int maxLevel = Mathf.Max(1, _titleData.AllyCommon.maxLevel);
+        int highestLevel = Mathf.Max(source.Level, target.Level);
+        if (highestLevel >= maxLevel) return false;
+
+        int resultLevel = highestLevel + 1;
+        string resultJobId = GetMergeResultJobId(
+            sourceJob,
+            targetJob);
+
+        ReserveMerge(source, target);
+
+        int classLevel = Mathf.Clamp(
+            _titleData.AllyCommon.classLevel,
+            1,
+            maxLevel);
+        bool requiresEvolution =
+            string.IsNullOrEmpty(targetJob.previousJob) &&
+            string.IsNullOrEmpty(sourceJob.previousJob) &&
+            resultLevel == classLevel;
+
+        if (requiresEvolution)
+        {
+            _titleData.GetNextAllyJobs(
+                sourceRoot.id,
+                _evolutionCandidates);
+            if (_evolutionCandidates.Count != 2)
+            {
+                Debug.LogError(
+                    $"[UnitManager] Evolution candidates must be 2: {sourceRoot.id}");
+                _mergeReservations.Remove(source);
+                _mergeReservations.Remove(target);
+                source.transform.position = sourceOriginalPosition;
+                return false;
+            }
+
+            _pendingMergeSource = source;
+            _pendingMergeTarget = target;
+            _pendingMergePosition = target.transform.position;
+            source.SetMergeReserved(true);
+            target.SetMergeReserved(true);
+            _battleManager.SetPreparationLock(true);
+            OnEvolutionRequested?.Invoke(
+                _evolutionCandidates[0],
+                _evolutionCandidates[1]);
+            return true;
+        }
+
+        Vector3 resultPosition = target.transform.position;
+        ConsumeReservedInputs(source, target);
+        SpawnMergedAlly(resultJobId, resultLevel, resultPosition);
+        return true;
+    }
+
+    public bool ChooseEvolution(string unitId)
+    {
+        if (_pendingMergeSource == null ||
+            _pendingMergeTarget == null) return false;
+
+        bool isCandidate = false;
+        foreach (var candidate in _evolutionCandidates)
+        {
+            if (candidate != null && candidate.id == unitId)
+            {
+                isCandidate = true;
+                break;
             }
         }
 
-        units.Clear();
+        if (!isCandidate) return false;
+
+        var source = _pendingMergeSource;
+        var target = _pendingMergeTarget;
+        var position = _pendingMergePosition;
+        int level = Mathf.Clamp(
+            _titleData.AllyCommon.classLevel,
+            1,
+            _titleData.AllyCommon.maxLevel);
+
+        ClearPendingEvolution();
+        ConsumeReservedInputs(source, target);
+        SpawnMergedAlly(unitId, level, position);
+        _battleManager.SetPreparationLock(false);
+        return true;
+    }
+
+    private string GetMergeResultJobId(
+        AllyUnitData sourceJob,
+        AllyUnitData targetJob)
+    {
+        bool sourceAdvanced =
+            !string.IsNullOrEmpty(sourceJob.previousJob);
+        bool targetAdvanced =
+            !string.IsNullOrEmpty(targetJob.previousJob);
+
+        if (targetAdvanced) return targetJob.id;
+        if (sourceAdvanced) return sourceJob.id;
+        return targetJob.id;
+    }
+
+    private void ReserveMerge(AllyUnit source, AllyUnit target)
+    {
+        _mergeReservations.Add(source);
+        _mergeReservations.Add(target);
+    }
+
+    private void ConsumeReservedInputs(
+        AllyUnit source,
+        AllyUnit target)
+    {
+        _mergeReservations.Remove(source);
+        _mergeReservations.Remove(target);
+        ReleaseUnit(source);
+        ReleaseUnit(target);
+    }
+
+    private void SpawnMergedAlly(
+        string unitId,
+        int level,
+        Vector3 position)
+    {
+        var data = new BattleUnitSpawnData
+        {
+            UnitId = unitId,
+            Level = level
+        };
+        var result = SpawnAlly(data);
+        if (result != null)
+        {
+            result.transform.position = position;
+        }
+    }
+
+    private void ClearPendingEvolution()
+    {
+        _pendingMergeSource = null;
+        _pendingMergeTarget = null;
+        _pendingMergePosition = default;
+        _evolutionCandidates.Clear();
     }
 
     public UnitBase FindClosestAliveEnemy(Vector3 fromPosition, float maxDistance)

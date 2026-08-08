@@ -20,6 +20,8 @@ public class BattleManager : AppService, IItemEventListener
     public int Gold => _gold;
     public EWaveState State => _state;
     public bool IsPreparationPhase => _state == EWaveState.Pending;
+    public bool CanUsePreparationActions =>
+        IsPreparationPhase && !_isPreparationLocked;
     public bool HasValidCurrentWave =>
         waveList != null &&
         _currentWaveIndex >= 0 &&
@@ -31,6 +33,7 @@ public class BattleManager : AppService, IItemEventListener
     public event Action<int> OnHpChanged;
     public event Action<int> OnGoldChanged;
     public event Action<string> OnActionRejected;
+    public event Action<bool> OnPreparationAvailabilityChanged;
 
     private UnitManager _unitManager;
     
@@ -40,6 +43,7 @@ public class BattleManager : AppService, IItemEventListener
     private int _gold;
     private int _barrierDamageReduction;
     private int _minimumBarrierDamage = 1;
+    private bool _isPreparationLocked;
     
     [Header("Wave Input (Temporary)")]
     [SerializeField] private List<BattleWaveData> waveList = new()
@@ -131,7 +135,7 @@ public class BattleManager : AppService, IItemEventListener
     
     public bool TryStartWave()
     {
-        if (!IsPreparationPhase)
+        if (!CanUsePreparationActions)
         {
             RejectAction("전투 준비 단계에서만 웨이브를 시작할 수 있습니다.");
             return false;
@@ -172,8 +176,17 @@ public class BattleManager : AppService, IItemEventListener
 
     public bool TrySpendPreparationGold(int amount)
     {
-        if (!IsPreparationPhase) return false;
+        if (!CanUsePreparationActions) return false;
         return TrySpendGold(amount);
+    }
+
+    public void SetPreparationLock(bool isLocked)
+    {
+        if (_isPreparationLocked == isLocked) return;
+
+        _isPreparationLocked = isLocked;
+        OnPreparationAvailabilityChanged?.Invoke(
+            CanUsePreparationActions);
     }
 
     public void AddGold(int amount)
@@ -202,7 +215,7 @@ public class BattleManager : AppService, IItemEventListener
         OnHpChanged?.Invoke(_playerHp);
 
         var wave = CurrentWave;
-        _unitManager.ClearBattleUnits();
+        _unitManager.ResolveWaveResult();
 
         if (_playerHp <= 0)
         {
@@ -219,7 +232,7 @@ public class BattleManager : AppService, IItemEventListener
         if (_state is not EWaveState.Active) return;
 
         var wave = CurrentWave;
-        _unitManager.ClearBattleUnits();
+        _unitManager.ResolveWaveResult();
 
         if (wave == null)
         {

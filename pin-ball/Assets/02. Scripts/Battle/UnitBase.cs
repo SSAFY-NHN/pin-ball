@@ -15,6 +15,7 @@ public abstract class UnitBase : MonoBehaviour
     public float CurrentDefense => _stats.Defense * _defenseMultiplier;
     public float HpRatio => MaxHp > 0f ? Mathf.Clamp01(CurrentHp / MaxHp) : 0f;
     public bool IsAlive => _state != EBattleUnitState.Dead;
+    public bool IsInPool { get; private set; }
     public bool IsStunned => Time.time < _stunnedUntil;
     public float LastDamagedTime { get; private set; }
 
@@ -58,17 +59,67 @@ public abstract class UnitBase : MonoBehaviour
         _stats = stats;
         _initialStats = stats;
 
-        _state = EBattleUnitState.Idle;
-        CurrentHp = stats.MaxHp;
-        _nextAttackTime = 0f;
-        _hitUntilTime = 0f;
-        _currentTarget = null;
-        _forcedTarget = null;
+        IsInPool = false;
+        ResetCombatState();
 
         _renderer = GetComponentInChildren<SpriteRenderer>();
 
         UpdateLabel();
         UpdateVisual();
+    }
+
+    public void ResetCombatState()
+    {
+        StopAllCoroutines();
+        _damageOverTimeVersion++;
+
+        _stats = _initialStats;
+
+        _state = EBattleUnitState.Idle;
+        CurrentHp = _stats.MaxHp;
+        LastDamagedTime = 0f;
+        _nextAttackTime = 0f;
+        _hitUntilTime = 0f;
+        _stunnedUntil = 0f;
+        _shieldUntil = 0f;
+        _shieldAmount = 0f;
+        _forcedTargetUntil = 0f;
+        _attackRateMultiplier = 1f;
+        _attackRateMultiplierUntil = 0f;
+        _moveSpeedMultiplier = 1f;
+        _moveSpeedMultiplierUntil = 0f;
+        _damageReduction = 0f;
+        _damageReductionUntil = 0f;
+        _knockbackImmuneUntil = 0f;
+        _attackDamageMultiplier = 1f;
+        _attackDamageMultiplierUntil = 0f;
+        _defenseMultiplier = 1f;
+        _defenseMultiplierUntil = 0f;
+        _currentTarget = null;
+        _forcedTarget = null;
+
+        UpdateLabel();
+        UpdateVisual();
+    }
+
+    public void RestoreForPreparation(Vector3 position)
+    {
+        IsInPool = false;
+        transform.position = position;
+        gameObject.SetActive(true);
+        ResetCombatState();
+    }
+
+    public void MarkReturnedToPool()
+    {
+        StopAllCoroutines();
+        _damageOverTimeVersion++;
+        _state = EBattleUnitState.Dead;
+        CurrentHp = 0f;
+        _currentTarget = null;
+        _forcedTarget = null;
+        IsInPool = true;
+        gameObject.SetActive(false);
     }
 
     private void Update()
@@ -436,10 +487,8 @@ public abstract class UnitBase : MonoBehaviour
 
     public void ForceRemove()
     {
-        if (!IsAlive) return;
-
-        gameObject.SetActive(false);
-        Die();
+        if (IsInPool) return;
+        _unitManager?.ReleaseUnit(this);
     }
 
     private void Die()
@@ -449,7 +498,11 @@ public abstract class UnitBase : MonoBehaviour
         CurrentHp = 0f;
         _state = EBattleUnitState.Dead;
         _unitManager.NotifyUnitDied(this);
-        Destroy(gameObject);
+
+        if (Team == EBattleTeam.Ally)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void UpdateLabel()
