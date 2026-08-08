@@ -2010,17 +2010,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerMaxHp: 20
-  startingGold: 500
-  waveList:
-  - WaveName: Wave 1
-    RetryGoldReward: 5
-    WaveClearGoldReward: 10
-    FinalClearGoldReward: 20
-    Enemies:
-    - EnemyId: Enemy A
-      Count: 2
-    - EnemyId: Enemy B
-      Count: 1
 --- !u!4 &492424497
 Transform:
   m_ObjectHideFlags: 0
@@ -7461,10 +7450,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: LAUNCH BALL
+  m_text: 발사 50G
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8a1ddd39cde59b449998e2220b981e3b, type: 2}
+  m_sharedMaterial: {fileID: -1272043643258211167, guid: 8a1ddd39cde59b449998e2220b981e3b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -12063,7 +12052,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startButton: {fileID: 1314551025}
   launchButton: {fileID: 668368687}
+  launchCostText: {fileID: 1548583861}
   feedbackText: {fileID: 8820000000000000003}
+  availableCostColor: {r: 1, g: 1, b: 1, a: 1}
+  unavailableCostColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!4 &2739111089305989255
 Transform:
   m_ObjectHideFlags: 0
@@ -14258,7 +14250,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba8f7eb2119378d4f9cd4ac8671ea091, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launchCost: 0
   launchPosition: {x: 6.4, y: 10}
   launchMoveSpeed: 6
   launchHalfRange: 4

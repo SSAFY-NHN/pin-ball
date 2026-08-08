@@ -8,7 +8,10 @@ public class WavePanel : UIBase
     
     [SerializeField] private Button startButton;
     [SerializeField] private Button launchButton;
+    [SerializeField] private TextMeshProUGUI launchCostText;
     [SerializeField] private TextMeshProUGUI feedbackText;
+    [SerializeField] private Color availableCostColor = Color.white;
+    [SerializeField] private Color unavailableCostColor = Color.red;
     
     private BattleManager _battleManager;
     private PinballManager _pinballManager;
@@ -22,6 +25,7 @@ public class WavePanel : UIBase
         _battleManager = App.Get<BattleManager>();
         _battleManager.OnStateChanged += OnBattleStateChanged;
         _battleManager.OnActionRejected += OnActionRejected;
+        _battleManager.OnGoldChanged += OnGoldChanged;
         _battleManager.OnPreparationAvailabilityChanged +=
             OnPreparationAvailabilityChanged;
 
@@ -29,6 +33,7 @@ public class WavePanel : UIBase
         
         _pinballManager = App.Get<PinballManager>();
         _pinballManager.OnStateChanged += OnPinballStateChanged;
+        _pinballManager.OnLaunchCostChanged += OnLaunchCostChanged;
 
         startButton.onClick.AddListener(_battleManager.StartWave);
         launchButton.onClick.AddListener(_pinballManager.LaunchBall);
@@ -36,6 +41,11 @@ public class WavePanel : UIBase
         if (feedbackText == null)
         {
             Debug.LogError("[WavePanel] feedbackText가 설정되지 않았습니다.");
+        }
+
+        if (launchCostText == null)
+        {
+            Debug.LogError("[WavePanel] launchCostText가 설정되지 않았습니다.");
         }
         OnBattleStateChanged(_battleManager.State);
     }
@@ -69,6 +79,16 @@ public class WavePanel : UIBase
         RefreshButtons();
     }
 
+    private void OnGoldChanged(int _)
+    {
+        RefreshButtons();
+    }
+
+    private void OnLaunchCostChanged(int _)
+    {
+        RefreshButtons();
+    }
+
     private void RefreshButtons()
     {
         if (_battleManager == null) return;
@@ -79,6 +99,14 @@ public class WavePanel : UIBase
         bool hasAlly =
             _unitManager != null &&
             _unitManager.RemainingAllyCount > 0;
+        int launchCost = _pinballManager != null
+            ? _pinballManager.CurrentLaunchCost
+            : 0;
+        bool canAffordLaunch =
+            _battleManager.Gold >= launchCost;
+        bool hasAvailableBall =
+            _pinballManager != null &&
+            _pinballManager.HasAvailableBall;
 
         if (startButton != null)
         {
@@ -91,7 +119,19 @@ public class WavePanel : UIBase
 
         if (launchButton != null)
         {
-            launchButton.interactable = canUsePreparation;
+            launchButton.interactable =
+                canUsePreparation &&
+                _pinballState == EPinballState.Idle &&
+                hasAvailableBall &&
+                canAffordLaunch;
+        }
+
+        if (launchCostText != null)
+        {
+            launchCostText.text = $"발사 {launchCost}G";
+            launchCostText.color = canAffordLaunch
+                ? availableCostColor
+                : unavailableCostColor;
         }
 
         if (feedbackText != null && isPreparation)
@@ -115,6 +155,7 @@ public class WavePanel : UIBase
         {
             _battleManager.OnStateChanged -= OnBattleStateChanged;
             _battleManager.OnActionRejected -= OnActionRejected;
+            _battleManager.OnGoldChanged -= OnGoldChanged;
             _battleManager.OnPreparationAvailabilityChanged -=
                 OnPreparationAvailabilityChanged;
         }
@@ -122,6 +163,7 @@ public class WavePanel : UIBase
         if (_pinballManager != null)
         {
             _pinballManager.OnStateChanged -= OnPinballStateChanged;
+            _pinballManager.OnLaunchCostChanged -= OnLaunchCostChanged;
         }
 
         if (startButton != null && _battleManager != null)

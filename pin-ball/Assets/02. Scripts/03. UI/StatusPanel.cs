@@ -19,12 +19,24 @@ public class StatusPanel : UIBase
         base.Initialize(manager);
 
         _battleManager = App.Get<BattleManager>();
+        _battleManager.OnInitialized += OnBattleInitialized;
         _battleManager.OnWaveChanged += OnWaveChanged;
         _battleManager.OnHpChanged += OnHpChanged;
         _battleManager.OnGoldChanged += OnGoldChanged;
 
         _maxHp = _battleManager.playerMaxHp;
-        _totalWaveCount = 1;
+        if (_battleManager.IsInitialized)
+        {
+            OnBattleInitialized();
+        }
+    }
+
+    private void OnBattleInitialized()
+    {
+        _totalWaveCount = _battleManager.TotalWaveCount;
+        OnWaveChanged(_battleManager.CurrentWaveNumber - 1);
+        OnHpChanged(_battleManager.PlayerHp);
+        OnGoldChanged(_battleManager.Gold);
     }
 
     private void OnWaveChanged(int waveIndex)
@@ -41,5 +53,15 @@ public class StatusPanel : UIBase
     private void OnGoldChanged(int gold)
     {
         goldText.text = $"Gold: {Mathf.Max(0, gold)}";
+    }
+
+    private void OnDestroy()
+    {
+        if (_battleManager == null) return;
+
+        _battleManager.OnInitialized -= OnBattleInitialized;
+        _battleManager.OnWaveChanged -= OnWaveChanged;
+        _battleManager.OnHpChanged -= OnHpChanged;
+        _battleManager.OnGoldChanged -= OnGoldChanged;
     }
 }
