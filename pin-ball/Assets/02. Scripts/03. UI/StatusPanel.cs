@@ -58,6 +58,9 @@ public class StatusPanel : UIBase
 
     [SerializeField] private TextMeshProUGUI playerHpText;
     [SerializeField] private TextMeshProUGUI goldText;
+    [SerializeField] private TextMeshProUGUI allyCountText;
+    [SerializeField] private Color allyCountDefaultColor = Color.white;
+    [SerializeField] private Color allyCountOverLimitColor = Color.red;
 
     [Header("Wave Progress")]
     [SerializeField] private Image[] waveNodes;
@@ -73,6 +76,7 @@ public class StatusPanel : UIBase
     [SerializeField] private Sprite completeConnectorSprite;
 
     private BattleManager _battleManager;
+    private UnitManager _unitManager;
     private int _maxHp;
     private int _totalWaveCount;
     private bool _isWaveHudValid;
@@ -89,6 +93,11 @@ public class StatusPanel : UIBase
         _battleManager.OnWaveChanged += OnWaveChanged;
         _battleManager.OnHpChanged += OnHpChanged;
         _battleManager.OnGoldChanged += OnGoldChanged;
+
+        _unitManager = App.Get<UnitManager>();
+        _unitManager.OnDeployedAllyCountChanged +=
+            OnDeployedAllyCountChanged;
+        OnDeployedAllyCountChanged(_unitManager.DeployedAllyCount);
 
         _isWaveHudValid = ValidateHudReferences();
 
@@ -135,6 +144,17 @@ public class StatusPanel : UIBase
     private void OnGoldChanged(int gold)
     {
         goldText.text = Mathf.Max(0, gold).ToString();
+    }
+
+    private void OnDeployedAllyCountChanged(int count)
+    {
+        if (allyCountText == null) return;
+
+        allyCountText.text =
+            $"{Mathf.Max(0, count)}/{UnitManager.MaxDeployedAllyCount}";
+        allyCountText.color = count > UnitManager.MaxDeployedAllyCount
+            ? allyCountOverLimitColor
+            : allyCountDefaultColor;
     }
 
     private void RefreshWaveProgress(int currentWave)
@@ -215,11 +235,18 @@ public class StatusPanel : UIBase
 
     private void OnDestroy()
     {
-        if (_battleManager == null) return;
+        if (_battleManager != null)
+        {
+            _battleManager.OnInitialized -= OnBattleInitialized;
+            _battleManager.OnWaveChanged -= OnWaveChanged;
+            _battleManager.OnHpChanged -= OnHpChanged;
+            _battleManager.OnGoldChanged -= OnGoldChanged;
+        }
 
-        _battleManager.OnInitialized -= OnBattleInitialized;
-        _battleManager.OnWaveChanged -= OnWaveChanged;
-        _battleManager.OnHpChanged -= OnHpChanged;
-        _battleManager.OnGoldChanged -= OnGoldChanged;
+        if (_unitManager != null)
+        {
+            _unitManager.OnDeployedAllyCountChanged -=
+                OnDeployedAllyCountChanged;
+        }
     }
 }
