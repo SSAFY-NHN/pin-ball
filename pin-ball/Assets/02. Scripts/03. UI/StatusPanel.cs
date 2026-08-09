@@ -5,6 +5,7 @@ using TMPro;
 public enum EWaveHudNodeState
 {
     Idle,
+    Locked,
     Current,
     Complete,
     Elite05,
@@ -25,7 +26,7 @@ public sealed class WaveHudState
 
         if (nodeWave > currentWave)
         {
-            return EWaveHudNodeState.Idle;
+            return EWaveHudNodeState.Locked;
         }
 
         return nodeWave switch
@@ -61,8 +62,8 @@ public class StatusPanel : UIBase
     [Header("Wave Progress")]
     [SerializeField] private Image[] waveNodes;
     [SerializeField] private Image[] waveConnectors;
-    [SerializeField] private TextMeshProUGUI[] waveNumberTexts;
     [SerializeField] private Sprite idleNodeSprite;
+    [SerializeField] private Sprite lockedNodeSprite;
     [SerializeField] private Sprite currentNodeSprite;
     [SerializeField] private Sprite completeNodeSprite;
     [SerializeField] private Sprite elite05NodeSprite;
@@ -143,7 +144,6 @@ public class StatusPanel : UIBase
             int nodeWave = index + 1;
             waveNodes[index].sprite = GetNodeSprite(
                 _waveHudState.ResolveNodeState(currentWave, nodeWave));
-            waveNumberTexts[index].text = nodeWave.ToString();
         }
 
         for (int index = 0; index < WaveConnectorCount; index++)
@@ -167,6 +167,7 @@ public class StatusPanel : UIBase
             EWaveHudNodeState.Elite05 => elite05NodeSprite,
             EWaveHudNodeState.Elite09 => elite09NodeSprite,
             EWaveHudNodeState.Boss10 => boss10NodeSprite,
+            EWaveHudNodeState.Locked => lockedNodeSprite,
             _ => idleNodeSprite,
         };
     }
@@ -177,16 +178,13 @@ public class StatusPanel : UIBase
             waveNodes != null &&
             waveNodes.Length == WaveNodeCount &&
             waveConnectors != null &&
-            waveConnectors.Length == WaveConnectorCount &&
-            waveNumberTexts != null &&
-            waveNumberTexts.Length == WaveNodeCount;
+            waveConnectors.Length == WaveConnectorCount;
 
         if (valid)
         {
             for (int index = 0; index < WaveNodeCount; index++)
             {
                 valid &= waveNodes[index] != null;
-                valid &= waveNumberTexts[index] != null;
             }
 
             for (int index = 0; index < WaveConnectorCount; index++)
@@ -196,6 +194,7 @@ public class StatusPanel : UIBase
         }
 
         valid &= idleNodeSprite != null;
+        valid &= lockedNodeSprite != null;
         valid &= currentNodeSprite != null;
         valid &= completeNodeSprite != null;
         valid &= elite05NodeSprite != null;
@@ -208,7 +207,7 @@ public class StatusPanel : UIBase
         {
             Debug.LogError(
                 "[StatusPanel] Wave HUD requires 10 nodes, " +
-                "9 connectors, 10 labels, and all state Sprites.");
+                "9 connectors, standard-wave labels, and all state Sprites.");
         }
 
         return valid;

@@ -127,6 +127,7 @@ public static class ArcaneGameUiSetup
         goldIcon.raycastTarget = false;
 
         Sprite idleNode = LoadHudSprite("ui_wave_node_idle.png");
+        Sprite lockedNode = LoadHudSprite("ui_wave_node_locked.png");
         Sprite currentNode = LoadHudSprite("ui_wave_node_current.png");
         Sprite completeNode = LoadHudSprite("ui_wave_node_complete.png");
         Sprite elite05Node = LoadHudSprite("ui_wave_node_elite_05.png");
@@ -195,6 +196,7 @@ public static class ArcaneGameUiSetup
             "waveNumberTexts",
             numberTexts);
         AssignObject(statusSerialized, "idleNodeSprite", idleNode);
+        AssignObject(statusSerialized, "lockedNodeSprite", lockedNode);
         AssignObject(statusSerialized, "currentNodeSprite", currentNode);
         AssignObject(statusSerialized, "completeNodeSprite", completeNode);
         AssignObject(statusSerialized, "elite05NodeSprite", elite05Node);
@@ -438,6 +440,7 @@ public static class ArcaneGameUiSetup
         string[] spriteFields =
         {
             "idleNodeSprite",
+            "lockedNodeSprite",
             "currentNodeSprite",
             "completeNodeSprite",
             "elite05NodeSprite",

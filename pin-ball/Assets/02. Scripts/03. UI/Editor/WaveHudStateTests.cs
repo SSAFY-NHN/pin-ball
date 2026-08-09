@@ -6,7 +6,8 @@ public class WaveHudStateTests
     private readonly WaveHudState _state = new();
 
     [TestCase(1, 1, EWaveHudNodeState.Current)]
-    [TestCase(1, 2, EWaveHudNodeState.Idle)]
+    [TestCase(1, 2, EWaveHudNodeState.Locked)]
+    [TestCase(3, 10, EWaveHudNodeState.Locked)]
     [TestCase(2, 1, EWaveHudNodeState.Complete)]
     [TestCase(5, 5, EWaveHudNodeState.Elite05)]
     [TestCase(9, 9, EWaveHudNodeState.Elite09)]
