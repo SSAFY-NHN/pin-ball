@@ -3,6 +3,8 @@ using NUnit.Framework;
 
 public class WaveHudStateTests
 {
+    private readonly WaveHudState _state = new();
+
     [TestCase(1, 1, EWaveHudNodeState.Current)]
     [TestCase(1, 2, EWaveHudNodeState.Idle)]
     [TestCase(2, 1, EWaveHudNodeState.Complete)]
@@ -15,7 +17,7 @@ public class WaveHudStateTests
         EWaveHudNodeState expected)
     {
         Assert.That(
-            WaveHudState.ResolveNodeState(currentWave, nodeWave),
+            _state.ResolveNodeState(currentWave, nodeWave),
             Is.EqualTo(expected));
     }
 
@@ -28,9 +30,21 @@ public class WaveHudStateTests
         bool expected)
     {
         Assert.That(
-            WaveHudState.IsConnectorComplete(
+            _state.IsConnectorComplete(
                 currentWave,
                 connectorAfterWave),
+            Is.EqualTo(expected));
+    }
+
+    [TestCase(10, true)]
+    [TestCase(9, false)]
+    [TestCase(11, false)]
+    public void IsSupportedWaveCount_AcceptsExactlyTen(
+        int waveCount,
+        bool expected)
+    {
+        Assert.That(
+            _state.IsSupportedWaveCount(waveCount),
             Is.EqualTo(expected));
     }
 }

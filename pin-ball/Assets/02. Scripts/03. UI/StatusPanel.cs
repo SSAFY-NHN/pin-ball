@@ -12,9 +12,9 @@ public enum EWaveHudNodeState
     Boss10
 }
 
-public static class WaveHudState
+public sealed class WaveHudState
 {
-    public static EWaveHudNodeState ResolveNodeState(
+    public EWaveHudNodeState ResolveNodeState(
         int currentWave,
         int nodeWave)
     {
@@ -37,11 +37,16 @@ public static class WaveHudState
         };
     }
 
-    public static bool IsConnectorComplete(
+    public bool IsConnectorComplete(
         int currentWave,
         int connectorAfterWave)
     {
         return connectorAfterWave < currentWave;
+    }
+
+    public bool IsSupportedWaveCount(int waveCount)
+    {
+        return waveCount == 10;
     }
 }
 
@@ -71,6 +76,7 @@ public class StatusPanel : UIBase
     private int _maxHp;
     private int _totalWaveCount;
     private bool _isWaveHudValid;
+    private readonly WaveHudState _waveHudState = new();
 
     public override bool IsDefaultPanel => true;
 
@@ -100,6 +106,14 @@ public class StatusPanel : UIBase
     private void OnBattleInitialized()
     {
         _totalWaveCount = _battleManager.TotalWaveCount;
+        if (!_waveHudState.IsSupportedWaveCount(_totalWaveCount))
+        {
+            Debug.LogError(
+                $"[StatusPanel] Wave HUD requires exactly 10 waves. " +
+                $"Loaded: {_totalWaveCount}");
+            _isWaveHudValid = false;
+        }
+
         OnWaveChanged(_battleManager.CurrentWaveNumber - 1);
         OnHpChanged(_battleManager.PlayerHp);
         OnGoldChanged(_battleManager.Gold);
@@ -133,7 +147,7 @@ public class StatusPanel : UIBase
         {
             int nodeWave = index + 1;
             waveNodes[index].sprite = GetNodeSprite(
-                WaveHudState.ResolveNodeState(currentWave, nodeWave));
+                _waveHudState.ResolveNodeState(currentWave, nodeWave));
             waveNumberTexts[index].text = nodeWave.ToString();
         }
 
@@ -141,7 +155,7 @@ public class StatusPanel : UIBase
         {
             int connectorAfterWave = index + 1;
             waveConnectors[index].sprite =
-                WaveHudState.IsConnectorComplete(
+                _waveHudState.IsConnectorComplete(
                     currentWave,
                     connectorAfterWave)
                     ? completeConnectorSprite
