@@ -30,6 +30,8 @@ public class WavePanel : UIBase
             OnPreparationAvailabilityChanged;
 
         _unitManager = App.Get<UnitManager>();
+        _unitManager.OnDeployedAllyCountChanged +=
+            OnDeployedAllyCountChanged;
         
         _pinballManager = App.Get<PinballManager>();
         _pinballManager.OnStateChanged += OnPinballStateChanged;
@@ -89,6 +91,11 @@ public class WavePanel : UIBase
         RefreshButtons();
     }
 
+    private void OnDeployedAllyCountChanged(int _)
+    {
+        RefreshButtons();
+    }
+
     private void RefreshButtons()
     {
         if (_battleManager == null) return;
@@ -98,7 +105,13 @@ public class WavePanel : UIBase
             _battleManager.CanUsePreparationActions;
         bool hasAlly =
             _unitManager != null &&
-            _unitManager.RemainingAllyCount > 0;
+            _unitManager.DeployedAllyCount > 0;
+        bool canStartWithRoster =
+            _unitManager != null &&
+            _unitManager.CanStartWaveWithCurrentRoster;
+        bool canLaunchWithRoster =
+            _unitManager != null &&
+            _unitManager.CanLaunchPinballWithCurrentRoster;
         int launchCost = _pinballManager != null
             ? _pinballManager.CurrentLaunchCost
             : 0;
@@ -114,7 +127,8 @@ public class WavePanel : UIBase
             startButton.interactable =
                 canUsePreparation &&
                 _pinballState == EPinballState.Idle &&
-                hasAlly;
+                hasAlly &&
+                canStartWithRoster;
         }
 
         if (launchButton != null)
@@ -123,7 +137,8 @@ public class WavePanel : UIBase
                 canUsePreparation &&
                 _pinballState == EPinballState.Idle &&
                 hasAvailableBall &&
-                canAffordLaunch;
+                canAffordLaunch &&
+                canLaunchWithRoster;
         }
 
         if (launchCostText != null)
@@ -164,6 +179,12 @@ public class WavePanel : UIBase
         {
             _pinballManager.OnStateChanged -= OnPinballStateChanged;
             _pinballManager.OnLaunchCostChanged -= OnLaunchCostChanged;
+        }
+
+        if (_unitManager != null)
+        {
+            _unitManager.OnDeployedAllyCountChanged -=
+                OnDeployedAllyCountChanged;
         }
 
         if (startButton != null && _battleManager != null)

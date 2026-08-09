@@ -90,7 +90,7 @@ public class AllyUnit : UnitBase
         worldPosition.z = _dragStartPosition.z;
         if (_unitManager.BattleArea != null)
         {
-            worldPosition = _unitManager.BattleArea.Clamp(
+            worldPosition = _unitManager.BattleArea.ClampAllyPlacement(
                 worldPosition,
                 GetPlacementPadding());
         }
@@ -129,7 +129,10 @@ public class AllyUnit : UnitBase
                 this,
                 target,
                 _dragStartPosition);
+            return;
         }
+
+        _unitManager.SaveAllyPreparationPosition(this);
     }
 
     private float GetPlacementPadding()

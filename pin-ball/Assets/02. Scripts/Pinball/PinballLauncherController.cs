@@ -33,12 +33,16 @@ public class PinballLauncherController : MonoBehaviour
     private float _pullDistance;
     private bool _isDragging;
     private bool _hasLoadedBall;
+    private float _leverRotationDirection;
 
     private void Awake()
     {
         _camera = Camera.main;
         _leverStartPosition = transform.localPosition;
         _leverStartRotation = transform.localRotation;
+        var localForward = _leverStartRotation * Vector3.forward;
+        _leverRotationDirection =
+            Vector3.Dot(localForward, Vector3.forward) < 0f ? 1f : -1f;
         if (piston != null) _pistonStartPosition = piston.localPosition;
         if (loadPoint != null) _loadPointStartPosition = loadPoint.localPosition;
         if (spring != null)
@@ -125,7 +129,9 @@ public class PinballLauncherController : MonoBehaviour
         var pullRatio = maximumPullDistance > 0f
             ? distance / maximumPullDistance
             : 0f;
-        var leverAngle = -leverMaximumAngle * pullRatio;
+        var leverAngle = leverMaximumAngle *
+                         pullRatio *
+                         _leverRotationDirection;
         var rotatedOffset = Quaternion.Euler(0f, 0f, leverAngle) *
                             (_leverStartPosition - _leverPivotInParent);
         transform.localPosition = _leverPivotInParent + rotatedOffset;

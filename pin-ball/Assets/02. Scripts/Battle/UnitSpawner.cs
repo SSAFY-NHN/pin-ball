@@ -17,7 +17,6 @@ public class UnitSpawner : MonoBehaviour
     [SerializeField] private Transform allyPoolParent;
     [SerializeField] private Transform enemyPoolParent;
 
-    private int _allySpawnIndex;
     private readonly Queue<AllyUnit> _allyPool = new();
     private readonly Queue<EnemyUnit> _enemyPool = new();
     private readonly HashSet<UnitBase> _pooledUnits = new();
@@ -41,7 +40,7 @@ public class UnitSpawner : MonoBehaviour
             EBattleTeam.Ally,
             data.UnitId,
             stats,
-            _allySpawnIndex++);
+            0);
         ally.SetData(data.UnitId, data.Level, allyData?.skill, commonData);
         return ally;
     }
@@ -70,20 +69,6 @@ public class UnitSpawner : MonoBehaviour
 
         unit?.SetData(data);
         return unit;
-    }
-
-    internal void ResetAllySpawnOrder()
-    {
-        _allySpawnIndex = 0;
-    }
-
-    public Vector3 GetAllyPreparationPosition(int spawnIndex)
-    {
-        var position = allySpawnPoint != null
-            ? allySpawnPoint.position
-            : transform.position;
-        position.y += GetFormationOffset(spawnIndex);
-        return position;
     }
 
     public void ReturnUnit(UnitBase unit)
@@ -121,7 +106,10 @@ public class UnitSpawner : MonoBehaviour
         var position = overridePosition ??
             (spawnPoint != null ? spawnPoint.position : transform.position);
         position.x += Random.Range(-0.15f, 0.15f);
-        position.y += GetFormationOffset(spawnIndex);
+        if (team == EBattleTeam.Enemy)
+        {
+            position.y += GetFormationOffset(spawnIndex);
+        }
         
         unit.transform.SetParent(null, true);
         unit.transform.SetPositionAndRotation(position, Quaternion.identity);

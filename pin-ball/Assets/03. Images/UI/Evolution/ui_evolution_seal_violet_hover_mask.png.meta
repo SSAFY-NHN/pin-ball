@@ -1,0 +1,988 @@
+fileFormatVersion: 2
+guid: b765b7b3dc6b328438f3732d2a8cbb01
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2515779468472806557
+    second: ui_evolution_seal_violet_hover_mask_0
+  - first:
+      213: 1039048117126696709
+    second: ui_evolution_seal_violet_hover_mask_1
+  - first:
+      213: -3047354931764902202
+    second: ui_evolution_seal_violet_hover_mask_2
+  - first:
+      213: -1140132364088243168
+    second: ui_evolution_seal_violet_hover_mask_3
+  - first:
+      213: -8331777139640671521
+    second: ui_evolution_seal_violet_hover_mask_4
+  - first:
+      213: -5444232433190913850
+    second: ui_evolution_seal_violet_hover_mask_5
+  - first:
+      213: 3304555535267014445
+    second: ui_evolution_seal_violet_hover_mask_6
+  - first:
+      213: -7977634305113350914
+    second: ui_evolution_seal_violet_hover_mask_7
+  - first:
+      213: 7719556093696785094
+    second: ui_evolution_seal_violet_hover_mask_8
+  - first:
+      213: -4805407807993184342
+    second: ui_evolution_seal_violet_hover_mask_9
+  - first:
+      213: -7020761498826541278
+    second: ui_evolution_seal_violet_hover_mask_10
+  - first:
+      213: 3457370676414696706
+    second: ui_evolution_seal_violet_hover_mask_11
+  - first:
+      213: -2857064868813147445
+    second: ui_evolution_seal_violet_hover_mask_12
+  - first:
+      213: 2109201691024316801
+    second: ui_evolution_seal_violet_hover_mask_13
+  - first:
+      213: 3449970334512465632
+    second: ui_evolution_seal_violet_hover_mask_14
+  - first:
+      213: 4235184538591805381
+    second: ui_evolution_seal_violet_hover_mask_15
+  - first:
+      213: 5274440876050239014
+    second: ui_evolution_seal_violet_hover_mask_16
+  - first:
+      213: 1095058280605798202
+    second: ui_evolution_seal_violet_hover_mask_17
+  - first:
+      213: 1552499206314581105
+    second: ui_evolution_seal_violet_hover_mask_18
+  - first:
+      213: 6930147092393664237
+    second: ui_evolution_seal_violet_hover_mask_19
+  - first:
+      213: 6849556511559669924
+    second: ui_evolution_seal_violet_hover_mask_20
+  - first:
+      213: 7254580696186014438
+    second: ui_evolution_seal_violet_hover_mask_21
+  - first:
+      213: -7158759553757234420
+    second: ui_evolution_seal_violet_hover_mask_22
+  - first:
+      213: 8693056492308431428
+    second: ui_evolution_seal_violet_hover_mask_23
+  - first:
+      213: -7435491442550740371
+    second: ui_evolution_seal_violet_hover_mask_24
+  - first:
+      213: -7880323059195361333
+    second: ui_evolution_seal_violet_hover_mask_25
+  - first:
+      213: 8214178172201558082
+    second: ui_evolution_seal_violet_hover_mask_26
+  - first:
+      213: -4376929747219107316
+    second: ui_evolution_seal_violet_hover_mask_27
+  - first:
+      213: 4687189011195348868
+    second: ui_evolution_seal_violet_hover_mask_28
+  - first:
+      213: 2394799953899671551
+    second: ui_evolution_seal_violet_hover_mask_29
+  - first:
+      213: -435178898171789953
+    second: ui_evolution_seal_violet_hover_mask_30
+  - first:
+      213: 1448427379037100744
+    second: ui_evolution_seal_violet_hover_mask_31
+  - first:
+      213: -6487004917822326327
+    second: ui_evolution_seal_violet_hover_mask_32
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_0
+      rect:
+        serializedVersion: 2
+        x: 93
+        y: 196
+        width: 21
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 363157017e7261dd0800000000000000
+      internalID: -2515779468472806557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_1
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 203
+        width: 14
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50f00e5e1c07b6e00800000000000000
+      internalID: 1039048117126696709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_2
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 198
+        width: 19
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c64e9bc5de95b5d0800000000000000
+      internalID: -3047354931764902202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_3
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 180
+        width: 15
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02c0891d7af6d20f0800000000000000
+      internalID: -1140132364088243168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_4
+      rect:
+        serializedVersion: 2
+        x: 85
+        y: 192
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd26ffbc5d49f5c80800000000000000
+      internalID: -8331777139640671521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_5
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 192
+        width: 13
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c8bef062733274b0800000000000000
+      internalID: -5444232433190913850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_6
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 180
+        width: 17
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d27242440c32cdd20800000000000000
+      internalID: 3304555535267014445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_7
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 141
+        width: 12
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: efc9fb7eddfb94190800000000000000
+      internalID: -7977634305113350914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_8
+      rect:
+        serializedVersion: 2
+        x: 59
+        y: 166
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6cabf740e5f512b60800000000000000
+      internalID: 7719556093696785094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_9
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 160
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aaf7dab0f03cf4db0800000000000000
+      internalID: -4805407807993184342
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_10
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 153
+        width: 25
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22774b94d9e319e90800000000000000
+      internalID: -7020761498826541278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_11
+      rect:
+        serializedVersion: 2
+        x: 195
+        y: 154
+        width: 13
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20dcc80ff4c0bff20800000000000000
+      internalID: 3457370676414696706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_12
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 101
+        width: 17
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc2f422a3aaa958d0800000000000000
+      internalID: -2857064868813147445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_13
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 138
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 189582153c3654d10800000000000000
+      internalID: 2109201691024316801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_14
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 152
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e640429db1c0ef20800000000000000
+      internalID: 3449970334512465632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_15
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 77
+        width: 31
+        height: 79
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5cfbdfc16e566ca30800000000000000
+      internalID: 4235184538591805381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_16
+      rect:
+        serializedVersion: 2
+        x: 206
+        y: 142
+        width: 6
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62e46c51804923940800000000000000
+      internalID: 5274440876050239014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_17
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 120
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3fcbdf44bd623f00800000000000000
+      internalID: 1095058280605798202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_18
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 76
+        width: 30
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17cd47a7dc59b8510800000000000000
+      internalID: 1552499206314581105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_19
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 111
+        width: 28
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dee94532014dc2060800000000000000
+      internalID: 6930147092393664237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_20
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 120
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a85a745b538e0f50800000000000000
+      internalID: 6849556511559669924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_21
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 111
+        width: 12
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6eac29ee4b27da460800000000000000
+      internalID: 7254580696186014438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_22
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 97
+        width: 7
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0bbdd55d1af6ac90800000000000000
+      internalID: -7158759553757234420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_23
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 89
+        width: 6
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 442827c62d0f3a870800000000000000
+      internalID: 8693056492308431428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_24
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 81
+        width: 12
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6a6e4c8de3dfc890800000000000000
+      internalID: -7435491442550740371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_25
+      rect:
+        serializedVersion: 2
+        x: 206
+        y: 101
+        width: 6
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc7475dede773a290800000000000000
+      internalID: -7880323059195361333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_26
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 80
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24067dbe68f9ef170800000000000000
+      internalID: 8214178172201558082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_27
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 57
+        width: 30
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c023a2ab5950243c0800000000000000
+      internalID: -4376929747219107316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_28
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 57
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 487c967629d3c0140800000000000000
+      internalID: 4687189011195348868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_29
+      rect:
+        serializedVersion: 2
+        x: 181
+        y: 60
+        width: 16
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fffcf40bed90c3120800000000000000
+      internalID: 2394799953899671551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_30
+      rect:
+        serializedVersion: 2
+        x: 93
+        y: 50
+        width: 22
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7d79b8091fe5f9f0800000000000000
+      internalID: -435178898171789953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_31
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 36
+        width: 14
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8cad472f609d91410800000000000000
+      internalID: 1448427379037100744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_evolution_seal_violet_hover_mask_32
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 50
+        width: 20
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c9fcf8956789f5a0800000000000000
+      internalID: -6487004917822326327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      ui_evolution_seal_violet_hover_mask_0: -2515779468472806557
+      ui_evolution_seal_violet_hover_mask_1: 1039048117126696709
+      ui_evolution_seal_violet_hover_mask_10: -7020761498826541278
+      ui_evolution_seal_violet_hover_mask_11: 3457370676414696706
+      ui_evolution_seal_violet_hover_mask_12: -2857064868813147445
+      ui_evolution_seal_violet_hover_mask_13: 2109201691024316801
+      ui_evolution_seal_violet_hover_mask_14: 3449970334512465632
+      ui_evolution_seal_violet_hover_mask_15: 4235184538591805381
+      ui_evolution_seal_violet_hover_mask_16: 5274440876050239014
+      ui_evolution_seal_violet_hover_mask_17: 1095058280605798202
+      ui_evolution_seal_violet_hover_mask_18: 1552499206314581105
+      ui_evolution_seal_violet_hover_mask_19: 6930147092393664237
+      ui_evolution_seal_violet_hover_mask_2: -3047354931764902202
+      ui_evolution_seal_violet_hover_mask_20: 6849556511559669924
+      ui_evolution_seal_violet_hover_mask_21: 7254580696186014438
+      ui_evolution_seal_violet_hover_mask_22: -7158759553757234420
+      ui_evolution_seal_violet_hover_mask_23: 8693056492308431428
+      ui_evolution_seal_violet_hover_mask_24: -7435491442550740371
+      ui_evolution_seal_violet_hover_mask_25: -7880323059195361333
+      ui_evolution_seal_violet_hover_mask_26: 8214178172201558082
+      ui_evolution_seal_violet_hover_mask_27: -4376929747219107316
+      ui_evolution_seal_violet_hover_mask_28: 4687189011195348868
+      ui_evolution_seal_violet_hover_mask_29: 2394799953899671551
+      ui_evolution_seal_violet_hover_mask_3: -1140132364088243168
+      ui_evolution_seal_violet_hover_mask_30: -435178898171789953
+      ui_evolution_seal_violet_hover_mask_31: 1448427379037100744
+      ui_evolution_seal_violet_hover_mask_32: -6487004917822326327
+      ui_evolution_seal_violet_hover_mask_4: -8331777139640671521
+      ui_evolution_seal_violet_hover_mask_5: -5444232433190913850
+      ui_evolution_seal_violet_hover_mask_6: 3304555535267014445
+      ui_evolution_seal_violet_hover_mask_7: -7977634305113350914
+      ui_evolution_seal_violet_hover_mask_8: 7719556093696785094
+      ui_evolution_seal_violet_hover_mask_9: -4805407807993184342
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

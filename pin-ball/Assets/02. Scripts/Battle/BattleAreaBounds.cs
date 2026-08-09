@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class BattleAreaBounds : MonoBehaviour
 {
+    private const float AllyGridGap = 0.15f;
+
     public bool IsValid { get; private set; }
 
     [SerializeField] private RectTransform battleArea;
@@ -59,6 +61,113 @@ public class BattleAreaBounds : MonoBehaviour
             _worldMin.y + safePadding,
             _worldMax.y - safePadding);
         return worldPosition;
+    }
+
+    public bool ContainsAllyPlacement(
+        Vector3 worldPosition,
+        float padding)
+    {
+        return IsValid && ContainsAllyPlacement(
+            _worldMin,
+            _worldMax,
+            worldPosition,
+            padding);
+    }
+
+    public Vector3 ClampAllyPlacement(
+        Vector3 worldPosition,
+        float padding)
+    {
+        return IsValid
+            ? ClampAllyPlacement(
+                _worldMin,
+                _worldMax,
+                worldPosition,
+                padding)
+            : worldPosition;
+    }
+
+    public bool TryGetAllyGridPosition(
+        int gridIndex,
+        float padding,
+        out Vector3 position)
+    {
+        if (!IsValid)
+        {
+            position = default;
+            return false;
+        }
+
+        return TryGetAllyGridPosition(
+            _worldMin,
+            _worldMax,
+            gridIndex,
+            padding,
+            out position);
+    }
+
+    private static bool ContainsAllyPlacement(
+        Vector2 worldMin,
+        Vector2 worldMax,
+        Vector3 worldPosition,
+        float padding)
+    {
+        float safePadding = Mathf.Max(0f, padding);
+        float midpoint = (worldMin.x + worldMax.x) * 0.5f;
+        return worldPosition.x >= midpoint + safePadding &&
+               worldPosition.x <= worldMax.x - safePadding &&
+               worldPosition.y >= worldMin.y + safePadding &&
+               worldPosition.y <= worldMax.y - safePadding;
+    }
+
+    private static Vector3 ClampAllyPlacement(
+        Vector2 worldMin,
+        Vector2 worldMax,
+        Vector3 worldPosition,
+        float padding)
+    {
+        float safePadding = Mathf.Max(0f, padding);
+        float midpoint = (worldMin.x + worldMax.x) * 0.5f;
+        worldPosition.x = Mathf.Clamp(
+            worldPosition.x,
+            midpoint + safePadding,
+            worldMax.x - safePadding);
+        worldPosition.y = Mathf.Clamp(
+            worldPosition.y,
+            worldMin.y + safePadding,
+            worldMax.y - safePadding);
+        return worldPosition;
+    }
+
+    private static bool TryGetAllyGridPosition(
+        Vector2 worldMin,
+        Vector2 worldMax,
+        int gridIndex,
+        float padding,
+        out Vector3 position)
+    {
+        position = default;
+        if (gridIndex < 0) return false;
+
+        float safePadding = Mathf.Max(0f, padding);
+        float midpoint = (worldMin.x + worldMax.x) * 0.5f;
+        float minX = midpoint + safePadding;
+        float maxX = worldMax.x - safePadding;
+        float minY = worldMin.y + safePadding;
+        float maxY = worldMax.y - safePadding;
+        float step = Mathf.Max(
+            safePadding * 2f + AllyGridGap,
+            AllyGridGap);
+        int columnCount = Mathf.FloorToInt((maxX - minX) / step) + 1;
+        if (columnCount <= 0 || minX > maxX || minY > maxY) return false;
+
+        int column = gridIndex % columnCount;
+        int row = gridIndex / columnCount;
+        float y = maxY - row * step;
+        if (y < minY) return false;
+
+        position = new Vector3(minX + column * step, y, 0f);
+        return true;
     }
 
     private void ValidateReferences()

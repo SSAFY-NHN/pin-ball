@@ -27,8 +27,6 @@ public abstract class UnitBase : MonoBehaviour
     protected UnitBase _currentTarget;
     protected EBattleUnitState _state;
 
-    [SerializeField] private TextMesh _stateLabel;
-
     private UnitManager _unitManager;
     private SpriteRenderer _renderer;
     private BattleUnitStats _initialStats;
@@ -68,7 +66,6 @@ public abstract class UnitBase : MonoBehaviour
 
         _renderer = GetComponentInChildren<SpriteRenderer>();
 
-        UpdateLabel();
         UpdateVisual();
     }
 
@@ -102,7 +99,6 @@ public abstract class UnitBase : MonoBehaviour
         _currentTarget = null;
         _forcedTarget = null;
 
-        UpdateLabel();
         UpdateVisual();
     }
 
@@ -146,7 +142,6 @@ public abstract class UnitBase : MonoBehaviour
             _state = EBattleUnitState.Idle;
         }
 
-        UpdateLabel();
         UpdateVisual();
     }
 
@@ -525,13 +520,7 @@ public abstract class UnitBase : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
-
-    private void UpdateLabel()
-    {
-        if (_stateLabel == null) return;
-        _stateLabel.text = $"{Mathf.CeilToInt(CurrentHp)}/{Mathf.CeilToInt(MaxHp)}\n{_state}";
-    }
-
+    
     private void UpdateVisual()
     {
         if (_renderer == null) return;
