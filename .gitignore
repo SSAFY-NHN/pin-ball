@@ -2,7 +2,7 @@
 # repository-root/pin-ball/
 
 # Codex isolated worktrees
-/.worktrees/
+/pin-ball/.worktrees/
 
 # Unity generated directories
 /pin-ball/.utmp/
