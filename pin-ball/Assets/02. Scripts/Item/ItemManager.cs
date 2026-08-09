@@ -11,6 +11,8 @@ public interface IItemEventListener
 
 public class ItemManager : AppService
 {
+    private const string ItemIconPath = "ItemIcons/";
+
     public event Action<Item> OnItemAcquired;
 
     private readonly Dictionary<EItem, Item> _items = new();
@@ -33,7 +35,8 @@ public class ItemManager : AppService
         var titleData = App.Get<TitleData>();
         foreach (var data in titleData.Item)
         {
-            var item = new Item(data.Value, null);
+            var icon = Resources.Load<Sprite>($"{ItemIconPath}{data.Value.id}");
+            var item = new Item(data.Value, icon);
             _items.Add(item.Key, item);
         }
 
