@@ -1,30 +1,12 @@
 fileFormatVersion: 2
-guid: 640d40d7298c37c4f949ca009495c154
+guid: a1000000000000000000000000000010
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -1063189973943916183
-    second: ui_button_title_defeat_accent_0
-  - first:
-      213: -4972351339860230625
-    second: ui_button_title_defeat_accent_1
-  - first:
-      213: -3158262927166930592
-    second: ui_button_title_defeat_accent_2
-  - first:
-      213: 3066213733481871621
-    second: ui_button_title_defeat_accent_3
-  - first:
-      213: -3189477746477594133
-    second: ui_button_title_defeat_accent_4
-  - first:
-      213: 4658959792455982480
-    second: ui_button_title_defeat_accent_5
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -55,13 +37,13 @@ TextureImporter:
     filterMode: 1
     aniso: 1
     mipBias: 0
-    wrapU: 1
-    wrapV: 1
-    wrapW: 1
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -126,144 +108,12 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: ui_button_title_defeat_accent_0
-      rect:
-        serializedVersion: 2
-        x: 6
-        y: 33
-        width: 46
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 969e05a0a5ace31f0800000000000000
-      internalID: -1063189973943916183
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ui_button_title_defeat_accent_1
-      rect:
-        serializedVersion: 2
-        x: 85
-        y: 36
-        width: 7
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f1e71311dc8aefab0800000000000000
-      internalID: -4972351339860230625
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ui_button_title_defeat_accent_2
-      rect:
-        serializedVersion: 2
-        x: 124
-        y: 33
-        width: 46
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0610ee6d9989b24d0800000000000000
-      internalID: -3158262927166930592
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ui_button_title_defeat_accent_3
-      rect:
-        serializedVersion: 2
-        x: 6
-        y: 3
-        width: 46
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 5097c9525216d8a20800000000000000
-      internalID: 3066213733481871621
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ui_button_title_defeat_accent_4
-      rect:
-        serializedVersion: 2
-        x: 85
-        y: 1
-        width: 7
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: be9803e53e2bcb3d0800000000000000
-      internalID: -3189477746477594133
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ui_button_title_defeat_accent_5
-      rect:
-        serializedVersion: 2
-        x: 124
-        y: 3
-        width: 46
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 09d9a2c3f33f7a040800000000000000
-      internalID: 4658959792455982480
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -272,13 +122,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      ui_button_title_defeat_accent_0: -1063189973943916183
-      ui_button_title_defeat_accent_1: -4972351339860230625
-      ui_button_title_defeat_accent_2: -3158262927166930592
-      ui_button_title_defeat_accent_3: 3066213733481871621
-      ui_button_title_defeat_accent_4: -3189477746477594133
-      ui_button_title_defeat_accent_5: 4658959792455982480
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

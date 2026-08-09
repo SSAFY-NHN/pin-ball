@@ -13,6 +13,20 @@ public class ResultPanel : UIBase
     [SerializeField] private TextMeshProUGUI messageText;
     [SerializeField] private Button titleButton;
 
+    [Header("Artwork")]
+    [SerializeField] private Image overlayImage;
+    [SerializeField] private Image titleImage;
+    [SerializeField] private Image iconImage;
+    [SerializeField] private Image buttonAccentImage;
+    [SerializeField] private Sprite victoryOverlaySprite;
+    [SerializeField] private Sprite defeatOverlaySprite;
+    [SerializeField] private Sprite victoryTitleSprite;
+    [SerializeField] private Sprite defeatTitleSprite;
+    [SerializeField] private Sprite victoryIconSprite;
+    [SerializeField] private Sprite defeatIconSprite;
+    [SerializeField] private Sprite victoryButtonAccentSprite;
+    [SerializeField] private Sprite defeatButtonAccentSprite;
+
     private BattleManager _battleManager;
     private SceneManager _sceneManager;
 
@@ -20,7 +34,7 @@ public class ResultPanel : UIBase
     {
         base.Initialize(manager);
 
-        if (titleText == null || messageText == null || titleButton == null)
+        if (!ValidateReferences())
         {
             Debug.LogError("[ResultPanel] UI 참조가 설정되지 않았습니다.");
             enabled = false;
@@ -46,6 +60,14 @@ public class ResultPanel : UIBase
         bool isVictory = state == EWaveState.Victory;
         titleText.text = isVictory ? victoryTitle : defeatTitle;
         messageText.text = isVictory ? victoryMessage : defeatMessage;
+        overlayImage.sprite = isVictory
+            ? victoryOverlaySprite
+            : defeatOverlaySprite;
+        titleImage.sprite = isVictory ? victoryTitleSprite : defeatTitleSprite;
+        iconImage.sprite = isVictory ? victoryIconSprite : defeatIconSprite;
+        buttonAccentImage.sprite = isVictory
+            ? victoryButtonAccentSprite
+            : defeatButtonAccentSprite;
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
     }
@@ -53,6 +75,33 @@ public class ResultPanel : UIBase
     private void ReturnToTitle()
     {
         _sceneManager?.Load(ESceneName.Title);
+    }
+
+    private bool ValidateReferences()
+    {
+        bool valid =
+            titleText != null &&
+            messageText != null &&
+            titleButton != null &&
+            overlayImage != null &&
+            titleImage != null &&
+            iconImage != null &&
+            buttonAccentImage != null &&
+            victoryOverlaySprite != null &&
+            defeatOverlaySprite != null &&
+            victoryTitleSprite != null &&
+            defeatTitleSprite != null &&
+            victoryIconSprite != null &&
+            defeatIconSprite != null &&
+            victoryButtonAccentSprite != null &&
+            defeatButtonAccentSprite != null;
+
+        if (!valid)
+        {
+            Debug.LogError("[ResultPanel] 결과 UI 이미지 참조가 설정되지 않았습니다.");
+        }
+
+        return valid;
     }
 
     private void OnDestroy()
