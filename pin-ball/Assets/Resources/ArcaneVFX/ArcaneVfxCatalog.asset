@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf3058a4f0f8e9c429616620dd8d4fb4, type: 3}
   m_Name: ArcaneVfxCatalog
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   ballMask: {fileID: 21300000, guid: a35c1ff83fe71c54783197d1f648a53d, type: 3}
   standardBumperMask: {fileID: 21300000, guid: 5aa0264be9482eb4090a000837a91dd9, type: 3}
   specialBumperMask: {fileID: 21300000, guid: 0824cc86f16da1645a9bce6a1c9fa92d, type: 3}
