@@ -1,0 +1,1222 @@
+fileFormatVersion: 2
+guid: dc5a0b3ff407d154597dcba79c83ce9e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 720430974874148859
+    second: ui_result_victory_overlay_0
+  - first:
+      213: -2947061806246222696
+    second: ui_result_victory_overlay_1
+  - first:
+      213: 2800028849307972391
+    second: ui_result_victory_overlay_2
+  - first:
+      213: 320747966140693147
+    second: ui_result_victory_overlay_3
+  - first:
+      213: 5232823768931587846
+    second: ui_result_victory_overlay_4
+  - first:
+      213: -6666918658304348800
+    second: ui_result_victory_overlay_5
+  - first:
+      213: -6904179255343370048
+    second: ui_result_victory_overlay_6
+  - first:
+      213: -3379581140266138645
+    second: ui_result_victory_overlay_7
+  - first:
+      213: 9012250032120801885
+    second: ui_result_victory_overlay_8
+  - first:
+      213: 6296090289724403401
+    second: ui_result_victory_overlay_9
+  - first:
+      213: 9000907134827892681
+    second: ui_result_victory_overlay_10
+  - first:
+      213: -560524841558859184
+    second: ui_result_victory_overlay_11
+  - first:
+      213: 6637286145949124063
+    second: ui_result_victory_overlay_12
+  - first:
+      213: 6464119501610940267
+    second: ui_result_victory_overlay_13
+  - first:
+      213: -6078687412723154443
+    second: ui_result_victory_overlay_14
+  - first:
+      213: 1635018633171425576
+    second: ui_result_victory_overlay_15
+  - first:
+      213: -2710461287180324482
+    second: ui_result_victory_overlay_16
+  - first:
+      213: 4754759194666103942
+    second: ui_result_victory_overlay_17
+  - first:
+      213: 7697158592566482258
+    second: ui_result_victory_overlay_18
+  - first:
+      213: -8051689359425919256
+    second: ui_result_victory_overlay_19
+  - first:
+      213: -5900380081249313214
+    second: ui_result_victory_overlay_20
+  - first:
+      213: 6242181613458559615
+    second: ui_result_victory_overlay_21
+  - first:
+      213: -866701446322722406
+    second: ui_result_victory_overlay_22
+  - first:
+      213: -6004335403315808434
+    second: ui_result_victory_overlay_23
+  - first:
+      213: 7963471156793297560
+    second: ui_result_victory_overlay_24
+  - first:
+      213: 4007992145957304696
+    second: ui_result_victory_overlay_25
+  - first:
+      213: -2439684463734637476
+    second: ui_result_victory_overlay_26
+  - first:
+      213: 3502132768811420181
+    second: ui_result_victory_overlay_27
+  - first:
+      213: -7428120898279045687
+    second: ui_result_victory_overlay_28
+  - first:
+      213: -1092085024933371963
+    second: ui_result_victory_overlay_29
+  - first:
+      213: 5705223028886256638
+    second: ui_result_victory_overlay_30
+  - first:
+      213: 4863246454488927343
+    second: ui_result_victory_overlay_31
+  - first:
+      213: 6542760268969556705
+    second: ui_result_victory_overlay_32
+  - first:
+      213: 4112849844853203501
+    second: ui_result_victory_overlay_33
+  - first:
+      213: 5693250602783473353
+    second: ui_result_victory_overlay_34
+  - first:
+      213: -2294678243635678255
+    second: ui_result_victory_overlay_35
+  - first:
+      213: -5004552295455096250
+    second: ui_result_victory_overlay_36
+  - first:
+      213: 5047922012836715712
+    second: ui_result_victory_overlay_37
+  - first:
+      213: -6797647472462699323
+    second: ui_result_victory_overlay_38
+  - first:
+      213: -5192223305777363262
+    second: ui_result_victory_overlay_39
+  - first:
+      213: -4182361954813459513
+    second: ui_result_victory_overlay_40
+  - first:
+      213: 5893491399359945772
+    second: ui_result_victory_overlay_41
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_0
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 265
+        width: 21
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bffdf86972c7ff900800000000000000
+      internalID: 720430974874148859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_1
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 271
+        width: 14
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 894a293c6eee917d0800000000000000
+      internalID: -2947061806246222696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_2
+      rect:
+        serializedVersion: 2
+        x: 182
+        y: 257
+        width: 28
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 723f8db3763bbd620800000000000000
+      internalID: 2800028849307972391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_3
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 270
+        width: 13
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9abe386396837400800000000000000
+      internalID: 320747966140693147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_4
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 255
+        width: 22
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 607536f3e79be9840800000000000000
+      internalID: 5232823768931587846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_5
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 238
+        width: 29
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08d68599dc85a73a0800000000000000
+      internalID: -6666918658304348800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_6
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 251
+        width: 97
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c033a31c8d6f20a0800000000000000
+      internalID: -6904179255343370048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_7
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 256
+        width: 17
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be3c3d4dbd05911d0800000000000000
+      internalID: -3379581140266138645
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_8
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 262
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5a209fb7a1f11d70800000000000000
+      internalID: 9012250032120801885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_9
+      rect:
+        serializedVersion: 2
+        x: 188
+        y: 247
+        width: 23
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ce2fc8a2c4306750800000000000000
+      internalID: 6296090289724403401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_10
+      rect:
+        serializedVersion: 2
+        x: 229
+        y: 252
+        width: 25
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cf02bba955a9ec70800000000000000
+      internalID: 9000907134827892681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_11
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 262
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0522a1b50ad9838f0800000000000000
+      internalID: -560524841558859184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_12
+      rect:
+        serializedVersion: 2
+        x: 253
+        y: 250
+        width: 19
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd54be975906c1c50800000000000000
+      internalID: 6637286145949124063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_13
+      rect:
+        serializedVersion: 2
+        x: 271
+        y: 255
+        width: 26
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b67f137307a25b950800000000000000
+      internalID: 6464119501610940267
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_14
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 248
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f18fff110a24aba0800000000000000
+      internalID: -6078687412723154443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_15
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 248
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 829d35fb8c0c0b610800000000000000
+      internalID: 1635018633171425576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_16
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 249
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e713b28e1d1826ad0800000000000000
+      internalID: -2710461287180324482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_17
+      rect:
+        serializedVersion: 2
+        x: 181
+        y: 247
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6847896bb4c4cf140800000000000000
+      internalID: 4754759194666103942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_18
+      rect:
+        serializedVersion: 2
+        x: 188
+        y: 238
+        width: 16
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25555c965fcc1da60800000000000000
+      internalID: 7697158592566482258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_19
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 249
+        width: 13
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e620a1ff27a24090800000000000000
+      internalID: -8051689359425919256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_20
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 248
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24e1851e393ad1ea0800000000000000
+      internalID: -5900380081249313214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_21
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 244
+        width: 14
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f721cadda1fa0a650800000000000000
+      internalID: 6242181613458559615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_22
+      rect:
+        serializedVersion: 2
+        x: 347
+        y: 238
+        width: 18
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a99ed9560abd8f3f0800000000000000
+      internalID: -866701446322722406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_23
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 165
+        width: 24
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e473f0553c05caca0800000000000000
+      internalID: -6004335403315808434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_24
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 165
+        width: 15
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89acbb723dee38e60800000000000000
+      internalID: 7963471156793297560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_25
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 185
+        width: 14
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 879375a1f9f3f9730800000000000000
+      internalID: 4007992145957304696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_26
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 164
+        width: 10
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5cbe0ff7ef742ed0800000000000000
+      internalID: -2439684463734637476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_27
+      rect:
+        serializedVersion: 2
+        x: 354
+        y: 167
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51a8249b2331a9030800000000000000
+      internalID: 3502132768811420181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_28
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 137
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c50c6d16630ae890800000000000000
+      internalID: -7428120898279045687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_29
+      rect:
+        serializedVersion: 2
+        x: 347
+        y: 145
+        width: 17
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5cf9258b47228d0f0800000000000000
+      internalID: -1092085024933371963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_30
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 137
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: efbb4210e160d2f40800000000000000
+      internalID: 5705223028886256638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_31
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 63
+        width: 24
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6c8dfe32e8bd7340800000000000000
+      internalID: 4863246454488927343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_32
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 62
+        width: 24
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ea3872bccd8cca50800000000000000
+      internalID: 6542760268969556705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_33
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 10
+        width: 29
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d22eef0a427c31930800000000000000
+      internalID: 4112849844853203501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_34
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 16
+        width: 33
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ceff24524d720f40800000000000000
+      internalID: 5693250602783473353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_35
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 12
+        width: 64
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d3374e8b4aa720e0800000000000000
+      internalID: -2294678243635678255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_36
+      rect:
+        serializedVersion: 2
+        x: 173
+        y: 8
+        width: 38
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6428889d3324c8ab0800000000000000
+      internalID: -5004552295455096250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_37
+      rect:
+        serializedVersion: 2
+        x: 188
+        y: 8
+        width: 16
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ccd10d5352dd0640800000000000000
+      internalID: 5047922012836715712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_38
+      rect:
+        serializedVersion: 2
+        x: 188
+        y: 2
+        width: 22
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c46787a3a7e9a1a0800000000000000
+      internalID: -6797647472462699323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_39
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 12
+        width: 69
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c6c2a8b96481f7b0800000000000000
+      internalID: -5192223305777363262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_40
+      rect:
+        serializedVersion: 2
+        x: 293
+        y: 16
+        width: 32
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c34c3116f345f5c0800000000000000
+      internalID: -4182361954813459513
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_result_victory_overlay_41
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 9
+        width: 29
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2c5ba1e333e9c150800000000000000
+      internalID: 5893491399359945772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      ui_result_victory_overlay_0: 720430974874148859
+      ui_result_victory_overlay_1: -2947061806246222696
+      ui_result_victory_overlay_10: 9000907134827892681
+      ui_result_victory_overlay_11: -560524841558859184
+      ui_result_victory_overlay_12: 6637286145949124063
+      ui_result_victory_overlay_13: 6464119501610940267
+      ui_result_victory_overlay_14: -6078687412723154443
+      ui_result_victory_overlay_15: 1635018633171425576
+      ui_result_victory_overlay_16: -2710461287180324482
+      ui_result_victory_overlay_17: 4754759194666103942
+      ui_result_victory_overlay_18: 7697158592566482258
+      ui_result_victory_overlay_19: -8051689359425919256
+      ui_result_victory_overlay_2: 2800028849307972391
+      ui_result_victory_overlay_20: -5900380081249313214
+      ui_result_victory_overlay_21: 6242181613458559615
+      ui_result_victory_overlay_22: -866701446322722406
+      ui_result_victory_overlay_23: -6004335403315808434
+      ui_result_victory_overlay_24: 7963471156793297560
+      ui_result_victory_overlay_25: 4007992145957304696
+      ui_result_victory_overlay_26: -2439684463734637476
+      ui_result_victory_overlay_27: 3502132768811420181
+      ui_result_victory_overlay_28: -7428120898279045687
+      ui_result_victory_overlay_29: -1092085024933371963
+      ui_result_victory_overlay_3: 320747966140693147
+      ui_result_victory_overlay_30: 5705223028886256638
+      ui_result_victory_overlay_31: 4863246454488927343
+      ui_result_victory_overlay_32: 6542760268969556705
+      ui_result_victory_overlay_33: 4112849844853203501
+      ui_result_victory_overlay_34: 5693250602783473353
+      ui_result_victory_overlay_35: -2294678243635678255
+      ui_result_victory_overlay_36: -5004552295455096250
+      ui_result_victory_overlay_37: 5047922012836715712
+      ui_result_victory_overlay_38: -6797647472462699323
+      ui_result_victory_overlay_39: -5192223305777363262
+      ui_result_victory_overlay_4: 5232823768931587846
+      ui_result_victory_overlay_40: -4182361954813459513
+      ui_result_victory_overlay_41: 5893491399359945772
+      ui_result_victory_overlay_5: -6666918658304348800
+      ui_result_victory_overlay_6: -6904179255343370048
+      ui_result_victory_overlay_7: -3379581140266138645
+      ui_result_victory_overlay_8: 9012250032120801885
+      ui_result_victory_overlay_9: 6296090289724403401
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
