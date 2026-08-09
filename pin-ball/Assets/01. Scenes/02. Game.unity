@@ -248,7 +248,7 @@ Transform:
   m_GameObject: {fileID: 126846854}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.08, y: 3.43, z: 0}
+  m_LocalPosition: {x: 1.425, y: 3.028, z: 0}
   m_LocalScale: {x: 0.36, y: 0.36, z: 0.36}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2463,7 +2463,7 @@ Transform:
   m_GameObject: {fileID: 415694698}
   serializedVersion: 2
   m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
-  m_LocalPosition: {x: -1.02, y: 2.182, z: 0}
+  m_LocalPosition: {x: -0.96, y: 2.182, z: 0}
   m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2973,37 +2973,6 @@ Transform:
   - {fileID: 1684787849}
   - {fileID: 608184928}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &496503594
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 496503595}
-  m_Layer: 0
-  m_Name: ArcaneBoardLayoutV2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &496503595
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 496503594}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1346856777}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &496806365
 GameObject:
@@ -3541,17 +3510,14 @@ EdgeCollider2D:
   - {x: 2.4911652, y: 3.68972}
   - {x: 2.3775141, y: 4.0302987}
   - {x: 2.1949837, y: 4.315801}
-  - {x: 1.9862432, y: 4.562483}
-  - {x: 1.6468407, y: 4.7435694}
-  - {x: 1.1292219, y: 4.8549557}
-  - {x: 0.4791832, y: 4.868774}
-  - {x: -0.7, y: 4.86}
-  - {x: -1.218113, y: 4.8287826}
-  - {x: -1.6094809, y: 4.718884}
-  - {x: -1.9821396, y: 4.485706}
-  - {x: -2.2470999, y: 4.2118273}
-  - {x: -2.4115248, y: 3.8208952}
-  - {x: -2.4532385, y: 3.37305}
+  - {x: 1.9141797, y: 4.6161475}
+  - {x: 1.5626025, y: 4.7700267}
+  - {x: 1.1302407, y: 4.8550067}
+  - {x: 0.5926171, y: 4.8609405}
+  - {x: 0.16728874, y: 4.760021}
+  - {x: -0.0582501, y: 4.516495}
+  - {x: -0.13165815, y: 4.2358704}
+  - {x: -0.13753462, y: 3.7396948}
   m_AdjacentStartPoint: {x: 0, y: 0}
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
@@ -10603,7 +10569,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 496503595}
   - {fileID: 203310910}
   - {fileID: 2053151901}
   - {fileID: 592681053}
@@ -13107,7 +13072,7 @@ Transform:
   m_GameObject: {fileID: 1791428833}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.64, y: 3.43, z: 0}
+  m_LocalPosition: {x: -1.864, y: 3.028, z: 0}
   m_LocalScale: {x: 0.36, y: 0.36, z: 0.36}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13292,14 +13257,12 @@ EdgeCollider2D:
   - {x: 2.034277, y: 3.3045988}
   - {x: 1.9538498, y: 3.5323114}
   - {x: 1.7784426, y: 3.7575471}
-  - {x: 1.5156126, y: 3.951116}
-  - {x: 1.2130051, y: 4.0402985}
-  - {x: -0.53438646, y: 4.07316}
-  - {x: -1.0376787, y: 4.0722866}
-  - {x: -1.4356135, y: 3.9668398}
-  - {x: -1.7371807, y: 3.745671}
-  - {x: -1.8990724, y: 3.461525}
-  - {x: -1.9104865, y: 3.1239781}
+  - {x: 1.4850303, y: 4.0113726}
+  - {x: 1.0681119, y: 4.148278}
+  - {x: 0.62921226, y: 4.129439}
+  - {x: 0.43915126, y: 4.0318546}
+  - {x: 0.36802164, y: 3.8325915}
+  - {x: 0.3808167, y: 3.401267}
   m_AdjacentStartPoint: {x: 0, y: 0}
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
@@ -13482,7 +13445,7 @@ Transform:
   m_GameObject: {fileID: 1850725696}
   serializedVersion: 2
   m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
-  m_LocalPosition: {x: 0.48, y: 2.182, z: 0}
+  m_LocalPosition: {x: 0.5399996, y: 2.182, z: 0}
   m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15791,7 +15754,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   launchSpeed: 12
-  maximumSpeed: 20
+  maximumSpeed: 12
   linearDamping: 0.35
   gravityScale: 0.35
 --- !u!1 &1998223488499689171
@@ -16052,7 +16015,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   launchPosition: {x: 14.41, y: -3.75}
   minimumLaunchSpeed: 8
-  maximumLaunchSpeed: 15
+  maximumLaunchSpeed: 12
   launcherController: {fileID: 1424973155}
   pooledBalls:
   - {fileID: 1858562383814038886}
