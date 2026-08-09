@@ -5071,7 +5071,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 334, y: 0}
+  m_AnchoredPosition: {x: 376, y: 0}
   m_SizeDelta: {x: 118, y: 52}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &683016304
@@ -5128,7 +5128,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -11297,7 +11297,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 142, y: 0}
+  m_AnchoredPosition: {x: 144, y: 0}
   m_SizeDelta: {x: 92, y: 52}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1329060728
@@ -11354,7 +11354,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -15587,7 +15587,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a058fe87b6f7d247bd19095e833585f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveText: {fileID: 1743381152}
   playerHpText: {fileID: 1329060728}
   goldText: {fileID: 683016304}
   waveNodes:
@@ -25102,7 +25101,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -731, y: -46}
+  m_AnchoredPosition: {x: -848, y: -46}
   m_SizeDelta: {x: 520, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8820000000000000002
@@ -25167,7 +25166,7 @@ MonoBehaviour:
   m_fontSizeMin: 0
   m_fontSizeMax: 0
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0

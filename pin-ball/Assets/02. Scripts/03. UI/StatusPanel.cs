@@ -55,7 +55,6 @@ public class StatusPanel : UIBase
     private const int WaveNodeCount = 10;
     private const int WaveConnectorCount = WaveNodeCount - 1;
 
-    [SerializeField] private TextMeshProUGUI waveText;
     [SerializeField] private TextMeshProUGUI playerHpText;
     [SerializeField] private TextMeshProUGUI goldText;
 
@@ -91,10 +90,6 @@ public class StatusPanel : UIBase
         _battleManager.OnGoldChanged += OnGoldChanged;
 
         _isWaveHudValid = ValidateHudReferences();
-        if (waveText != null)
-        {
-            waveText.text = string.Empty;
-        }
 
         _maxHp = _battleManager.playerMaxHp;
         if (_battleManager.IsInitialized)
