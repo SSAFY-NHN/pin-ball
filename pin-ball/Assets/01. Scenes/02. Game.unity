@@ -8296,7 +8296,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.9}
-  m_AnchoredPosition: {x: 0, y: -324.16}
+  m_AnchoredPosition: {x: 0, y: -324.16003}
   m_SizeDelta: {x: 0, y: -479}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1094700518
@@ -14522,7 +14522,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   battlePosition: {x: 0, y: 0, z: -10}
-  pinballPosition: {x: 5.54, y: -0.03, z: -10}
+  pinballPosition: {x: 5.02, y: -0.03, z: -10}
   slideDuration: 1
 --- !u!1 &1960021616
 GameObject:
@@ -15921,9 +15921,9 @@ Transform:
   m_GameObject: {fileID: 7408060959843839752}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.26, y: 0.62, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 5.46, y: 0.1, z: 0}
+  m_LocalScale: {x: 0.92, y: 0.92, z: 0.92}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2249481699777292701}
   - {fileID: 1346856777}
