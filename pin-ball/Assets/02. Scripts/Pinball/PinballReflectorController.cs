@@ -14,11 +14,18 @@ public class PinballReflectorController : MonoBehaviour
     private float _restAngle;
     private float _activeUntil;
     private float _readyAt;
+    private ArcaneMaskGlowController _glow;
 
     private void Awake()
     {
         _pinballManager = Object.FindFirstObjectByType<PinballManager>();
         _restAngle = transform.localEulerAngles.z;
+        var renderer = GetComponent<SpriteRenderer>();
+        var catalog = ArcaneVfxCatalog.Load();
+        if (renderer != null && catalog != null)
+        {
+            _glow = ArcaneMaskGlowController.Attach(renderer, catalog.reflectorMask);
+        }
     }
 
     private void FixedUpdate()
@@ -27,6 +34,7 @@ public class PinballReflectorController : MonoBehaviour
         {
             _activeUntil = Time.time + activeDuration;
             _readyAt = Time.time + cooldown;
+            _glow?.Pulse(2.2f, activeDuration + 0.1f);
         }
 
         var directionSign = Mathf.Approximately(outwardNormal.x, 0f)
