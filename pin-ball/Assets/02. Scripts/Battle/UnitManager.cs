@@ -9,8 +9,11 @@ using UnityEngine.Serialization;
 //금지: 골드/HP/웨이브 상태 변경
 public class UnitManager : AppService, IItemEventListener
 {
+    public const int MaxDeployedAllyCount = 5;
+
     public event Action<AllyUnitData, AllyUnitData> OnEvolutionRequested;
     public event Action<AllyUnit> OnAllyDetailRequested;
+    public event Action<int> OnDeployedAllyCountChanged;
 
     private readonly List<AllyUnit> _ownedAllies = new();
     private readonly List<UnitBase> _activeAllies = new();
@@ -21,8 +24,13 @@ public class UnitManager : AppService, IItemEventListener
     public IReadOnlyList<AllyUnit> OwnedAllies => _ownedAllies;
     public BattleAreaBounds BattleArea => battleArea;
 
+    public int DeployedAllyCount => _ownedAllies.Count;
     public int RemainingAllyCount => _activeAllies.Count;
     public int RemainingEnemyCount => _activeEnemies.Count;
+    public bool CanStartWaveWithCurrentRoster =>
+        CanStartWaveWithAllyCount(DeployedAllyCount);
+    public bool CanLaunchPinballWithCurrentRoster =>
+        CanLaunchPinballWithAllyCount(DeployedAllyCount);
     
     private BattleManager _battleManager;
     private UnitSpawner _spawner;
@@ -234,9 +242,16 @@ public class UnitManager : AppService, IItemEventListener
     private void AddOwnedAlly(AllyUnit ally)
     {
         if (ally == null) return;
-        if (!_ownedAllies.Contains(ally)) _ownedAllies.Add(ally);
+
+        bool ownedCountChanged = !_ownedAllies.Contains(ally);
+        if (ownedCountChanged) _ownedAllies.Add(ally);
         if (!_activeAllies.Contains(ally)) _activeAllies.Add(ally);
         RefreshAllyItemModifiers();
+
+        if (ownedCountChanged)
+        {
+            OnDeployedAllyCountChanged?.Invoke(DeployedAllyCount);
+        }
     }
 
     public void AddEnemy(UnitBase enemy)
@@ -279,9 +294,14 @@ public class UnitManager : AppService, IItemEventListener
 
         if (unit is AllyUnit ally)
         {
-            _ownedAllies.Remove(ally);
+            bool ownedCountChanged = _ownedAllies.Remove(ally);
             _activeAllies.Remove(ally);
             _mergeReservations.Remove(ally);
+
+            if (ownedCountChanged)
+            {
+                OnDeployedAllyCountChanged?.Invoke(DeployedAllyCount);
+            }
         }
         else
         {
@@ -289,6 +309,16 @@ public class UnitManager : AppService, IItemEventListener
         }
 
         _spawner.ReturnUnit(unit);
+    }
+
+    public static bool CanStartWaveWithAllyCount(int count)
+    {
+        return count >= 1 && count <= MaxDeployedAllyCount;
+    }
+
+    public static bool CanLaunchPinballWithAllyCount(int count)
+    {
+        return count <= MaxDeployedAllyCount + 1;
     }
 
     private void ReturnAllEnemies()
