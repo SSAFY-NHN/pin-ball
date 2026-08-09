@@ -1,22 +1,28 @@
 fileFormatVersion: 2
-guid: f30083bb081d0fc488589383f7f3a219
+guid: bae58fa63889e1e43859a768a0807b69
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -429889552318555041
-    second: Dog2_Warrior_walk_0
+      213: 4945630688743248849
+    second: dog2_Warrior_Walk_0
   - first:
-      213: -6177049013917743952
-    second: Dog2_Warrior_walk_1
+      213: 1412841561910611765
+    second: dog2_Warrior_Walk_1
   - first:
-      213: 4451953106250143388
-    second: Dog2_Warrior_walk_2
+      213: -8924045417054727546
+    second: dog2_Warrior_Walk_2
   - first:
-      213: -2798393174092431384
-    second: Dog2_Warrior_walk_3
+      213: 2349600222523530193
+    second: dog2_Warrior_Walk_3
   - first:
-      213: 6230043928261115937
-    second: Dog2_Warrior_walk_4
+      213: 5697838025397069002
+    second: dog2_Warrior_Walk_4
+  - first:
+      213: 1825301872586531592
+    second: dog2_Warrior_Walk_5
+  - first:
+      213: -5209024771817580387
+    second: dog2_Warrior_Walk_6
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -49,7 +55,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -87,7 +93,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -125,111 +131,111 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Dog2_Warrior_walk_0
+      name: dog2_Warrior_Walk_0
       rect:
         serializedVersion: 2
-        x: 8
-        y: 4
-        width: 49
-        height: 57
+        x: 1
+        y: 0
+        width: 31
+        height: 30
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f5c9665dab9b80af0800000000000000
-      internalID: -429889552318555041
+      spriteID: 53f079d3aeb6b9310800000000000000
+      internalID: 1412841561910611765
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog2_Warrior_walk_1
+      name: dog2_Warrior_Walk_1
       rect:
         serializedVersion: 2
-        x: 72
-        y: 4
-        width: 49
-        height: 58
+        x: 32
+        y: 0
+        width: 32
+        height: 31
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0b4814536a6b64aa0800000000000000
-      internalID: -6177049013917743952
+      spriteID: 682100d89fb672480800000000000000
+      internalID: -8924045417054727546
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog2_Warrior_walk_2
+      name: dog2_Warrior_Walk_2
       rect:
         serializedVersion: 2
-        x: 135
-        y: 3
-        width: 50
-        height: 58
+        x: 64
+        y: 0
+        width: 32
+        height: 30
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c969cbe33c388cd30800000000000000
-      internalID: 4451953106250143388
+      spriteID: 1db91b324f47b9020800000000000000
+      internalID: 2349600222523530193
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog2_Warrior_walk_3
+      name: dog2_Warrior_Walk_3
       rect:
         serializedVersion: 2
-        x: 198
-        y: 3
-        width: 49
-        height: 58
+        x: 96
+        y: 0
+        width: 31
+        height: 30
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8efb7541c3c1a29d0800000000000000
-      internalID: -2798393174092431384
+      spriteID: 803206bd166c45910800000000000000
+      internalID: 1825301872586531592
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog2_Warrior_walk_4
+      name: dog2_Warrior_Walk_4
       rect:
         serializedVersion: 2
-        x: 262
-        y: 3
-        width: 49
-        height: 59
+        x: 129
+        y: 0
+        width: 31
+        height: 31
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 120451fc1ff857650800000000000000
-      internalID: 6230043928261115937
+      spriteID: d985a919193d5b7b0800000000000000
+      internalID: -5209024771817580387
       vertices: []
       indices: 
       edges: []
@@ -238,7 +244,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: ef888ac7f8f22014fae4f7c3cafc0f47
     internalID: 0
     vertices: []
     indices: 
@@ -248,11 +254,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Dog2_Warrior_walk_0: -429889552318555041
-      Dog2_Warrior_walk_1: -6177049013917743952
-      Dog2_Warrior_walk_2: 4451953106250143388
-      Dog2_Warrior_walk_3: -2798393174092431384
-      Dog2_Warrior_walk_4: 6230043928261115937
+      dog2_Warrior_Walk_0: 1412841561910611765
+      dog2_Warrior_Walk_1: -8924045417054727546
+      dog2_Warrior_Walk_2: 2349600222523530193
+      dog2_Warrior_Walk_3: 1825301872586531592
+      dog2_Warrior_Walk_4: -5209024771817580387
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
