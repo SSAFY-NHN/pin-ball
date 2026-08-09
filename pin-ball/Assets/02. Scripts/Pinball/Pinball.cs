@@ -27,6 +27,8 @@ public class Pinball : MonoBehaviour
     private PinballManager _manager;
     private Rigidbody2D _rigidBody2D;
     private CircleCollider2D _collider;
+    private SpriteRenderer _spriteRenderer;
+    private PinballArcaneVfx _arcaneVfx;
 
     private void Awake()
     {
@@ -38,12 +40,18 @@ public class Pinball : MonoBehaviour
     private void FixedUpdate()
     {
         _manager?.ApplyTargetMagnet(this);
+        _arcaneVfx?.OnVelocityChanged(_rigidBody2D.linearVelocity);
         PreviousVelocity = _rigidBody2D.linearVelocity;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         _manager.ApplyCollisionRetention(this, PreviousVelocity);
+
+        var contactPoint = collision.contactCount > 0
+            ? collision.GetContact(0).point
+            : (Vector2)transform.position;
+        _arcaneVfx?.PlayCollision(contactPoint, collision.relativeVelocity.magnitude);
 
         var obstacle = collision.collider.GetComponentInParent<PinballObstacle>();
         if (obstacle == null) return;
@@ -81,6 +89,7 @@ public class Pinball : MonoBehaviour
 
         _rigidBody2D.simulated = true;
         ResetPosition(worldPosition, launchDirection);
+        _arcaneVfx?.OnActivated();
     }
 
     internal void ResetPosition(Vector2 worldPosition, Vector2 launchDirection)
@@ -101,6 +110,7 @@ public class Pinball : MonoBehaviour
     internal void SetVelocity(Vector2 velocity)
     {
         _rigidBody2D.linearVelocity = velocity;
+        _arcaneVfx?.OnVelocityChanged(velocity);
     }
 
     public void Deactivate()
@@ -111,6 +121,8 @@ public class Pinball : MonoBehaviour
             _rigidBody2D.angularVelocity = 0f;
             _rigidBody2D.simulated = false;
         }
+
+        _arcaneVfx?.OnDeactivated();
 
         gameObject.SetActive(false);
     }
@@ -125,6 +137,22 @@ public class Pinball : MonoBehaviour
         if (_collider == null)
         {
             _collider = GetComponent<CircleCollider2D>();
+        }
+
+        if (_spriteRenderer == null)
+        {
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+        }
+
+        if (_arcaneVfx == null)
+        {
+            _arcaneVfx = GetComponent<PinballArcaneVfx>();
+            if (_arcaneVfx == null)
+            {
+                _arcaneVfx = gameObject.AddComponent<PinballArcaneVfx>();
+            }
+
+            _arcaneVfx.Initialize(_spriteRenderer, _rigidBody2D);
         }
     }
 }
