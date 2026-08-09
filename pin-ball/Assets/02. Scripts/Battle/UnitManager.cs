@@ -10,6 +10,7 @@ using UnityEngine.Serialization;
 public class UnitManager : AppService, IItemEventListener
 {
     public event Action<AllyUnitData, AllyUnitData> OnEvolutionRequested;
+    public event Action<AllyUnit> OnAllyDetailRequested;
 
     private readonly List<AllyUnit> _ownedAllies = new();
     private readonly List<UnitBase> _activeAllies = new();
@@ -18,6 +19,7 @@ public class UnitManager : AppService, IItemEventListener
     private readonly List<AllyUnitData> _evolutionCandidates = new();
 
     public IReadOnlyList<AllyUnit> OwnedAllies => _ownedAllies;
+    public BattleAreaBounds BattleArea => battleArea;
 
     public int RemainingAllyCount => _activeAllies.Count;
     public int RemainingEnemyCount => _activeEnemies.Count;
@@ -25,6 +27,7 @@ public class UnitManager : AppService, IItemEventListener
     private BattleManager _battleManager;
     private UnitSpawner _spawner;
     private TitleData _titleData;
+    [SerializeField] private BattleAreaBounds battleArea;
     private float _attackMultiplier = 1f;
     private float _attackRateMultiplier = 1f;
     private float _hpMultiplier = 1f;
@@ -328,6 +331,30 @@ public class UnitManager : AppService, IItemEventListener
                _ownedAllies.Contains(ally) &&
                !_mergeReservations.Contains(ally) &&
                ally.IsAlive;
+    }
+
+    public void RequestAllyDetail(AllyUnit ally)
+    {
+        if (ally == null ||
+            !_ownedAllies.Contains(ally) ||
+            ally.IsInPool) return;
+
+        OnAllyDetailRequested?.Invoke(ally);
+    }
+
+    public bool IsValidAllyPlacement(
+        AllyUnit ally,
+        Vector3 position)
+    {
+        if (!CanDragAlly(ally) || battleArea == null) return false;
+
+        var unitCollider = ally.GetComponentInChildren<Collider2D>();
+        float padding = unitCollider == null
+            ? 0f
+            : Mathf.Max(
+                unitCollider.bounds.extents.x,
+                unitCollider.bounds.extents.y);
+        return battleArea.Contains(position, padding);
     }
 
     public bool TryMergeAllies(

@@ -11,8 +11,12 @@ public abstract class UnitBase : MonoBehaviour
     public EBattleUnitState State => _state;
     public float CurrentHp { get; private set; }
     public float MaxHp => _stats.MaxHp;
+    public float MaxMana => _stats.MaxMana;
     public float AttackDamage => _stats.AttackDamage;
     public float CurrentDefense => _stats.Defense * _defenseMultiplier;
+    public float MoveSpeed => _stats.MoveSpeed;
+    public float AttackRate => _stats.AttackRate;
+    public float AttackRange => _stats.AttackRange;
     public float HpRatio => MaxHp > 0f ? Mathf.Clamp01(CurrentHp / MaxHp) : 0f;
     public bool IsAlive => _state != EBattleUnitState.Dead;
     public bool IsInPool { get; private set; }
@@ -384,10 +388,19 @@ public abstract class UnitBase : MonoBehaviour
                 return;
             }
 
-            transform.position = Vector2.MoveTowards(
+            Vector3 nextPosition = Vector2.MoveTowards(
                 transform.position,
                 _currentTarget.transform.position,
                 moveSpeed * Time.deltaTime);
+            if (_unitManager != null &&
+                _unitManager.BattleArea != null)
+            {
+                nextPosition = _unitManager.BattleArea.Clamp(
+                    nextPosition,
+                    GetMovementPadding());
+            }
+
+            transform.position = nextPosition;
 
             _state = EBattleUnitState.Moving;
             return;
@@ -489,6 +502,14 @@ public abstract class UnitBase : MonoBehaviour
     {
         if (IsInPool) return;
         _unitManager?.ReleaseUnit(this);
+    }
+
+    private float GetMovementPadding()
+    {
+        if (_renderer == null) return 0f;
+        return Mathf.Max(
+            _renderer.bounds.extents.x,
+            _renderer.bounds.extents.y);
     }
 
     private void Die()
