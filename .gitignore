@@ -1,6 +1,9 @@
 # Unity project location:
 # repository-root/pin-ball/
 
+# Codex isolated worktrees
+/.worktrees/
+
 # Unity generated directories
 /pin-ball/.utmp/
 /pin-ball/[Ll]ibrary/
