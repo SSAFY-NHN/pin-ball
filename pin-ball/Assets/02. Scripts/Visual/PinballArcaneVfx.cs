@@ -43,7 +43,7 @@ public sealed class PinballArcaneVfx : MonoBehaviour
         };
         _additiveMaterial.SetFloat("_Intensity", 1.65f);
         _additiveMaterial.SetFloat("_GlowSpread", 1.2f);
-        _glow = ArcaneMaskGlowController.Attach(_sourceRenderer, catalog.ballMask);
+        _glow = GetComponent<ArcaneMaskGlowController>();
         CreateTrail(catalog.ballTrail);
         _impact = CreateSpriteEffect("Arcane Impact", catalog.ballImpact, _sourceRenderer.sortingOrder + 3);
         _ring = CreateSpriteEffect("Arcane Ring", catalog.ballRing, _sourceRenderer.sortingOrder + 2);

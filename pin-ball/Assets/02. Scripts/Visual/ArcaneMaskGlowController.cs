@@ -23,63 +23,29 @@ public static class ArcaneGlowMath
 [DisallowMultipleComponent]
 public sealed class ArcaneMaskGlowController : MonoBehaviour
 {
-    private static readonly int IntensityId = Shader.PropertyToID("_Intensity");
-    private static readonly Color DefaultGlowColor = new(0.03f, 0.55f, 1f, 0.9f);
-
+    [SerializeField] private SpriteRenderer sourceRenderer;
+    [SerializeField] private SpriteRenderer glowRenderer;
     [SerializeField, Min(0f)] private float baseIntensity = 1.65f;
 
     public float CurrentIntensity { get; private set; }
 
-    private SpriteRenderer sourceRenderer;
-    private SpriteRenderer glowRenderer;
-    private Material glowMaterial;
     private MaterialPropertyBlock propertyBlock;
     private float pulseIntensity;
     private float pulseDuration;
     private float pulseStartedAt = float.NegativeInfinity;
 
-    public static ArcaneMaskGlowController Attach(SpriteRenderer source, Sprite mask)
+    private void Awake()
     {
-        if (source == null || mask == null) return null;
-        var controller = source.GetComponent<ArcaneMaskGlowController>();
-        if (controller == null) controller = source.gameObject.AddComponent<ArcaneMaskGlowController>();
-        controller.Initialize(source, mask);
-        return controller;
-    }
-
-    public void Initialize(SpriteRenderer source, Sprite mask)
-    {
-        sourceRenderer = source;
-        if (sourceRenderer == null || sourceRenderer.sprite == null || mask == null) return;
-
-        if (glowRenderer == null)
+        if (sourceRenderer == null || glowRenderer == null)
         {
-            var child = new GameObject("Arcane Mask Glow");
-            child.transform.SetParent(transform, false);
-            glowRenderer = child.AddComponent<SpriteRenderer>();
-        }
-
-        var shader = Resources.Load<Shader>("ArcaneVFX/ArcaneAdditive");
-        if (shader == null)
-        {
-            glowRenderer.enabled = false;
-            Debug.LogWarning("Arcane additive shader was not found.", this);
+            Debug.LogError(
+                "[ArcaneMaskGlowController] Source and glow renderers must be serialized.",
+                this);
+            enabled = false;
             return;
         }
 
-        if (glowMaterial == null)
-        {
-            glowMaterial = new Material(shader)
-            {
-                name = "Arcane Mask Glow (Runtime)",
-                hideFlags = HideFlags.HideAndDontSave
-            };
-        }
-
-        propertyBlock ??= new MaterialPropertyBlock();
-        glowRenderer.sharedMaterial = glowMaterial;
-        glowRenderer.sprite = mask;
-        glowRenderer.color = DefaultGlowColor;
+        propertyBlock = new MaterialPropertyBlock();
         SyncToSource();
         SetIntensity(baseIntensity);
     }
@@ -129,12 +95,7 @@ public sealed class ArcaneMaskGlowController : MonoBehaviour
     {
         CurrentIntensity = intensity;
         propertyBlock.Clear();
-        propertyBlock.SetFloat(IntensityId, intensity);
+        propertyBlock.SetFloat("_Intensity", intensity);
         glowRenderer.SetPropertyBlock(propertyBlock);
-    }
-
-    private void OnDestroy()
-    {
-        if (glowMaterial != null) Destroy(glowMaterial);
     }
 }

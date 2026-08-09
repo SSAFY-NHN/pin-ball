@@ -27,7 +27,7 @@ public class PinballMagnetController : MonoBehaviour
         var shader = Resources.Load<Shader>("ArcaneVFX/ArcaneAdditive");
         if (catalog == null || targetRenderer == null) return;
 
-        _glow = ArcaneMaskGlowController.Attach(targetRenderer, catalog.magnetMask);
+        _glow = GetComponent<ArcaneMaskGlowController>();
         if (shader == null) return;
 
         _effectMaterial = new Material(shader)

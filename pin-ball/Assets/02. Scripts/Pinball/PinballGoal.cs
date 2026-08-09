@@ -94,13 +94,8 @@ public class PinballGoal : MonoBehaviour
         var catalog = ArcaneVfxCatalog.Load();
         if (catalog == null) return;
 
-        var runeRenderer = transform.Find("Rune")?.GetComponent<SpriteRenderer>();
-        if (runeRenderer != null)
-        {
-            _runeGlow = ArcaneMaskGlowController.Attach(
-                runeRenderer,
-                catalog.GetRuneMask(unitData.UnitId));
-        }
+        _runeGlow = transform.Find("Rune")?
+            .GetComponent<ArcaneMaskGlowController>();
 
         var shader = Resources.Load<Shader>("ArcaneVFX/ArcaneAdditive");
         if (shader == null) return;

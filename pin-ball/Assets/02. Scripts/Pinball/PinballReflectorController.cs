@@ -21,11 +21,7 @@ public class PinballReflectorController : MonoBehaviour
         _pinballManager = Object.FindFirstObjectByType<PinballManager>();
         _restAngle = transform.localEulerAngles.z;
         var renderer = GetComponent<SpriteRenderer>();
-        var catalog = ArcaneVfxCatalog.Load();
-        if (renderer != null && catalog != null)
-        {
-            _glow = ArcaneMaskGlowController.Attach(renderer, catalog.reflectorMask);
-        }
+        _glow = GetComponent<ArcaneMaskGlowController>();
     }
 
     private void FixedUpdate()

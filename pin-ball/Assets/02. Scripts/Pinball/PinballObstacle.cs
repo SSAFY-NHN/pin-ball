@@ -18,12 +18,7 @@ public class PinballObstacle : MonoBehaviour
     private void Awake()
     {
         if (type != EPinballObstacle.BigBumper) return;
-        var catalog = ArcaneVfxCatalog.Load();
-        var renderer = GetComponent<SpriteRenderer>();
-        if (catalog != null && renderer != null)
-        {
-            glow = ArcaneMaskGlowController.Attach(renderer, catalog.GetMaskFor(gameObject.name));
-        }
+        glow = GetComponent<ArcaneMaskGlowController>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
