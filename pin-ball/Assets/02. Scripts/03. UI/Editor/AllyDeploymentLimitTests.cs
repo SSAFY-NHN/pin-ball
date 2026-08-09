@@ -29,5 +29,18 @@ public class AllyDeploymentLimitTests
             UnitManager.CanLaunchPinballWithAllyCount(count),
             Is.EqualTo(expected));
     }
+
+    [TestCase(0, true)]
+    [TestCase(1, false)]
+    [TestCase(5, false)]
+    [TestCase(6, true)]
+    public void ShouldWarnAllyCount_WarnsWhenWaveCannotStart(
+        int count,
+        bool expected)
+    {
+        Assert.That(
+            StatusPanel.ShouldWarnAllyCount(count),
+            Is.EqualTo(expected));
+    }
 }
 #endif

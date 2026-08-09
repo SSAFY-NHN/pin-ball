@@ -1,9 +1,33 @@
 using NUnit.Framework;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.TestTools.Utils;
 
 public class PinballMotionTests
 {
+    [Test]
+    public void Magnet_IsActiveOnlyWhileMouseIsHeld()
+    {
+        var gameObject = new GameObject("Magnet Test");
+        var magnet = gameObject.AddComponent<PinballMagnetController>();
+        var activeField = typeof(PinballMagnetController).GetField(
+            "_isActive",
+            BindingFlags.Instance | BindingFlags.NonPublic);
+
+        try
+        {
+            gameObject.SendMessage("OnMouseDown");
+            Assert.That(activeField?.GetValue(magnet), Is.EqualTo(true));
+
+            gameObject.SendMessage("OnMouseUp");
+            Assert.That(activeField?.GetValue(magnet), Is.EqualTo(false));
+        }
+        finally
+        {
+            Object.DestroyImmediate(gameObject);
+        }
+    }
+
     [Test]
     public void CapVelocity_ReducesOnlyVelocityAboveMaximum()
     {

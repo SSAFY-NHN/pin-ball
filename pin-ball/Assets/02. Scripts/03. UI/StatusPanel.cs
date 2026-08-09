@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public enum EWaveHudNodeState
 {
@@ -80,6 +81,8 @@ public class StatusPanel : UIBase
     private int _maxHp;
     private int _totalWaveCount;
     private bool _isWaveHudValid;
+    private bool _hasDisplayedHp;
+    private bool _hasDisplayedGold;
     private readonly WaveHudState _waveHudState = new();
 
     public override bool IsDefaultPanel => true;
@@ -137,13 +140,20 @@ public class StatusPanel : UIBase
 
     private void OnHpChanged(int hp)
     {
-        playerHpText.text =
-            $"{Mathf.Max(0, hp)}/{Mathf.Max(1, _maxHp)}";
+        string value = $"{Mathf.Max(0, hp)}/{Mathf.Max(1, _maxHp)}";
+        bool changed = _hasDisplayedHp && playerHpText.text != value;
+        playerHpText.text = value;
+        _hasDisplayedHp = true;
+        if (changed) Emphasize(playerHpText);
     }
 
     private void OnGoldChanged(int gold)
     {
-        goldText.text = Mathf.Max(0, gold).ToString();
+        string value = Mathf.Max(0, gold).ToString();
+        bool changed = _hasDisplayedGold && goldText.text != value;
+        goldText.text = value;
+        _hasDisplayedGold = true;
+        if (changed) Emphasize(goldText);
     }
 
     private void OnDeployedAllyCountChanged(int count)
@@ -152,9 +162,29 @@ public class StatusPanel : UIBase
 
         allyCountText.text =
             $"{Mathf.Max(0, count)}/{UnitManager.MaxDeployedAllyCount}";
-        allyCountText.color = count > UnitManager.MaxDeployedAllyCount
+        allyCountText.color = ShouldWarnAllyCount(count)
             ? allyCountOverLimitColor
             : allyCountDefaultColor;
+    }
+
+    public static bool ShouldWarnAllyCount(int count)
+    {
+        return !UnitManager.CanStartWaveWithAllyCount(count);
+    }
+
+    public void EmphasizeAllyCount()
+    {
+        Emphasize(allyCountText);
+    }
+
+    private static void Emphasize(TextMeshProUGUI text)
+    {
+        if (text == null) return;
+
+        RectTransform rect = text.rectTransform;
+        rect.DOKill(true);
+        rect.DOShakeAnchorPos(0.3f, 8f, 14, 90f, false, true);
+        rect.DOPunchScale(Vector3.one * 0.12f, 0.3f, 6, 0.5f);
     }
 
     private void RefreshWaveProgress(int currentWave)
@@ -235,6 +265,10 @@ public class StatusPanel : UIBase
 
     private void OnDestroy()
     {
+        playerHpText?.rectTransform.DOKill();
+        goldText?.rectTransform.DOKill();
+        allyCountText?.rectTransform.DOKill();
+
         if (_battleManager != null)
         {
             _battleManager.OnInitialized -= OnBattleInitialized;
