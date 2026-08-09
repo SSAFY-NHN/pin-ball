@@ -36,6 +36,11 @@ public class UIManager : AppService
                 panel.gameObject.SetActive(true);
                 
                 panel.Initialize(this); 
+
+                if (!panel.IsManagedByStack)
+                {
+                    continue;
+                }
                 
                 if (panel.IsDefaultPanel)
                 {

@@ -5,6 +5,7 @@ using UnityEngine;
 public class ItemPanel : UIBase
 {
     public override bool IsDefaultPanel => true;
+    public override bool IsManagedByStack => false;
 
     
 

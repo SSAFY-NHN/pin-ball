@@ -3,6 +3,7 @@ using UnityEngine;
 public abstract class UIBase : MonoBehaviour
 {
     public virtual bool IsDefaultPanel => false;
+    public virtual bool IsManagedByStack => true;
     protected virtual GameObject Panel => gameObject;
 
     private UIManager _manager;

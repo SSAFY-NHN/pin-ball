@@ -30,6 +30,7 @@ public class PinballManager : AppService, IItemEventListener
 
     public int CurrentLaunchCost => CalculateLaunchCost();
     public bool HasAvailableBall => _availableBalls.Count > 0;
+    public bool HasActiveBalls => _activeBalls.Count > 0;
 
     [Header("Launcher")]
     [SerializeField] private Vector2 launchPosition = new(6.4f, 10f);
@@ -138,6 +139,9 @@ public class PinballManager : AppService, IItemEventListener
 
     private void UpdateLauncherPosition()
     {
+        if (_battleManager == null ||
+            !_battleManager.CanUsePreparationActions) return;
+
         var input = Input.GetAxisRaw("Horizontal");
         if (Mathf.Abs(input) < 0.01f) return;
 

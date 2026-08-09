@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class AllyUnit : UnitBase
 {
@@ -10,6 +11,7 @@ public class AllyUnit : UnitBase
     public string UnitId { get; private set; }
     public int Level { get; private set; }
     public float CurrentMana { get; private set; }
+    public AllySkillData Skill => _skill;
 
     private readonly List<UnitBase> _targets = new();
 
@@ -58,11 +60,18 @@ public class AllyUnit : UnitBase
 
     private void OnMouseDown()
     {
+        if (!Input.GetMouseButton(0)) return;
         if (_isMergeReserved || _unitManager == null) return;
         if (!_unitManager.CanDragAlly(this)) return;
 
         _dragStartPosition = transform.position;
         _isDragging = true;
+    }
+
+    private void OnMouseOver()
+    {
+        if (_isDragging || !Input.GetMouseButtonDown(1)) return;
+        _unitManager?.RequestAllyDetail(this);
     }
 
     private void OnMouseDrag()
@@ -79,6 +88,13 @@ public class AllyUnit : UnitBase
         Vector3 worldPosition =
             _dragCamera.ScreenToWorldPoint(Input.mousePosition);
         worldPosition.z = _dragStartPosition.z;
+        if (_unitManager.BattleArea != null)
+        {
+            worldPosition = _unitManager.BattleArea.Clamp(
+                worldPosition,
+                GetPlacementPadding());
+        }
+
         transform.position = worldPosition;
     }
 
@@ -86,6 +102,14 @@ public class AllyUnit : UnitBase
     {
         if (!_isDragging) return;
         _isDragging = false;
+
+        if ((EventSystem.current != null &&
+             EventSystem.current.IsPointerOverGameObject()) ||
+            !_unitManager.IsValidAllyPlacement(this, transform.position))
+        {
+            transform.position = _dragStartPosition;
+            return;
+        }
 
         var colliders = Physics2D.OverlapPointAll(transform.position);
         AllyUnit target = null;
@@ -99,14 +123,23 @@ public class AllyUnit : UnitBase
             break;
         }
 
-        if (target == null ||
-            !_unitManager.TryMergeAllies(
+        if (target != null)
+        {
+            _unitManager.TryMergeAllies(
                 this,
                 target,
-                _dragStartPosition))
-        {
-            transform.position = _dragStartPosition;
+                _dragStartPosition);
         }
+    }
+
+    private float GetPlacementPadding()
+    {
+        var unitCollider = GetComponentInChildren<Collider2D>();
+        if (unitCollider == null) return 0f;
+
+        return Mathf.Max(
+            unitCollider.bounds.extents.x,
+            unitCollider.bounds.extents.y);
     }
 
     protected override void Tick()

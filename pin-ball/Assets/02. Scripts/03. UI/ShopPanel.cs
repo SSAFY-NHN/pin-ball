@@ -7,6 +7,7 @@ using TMPro;
 public class ShopPanel : UIBase
 {
     public override bool IsDefaultPanel => true;
+    public override bool IsManagedByStack => false;
     private int DefaultShopItemCount => _itemSlots.Length;
     
     [Header("Reroll")]
