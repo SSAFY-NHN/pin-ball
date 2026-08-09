@@ -6,6 +6,9 @@ using UnityEngine;
 public class Pinball : MonoBehaviour
 {
     [SerializeField] private float launchSpeed = 8f;
+    [SerializeField, Min(0.1f)] private float maximumSpeed = 8.5f;
+    [SerializeField, Min(0f)] private float linearDamping = 0.35f;
+    [SerializeField, Min(0f)] private float gravityScale = 0.35f;
 
     public Vector2 Velocity => _rigidBody2D.linearVelocity;
     public Vector2 PreviousVelocity { get; private set; }
@@ -40,6 +43,9 @@ public class Pinball : MonoBehaviour
     private void FixedUpdate()
     {
         _manager?.ApplyTargetMagnet(this);
+        _rigidBody2D.linearVelocity = PinballMotionMath.CapVelocity(
+            _rigidBody2D.linearVelocity,
+            maximumSpeed);
         _arcaneVfx?.OnVelocityChanged(_rigidBody2D.linearVelocity);
         PreviousVelocity = _rigidBody2D.linearVelocity;
     }
@@ -72,24 +78,36 @@ public class Pinball : MonoBehaviour
         bool isClone)
     {
         EnsureInitialized();
-
-        PaidLaunchCost = paidLaunchCost;
-        IsClone = isClone;
-        WasRescued = false;
-        HasSplit = isClone;
-        SmallPinHitCount = 0;
-        BigBumperHitCount = 0;
-        GoldenBallGold = 0;
-        GoldenBumperGold = 0;
-        TargetMagnetUseCount = 0;
-        OverloadUseCount = 0;
-
+        ResetRunState(paidLaunchCost, isClone);
         transform.position = worldPosition;
         gameObject.SetActive(true);
-
         _rigidBody2D.simulated = true;
         ResetPosition(worldPosition, launchDirection);
         _arcaneVfx?.OnActivated();
+    }
+
+    internal void LoadAt(Vector2 worldPosition)
+    {
+        EnsureInitialized();
+        ResetRunState(0, false);
+        transform.position = worldPosition;
+        gameObject.SetActive(true);
+        _rigidBody2D.linearVelocity = Vector2.zero;
+        _rigidBody2D.angularVelocity = 0f;
+        _rigidBody2D.simulated = false;
+        _arcaneVfx?.OnDeactivated();
+    }
+
+    internal void LaunchLoaded(Vector2 launchVelocity, int paidLaunchCost)
+    {
+        EnsureInitialized();
+        PaidLaunchCost = paidLaunchCost;
+        _rigidBody2D.simulated = true;
+        _rigidBody2D.linearVelocity = launchVelocity;
+        _rigidBody2D.angularVelocity = 0f;
+        PreviousVelocity = launchVelocity;
+        _arcaneVfx?.OnActivated();
+        _arcaneVfx?.OnVelocityChanged(launchVelocity);
     }
 
     internal void ResetPosition(Vector2 worldPosition, Vector2 launchDirection)
@@ -113,6 +131,18 @@ public class Pinball : MonoBehaviour
         _arcaneVfx?.OnVelocityChanged(velocity);
     }
 
+    internal void ApplyForce(Vector2 force)
+    {
+        if (_rigidBody2D == null || !_rigidBody2D.simulated) return;
+        _rigidBody2D.AddForce(force, ForceMode2D.Force);
+    }
+
+    internal void ApplyImpulse(Vector2 impulse)
+    {
+        if (_rigidBody2D == null || !_rigidBody2D.simulated) return;
+        _rigidBody2D.AddForce(impulse, ForceMode2D.Impulse);
+    }
+
     public void Deactivate()
     {
         if (_rigidBody2D != null)
@@ -132,6 +162,8 @@ public class Pinball : MonoBehaviour
         if (_rigidBody2D == null)
         {
             _rigidBody2D = GetComponent<Rigidbody2D>();
+            _rigidBody2D.linearDamping = linearDamping;
+            _rigidBody2D.gravityScale = gravityScale;
         }
 
         if (_collider == null)
@@ -154,5 +186,19 @@ public class Pinball : MonoBehaviour
 
             _arcaneVfx.Initialize(_spriteRenderer, _rigidBody2D);
         }
+    }
+
+    private void ResetRunState(int paidLaunchCost, bool isClone)
+    {
+        PaidLaunchCost = paidLaunchCost;
+        IsClone = isClone;
+        WasRescued = false;
+        HasSplit = isClone;
+        SmallPinHitCount = 0;
+        BigBumperHitCount = 0;
+        GoldenBallGold = 0;
+        GoldenBumperGold = 0;
+        TargetMagnetUseCount = 0;
+        OverloadUseCount = 0;
     }
 }

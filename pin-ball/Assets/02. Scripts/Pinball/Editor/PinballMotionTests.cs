@@ -1,0 +1,36 @@
+using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools.Utils;
+
+public class PinballMotionTests
+{
+    [Test]
+    public void CapVelocity_ReducesOnlyVelocityAboveMaximum()
+    {
+        Assert.That(
+            PinballMotionMath.CapVelocity(new Vector2(12f, 0f), 8f),
+            Is.EqualTo(new Vector2(8f, 0f)).Using(Vector2ComparerWithEqualsOperator.Instance));
+        Assert.That(
+            PinballMotionMath.CapVelocity(new Vector2(3f, 4f), 8f),
+            Is.EqualTo(new Vector2(3f, 4f)).Using(Vector2ComparerWithEqualsOperator.Instance));
+    }
+
+    [Test]
+    public void CalculateBumperVelocity_UsesOutwardDirectionAndMinimumSpeed()
+    {
+        var result = PinballMotionMath.CalculateBumperVelocity(
+            new Vector2(2f, -1f), Vector2.up, 6f, 1f);
+
+        Assert.That(result, Is.EqualTo(new Vector2(0f, 6f))
+            .Using(Vector2ComparerWithEqualsOperator.Instance));
+    }
+
+    [Test]
+    public void CalculateAnchoredCompression_KeepsBottomEdgeStationary()
+    {
+        var result = PinballMotionMath.CalculateAnchoredCompression(2f, 0.6f);
+
+        Assert.That(result.ScaleRatio, Is.EqualTo(0.7f).Within(0.0001f));
+        Assert.That(result.CenterOffset, Is.EqualTo(-0.3f).Within(0.0001f));
+    }
+}

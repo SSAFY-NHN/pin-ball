@@ -29,14 +29,15 @@ public class PinballManager : AppService, IItemEventListener
     public event Action<int> OnLaunchCostChanged;
 
     public int CurrentLaunchCost => CalculateLaunchCost();
-    public bool HasAvailableBall => _availableBalls.Count > 0;
+    public bool HasAvailableBall => _loadedBall != null || _availableBalls.Count > 0;
     public bool HasActiveBalls => _activeBalls.Count > 0;
+    public IReadOnlyCollection<Pinball> ActiveBalls => _activeBalls;
 
     [Header("Launcher")]
     [SerializeField] private Vector2 launchPosition = new(6.4f, 10f);
-    [SerializeField, Min(0f)] private float launchMoveSpeed = 6f;
-    [SerializeField, Min(0f)] private float launchHalfRange = 4f;
-    [SerializeField] private KeyCode precisionKey = KeyCode.LeftShift;
+    [SerializeField, Min(0f)] private float minimumLaunchSpeed = 5.5f;
+    [SerializeField, Min(0f)] private float maximumLaunchSpeed = 8f;
+    [SerializeField] private PinballLauncherController launcherController;
 
     [SerializeField] private List<Pinball> pooledBalls = new();
 
@@ -51,6 +52,7 @@ public class PinballManager : AppService, IItemEventListener
     private int _baseLaunchCost = 50;
     private int _launchCostIncrease = 30;
     private int _successfulLaunchCount;
+    private Pinball _loadedBall;
 
     private Vector2 _currentLaunchPosition;
     private int _selectedGoalIndex;
@@ -105,14 +107,9 @@ public class PinballManager : AppService, IItemEventListener
         SubscribeItems();
         _battleManager.OnStateChanged += OnBattleStateChanged;
 
-        _currentLaunchPosition = launchPosition;
         PrepareBallPool();
+        LoadNextBall();
         NotifyLaunchCostChanged();
-    }
-
-    private void Update()
-    {
-        UpdateLauncherPosition();
     }
 
     private void PrepareBallPool()
@@ -137,46 +134,53 @@ public class PinballManager : AppService, IItemEventListener
         }
     }
 
-    private void UpdateLauncherPosition()
-    {
-        if (_battleManager == null ||
-            !_battleManager.CanUsePreparationActions) return;
-
-        var input = Input.GetAxisRaw("Horizontal");
-        if (Mathf.Abs(input) < 0.01f) return;
-
-        var isPrecisionMode = _precisionSpeedMultiplier < 1f && Input.GetKey(precisionKey);
-        var speedMultiplier = isPrecisionMode ? _precisionSpeedMultiplier : 1f;
-        var rangeMultiplier = 1f + (isPrecisionMode ? _precisionRangeBonus : 0f);
-        var halfRange = launchHalfRange * rangeMultiplier;
-
-        _currentLaunchPosition.x += input * launchMoveSpeed * speedMultiplier * Time.deltaTime;
-        _currentLaunchPosition.x = Mathf.Clamp(
-            _currentLaunchPosition.x,
-            launchPosition.x - halfRange,
-            launchPosition.x + halfRange);
-    }
-
     public void LaunchBall()
     {
-        LaunchBall(_currentLaunchPosition);
+        TryLaunchLoadedBall(1f);
     }
 
     public void LaunchBall(Vector2 position)
     {
+        launchPosition = position;
+        if (_loadedBall != null)
+        {
+            _loadedBall.LoadAt(position);
+        }
+
+        TryLaunchLoadedBall(1f);
+    }
+
+    public bool TryLaunchLoadedBall(float normalizedPull)
+    {
         if (_battleManager == null ||
-            !_battleManager.CanUsePreparationActions) return;
-        if (_availableBalls.Count <= 0) return;
+            !_battleManager.CanUsePreparationActions) return false;
+        if (_loadedBall == null) return false;
 
         var cost = CurrentLaunchCost;
-        if (!_battleManager.TrySpendPreparationGold(cost)) return;
+        if (!_battleManager.TrySpendPreparationGold(cost)) return false;
 
-        var ball = _availableBalls.Dequeue();
-        ball.Activate(position, Vector2.down, cost, false);
+        var ball = _loadedBall;
+        _loadedBall = null;
+        var direction = launcherController != null
+            ? launcherController.LaunchDirection
+            : Vector2.up;
+        var speed = Mathf.Lerp(
+            minimumLaunchSpeed,
+            maximumLaunchSpeed,
+            Mathf.Clamp01(normalizedPull));
+        ball.LaunchLoaded(direction.normalized * speed, cost);
         _activeBalls.Add(ball);
         _successfulLaunchCount++;
         NotifyLaunchCostChanged();
         OnStateChanged?.Invoke(EPinballState.Launched);
+        return true;
+    }
+
+    internal void MoveLoadedBall(Vector2 position)
+    {
+        if (_loadedBall == null) return;
+        _loadedBall.LoadAt(position);
+        launchPosition = position;
     }
 
     private int CalculateLaunchCost()
@@ -296,7 +300,10 @@ public class PinballManager : AppService, IItemEventListener
         {
             _remainingSafetyNetCount--;
             ball.WasRescued = true;
-            ball.ResetPosition(launchPosition, Vector2.down);
+            var direction = launcherController != null
+                ? launcherController.LaunchDirection
+                : Vector2.up;
+            ball.ResetPosition(launchPosition, direction);
             return;
         }
 
@@ -313,6 +320,7 @@ public class PinballManager : AppService, IItemEventListener
         if (_activeBalls.Count <= 0)
         {
             OnStateChanged?.Invoke(EPinballState.Idle);
+            LoadNextBall();
         }
     }
 
@@ -561,7 +569,24 @@ public class PinballManager : AppService, IItemEventListener
         _remainingSwapCount = _swapCount;
         _pendingSwapGoalIndex = -1;
         RefreshGoalWidths();
+        if (_activeBalls.Count <= 0)
+        {
+            LoadNextBall();
+        }
         NotifyLaunchCostChanged();
+    }
+
+    private void LoadNextBall()
+    {
+        if (_loadedBall != null || _availableBalls.Count <= 0) return;
+
+        _loadedBall = _availableBalls.Dequeue();
+        var position = launcherController != null
+            ? launcherController.LoadPosition
+            : launchPosition;
+        launchPosition = position;
+        _loadedBall.LoadAt(position);
+        launcherController?.SetLoaded(true);
     }
 
     protected override void OnDestroy()
