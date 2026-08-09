@@ -29,3 +29,13 @@
 - 사용자 직접 결정/수정 필요 영역: 사용자가 정확히 6마리일 때 핀볼 발사를 허용하고 표시 형식을 `5/5`로 결정했으며, 실제 Game View에서 최종 텍스트 위치 미세 조정 가능
 - 중요한 프롬프트/지시: 기존 구조 보존, 씬 배치와 Inspector 참조 우선, `[SerializeField]` underscore 금지, 최소 변경, 외부 패키지 금지
 - 테스트/검증 결과: 구현 전 두 규칙 메서드 부재로 `CS0117` RED 실패를 확인했다. 구현 후 5·6·7 경계를 포함한 focused EditMode 테스트와 전체 EditMode 테스트가 Unity 로그 기준 code 0으로 완료됐고 C# 및 씬 역직렬화 오류가 없었다. 프로젝트에 WebGL 배치 빌드 진입점이 없어 WebGL 빌드는 수행하지 않았으며, 5·6·7마리 실제 배치에 대한 Play Mode 시각 확인은 사용자 직접 확인 항목으로 남았다.
+
+## 2026-08-10 아군 준비 배치 제한 및 복원
+
+- 사용한 AI 도구/모델: Codex, GPT-5 계열 모델
+- 사용자 요청: 아군을 맵 오른쪽 절반에만 배치하고 오른쪽 끝까지 사용할 수 있게 하며, 소환 시 가로 우선 격자로 배치하고 웨이브 종료 후 기존 배치를 복원
+- AI 제안 내용: 전체 전투 경계와 아군 준비 배치 경계를 분리하고 `UnitManager`가 캐릭터별 준비 위치를 런타임 동안 보존
+- AI 실제 수정 영역: `BattleAreaBounds`, `UnitSpawner`, `UnitManager`, `AlllyUnit`, EditMode 배치 테스트, Game 씬의 `Panel_BattleArea`, AI 사용 기록
+- 사용자 직접 결정/수정 필요 영역: 사용자가 오른쪽 절반, 가로 우선 격자, 캐릭터별 위치 저장 방식을 결정했으며 최종 배치 간격과 체감은 Game View에서 확인 가능
+- 중요한 프롬프트/지시: 기존 구조와 적/전투 이동 보존, 최소 수정, Inspector 참조 유지, SetActive 풀링 유지, `[SerializeField]` underscore 금지
+- 테스트/검증 결과: 새 테스트는 구현 전 7개와 3개가 각각 의도대로 실패했고 구현 후 배치 테스트 10/10, 전체 EditMode 45/45가 통과했다. `dotnet build Assembly-CSharp-Editor.csproj --no-restore`는 오류 0개로 완료됐으며 기존 패키지 참조 경고 9개가 남았다. 프로젝트에 WebGL 배치 빌드 진입점이 없어 실제 WebGL 빌드와 Game View 체감 확인은 수행하지 못했다.

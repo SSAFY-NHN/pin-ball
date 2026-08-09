@@ -20,6 +20,8 @@ public class UnitManager : AppService, IItemEventListener
     private readonly List<UnitBase> _activeEnemies = new();
     private readonly HashSet<AllyUnit> _mergeReservations = new();
     private readonly List<AllyUnitData> _evolutionCandidates = new();
+    private readonly Dictionary<AllyUnit, Vector3>
+        _allyPreparationPositions = new();
 
     public IReadOnlyList<AllyUnit> OwnedAllies => _ownedAllies;
     public BattleAreaBounds BattleArea => battleArea;
@@ -149,6 +151,19 @@ public class UnitManager : AppService, IItemEventListener
             allyData,
             _titleData.AllyCommon,
             finalStats);
+        if (spawnedUnit == null)
+        {
+            return null;
+        }
+
+        if (!TryPlaceAllyInFreeGridSlot(spawnedUnit))
+        {
+            Debug.LogWarning(
+                "[UnitManager] No available ally preparation grid slot.");
+            _spawner.ReturnUnit(spawnedUnit);
+            return null;
+        }
+
         AddOwnedAlly(spawnedUnit);
         return spawnedUnit;
     }
@@ -297,6 +312,7 @@ public class UnitManager : AppService, IItemEventListener
             bool ownedCountChanged = _ownedAllies.Remove(ally);
             _activeAllies.Remove(ally);
             _mergeReservations.Remove(ally);
+            _allyPreparationPositions.Remove(ally);
 
             if (ownedCountChanged)
             {
@@ -336,7 +352,6 @@ public class UnitManager : AppService, IItemEventListener
 
     private void RestoreAlliesForPreparation()
     {
-        _spawner.ResetAllySpawnOrder();
         _activeAllies.Clear();
 
         for (var i = 0; i < _ownedAllies.Count; i++)
@@ -344,8 +359,18 @@ public class UnitManager : AppService, IItemEventListener
             var ally = _ownedAllies[i];
             if (ally == null) continue;
 
-            ally.RestoreForPreparation(
-                _spawner.GetAllyPreparationPosition(i));
+            if (!_allyPreparationPositions.TryGetValue(
+                    ally,
+                    out Vector3 preparationPosition) &&
+                !TryPlaceAllyInFreeGridSlot(ally))
+            {
+                Debug.LogWarning(
+                    "[UnitManager] Failed to restore ally preparation position.");
+                continue;
+            }
+
+            preparationPosition = _allyPreparationPositions[ally];
+            ally.RestoreForPreparation(preparationPosition);
             ally.ResetMana();
             _activeAllies.Add(ally);
         }
@@ -378,13 +403,17 @@ public class UnitManager : AppService, IItemEventListener
     {
         if (!CanDragAlly(ally) || battleArea == null) return false;
 
-        var unitCollider = ally.GetComponentInChildren<Collider2D>();
-        float padding = unitCollider == null
-            ? 0f
-            : Mathf.Max(
-                unitCollider.bounds.extents.x,
-                unitCollider.bounds.extents.y);
-        return battleArea.Contains(position, padding);
+        return battleArea.ContainsAllyPlacement(
+            position,
+            GetAllyPlacementPadding(ally));
+    }
+
+    public void SaveAllyPreparationPosition(AllyUnit ally)
+    {
+        if (!CanDragAlly(ally) ||
+            !IsValidAllyPlacement(ally, ally.transform.position)) return;
+
+        _allyPreparationPositions[ally] = ally.transform.position;
     }
 
     public bool TryMergeAllies(
@@ -535,7 +564,60 @@ public class UnitManager : AppService, IItemEventListener
         if (result != null)
         {
             result.transform.position = position;
+            _allyPreparationPositions[result] = position;
         }
+    }
+
+    private bool TryPlaceAllyInFreeGridSlot(AllyUnit ally)
+    {
+        if (ally == null || battleArea == null) return false;
+
+        float padding = GetAllyPlacementPadding(ally);
+        float minimumDistance = padding * 2f + 0.15f;
+        for (var gridIndex = 0; battleArea.TryGetAllyGridPosition(
+                 gridIndex,
+                 padding,
+                 out Vector3 candidate); gridIndex++)
+        {
+            if (IsGridPositionOccupied(
+                    candidate,
+                    _allyPreparationPositions.Values,
+                    minimumDistance)) continue;
+
+            ally.transform.position = candidate;
+            _allyPreparationPositions[ally] = candidate;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool IsGridPositionOccupied(
+        Vector3 candidate,
+        IEnumerable<Vector3> occupiedPositions,
+        float minimumDistance)
+    {
+        foreach (Vector3 occupied in occupiedPositions)
+        {
+            if (Vector2.Distance(candidate, occupied) < minimumDistance)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static float GetAllyPlacementPadding(AllyUnit ally)
+    {
+        if (ally == null) return 0f;
+
+        var unitCollider = ally.GetComponentInChildren<Collider2D>();
+        return unitCollider == null
+            ? 0f
+            : Mathf.Max(
+                unitCollider.bounds.extents.x,
+                unitCollider.bounds.extents.y);
     }
 
     private void ClearPendingEvolution()
