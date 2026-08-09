@@ -115,7 +115,7 @@ public static class ArcanePinballBoardSetup
         {
             var renderer = ball.GetComponent<SpriteRenderer>();
             renderer.sprite = ballSprite;
-            renderer.sortingOrder = 30;
+            renderer.sortingOrder = 110;
 
             var collider = ball.GetComponent<CircleCollider2D>();
             collider.radius = 0.3f;

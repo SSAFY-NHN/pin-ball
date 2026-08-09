@@ -31,7 +31,7 @@ Apply the base order to the reusable Ball prefab and any prefab-instance overrid
 - Tool/model: Codex, GPT-5.
 - User request: Show pinball sprites above all UI.
 - AI proposal: Raise the ball rendering order above the camera-space UI Canvas while retaining effect-relative offsets.
-- Planned AI modification area: Ball prefab sorting data, pinball prefab instance overrides if present, and the existing editor setup default.
+- AI modification area: Ball prefab sorting data, the existing editor setup default, and an EditMode rendering-order regression test.
 - User decisions: All UI must remain below the balls; only balls and their attached effects move forward.
 - Important instruction: Preserve the existing project structure and make the smallest verifiable change.
-- Verification status: Not yet implemented or tested.
+- Verification status: The rendering test failed before implementation with Ball `20` versus Canvas `100`, passed after setting Ball to `110`, and the full EditMode suite passed 46/46. Game view visual confirmation remains for the user.
