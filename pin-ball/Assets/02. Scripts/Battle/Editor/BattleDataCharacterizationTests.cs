@@ -24,8 +24,8 @@ public class BattleDataCharacterizationTests
 
         BattleUnitStats stats = data.CreateStats(3, 5);
 
-        Assert.That(stats.MaxHp, Is.EqualTo(228f));
-        Assert.That(stats.AttackDamage, Is.EqualTo(24f));
+        Assert.That(stats.MaxHp, Is.EqualTo(262.2f).Within(0.001f));
+        Assert.That(stats.AttackDamage, Is.EqualTo(27.6f).Within(0.001f));
         Assert.That(stats.Defense, Is.EqualTo(14f));
         Assert.That(stats.MoveSpeed, Is.EqualTo(2.5f));
         Assert.That(stats.AttackRate, Is.EqualTo(0.91f).Within(0.0001f));

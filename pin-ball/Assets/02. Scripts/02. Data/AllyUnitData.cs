@@ -33,6 +33,8 @@ public class AllySkillData
 [Serializable]
 public class AllyUnitData
 {
+    private const float CombatStatMultiplier = 1.15f;
+
     public string id;
     public string previousJob;
     public string name;
@@ -57,8 +59,10 @@ public class AllyUnitData
 
         return new BattleUnitStats
         {
-            MaxHp = health + healthGrowth * growthLevel,
-            AttackDamage = attack + attackGrowth * growthLevel,
+            MaxHp = (health + healthGrowth * growthLevel) *
+                    CombatStatMultiplier,
+            AttackDamage = (attack + attackGrowth * growthLevel) *
+                           CombatStatMultiplier,
             Defense = defense + defenseGrowth * growthLevel,
             MoveSpeed = moveSpeed,
             AttackRate = attackSpeed + attackSpeedGrowth * growthLevel,
