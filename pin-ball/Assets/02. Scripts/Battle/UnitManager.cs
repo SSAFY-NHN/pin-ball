@@ -9,20 +9,30 @@ using UnityEngine.Serialization;
 //금지: 골드/HP/웨이브 상태 변경
 public class UnitManager : AppService, IItemEventListener
 {
+    public const int MaxDeployedAllyCount = 5;
+
     public event Action<AllyUnitData, AllyUnitData> OnEvolutionRequested;
     public event Action<AllyUnit> OnAllyDetailRequested;
+    public event Action<int> OnDeployedAllyCountChanged;
 
     private readonly List<AllyUnit> _ownedAllies = new();
     private readonly List<UnitBase> _activeAllies = new();
     private readonly List<UnitBase> _activeEnemies = new();
     private readonly HashSet<AllyUnit> _mergeReservations = new();
     private readonly List<AllyUnitData> _evolutionCandidates = new();
+    private readonly Dictionary<AllyUnit, Vector3>
+        _allyPreparationPositions = new();
 
     public IReadOnlyList<AllyUnit> OwnedAllies => _ownedAllies;
     public BattleAreaBounds BattleArea => battleArea;
 
+    public int DeployedAllyCount => _ownedAllies.Count;
     public int RemainingAllyCount => _activeAllies.Count;
     public int RemainingEnemyCount => _activeEnemies.Count;
+    public bool CanStartWaveWithCurrentRoster =>
+        CanStartWaveWithAllyCount(DeployedAllyCount);
+    public bool CanLaunchPinballWithCurrentRoster =>
+        CanLaunchPinballWithAllyCount(DeployedAllyCount);
     
     private BattleManager _battleManager;
     private UnitSpawner _spawner;
@@ -141,6 +151,19 @@ public class UnitManager : AppService, IItemEventListener
             allyData,
             _titleData.AllyCommon,
             finalStats);
+        if (spawnedUnit == null)
+        {
+            return null;
+        }
+
+        if (!TryPlaceAllyInFreeGridSlot(spawnedUnit))
+        {
+            Debug.LogWarning(
+                "[UnitManager] No available ally preparation grid slot.");
+            _spawner.ReturnUnit(spawnedUnit);
+            return null;
+        }
+
         AddOwnedAlly(spawnedUnit);
         return spawnedUnit;
     }
@@ -234,9 +257,16 @@ public class UnitManager : AppService, IItemEventListener
     private void AddOwnedAlly(AllyUnit ally)
     {
         if (ally == null) return;
-        if (!_ownedAllies.Contains(ally)) _ownedAllies.Add(ally);
+
+        bool ownedCountChanged = !_ownedAllies.Contains(ally);
+        if (ownedCountChanged) _ownedAllies.Add(ally);
         if (!_activeAllies.Contains(ally)) _activeAllies.Add(ally);
         RefreshAllyItemModifiers();
+
+        if (ownedCountChanged)
+        {
+            OnDeployedAllyCountChanged?.Invoke(DeployedAllyCount);
+        }
     }
 
     public void AddEnemy(UnitBase enemy)
@@ -279,9 +309,15 @@ public class UnitManager : AppService, IItemEventListener
 
         if (unit is AllyUnit ally)
         {
-            _ownedAllies.Remove(ally);
+            bool ownedCountChanged = _ownedAllies.Remove(ally);
             _activeAllies.Remove(ally);
             _mergeReservations.Remove(ally);
+            _allyPreparationPositions.Remove(ally);
+
+            if (ownedCountChanged)
+            {
+                OnDeployedAllyCountChanged?.Invoke(DeployedAllyCount);
+            }
         }
         else
         {
@@ -289,6 +325,16 @@ public class UnitManager : AppService, IItemEventListener
         }
 
         _spawner.ReturnUnit(unit);
+    }
+
+    public static bool CanStartWaveWithAllyCount(int count)
+    {
+        return count >= 1 && count <= MaxDeployedAllyCount;
+    }
+
+    public static bool CanLaunchPinballWithAllyCount(int count)
+    {
+        return count <= MaxDeployedAllyCount + 1;
     }
 
     private void ReturnAllEnemies()
@@ -306,7 +352,6 @@ public class UnitManager : AppService, IItemEventListener
 
     private void RestoreAlliesForPreparation()
     {
-        _spawner.ResetAllySpawnOrder();
         _activeAllies.Clear();
 
         for (var i = 0; i < _ownedAllies.Count; i++)
@@ -314,8 +359,18 @@ public class UnitManager : AppService, IItemEventListener
             var ally = _ownedAllies[i];
             if (ally == null) continue;
 
-            ally.RestoreForPreparation(
-                _spawner.GetAllyPreparationPosition(i));
+            if (!_allyPreparationPositions.TryGetValue(
+                    ally,
+                    out Vector3 preparationPosition) &&
+                !TryPlaceAllyInFreeGridSlot(ally))
+            {
+                Debug.LogWarning(
+                    "[UnitManager] Failed to restore ally preparation position.");
+                continue;
+            }
+
+            preparationPosition = _allyPreparationPositions[ally];
+            ally.RestoreForPreparation(preparationPosition);
             ally.ResetMana();
             _activeAllies.Add(ally);
         }
@@ -348,13 +403,17 @@ public class UnitManager : AppService, IItemEventListener
     {
         if (!CanDragAlly(ally) || battleArea == null) return false;
 
-        var unitCollider = ally.GetComponentInChildren<Collider2D>();
-        float padding = unitCollider == null
-            ? 0f
-            : Mathf.Max(
-                unitCollider.bounds.extents.x,
-                unitCollider.bounds.extents.y);
-        return battleArea.Contains(position, padding);
+        return battleArea.ContainsAllyPlacement(
+            position,
+            GetAllyPlacementPadding(ally));
+    }
+
+    public void SaveAllyPreparationPosition(AllyUnit ally)
+    {
+        if (!CanDragAlly(ally) ||
+            !IsValidAllyPlacement(ally, ally.transform.position)) return;
+
+        _allyPreparationPositions[ally] = ally.transform.position;
     }
 
     public bool TryMergeAllies(
@@ -505,7 +564,60 @@ public class UnitManager : AppService, IItemEventListener
         if (result != null)
         {
             result.transform.position = position;
+            _allyPreparationPositions[result] = position;
         }
+    }
+
+    private bool TryPlaceAllyInFreeGridSlot(AllyUnit ally)
+    {
+        if (ally == null || battleArea == null) return false;
+
+        float padding = GetAllyPlacementPadding(ally);
+        float minimumDistance = padding * 2f + 0.15f;
+        for (var gridIndex = 0; battleArea.TryGetAllyGridPosition(
+                 gridIndex,
+                 padding,
+                 out Vector3 candidate); gridIndex++)
+        {
+            if (IsGridPositionOccupied(
+                    candidate,
+                    _allyPreparationPositions.Values,
+                    minimumDistance)) continue;
+
+            ally.transform.position = candidate;
+            _allyPreparationPositions[ally] = candidate;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool IsGridPositionOccupied(
+        Vector3 candidate,
+        IEnumerable<Vector3> occupiedPositions,
+        float minimumDistance)
+    {
+        foreach (Vector3 occupied in occupiedPositions)
+        {
+            if (Vector2.Distance(candidate, occupied) < minimumDistance)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static float GetAllyPlacementPadding(AllyUnit ally)
+    {
+        if (ally == null) return 0f;
+
+        var unitCollider = ally.GetComponentInChildren<Collider2D>();
+        return unitCollider == null
+            ? 0f
+            : Mathf.Max(
+                unitCollider.bounds.extents.x,
+                unitCollider.bounds.extents.y);
     }
 
     private void ClearPendingEvolution()

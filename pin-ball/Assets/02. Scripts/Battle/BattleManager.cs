@@ -113,9 +113,15 @@ public class BattleManager : AppService, IItemEventListener
             return false;
         }
 
-        if (_unitManager == null || _unitManager.RemainingAllyCount <= 0)
+        if (_unitManager == null || _unitManager.DeployedAllyCount <= 0)
         {
             RejectAction("아군 유닛을 한 명 이상 준비해야 합니다.");
+            return false;
+        }
+
+        if (!_unitManager.CanStartWaveWithCurrentRoster)
+        {
+            RejectAction("배치 아군은 5마리까지 웨이브에 참가할 수 있습니다.");
             return false;
         }
 

@@ -8,22 +8,16 @@ using UnityEngine;
 public sealed class PinballArcaneVfx : MonoBehaviour
 {
     private const float ReferenceSpeed = 8f;
-    private const int ImpactParticleCount = 10;
-
-    private static readonly Color TrailLow = new(0.1f, 0.75f, 1.8f, 0.72f);
-    private static readonly Color TrailHigh = new(1.2f, 0.18f, 2.4f, 0.92f);
-    private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
-    private static readonly int EmissionStrengthId = Shader.PropertyToID("_EmissionStrength");
+    private static readonly Color TrailLow = new(0.02f, 0.55f, 1f, 0.78f);
+    private static readonly Color TrailHigh = new(0.55f, 0.12f, 1f, 0.9f);
 
     private SpriteRenderer _sourceRenderer;
     private Rigidbody2D _body;
-    private SpriteRenderer _glowRenderer;
+    private ArcaneMaskGlowController _glow;
     private TrailRenderer _trail;
-    private ParticleSystem _impact;
-    private Material _spriteMaterial;
+    private ArcaneSpriteEffect _impact;
+    private ArcaneSpriteEffect _ring;
     private Material _additiveMaterial;
-    private MaterialPropertyBlock _propertyBlock;
-    private ParticleSystem.Particle[] _impactParticles;
     private bool _initialized;
 
     public void Initialize(SpriteRenderer sourceRenderer, Rigidbody2D body)
@@ -33,31 +27,26 @@ public sealed class PinballArcaneVfx : MonoBehaviour
         _sourceRenderer = sourceRenderer;
         _body = body;
 
-        var spriteShader = Resources.Load<Shader>("ArcaneVFX/ArcaneSprite");
         var additiveShader = Resources.Load<Shader>("ArcaneVFX/ArcaneAdditive");
-        if (spriteShader == null || additiveShader == null)
+        var catalog = ArcaneVfxCatalog.Load();
+        if (additiveShader == null || catalog == null)
         {
-            Debug.LogWarning("Arcane pinball shaders were not found in Resources.", this);
+            Debug.LogWarning("Arcane pinball shader or VFX catalog was not found in Resources.", this);
             enabled = false;
             return;
         }
 
-        _spriteMaterial = new Material(spriteShader)
-        {
-            name = "Arcane Sprite (Runtime)",
-            hideFlags = HideFlags.HideAndDontSave
-        };
         _additiveMaterial = new Material(additiveShader)
         {
             name = "Arcane Additive (Runtime)",
             hideFlags = HideFlags.HideAndDontSave
         };
-        _propertyBlock = new MaterialPropertyBlock();
-        _impactParticles = new ParticleSystem.Particle[ImpactParticleCount];
-
-        CreateGlow();
-        CreateTrail();
-        CreateImpactParticles();
+        _additiveMaterial.SetFloat("_Intensity", 1.65f);
+        _additiveMaterial.SetFloat("_GlowSpread", 1.2f);
+        _glow = GetComponent<ArcaneMaskGlowController>();
+        CreateTrail(catalog.ballTrail);
+        _impact = CreateSpriteEffect("Arcane Impact", catalog.ballImpact, _sourceRenderer.sortingOrder + 3);
+        _ring = CreateSpriteEffect("Arcane Ring", catalog.ballRing, _sourceRenderer.sortingOrder + 2);
         _initialized = true;
         OnDeactivated();
     }
@@ -66,8 +55,7 @@ public sealed class PinballArcaneVfx : MonoBehaviour
     {
         if (!_initialized) return;
 
-        SyncGlowSprite();
-        _glowRenderer.enabled = true;
+        _glow?.SetActiveIntensity(1.65f);
         _trail.Clear();
         _trail.emitting = true;
         OnVelocityChanged(_body != null ? _body.linearVelocity : Vector2.zero);
@@ -79,74 +67,60 @@ public sealed class PinballArcaneVfx : MonoBehaviour
 
         _trail.emitting = false;
         _trail.Clear();
-        _glowRenderer.enabled = false;
-        _impact.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        _glow?.SetActiveIntensity(1.15f);
+        _impact?.StopEffect();
+        _ring?.StopEffect();
     }
 
     public void OnVelocityChanged(Vector2 velocity)
     {
         if (!_initialized || !_trail.emitting) return;
 
-        SyncGlowSprite();
         var speed01 = Mathf.Clamp01(velocity.magnitude / (ReferenceSpeed * 1.5f));
         _trail.time = Mathf.Lerp(0.08f, 0.2f, speed01);
-        _trail.widthMultiplier = Mathf.Lerp(0.14f, 0.24f, speed01);
+        _trail.widthMultiplier = Mathf.Lerp(0.28f, 0.6f, speed01);
 
         var hdrColor = Color.Lerp(TrailLow, TrailHigh, speed01);
         _trail.startColor = hdrColor;
         _trail.endColor = new Color(hdrColor.r * 0.2f, hdrColor.g * 0.2f, hdrColor.b * 0.2f, 0f);
 
-        _propertyBlock.Clear();
-        _propertyBlock.SetColor(EmissionColorId, hdrColor);
-        _propertyBlock.SetFloat(EmissionStrengthId, Mathf.Lerp(1.15f, 1.8f, speed01));
-        _glowRenderer.SetPropertyBlock(_propertyBlock);
-        _glowRenderer.transform.localScale = Vector3.one * Mathf.Lerp(1.08f, 1.18f, speed01);
+        _glow?.SetActiveIntensity(Mathf.Lerp(1.35f, 1.9f, speed01));
     }
 
     public void PlayCollision(Vector2 worldPoint, float relativeSpeed)
     {
         if (!_initialized || !isActiveAndEnabled) return;
 
-        _impact.transform.position = new Vector3(worldPoint.x, worldPoint.y, transform.position.z);
         var strength = Mathf.Clamp01(relativeSpeed / (ReferenceSpeed * 1.25f));
         var color = Color.Lerp(TrailLow, TrailHigh, strength);
-        var lifetime = Mathf.Lerp(0.12f, 0.22f, strength);
-        var particleSpeed = Mathf.Lerp(1.2f, 3.2f, strength);
-
-        for (var i = 0; i < _impactParticles.Length; i++)
-        {
-            var angle = (Mathf.PI * 2f * i / _impactParticles.Length) + strength * 0.35f;
-            var direction = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f);
-            _impactParticles[i] = new ParticleSystem.Particle
-            {
-                position = _impact.transform.position,
-                velocity = direction * particleSpeed * Mathf.Lerp(0.72f, 1f, i / 9f),
-                startLifetime = lifetime,
-                remainingLifetime = lifetime,
-                startSize = Mathf.Lerp(0.05f, 0.12f, strength),
-                startColor = color,
-                rotation = angle * Mathf.Rad2Deg
-            };
-        }
-
-        _impact.SetParticles(_impactParticles, _impactParticles.Length);
-        _impact.Play();
+        var position = new Vector3(worldPoint.x, worldPoint.y, transform.position.z);
+        _impact.Play(position, 0.18f, Vector3.one * 0.28f, Vector3.one * 0.65f, color);
+        _ring.Play(position, 0.24f, Vector3.one * 0.2f, Vector3.one * 0.9f, color);
+        _glow?.Pulse(2f, 0.16f);
     }
 
-    private void CreateGlow()
-    {
-        var glowObject = new GameObject("Arcane Glow");
-        glowObject.transform.SetParent(transform, false);
-        _glowRenderer = glowObject.AddComponent<SpriteRenderer>();
-        _glowRenderer.sharedMaterial = _spriteMaterial;
-        _glowRenderer.maskInteraction = _sourceRenderer.maskInteraction;
-        SyncGlowSprite();
-    }
-
-    private void CreateTrail()
+    private void CreateTrail(Sprite[] trailSprites)
     {
         _trail = gameObject.AddComponent<TrailRenderer>();
-        _trail.sharedMaterial = _additiveMaterial;
+        var trailMaterial = new Material(_additiveMaterial)
+        {
+            name = "Arcane Ball Trail (Runtime)",
+            hideFlags = HideFlags.HideAndDontSave
+        };
+        trailMaterial.SetFloat("_Intensity", 3f);
+        if (trailSprites != null && trailSprites.Length > 0)
+        {
+            var sprite = trailSprites[0];
+            trailMaterial.mainTexture = sprite.texture;
+            var rect = sprite.textureRect;
+            trailMaterial.mainTextureScale = new Vector2(
+                rect.width / sprite.texture.width,
+                rect.height / sprite.texture.height);
+            trailMaterial.mainTextureOffset = new Vector2(
+                rect.x / sprite.texture.width,
+                rect.y / sprite.texture.height);
+        }
+        _trail.sharedMaterial = trailMaterial;
         _trail.alignment = LineAlignment.View;
         _trail.textureMode = LineTextureMode.Stretch;
         _trail.minVertexDistance = 0.06f;
@@ -160,50 +134,17 @@ public sealed class PinballArcaneVfx : MonoBehaviour
         _trail.emitting = false;
     }
 
-    private void CreateImpactParticles()
+    private ArcaneSpriteEffect CreateSpriteEffect(string effectName, Sprite[] sprites, int sortingOrder)
     {
-        var impactObject = new GameObject("Arcane Impact");
-        impactObject.transform.SetParent(transform, false);
-        _impact = impactObject.AddComponent<ParticleSystem>();
-        _impact.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-
-        var main = _impact.main;
-        main.playOnAwake = false;
-        main.loop = false;
-        main.duration = 0.25f;
-        main.simulationSpace = ParticleSystemSimulationSpace.World;
-        main.maxParticles = ImpactParticleCount;
-        main.startSpeed = 0f;
-        main.startLifetime = 0.18f;
-        main.startSize = 0.08f;
-        main.gravityModifier = 0f;
-
-        var emission = _impact.emission;
-        emission.enabled = false;
-        var shape = _impact.shape;
-        shape.enabled = false;
-
-        var renderer = _impact.GetComponent<ParticleSystemRenderer>();
-        renderer.sharedMaterial = _additiveMaterial;
-        renderer.renderMode = ParticleSystemRenderMode.Billboard;
-        renderer.sortingLayerID = _sourceRenderer.sortingLayerID;
-        renderer.sortingOrder = _sourceRenderer.sortingOrder + 3;
-    }
-
-    private void SyncGlowSprite()
-    {
-        if (_sourceRenderer == null || _glowRenderer == null) return;
-
-        _glowRenderer.sprite = _sourceRenderer.sprite;
-        _glowRenderer.flipX = _sourceRenderer.flipX;
-        _glowRenderer.flipY = _sourceRenderer.flipY;
-        _glowRenderer.sortingLayerID = _sourceRenderer.sortingLayerID;
-        _glowRenderer.sortingOrder = _sourceRenderer.sortingOrder - 1;
+        var effectObject = new GameObject(effectName);
+        effectObject.transform.SetParent(transform, false);
+        var effect = effectObject.AddComponent<ArcaneSpriteEffect>();
+        effect.Initialize(sprites, _additiveMaterial, sortingOrder);
+        return effect;
     }
 
     private void OnDestroy()
     {
-        if (_spriteMaterial != null) Destroy(_spriteMaterial);
         if (_additiveMaterial != null) Destroy(_additiveMaterial);
     }
 }

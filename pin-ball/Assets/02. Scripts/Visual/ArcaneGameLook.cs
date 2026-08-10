@@ -64,10 +64,10 @@ public sealed class ArcaneGameLook : MonoBehaviour
         _runtimeProfile = profile;
 
         var bloom = profile.Add<Bloom>(true);
-        bloom.threshold.Override(1.08f);
-        bloom.intensity.Override(0.58f);
-        bloom.scatter.Override(0.52f);
-        bloom.clamp.Override(8f);
+        bloom.threshold.Override(0.6f);
+        bloom.intensity.Override(1.1f);
+        bloom.scatter.Override(0.7f);
+        bloom.clamp.Override(12f);
         bloom.highQualityFiltering.Override(false);
 
         var color = profile.Add<ColorAdjustments>(true);

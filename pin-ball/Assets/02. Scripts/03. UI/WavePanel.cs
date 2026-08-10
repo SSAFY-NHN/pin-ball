@@ -16,6 +16,7 @@ public class WavePanel : UIBase
     private BattleManager _battleManager;
     private PinballManager _pinballManager;
     private UnitManager _unitManager;
+    private StatusPanel _statusPanel;
     private EPinballState _pinballState = EPinballState.Idle;
     
     public override void Initialize(UIManager manager)
@@ -24,23 +25,25 @@ public class WavePanel : UIBase
 
         _battleManager = App.Get<BattleManager>();
         _battleManager.OnStateChanged += OnBattleStateChanged;
-        _battleManager.OnActionRejected += OnActionRejected;
         _battleManager.OnGoldChanged += OnGoldChanged;
         _battleManager.OnPreparationAvailabilityChanged +=
             OnPreparationAvailabilityChanged;
 
         _unitManager = App.Get<UnitManager>();
+        _unitManager.OnDeployedAllyCountChanged +=
+            OnDeployedAllyCountChanged;
+        _statusPanel = manager.GetPanel<StatusPanel>();
         
         _pinballManager = App.Get<PinballManager>();
         _pinballManager.OnStateChanged += OnPinballStateChanged;
         _pinballManager.OnLaunchCostChanged += OnLaunchCostChanged;
 
-        startButton.onClick.AddListener(_battleManager.StartWave);
+        startButton.onClick.AddListener(OnStartButtonClicked);
         launchButton.onClick.AddListener(_pinballManager.LaunchBall);
 
-        if (feedbackText == null)
+        if (feedbackText != null)
         {
-            Debug.LogError("[WavePanel] feedbackText가 설정되지 않았습니다.");
+            feedbackText.gameObject.SetActive(false);
         }
 
         if (launchCostText == null)
@@ -52,11 +55,6 @@ public class WavePanel : UIBase
     
     private void OnBattleStateChanged(EWaveState state)
     {
-        if (state != EWaveState.Pending && feedbackText != null)
-        {
-            feedbackText.text = string.Empty;
-        }
-
         RefreshButtons();
     }
     
@@ -66,12 +64,15 @@ public class WavePanel : UIBase
         RefreshButtons();
     }
 
-    private void OnActionRejected(string message)
+    private void OnStartButtonClicked()
     {
-        if (feedbackText != null)
+        if (_unitManager != null &&
+            !_unitManager.CanStartWaveWithCurrentRoster)
         {
-            feedbackText.text = message;
+            _statusPanel?.EmphasizeAllyCount();
         }
+
+        _battleManager.TryStartWave();
     }
 
     private void OnPreparationAvailabilityChanged(bool _)
@@ -89,6 +90,11 @@ public class WavePanel : UIBase
         RefreshButtons();
     }
 
+    private void OnDeployedAllyCountChanged(int _)
+    {
+        RefreshButtons();
+    }
+
     private void RefreshButtons()
     {
         if (_battleManager == null) return;
@@ -96,9 +102,9 @@ public class WavePanel : UIBase
         bool isPreparation = _battleManager.IsPreparationPhase;
         bool canUsePreparation =
             _battleManager.CanUsePreparationActions;
-        bool hasAlly =
+        bool canLaunchWithRoster =
             _unitManager != null &&
-            _unitManager.RemainingAllyCount > 0;
+            _unitManager.CanLaunchPinballWithCurrentRoster;
         int launchCost = _pinballManager != null
             ? _pinballManager.CurrentLaunchCost
             : 0;
@@ -113,8 +119,7 @@ public class WavePanel : UIBase
             startButton.gameObject.SetActive(isPreparation);
             startButton.interactable =
                 canUsePreparation &&
-                _pinballState == EPinballState.Idle &&
-                hasAlly;
+                _pinballState == EPinballState.Idle;
         }
 
         if (launchButton != null)
@@ -123,7 +128,8 @@ public class WavePanel : UIBase
                 canUsePreparation &&
                 _pinballState == EPinballState.Idle &&
                 hasAvailableBall &&
-                canAffordLaunch;
+                canAffordLaunch &&
+                canLaunchWithRoster;
         }
 
         if (launchCostText != null)
@@ -134,19 +140,6 @@ public class WavePanel : UIBase
                 : unavailableCostColor;
         }
 
-        if (feedbackText != null && isPreparation)
-        {
-            const string emptyRosterMessage =
-                "아군 유닛을 한 명 이상 준비해야 합니다.";
-            if (!hasAlly)
-            {
-                feedbackText.text = emptyRosterMessage;
-            }
-            else if (feedbackText.text == emptyRosterMessage)
-            {
-                feedbackText.text = string.Empty;
-            }
-        }
     }
 
     private void OnDestroy()
@@ -154,7 +147,6 @@ public class WavePanel : UIBase
         if (_battleManager != null)
         {
             _battleManager.OnStateChanged -= OnBattleStateChanged;
-            _battleManager.OnActionRejected -= OnActionRejected;
             _battleManager.OnGoldChanged -= OnGoldChanged;
             _battleManager.OnPreparationAvailabilityChanged -=
                 OnPreparationAvailabilityChanged;
@@ -166,9 +158,15 @@ public class WavePanel : UIBase
             _pinballManager.OnLaunchCostChanged -= OnLaunchCostChanged;
         }
 
+        if (_unitManager != null)
+        {
+            _unitManager.OnDeployedAllyCountChanged -=
+                OnDeployedAllyCountChanged;
+        }
+
         if (startButton != null && _battleManager != null)
         {
-            startButton.onClick.RemoveListener(_battleManager.StartWave);
+            startButton.onClick.RemoveListener(OnStartButtonClicked);
         }
 
         if (launchButton != null && _pinballManager != null)
