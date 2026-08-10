@@ -51,27 +51,24 @@ public class ItemCatalogTests
     [Test]
     public void RetainedEnums_PreserveKeysAndCategories()
     {
-        Assert.Multiple(() =>
-        {
-            Assert.That((int)EItem.GoldenBall, Is.EqualTo(4));
-            Assert.That((int)EItem.AutoBallFeeder, Is.EqualTo(5));
-            Assert.That((int)EItem.TargetMagnet, Is.EqualTo(6));
-            Assert.That((int)EItem.SplitCapsule, Is.EqualTo(7));
-            Assert.That((int)EItem.GoldenBumper, Is.EqualTo(9));
-            Assert.That((int)EItem.FocusedPocket, Is.EqualTo(11));
-            Assert.That((int)EItem.SwapLever, Is.EqualTo(13));
-            Assert.That((int)EItem.ChargedPin, Is.EqualTo(14));
-            Assert.That((int)EItem.OverloadBumper, Is.EqualTo(15));
-            Assert.That((int)EItem.BattleClock, Is.EqualTo(17));
-            Assert.That((int)EItem.FieldArmor, Is.EqualTo(18));
-            Assert.That((int)EItem.DiversityEmblem, Is.EqualTo(20));
-            Assert.That((int)EItem.BarrierReinforcement, Is.EqualTo(21));
-            Assert.That((int)EItem.PersonalHealingPotion, Is.EqualTo(22));
-            Assert.That((int)EItem.PartyHealingPotion, Is.EqualTo(23));
-            Assert.That((int)EItemCategory.Ball, Is.Zero);
-            Assert.That((int)EItemCategory.Board, Is.EqualTo(1));
-            Assert.That((int)EItemCategory.Battle, Is.EqualTo(2));
-        });
+        Assert.That((int)EItem.GoldenBall, Is.EqualTo(4));
+        Assert.That((int)EItem.AutoBallFeeder, Is.EqualTo(5));
+        Assert.That((int)EItem.TargetMagnet, Is.EqualTo(6));
+        Assert.That((int)EItem.SplitCapsule, Is.EqualTo(7));
+        Assert.That((int)EItem.GoldenBumper, Is.EqualTo(9));
+        Assert.That((int)EItem.FocusedPocket, Is.EqualTo(11));
+        Assert.That((int)EItem.SwapLever, Is.EqualTo(13));
+        Assert.That((int)EItem.ChargedPin, Is.EqualTo(14));
+        Assert.That((int)EItem.OverloadBumper, Is.EqualTo(15));
+        Assert.That((int)EItem.BattleClock, Is.EqualTo(17));
+        Assert.That((int)EItem.FieldArmor, Is.EqualTo(18));
+        Assert.That((int)EItem.DiversityEmblem, Is.EqualTo(20));
+        Assert.That((int)EItem.BarrierReinforcement, Is.EqualTo(21));
+        Assert.That((int)EItem.PersonalHealingPotion, Is.EqualTo(22));
+        Assert.That((int)EItem.PartyHealingPotion, Is.EqualTo(23));
+        Assert.That((int)EItemCategory.Ball, Is.Zero);
+        Assert.That((int)EItemCategory.Board, Is.EqualTo(1));
+        Assert.That((int)EItemCategory.Battle, Is.EqualTo(2));
     }
 }
 #endif
