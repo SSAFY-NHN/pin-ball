@@ -168,6 +168,23 @@ public class UnitMergeServiceTests
     }
 
     [Test]
+    public void TryChooseAutomaticEvolution_AlwaysChoosesSecondSortedCandidate()
+    {
+        AllyUnit source = CreateAlly("warrior", 2, Vector3.zero);
+        AllyUnit target = CreateAlly("warrior", 2, Vector3.right);
+        UnitMergeDecision pending = _service.TryBegin(source, target);
+        Assert.That(pending.Type,
+            Is.EqualTo(UnitMergeDecisionType.EvolutionRequired));
+
+        bool selected = _service.TryChooseAutomaticEvolution(
+            out UnitMergeDecision chosen);
+
+        Assert.That(selected, Is.True);
+        Assert.That(chosen.ResultUnitId, Is.EqualTo("z_paladin"));
+        Assert.That(chosen.ResultLevel, Is.EqualTo(3));
+    }
+
+    [Test]
     public void CancelPendingEvolution_ReleasesBothReservations()
     {
         AllyUnit source = CreateAlly("warrior", 2, Vector3.zero);
