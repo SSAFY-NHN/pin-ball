@@ -35,7 +35,7 @@ public sealed class PinballGoldPopup : MonoBehaviour
         _amountText.fontSize = 30f;
         _amountText.fontStyle = FontStyles.Bold;
         _amountText.overflowMode = TextOverflowModes.Overflow;
-        _amountText.rectTransform.sizeDelta = new Vector2(3f, 1.2f);
+        _amountText.rectTransform.sizeDelta = new Vector2(5f, 1.2f);
         _amountText.color = GoldColor;
         _amountText.sortingOrder = sortingOrder;
         _amountText.renderer.sortingLayerID = _iconRenderer.sortingLayerID;
