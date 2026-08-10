@@ -364,6 +364,38 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
                ally.IsAlive;
     }
 
+    public void BeginAllyDragHighlight(AllyUnit source)
+    {
+        EndAllyDragHighlight();
+        if (source == null || _titleData == null ||
+            !_titleData.TryGetRootAllyJob(source.UnitId, out var sourceRoot))
+        {
+            return;
+        }
+
+        foreach (var ally in _roster.OwnedAllies)
+        {
+            if (ally == null || ally == source || ally.IsInPool ||
+                !ally.IsAlive || !ally.gameObject.activeInHierarchy ||
+                !_titleData.TryGetRootAllyJob(ally.UnitId, out var allyRoot))
+            {
+                continue;
+            }
+
+            ally.SetLineageHighlighted(allyRoot.id == sourceRoot.id);
+        }
+    }
+
+    public void EndAllyDragHighlight()
+    {
+        if (_roster == null) return;
+
+        foreach (var ally in _roster.OwnedAllies)
+        {
+            ally?.SetLineageHighlighted(false);
+        }
+    }
+
     public void RequestAllyDetail(AllyUnit ally)
     {
         if (ally == null ||
