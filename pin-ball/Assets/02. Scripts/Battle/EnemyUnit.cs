@@ -18,6 +18,7 @@ public class EnemyUnit : UnitBase
         BreachDamage = Mathf.Max(0, data?.BreachDamage ?? 0);
         _unitManager = unitManager;
         _skills.Initialize(data, registry ?? UnitSkillRegistry.CreateDefault());
+        GetComponent<BattleUnitVisual>()?.SetUnitId(UnitId);
         if (_unitManager != null) _skills.OnBattleStart(CreateContext(null));
     }
 

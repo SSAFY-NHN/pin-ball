@@ -6,131 +6,131 @@
   },
   "waves": [
     {
-      "WaveName": "첫 침입",
+      "WaveName": "로그 정찰대",
       "RetryGoldReward": 80,
       "WaveClearGoldReward": 150,
       "FinalClearGoldReward": 0,
       "IsElite": false,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "goblin", "Count": 2 },
-        { "EnemyId": "wolf", "Count": 1 }
+        { "EnemyId": "goblin", "Count": 3 }
       ]
     },
     {
-      "WaveName": "무리의 습격",
+      "WaveName": "로그 습격대",
       "RetryGoldReward": 100,
       "WaveClearGoldReward": 180,
       "FinalClearGoldReward": 0,
       "IsElite": false,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "goblin", "Count": 2 },
-        { "EnemyId": "wolf", "Count": 2 }
+        { "EnemyId": "goblin", "Count": 4 }
       ]
     },
     {
-      "WaveName": "화살 세례",
+      "WaveName": "궁수 합류",
       "RetryGoldReward": 120,
       "WaveClearGoldReward": 220,
       "FinalClearGoldReward": 0,
       "IsElite": false,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "goblin", "Count": 2 },
-        { "EnemyId": "goblin_archer", "Count": 2 },
-        { "EnemyId": "wolf", "Count": 1 }
+        { "EnemyId": "goblin", "Count": 3 },
+        { "EnemyId": "goblin_archer", "Count": 1 }
       ]
     },
     {
-      "WaveName": "방패 진형",
+      "WaveName": "원거리 지원",
       "RetryGoldReward": 140,
       "WaveClearGoldReward": 260,
       "FinalClearGoldReward": 0,
       "IsElite": false,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "shield_guard", "Count": 1 },
-        { "EnemyId": "goblin", "Count": 2 },
+        { "EnemyId": "goblin", "Count": 3 },
         { "EnemyId": "goblin_archer", "Count": 2 }
       ]
     },
     {
-      "WaveName": "오우거의 진군",
+      "WaveName": "메이스 전사",
       "RetryGoldReward": 200,
       "WaveClearGoldReward": 350,
       "FinalClearGoldReward": 0,
       "IsElite": true,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "ogre_elite", "Count": 1 },
         { "EnemyId": "goblin", "Count": 2 },
-        { "EnemyId": "wolf", "Count": 2 }
+        { "EnemyId": "goblin_archer", "Count": 2 },
+        { "EnemyId": "shield_guard", "Count": 1 }
       ]
     },
     {
-      "WaveName": "주술 의식",
+      "WaveName": "방패 진형",
       "RetryGoldReward": 180,
       "WaveClearGoldReward": 320,
       "FinalClearGoldReward": 0,
       "IsElite": false,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "orc_warrior", "Count": 2 },
-        { "EnemyId": "shaman", "Count": 1 },
-        { "EnemyId": "goblin_archer", "Count": 2 }
+        { "EnemyId": "goblin", "Count": 2 },
+        { "EnemyId": "goblin_archer", "Count": 1 },
+        { "EnemyId": "shield_guard", "Count": 2 }
       ]
     },
     {
-      "WaveName": "후열 붕괴",
+      "WaveName": "검방 전사 등장",
       "RetryGoldReward": 200,
       "WaveClearGoldReward": 380,
       "FinalClearGoldReward": 0,
       "IsElite": false,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "assassin", "Count": 2 },
+        { "EnemyId": "goblin", "Count": 2 },
+        { "EnemyId": "goblin_archer", "Count": 1 },
         { "EnemyId": "shield_guard", "Count": 1 },
-        { "EnemyId": "wolf", "Count": 2 }
+        { "EnemyId": "orc_warrior", "Count": 1 }
       ]
     },
     {
-      "WaveName": "재생의 벽",
+      "WaveName": "혼성 부대",
       "RetryGoldReward": 240,
       "WaveClearGoldReward": 440,
       "FinalClearGoldReward": 0,
       "IsElite": false,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "troll", "Count": 1 },
-        { "EnemyId": "shaman", "Count": 2 },
+        { "EnemyId": "goblin", "Count": 1 },
+        { "EnemyId": "goblin_archer", "Count": 2 },
+        { "EnemyId": "shield_guard", "Count": 1 },
         { "EnemyId": "orc_warrior", "Count": 1 }
       ]
     },
     {
-      "WaveName": "정예 연합",
+      "WaveName": "전사 연합",
       "RetryGoldReward": 300,
       "WaveClearGoldReward": 550,
       "FinalClearGoldReward": 0,
       "IsElite": true,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "dark_mage_elite", "Count": 1 },
-        { "EnemyId": "ogre_elite", "Count": 1 },
-        { "EnemyId": "goblin_archer", "Count": 2 }
+        { "EnemyId": "goblin", "Count": 1 },
+        { "EnemyId": "goblin_archer", "Count": 1 },
+        { "EnemyId": "shield_guard", "Count": 1 },
+        { "EnemyId": "orc_warrior", "Count": 2 }
       ]
     },
     {
-      "WaveName": "고블린 왕",
+      "WaveName": "기마 마도사",
       "RetryGoldReward": 400,
       "WaveClearGoldReward": 0,
       "FinalClearGoldReward": 900,
       "IsElite": false,
       "IsBoss": true,
       "Enemies": [
-        { "EnemyId": "goblin_king", "Count": 1 },
-        { "EnemyId": "shield_guard", "Count": 2 },
-        { "EnemyId": "shaman", "Count": 1 }
+        { "EnemyId": "goblin", "Count": 1 },
+        { "EnemyId": "goblin_archer", "Count": 1 },
+        { "EnemyId": "shield_guard", "Count": 1 },
+        { "EnemyId": "goblin_king", "Count": 1 }
       ]
     }
   ]

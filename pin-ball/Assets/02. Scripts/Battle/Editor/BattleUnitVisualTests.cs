@@ -8,6 +8,33 @@ public class BattleUnitVisualTests
     private const string AllyPrefabPath =
         "Assets/04. Prefabs/AllyUnit.prefab";
 
+    [Test]
+    public void ResetFacing_AfterSpawnPositionChange_FacesAllyLeftImmediately()
+    {
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(AllyPrefabPath);
+        Assert.That(prefab, Is.Not.Null);
+
+        var instance = Object.Instantiate(prefab);
+        try
+        {
+            var visual = instance.GetComponent<BattleUnitVisual>();
+            var spriteRenderer = instance.GetComponent<SpriteRenderer>();
+            Assert.That(visual, Is.Not.Null);
+            Assert.That(spriteRenderer, Is.Not.Null);
+
+            instance.transform.position = new Vector3(4f, 0f, 0f);
+            spriteRenderer.flipX = false;
+
+            visual.ResetFacing();
+
+            Assert.That(spriteRenderer.flipX, Is.False);
+        }
+        finally
+        {
+            Object.DestroyImmediate(instance);
+        }
+    }
+
     [TestCase(
         "warrior",
         "Dog1_Farmer_Sword_Tiny32",
@@ -96,6 +123,9 @@ public class BattleUnitVisualTests
         Assert.That(
             unitProfile.FindPropertyRelative("attackFramesPerSecond").floatValue,
             Is.EqualTo(attackFramesPerSecond));
+        Assert.That(
+            unitProfile.FindPropertyRelative("sourceFacesRight").boolValue,
+            Is.False);
     }
 
     [TestCase(

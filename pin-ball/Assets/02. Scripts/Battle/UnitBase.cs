@@ -50,6 +50,7 @@ public abstract class UnitBase : MonoBehaviour
         ResetCombatState();
         _renderer = GetComponentInChildren<SpriteRenderer>();
         UpdateVisual();
+        GetComponent<BattleUnitVisual>()?.ResetFacing();
     }
 
     public void ResetCombatState()
@@ -73,6 +74,7 @@ public abstract class UnitBase : MonoBehaviour
         transform.position = position;
         gameObject.SetActive(true);
         ResetCombatState();
+        GetComponent<BattleUnitVisual>()?.ResetFacing();
     }
 
     public void MarkReturnedToPool()

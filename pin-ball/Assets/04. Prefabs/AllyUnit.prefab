@@ -527,7 +527,7 @@ MonoBehaviour:
   attackFrames:
   - {fileID: 2782695096151940842, guid: 55461e6f21d353f43bd86389fb233954, type: 3}
   framesPerSecond: 10
-  sourceFacesRight: 1
+  sourceFacesRight: 0
   unitAnimations:
   - unitId: warrior
     idleFrames:
@@ -552,7 +552,7 @@ MonoBehaviour:
     - {fileID: -3394132255893515074, guid: 4a49a5a62a861a244972426a2db9234e, type: 3}
     moveFramesPerSecond: 12
     attackFramesPerSecond: 10
-    sourceFacesRight: 1
+    sourceFacesRight: 0
   - unitId: archer
     idleFrames:
     - {fileID: -780352543327639502, guid: 77ef4a0d8e4266645bc69b53a1b35b39, type: 3}
@@ -580,7 +580,7 @@ MonoBehaviour:
     - {fileID: -6373831393414778035, guid: 71a0af9df6b50d047ad85d87af661a8f, type: 3}
     moveFramesPerSecond: 12
     attackFramesPerSecond: 12
-    sourceFacesRight: 1
+    sourceFacesRight: 0
   - unitId: mage
     idleFrames:
     - {fileID: 5551512243061292137, guid: e431ebaa60e47c8449dc66f8884cff70, type: 3}
@@ -605,7 +605,7 @@ MonoBehaviour:
     - {fileID: 6804684983309365072, guid: 0b7625a3e8f28b649b65d0dc4716596a, type: 3}
     moveFramesPerSecond: 12
     attackFramesPerSecond: 10
-    sourceFacesRight: 1
+    sourceFacesRight: 0
   - unitId: lancer
     idleFrames:
     - {fileID: 947592258228252345, guid: 9001e3cd245d43399afca23bf9325a25, type: 3}
@@ -636,7 +636,7 @@ MonoBehaviour:
     - {fileID: -8339915514171720830, guid: 44ee3c7ff4afbe84f9b2f082fa12a36b, type: 3}
     moveFramesPerSecond: 12
     attackFramesPerSecond: 12
-    sourceFacesRight: 1
+    sourceFacesRight: 0
 --- !u!58 &6110000000000000001
 CircleCollider2D:
   m_ObjectHideFlags: 0

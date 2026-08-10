@@ -1,0 +1,400 @@
+fileFormatVersion: 2
+guid: 57074de4b46cbb54a84c58aae128f4be
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6999645835566627950
+    second: Cat2_gunslinger_Tiny32_Attack_0
+  - first:
+      213: 7976378692237277665
+    second: Cat2_gunslinger_Tiny32_Attack_1
+  - first:
+      213: -8407190247592767524
+    second: Cat2_gunslinger_Tiny32_Attack_2
+  - first:
+      213: -7042462122679472432
+    second: Cat2_gunslinger_Tiny32_Attack_3
+  - first:
+      213: 5955317715343409346
+    second: Cat2_gunslinger_Tiny32_Attack_4
+  - first:
+      213: -3920609764869986581
+    second: Cat2_gunslinger_Tiny32_Attack_5
+  - first:
+      213: -52756985717705601
+    second: Cat2_gunslinger_Tiny32_Attack_6
+  - first:
+      213: -6771314583342960527
+    second: Cat2_gunslinger_Tiny32_Attack_7
+  - first:
+      213: 7905547316107419245
+    second: Cat2_gunslinger_Tiny32_Attack_8
+  - first:
+      213: -4112272110919272964
+    second: Cat2_gunslinger_Tiny32_Attack_00
+  - first:
+      213: 8774636511265551190
+    second: Cat2_gunslinger_Tiny32_Attack_01
+  - first:
+      213: 1549374487222921685
+    second: Cat2_gunslinger_Tiny32_Attack_02
+  - first:
+      213: -536106663122671335
+    second: Cat2_gunslinger_Tiny32_Attack_03
+  - first:
+      213: -8004981974377345685
+    second: Cat2_gunslinger_Tiny32_Attack_04
+  - first:
+      213: 2841648318421003690
+    second: Cat2_gunslinger_Tiny32_Attack_05
+  - first:
+      213: -8050203876104985986
+    second: Cat2_gunslinger_Tiny32_Attack_06
+  - first:
+      213: 8642513481927842081
+    second: Cat2_gunslinger_Tiny32_Attack_07
+  - first:
+      213: 6347697077223320954
+    second: Cat2_gunslinger_Tiny32_Attack_08
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Cat2_gunslinger_Tiny32_Attack_00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.46875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf539e88d464ee6c0800000000000000
+      internalID: -4112272110919272964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat2_gunslinger_Tiny32_Attack_01
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.46875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 653f72fba65c5c970800000000000000
+      internalID: 8774636511265551190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat2_gunslinger_Tiny32_Attack_02
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.46875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d9a9fe13eb708510800000000000000
+      internalID: 1549374487222921685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat2_gunslinger_Tiny32_Attack_03
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.46875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9196ade84dd5f88f0800000000000000
+      internalID: -536106663122671335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat2_gunslinger_Tiny32_Attack_04
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.46875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6d45d77e4798e090800000000000000
+      internalID: -8004981974377345685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat2_gunslinger_Tiny32_Attack_05
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.46875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aade11407109f6720800000000000000
+      internalID: 2841648318421003690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat2_gunslinger_Tiny32_Attack_06
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.46875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e722a4bf93ee74090800000000000000
+      internalID: -8050203876104985986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat2_gunslinger_Tiny32_Attack_07
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.46875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12955d8c83060f770800000000000000
+      internalID: 8642513481927842081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat2_gunslinger_Tiny32_Attack_08
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.46875}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7d6ea53cdc871850800000000000000
+      internalID: 6347697077223320954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Cat2_gunslinger_Tiny32_Attack_0: 6999645835566627950
+      Cat2_gunslinger_Tiny32_Attack_00: -4112272110919272964
+      Cat2_gunslinger_Tiny32_Attack_01: 8774636511265551190
+      Cat2_gunslinger_Tiny32_Attack_02: 1549374487222921685
+      Cat2_gunslinger_Tiny32_Attack_03: -536106663122671335
+      Cat2_gunslinger_Tiny32_Attack_04: -8004981974377345685
+      Cat2_gunslinger_Tiny32_Attack_05: 2841648318421003690
+      Cat2_gunslinger_Tiny32_Attack_06: -8050203876104985986
+      Cat2_gunslinger_Tiny32_Attack_07: 8642513481927842081
+      Cat2_gunslinger_Tiny32_Attack_08: 6347697077223320954
+      Cat2_gunslinger_Tiny32_Attack_1: 7976378692237277665
+      Cat2_gunslinger_Tiny32_Attack_2: -8407190247592767524
+      Cat2_gunslinger_Tiny32_Attack_3: -7042462122679472432
+      Cat2_gunslinger_Tiny32_Attack_4: 5955317715343409346
+      Cat2_gunslinger_Tiny32_Attack_5: -3920609764869986581
+      Cat2_gunslinger_Tiny32_Attack_6: -52756985717705601
+      Cat2_gunslinger_Tiny32_Attack_7: -6771314583342960527
+      Cat2_gunslinger_Tiny32_Attack_8: 7905547316107419245
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
