@@ -20,6 +20,7 @@ public sealed class EvolutionGlowEffect : MonoBehaviour
 
     public void Play(Vector3 worldPosition)
     {
+        _spriteRenderer ??= GetComponent<SpriteRenderer>();
         transform.position = worldPosition;
         gameObject.SetActive(true);
 

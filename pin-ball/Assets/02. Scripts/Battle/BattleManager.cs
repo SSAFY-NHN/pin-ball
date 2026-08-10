@@ -122,6 +122,7 @@ public class BattleManager : AppService, IItemEventListener
         }
 
         ChangeState(EWaveState.Active);
+        SoundManager.PlaySFXIfAvailable(SoundName.WaveStart);
         return true;
     }
 
@@ -205,6 +206,10 @@ public class BattleManager : AppService, IItemEventListener
             }
         }
 
+        SoundManager.PlaySFXIfAvailable(
+            result == EWaveResolutionResult.Cleared
+                ? SoundName.WaveWin
+                : SoundName.WaveFailed);
         OnWaveResolutionStarted?.Invoke(result, CurrentWaveNumber);
     }
 

@@ -3,8 +3,44 @@ using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 using DG.Tweening;
+
+public static class SoundName
+{
+    public const string MainBgm = "main2";
+    public const string Arrow = "arrow_sound";
+    public const string BallHit = "ball_hit_sound_lastpart_use";
+    public const string BossWind = "boss_wind";
+    public const string BumperHit = "bumper_hit_sound";
+    public const string ButtonClick = "button_click_sound";
+    public const string BuyItem = "Buy_item";
+    public const string ClassicPunch = "classic-punch";
+    public const string Evolution = "evolution_sound";
+    public const string EnemyHealing = "healing2_sound";
+    public const string AllyHealing = "healing_sound";
+    public const string Hit = "hit_sound";
+    public const string MagicSpell = "magicspell_sound";
+    public const string SmallPinHit = "pinball_pin_small_hit_sound";
+    public const string Spring = "spring_sound";
+    public const string SpringPull = "spring_sound2";
+    public const string UnitSpawn = "unit_spawn";
+    public const string WaveFailed = "wave_faild";
+    public const string WaveStart = "wave_start";
+    public const string WaveWin = "Wave_Win";
+
+    public static string GetAttack(string unitId)
+    {
+        return unitId switch
+        {
+            "archer" or "ranger" => Arrow,
+            "mage" or "frost" or "pyromancer" => MagicSpell,
+            _ => ClassicPunch
+        };
+    }
+}
 
 public class SoundManager : AppService
 {
@@ -28,6 +64,7 @@ public class SoundManager : AppService
     [SerializeField] private AudioMixerGroup _sfxMixerGroup;
 
     [Header("Settings")]
+    [SerializeField] private string startupBgmName = SoundName.MainBgm;
     [SerializeField, Range(0f, 1f)] private float _bgmVolume = 0.2f;
     [SerializeField, Range(0f, 1f)] private float _sfxVolume = 0.2f;
     [SerializeField, Min(1)] private int _initialPoolSize = 5;
@@ -37,6 +74,7 @@ public class SoundManager : AppService
     
     private Queue<AudioSource> _sfxPool = new();
     private List<AudioSource> _activeSfx = new();
+    private readonly List<Button> _clickSoundButtons = new();
     
     private readonly Dictionary<EVolumeType, bool> _muted = new()
     {
@@ -56,6 +94,69 @@ public class SoundManager : AppService
         {
             _sfxPool.Enqueue(CreateSfxSource());
         }
+    }
+
+    private void OnEnable()
+    {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+        ClearButtonClickListeners();
+    }
+
+    private void Start()
+    {
+        RegisterButtonClickListeners();
+
+        if (!string.IsNullOrWhiteSpace(startupBgmName))
+        {
+            PlayBGM(startupBgmName);
+        }
+    }
+
+    private void OnSceneLoaded(Scene _, LoadSceneMode __)
+    {
+        RegisterButtonClickListeners();
+    }
+
+    private void RegisterButtonClickListeners()
+    {
+        ClearButtonClickListeners();
+
+        var buttons = FindObjectsByType<Button>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None);
+        foreach (var button in buttons)
+        {
+            if (button == null)
+            {
+                continue;
+            }
+
+            button.onClick.AddListener(PlayButtonClickSound);
+            _clickSoundButtons.Add(button);
+        }
+    }
+
+    private void ClearButtonClickListeners()
+    {
+        foreach (var button in _clickSoundButtons)
+        {
+            if (button != null)
+            {
+                button.onClick.RemoveListener(PlayButtonClickSound);
+            }
+        }
+
+        _clickSoundButtons.Clear();
+    }
+
+    private void PlayButtonClickSound()
+    {
+        PlaySFX(SoundName.ButtonClick);
     }
     
     private void Update()
@@ -86,10 +187,15 @@ public class SoundManager : AppService
             return;
         }
 
-        _bgmPlayer.clip = clip;
+        if (_bgmPlayer.clip != clip)
+        {
+            _bgmPlayer.clip = clip;
+            _bgmPlayer.volume = 0f;
+        }
+
         _bgmPlayer.loop = true;
         
-        FadeInBGM(5);
+        FadeInBGM(1f);
     }
 
     public void StopBGM() => FadeOutBGM(1);
@@ -117,6 +223,14 @@ public class SoundManager : AppService
     #endregion
 
     #region SFX
+    public static void PlaySFXIfAvailable(string name)
+    {
+        if (App.TryGet<SoundManager>(out var soundManager))
+        {
+            soundManager.PlaySFX(name);
+        }
+    }
+
     public AudioSource PlaySFX(string name)
     {
         if (!_sfxDict.TryGetValue(name, out var clip))

@@ -54,8 +54,8 @@ public sealed class SceneManager : AppService
     {
         string bgmKey = eSceneName switch
         {
-            ESceneName.Title => "Title",
-            ESceneName.Game => "InGame",
+            ESceneName.Title => SoundName.MainBgm,
+            ESceneName.Game => SoundName.MainBgm,
             _ => null
         };
 

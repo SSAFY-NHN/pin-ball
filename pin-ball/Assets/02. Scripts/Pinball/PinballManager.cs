@@ -172,6 +172,7 @@ public class PinballManager : AppService, IItemEventListener
         _activeBalls.Add(ball);
         _successfulLaunchCount++;
         NotifyLaunchCostChanged();
+        SoundManager.PlaySFXIfAvailable(SoundName.Spring);
         OnStateChanged?.Invoke(EPinballState.Launched);
         return true;
     }
@@ -204,16 +205,23 @@ public class PinballManager : AppService, IItemEventListener
 
         if (obstacle == EPinballObstacle.SmallPin)
         {
+            SoundManager.PlaySFXIfAvailable(SoundName.SmallPinHit);
             ball.SmallPinHitCount++;
             ApplyWeightedCore(ball);
             ApplyGoldenBall(ball);
             return;
         }
 
+        SoundManager.PlaySFXIfAvailable(SoundName.BumperHit);
         ball.BigBumperHitCount++;
         ApplyReinforcedBumper(ball);
         ApplyGoldenBumper(ball);
         ApplySplitCapsule(ball);
+    }
+
+    internal void OnBallHitSurface()
+    {
+        SoundManager.PlaySFXIfAvailable(SoundName.BallHit);
     }
 
     internal void ApplyCollisionRetention(Pinball ball, Vector2 previousVelocity)

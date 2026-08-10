@@ -60,7 +60,11 @@ public class Pinball : MonoBehaviour
         _arcaneVfx?.PlayCollision(contactPoint, collision.relativeVelocity.magnitude);
 
         var obstacle = collision.collider.GetComponentInParent<PinballObstacle>();
-        if (obstacle == null) return;
+        if (obstacle == null)
+        {
+            _manager.OnBallHitSurface();
+            return;
+        }
 
         _manager.OnBallHit(this, obstacle.Type);
     }

@@ -128,6 +128,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         }
 
         AddOwnedAlly(spawnedUnit);
+        SoundManager.PlaySFXIfAvailable(SoundName.UnitSpawn);
         return spawnedUnit;
     }
 
@@ -444,6 +445,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         if (evolvedAlly != null)
         {
             evolutionGlowEffect?.Play(evolvedAlly.transform.position);
+            SoundManager.PlaySFXIfAvailable(SoundName.Evolution);
         }
 
         return true;

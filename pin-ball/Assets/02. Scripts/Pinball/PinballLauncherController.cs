@@ -33,6 +33,7 @@ public class PinballLauncherController : MonoBehaviour
     private float _pointerStartY;
     private float _pullDistance;
     private bool _isDragging;
+    private bool _hasPlayedPullSound;
     private bool _hasLoadedBall;
     private float _leverRotationDirection;
 
@@ -72,6 +73,7 @@ public class PinballLauncherController : MonoBehaviour
     {
         if (!_hasLoadedBall) return;
         _isDragging = true;
+        _hasPlayedPullSound = false;
         _pointerStartY = GetPointerWorldY();
         _pullDistance = 0f;
     }
@@ -94,6 +96,12 @@ public class PinballLauncherController : MonoBehaviour
             _pointerStartY - GetPointerWorldY(),
             0f,
             maximumPullDistance);
+        if (ShouldPlayPullSound(_hasPlayedPullSound, _pullDistance))
+        {
+            _hasPlayedPullSound = true;
+            SoundManager.PlaySFXIfAvailable(SoundName.SpringPull);
+        }
+
         ApplyVisualPull(_pullDistance);
     }
 
@@ -118,6 +126,7 @@ public class PinballLauncherController : MonoBehaviour
     private void OnDisable()
     {
         _isDragging = false;
+        _hasPlayedPullSound = false;
         ResetVisuals();
         glowController?.ResetInteraction();
     }
@@ -126,6 +135,13 @@ public class PinballLauncherController : MonoBehaviour
     {
         _hasLoadedBall = isLoaded;
         glowController?.SetLoaded(isLoaded);
+    }
+
+    private static bool ShouldPlayPullSound(
+        bool hasPlayedPullSound,
+        float pullDistance)
+    {
+        return !hasPlayedPullSound && pullDistance > 0f;
     }
 
     private float GetPointerWorldY()
