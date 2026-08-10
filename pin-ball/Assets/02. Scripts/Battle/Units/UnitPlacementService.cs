@@ -43,10 +43,25 @@ public sealed class UnitPlacementService
         if (ally == null || _battleArea == null) return false;
 
         float padding = GetPadding(ally);
-        float minimumDistance = padding * 2f + 0.15f;
+        if (!TryFindFreeGridSlot(padding, out Vector3 candidate)) return false;
+
+        ally.transform.position = candidate;
+        _savedPositions[ally] = candidate;
+        return true;
+    }
+
+    public bool TryFindFreeGridSlot(
+        float padding,
+        out Vector3 position)
+    {
+        position = default;
+        if (_battleArea == null) return false;
+
+        float safePadding = Mathf.Max(0f, padding);
+        float minimumDistance = safePadding * 2f + 0.15f;
         for (var gridIndex = 0; _battleArea.TryGetAllyGridPosition(
                  gridIndex,
-                 padding,
+                 safePadding,
                  out Vector3 candidate); gridIndex++)
         {
             if (IsGridPositionOccupied(
@@ -54,8 +69,7 @@ public sealed class UnitPlacementService
                     _savedPositions.Values,
                     minimumDistance)) continue;
 
-            ally.transform.position = candidate;
-            _savedPositions[ally] = candidate;
+            position = candidate;
             return true;
         }
 

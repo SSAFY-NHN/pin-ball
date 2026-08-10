@@ -135,12 +135,22 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             return null;
         }
 
+        if (!_placementService.TryFindFreeGridSlot(
+                _spawner.AllyPlacementPadding,
+                out Vector3 spawnPosition))
+        {
+            Debug.LogWarning(
+                "[UnitManager] No available ally preparation grid slot.");
+            return null;
+        }
+
         var spawnedUnit = _spawner.SpawnAlly(
             unitData,
             allyData,
             _titleData.AllyCommon,
             finalStats,
             _combatContext,
+            spawnPosition,
             this,
             UnitSkillRegistry.CreateDefault());
         if (spawnedUnit == null)
@@ -148,7 +158,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             return null;
         }
 
-        if (!_placementService.TryPlaceInFreeGridSlot(spawnedUnit))
+        if (!_placementService.TrySave(spawnedUnit, spawnPosition))
         {
             Debug.LogWarning(
                 "[UnitManager] No available ally preparation grid slot.");
