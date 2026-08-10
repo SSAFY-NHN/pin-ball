@@ -23,6 +23,7 @@ public class AllyDetailPanel : UIBase
     [Header("Unit")]
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI detailText;
+    [SerializeField] private TextMeshProUGUI skillText;
     [SerializeField] private Image portraitImage;
 
     private UnitManager _unitManager;
@@ -99,8 +100,8 @@ public class AllyDetailPanel : UIBase
             $"방어력  {ally.CurrentDefense:0}\n" +
             $"공격 속도  {ally.AttackRate:0.##}\n" +
             $"사거리  {ally.AttackRange:0.##}\n" +
-            $"마나  {ally.CurrentMana:0}/{ally.MaxMana:0}\n\n" +
-            $"<b>{skillName}</b>\n{skillDescription}";
+            $"마나  {ally.CurrentMana:0}/{ally.MaxMana:0}";
+        skillText.text = $"<b>{skillName}</b>\n{skillDescription}";
     }
 
     private void StartAnimation(
