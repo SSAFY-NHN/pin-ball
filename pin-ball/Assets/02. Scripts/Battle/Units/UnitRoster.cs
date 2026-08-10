@@ -54,7 +54,7 @@ public sealed class UnitRoster
         if (unit == null) return false;
 
         return unit.Team == EBattleTeam.Ally
-            ? _activeAllies.Remove(unit)
+            ? RemoveUnit(unit)
             : _activeEnemies.Remove(unit);
     }
 

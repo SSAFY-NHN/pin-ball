@@ -32,8 +32,6 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     public int RemainingEnemyCount => _roster.ActiveEnemyCount;
     public bool CanStartWaveWithCurrentRoster =>
         CanStartWaveWithAllyCount(DeployedAllyCount);
-    public bool CanLaunchPinballWithCurrentRoster =>
-        CanLaunchPinballWithAllyCount(DeployedAllyCount);
     
     private BattleManager _battleManager;
     private UnitSpawner _spawner;
@@ -229,6 +227,22 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         }
     }
 
+    private bool RemoveOwnedAlly(AllyUnit ally)
+    {
+        if (ally == null) return false;
+
+        int previousOwnedCount = _roster.OwnedAllyCount;
+        _roster.RemoveUnit(ally);
+        _placementService.Remove(ally);
+        bool removed = _roster.OwnedAllyCount != previousOwnedCount;
+        if (removed)
+        {
+            OnDeployedAllyCountChanged?.Invoke(DeployedAllyCount);
+        }
+
+        return removed;
+    }
+
     public void AddEnemy(UnitBase enemy)
     {
         _roster.AddEnemy(enemy);
@@ -238,16 +252,16 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     {
         if (unit == null) return;
 
-        if (unit.Team == EBattleTeam.Ally)
+        if (unit is AllyUnit ally)
         {
-            _roster.NotifyUnitDied(unit);
+            RemoveOwnedAlly(ally);
             RefreshAllyItemModifiers();
+            _spawner.ReturnUnit(ally);
+            return;
         }
-        else
-        {
-            _roster.NotifyUnitDied(unit);
-            _spawner.ReturnUnit(unit);
-        }
+
+        _roster.NotifyUnitDied(unit);
+        _spawner.ReturnUnit(unit);
     }
 
     public void CleanupDestroyedUnits()
@@ -267,14 +281,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
 
         if (unit is AllyUnit ally)
         {
-            int previousOwnedCount = _roster.OwnedAllyCount;
-            _roster.RemoveUnit(ally);
-            _placementService.Remove(ally);
-
-            if (_roster.OwnedAllyCount != previousOwnedCount)
-            {
-                OnDeployedAllyCountChanged?.Invoke(DeployedAllyCount);
-            }
+            RemoveOwnedAlly(ally);
         }
         else
         {
@@ -287,11 +294,6 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     public static bool CanStartWaveWithAllyCount(int count)
     {
         return count >= 1 && count <= MaxDeployedAllyCount;
-    }
-
-    public static bool CanLaunchPinballWithAllyCount(int count)
-    {
-        return count <= MaxDeployedAllyCount + 1;
     }
 
     private void ReturnAllEnemies()

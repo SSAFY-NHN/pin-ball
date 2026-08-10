@@ -18,6 +18,28 @@ public static class ArcaneGlowMath
         if (pulseDuration <= 0f || elapsed >= pulseDuration) return baseIntensity;
         return Mathf.Lerp(pulseIntensity, baseIntensity, elapsed / pulseDuration);
     }
+
+    public static float CalculateLauncherIntensity(
+        bool loaded,
+        bool hovered,
+        float pullRatio,
+        float breathing01,
+        float unloadedIntensity,
+        float loadedIntensity,
+        float hoverIntensity,
+        float fullPullIntensity,
+        float breathingAmplitude)
+    {
+        if (!loaded) return Mathf.Max(0f, unloadedIntensity);
+
+        float idle = hovered ? hoverIntensity : loadedIntensity;
+        idle += Mathf.Clamp01(breathing01) *
+                Mathf.Max(0f, breathingAmplitude);
+        return Mathf.Lerp(
+            Mathf.Max(0f, idle),
+            Mathf.Max(0f, fullPullIntensity),
+            Mathf.Clamp01(pullRatio));
+    }
 }
 
 [DisallowMultipleComponent]
@@ -33,6 +55,7 @@ public sealed class ArcaneMaskGlowController : MonoBehaviour
     private float pulseIntensity;
     private float pulseDuration;
     private float pulseStartedAt = float.NegativeInfinity;
+    private float scaleMultiplier = 1f;
 
     private void Awake()
     {
@@ -64,6 +87,11 @@ public sealed class ArcaneMaskGlowController : MonoBehaviour
         if (Time.time - pulseStartedAt >= pulseDuration) SetIntensity(baseIntensity);
     }
 
+    public void SetScaleMultiplier(float multiplier)
+    {
+        scaleMultiplier = Mathf.Max(0.01f, multiplier);
+    }
+
     private void LateUpdate()
     {
         if (glowRenderer == null) return;
@@ -84,7 +112,7 @@ public sealed class ArcaneMaskGlowController : MonoBehaviour
 
         var scale = ArcaneGlowMath.CalculateMaskScale(
             sourceRenderer.sprite.bounds.size,
-            glowRenderer.sprite.bounds.size);
+            glowRenderer.sprite.bounds.size) * scaleMultiplier;
         glowRenderer.transform.localScale = new Vector3(scale.x, scale.y, 1f);
         var scaledMaskCenter = Vector2.Scale(glowRenderer.sprite.bounds.center, scale);
         var offset = (Vector2)sourceRenderer.sprite.bounds.center - scaledMaskCenter;

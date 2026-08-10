@@ -8,7 +8,6 @@ public class EvolutionChoiceView : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI roleText;
-    [SerializeField] private TextMeshProUGUI statsText;
     [SerializeField] private TextMeshProUGUI skillText;
     [SerializeField] private Button selectButton;
 
@@ -30,7 +29,6 @@ public class EvolutionChoiceView : MonoBehaviour
         if (data == null ||
             nameText == null ||
             roleText == null ||
-            statsText == null ||
             skillText == null ||
             selectButton == null)
         {
@@ -42,9 +40,6 @@ public class EvolutionChoiceView : MonoBehaviour
         _onSelected = onSelected;
         nameText.text = data.name;
         roleText.text = data.role;
-        statsText.text =
-            $"HP {data.health}  ATK {data.attack}  DEF {data.defense}\n" +
-            $"공속 {data.attackSpeed:0.##}  사거리 {data.attackRange:0.##}";
         skillText.text = data.skill == null
             ? "스킬 없음"
             : $"{data.skill.name}\n{data.skill.description}";

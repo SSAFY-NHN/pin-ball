@@ -154,8 +154,6 @@ public class PinballManager : AppService, IItemEventListener
     {
         if (_battleManager == null ||
             !_battleManager.CanUsePreparationActions) return false;
-        if (_unitManager == null ||
-            !_unitManager.CanLaunchPinballWithCurrentRoster) return false;
         if (_loadedBall == null) return false;
 
         var cost = CurrentLaunchCost;

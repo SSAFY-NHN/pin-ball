@@ -17,8 +17,15 @@ public enum EWaveState
 {
     Pending,
     Active,
+    Resolving,
     Victory,
     Defeat
+}
+
+public enum EWaveResolutionResult
+{
+    Cleared,
+    Failed
 }
 
 public enum EBattleTeam
