@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -15,20 +16,19 @@ public class UnitManager : AppService, IItemEventListener
     public event Action<AllyUnit> OnAllyDetailRequested;
     public event Action<int> OnDeployedAllyCountChanged;
 
-    private readonly List<AllyUnit> _ownedAllies = new();
-    private readonly List<UnitBase> _activeAllies = new();
-    private readonly List<UnitBase> _activeEnemies = new();
+    private UnitRoster _roster;
+    private UnitTargetFinder _targetFinder;
     private readonly HashSet<AllyUnit> _mergeReservations = new();
     private readonly List<AllyUnitData> _evolutionCandidates = new();
     private readonly Dictionary<AllyUnit, Vector3>
         _allyPreparationPositions = new();
 
-    public IReadOnlyList<AllyUnit> OwnedAllies => _ownedAllies;
+    public IReadOnlyList<AllyUnit> OwnedAllies => _roster.OwnedAllies;
     public BattleAreaBounds BattleArea => battleArea;
 
-    public int DeployedAllyCount => _ownedAllies.Count;
-    public int RemainingAllyCount => _activeAllies.Count;
-    public int RemainingEnemyCount => _activeEnemies.Count;
+    public int DeployedAllyCount => _roster.OwnedAllyCount;
+    public int RemainingAllyCount => _roster.ActiveAllyCount;
+    public int RemainingEnemyCount => _roster.ActiveEnemyCount;
     public bool CanStartWaveWithCurrentRoster =>
         CanStartWaveWithAllyCount(DeployedAllyCount);
     public bool CanLaunchPinballWithCurrentRoster =>
@@ -55,6 +55,8 @@ public class UnitManager : AppService, IItemEventListener
     {
         base.Awake();
         _spawner = GetComponent<UnitSpawner>();
+        _roster = new UnitRoster();
+        _targetFinder = new UnitTargetFinder(_roster);
     }
 
     private void Start()
@@ -258,12 +260,11 @@ public class UnitManager : AppService, IItemEventListener
     {
         if (ally == null) return;
 
-        bool ownedCountChanged = !_ownedAllies.Contains(ally);
-        if (ownedCountChanged) _ownedAllies.Add(ally);
-        if (!_activeAllies.Contains(ally)) _activeAllies.Add(ally);
+        int previousOwnedCount = _roster.OwnedAllyCount;
+        _roster.AddOwnedAlly(ally);
         RefreshAllyItemModifiers();
 
-        if (ownedCountChanged)
+        if (_roster.OwnedAllyCount != previousOwnedCount)
         {
             OnDeployedAllyCountChanged?.Invoke(DeployedAllyCount);
         }
@@ -271,8 +272,7 @@ public class UnitManager : AppService, IItemEventListener
 
     public void AddEnemy(UnitBase enemy)
     {
-        if (enemy == null) return;
-        _activeEnemies.Add(enemy);
+        _roster.AddEnemy(enemy);
     }
 
     public void NotifyUnitDied(UnitBase unit)
@@ -281,20 +281,19 @@ public class UnitManager : AppService, IItemEventListener
 
         if (unit.Team == EBattleTeam.Ally)
         {
-            _activeAllies.Remove(unit);
+            _roster.NotifyUnitDied(unit);
             RefreshAllyItemModifiers();
         }
         else
         {
-            _activeEnemies.Remove(unit);
+            _roster.NotifyUnitDied(unit);
             _spawner.ReturnUnit(unit);
         }
     }
 
     public void CleanupDestroyedUnits()
     {
-        _activeAllies.RemoveAll(unit => unit == null || !unit.IsAlive);
-        _activeEnemies.RemoveAll(unit => unit == null || !unit.IsAlive);
+        _roster.CleanupDestroyedUnits();
     }
 
     public void ResolveWaveResult()
@@ -309,19 +308,19 @@ public class UnitManager : AppService, IItemEventListener
 
         if (unit is AllyUnit ally)
         {
-            bool ownedCountChanged = _ownedAllies.Remove(ally);
-            _activeAllies.Remove(ally);
+            int previousOwnedCount = _roster.OwnedAllyCount;
+            _roster.RemoveUnit(ally);
             _mergeReservations.Remove(ally);
             _allyPreparationPositions.Remove(ally);
 
-            if (ownedCountChanged)
+            if (_roster.OwnedAllyCount != previousOwnedCount)
             {
                 OnDeployedAllyCountChanged?.Invoke(DeployedAllyCount);
             }
         }
         else
         {
-            _activeEnemies.Remove(unit);
+            _roster.RemoveUnit(unit);
         }
 
         _spawner.ReturnUnit(unit);
@@ -339,8 +338,7 @@ public class UnitManager : AppService, IItemEventListener
 
     private void ReturnAllEnemies()
     {
-        var snapshot = _activeEnemies.ToArray();
-        _activeEnemies.Clear();
+        var snapshot = _roster.DrainEnemies();
         foreach (var unit in snapshot)
         {
             if (unit != null)
@@ -352,11 +350,11 @@ public class UnitManager : AppService, IItemEventListener
 
     private void RestoreAlliesForPreparation()
     {
-        _activeAllies.Clear();
+        _roster.ClearActiveAllies();
 
-        for (var i = 0; i < _ownedAllies.Count; i++)
+        for (var i = 0; i < _roster.OwnedAllyCount; i++)
         {
-            var ally = _ownedAllies[i];
+            var ally = _roster.OwnedAllies[i];
             if (ally == null) continue;
 
             if (!_allyPreparationPositions.TryGetValue(
@@ -372,7 +370,7 @@ public class UnitManager : AppService, IItemEventListener
             preparationPosition = _allyPreparationPositions[ally];
             ally.RestoreForPreparation(preparationPosition);
             ally.ResetMana();
-            _activeAllies.Add(ally);
+            _roster.AddActiveAlly(ally);
         }
 
         RefreshAllyItemModifiers();
@@ -383,7 +381,7 @@ public class UnitManager : AppService, IItemEventListener
         return ally != null &&
                _battleManager != null &&
                _battleManager.CanUsePreparationActions &&
-               _ownedAllies.Contains(ally) &&
+               _roster.OwnedAllies.Contains(ally) &&
                !_mergeReservations.Contains(ally) &&
                ally.IsAlive;
     }
@@ -391,7 +389,7 @@ public class UnitManager : AppService, IItemEventListener
     public void RequestAllyDetail(AllyUnit ally)
     {
         if (ally == null ||
-            !_ownedAllies.Contains(ally) ||
+            !_roster.OwnedAllies.Contains(ally) ||
             ally.IsInPool) return;
 
         OnAllyDetailRequested?.Invoke(ally);
@@ -630,58 +628,29 @@ public class UnitManager : AppService, IItemEventListener
 
     public UnitBase FindClosestAliveEnemy(Vector3 fromPosition, float maxDistance)
     {
-        return FindClosest(fromPosition, maxDistance, _activeEnemies);
+        return _targetFinder.FindClosestAliveEnemy(fromPosition, maxDistance);
     }
 
     public UnitBase FindClosestAliveAlly(Vector3 fromPosition, float maxDistance)
     {
-        return FindClosest(fromPosition, maxDistance, _activeAllies);
+        return _targetFinder.FindClosestAliveAlly(fromPosition, maxDistance);
     }
 
     public UnitBase FindFarthestAliveAlly(Vector3 fromPosition)
     {
-        UnitBase result = null;
-        float farthestDistance = float.MinValue;
-
-        foreach (var ally in _activeAllies)
-        {
-            if (ally == null || !ally.IsAlive) continue;
-
-            float distance = Vector2.Distance(fromPosition, ally.transform.position);
-            if (distance > farthestDistance)
-            {
-                result = ally;
-                farthestDistance = distance;
-            }
-        }
-
-        return result;
+        return _targetFinder.FindFarthestAliveAlly(fromPosition);
     }
 
     public UnitBase FindHighestHpAliveAlly()
     {
-        UnitBase result = null;
-        float highestHp = float.MinValue;
-
-        foreach (var ally in _activeAllies)
-        {
-            if (ally == null || !ally.IsAlive) continue;
-
-            if (ally.CurrentHp > highestHp)
-            {
-                result = ally;
-                highestHp = ally.CurrentHp;
-            }
-        }
-
-        return result;
+        return _targetFinder.FindHighestHpAliveAlly();
     }
 
     public void ApplyEnemySpeedBuff(
         float moveSpeedMultiplier,
         float attackRateMultiplier)
     {
-        foreach (var enemy in _activeEnemies)
+        foreach (var enemy in _roster.ActiveEnemies)
         {
             if (enemy == null || !enemy.IsAlive) continue;
 
@@ -695,7 +664,7 @@ public class UnitManager : AppService, IItemEventListener
     {
         int damage = 0;
 
-        foreach (var enemy in _activeEnemies)
+        foreach (var enemy in _roster.ActiveEnemies)
         {
             if (enemy is EnemyUnit enemyUnit && enemyUnit.IsAlive)
             {
@@ -711,7 +680,7 @@ public class UnitManager : AppService, IItemEventListener
         float radius,
         List<UnitBase> result)
     {
-        GetAliveUnitsInRadius(center, radius, _activeEnemies, result);
+        _targetFinder.GetAliveEnemiesInRadius(center, radius, result);
     }
 
     public void GetAliveAlliesInRadius(
@@ -719,7 +688,7 @@ public class UnitManager : AppService, IItemEventListener
         float radius,
         List<UnitBase> result)
     {
-        GetAliveUnitsInRadius(center, radius, _activeAllies, result);
+        _targetFinder.GetAliveAlliesInRadius(center, radius, result);
     }
 
     public void GetEnemiesInLine(
@@ -729,77 +698,12 @@ public class UnitManager : AppService, IItemEventListener
         float halfWidth,
         List<UnitBase> result)
     {
-        result.Clear();
-        var normalizedDirection = direction.sqrMagnitude > 0.001f
-            ? direction.normalized
-            : Vector3.right;
-
-        foreach (var enemy in _activeEnemies)
-        {
-            if (enemy == null || !enemy.IsAlive) continue;
-
-            var offset = enemy.transform.position - origin;
-            var forwardDistance = Vector3.Dot(offset, normalizedDirection);
-            if (forwardDistance < 0f || forwardDistance > distance) continue;
-
-            var lateralOffset = offset - normalizedDirection * forwardDistance;
-            if (lateralOffset.magnitude <= halfWidth)
-            {
-                result.Add(enemy);
-            }
-        }
-
-        result.Sort((left, right) =>
-            Vector2.Distance(origin, left.transform.position).CompareTo(
-                Vector2.Distance(origin, right.transform.position)));
-    }
-
-    private static void GetAliveUnitsInRadius(
-        Vector3 center,
-        float radius,
-        List<UnitBase> candidates,
-        List<UnitBase> result)
-    {
-        result.Clear();
-        float sqrRadius = radius * radius;
-
-        foreach (var candidate in candidates)
-        {
-            if (candidate == null || !candidate.IsAlive) continue;
-
-            if ((candidate.transform.position - center).sqrMagnitude <= sqrRadius)
-            {
-                result.Add(candidate);
-            }
-        }
-    }
-
-    private static UnitBase FindClosest(
-        Vector3 fromPosition,
-        float maxDistance,
-        List<UnitBase> candidates)
-    {
-        UnitBase best = null;
-        var bestDistance = maxDistance;
-
-        foreach (var candidate in candidates)
-        {
-            if (candidate == null || !candidate.IsAlive)
-            {
-                continue;
-            }
-
-            var distance = Vector2.Distance(fromPosition, candidate.transform.position);
-            if (distance > bestDistance)
-            {
-                continue;
-            }
-
-            best = candidate;
-            bestDistance = distance;
-        }
-
-        return best;
+        _targetFinder.GetEnemiesInLine(
+            origin,
+            direction,
+            distance,
+            halfWidth,
+            result);
     }
 
     public void OnItemEvent(Item item)
@@ -832,7 +736,7 @@ public class UnitManager : AppService, IItemEventListener
     private void RefreshAllyItemModifiers()
     {
         var unitTypes = new HashSet<string>();
-        foreach (var ally in _activeAllies)
+        foreach (var ally in _roster.ActiveAllies)
         {
             if (ally != null)
             {
@@ -844,7 +748,7 @@ public class UnitManager : AppService, IItemEventListener
             _diversityMaxBonus,
             unitTypes.Count * _diversityBonusPerType);
 
-        foreach (var ally in _activeAllies)
+        foreach (var ally in _roster.ActiveAllies)
         {
             if (ally == null) continue;
 
