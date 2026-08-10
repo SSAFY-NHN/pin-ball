@@ -82,4 +82,6 @@ public enum EItem
     DuplicationSeal,
     DiversityEmblem,
     BarrierReinforcement,
+    HealthPotion,
+    FullHealthPotion,
 }
