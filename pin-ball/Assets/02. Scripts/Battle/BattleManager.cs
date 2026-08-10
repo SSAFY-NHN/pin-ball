@@ -31,7 +31,7 @@ public class BattleManager : AppService, IItemEventListener
 
     private UnitManager _unitManager;
     private BattleRunState _runState;
-    private BattleEconomy _economy;
+    private BattleEconomy _economy = new(0);
     private int _barrierDamageReduction;
     private int _minimumBarrierDamage = 1;
     private bool _isPreparationLocked;
