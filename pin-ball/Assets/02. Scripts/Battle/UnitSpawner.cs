@@ -25,7 +25,10 @@ public class UnitSpawner : MonoBehaviour
         BattleUnitSpawnData data,
         AllyUnitData allyData,
         AllyCommonData commonData,
-        BattleUnitStats stats)
+        BattleUnitStats stats,
+        UnitCombatContext context,
+        UnitManager unitManager = null,
+        UnitSkillRegistry skillRegistry = null)
     {
         if (data == null)
         {
@@ -40,8 +43,9 @@ public class UnitSpawner : MonoBehaviour
             EBattleTeam.Ally,
             data.UnitId,
             stats,
-            0);
-        ally.SetData(data.UnitId, data.Level, allyData?.skill, commonData);
+            0,
+            context);
+        ally.SetData(data.UnitId, data.Level, allyData?.skill, commonData, unitManager, skillRegistry);
         return ally;
     }
 
@@ -49,7 +53,10 @@ public class UnitSpawner : MonoBehaviour
         EnemyUnitData data,
         BattleUnitStats stats,
         int spawnIndex,
-        Vector3? spawnPosition = null)
+        UnitCombatContext context,
+        Vector3? spawnPosition = null,
+        UnitManager unitManager = null,
+        UnitSkillRegistry skillRegistry = null)
     {
         if (data == null)
         {
@@ -65,9 +72,10 @@ public class UnitSpawner : MonoBehaviour
             data.id,
             stats,
             spawnIndex,
+            context,
             spawnPosition);
 
-        unit?.SetData(data);
+        unit?.SetData(data, unitManager, skillRegistry);
         return unit;
     }
 
@@ -98,6 +106,7 @@ public class UnitSpawner : MonoBehaviour
         string unitId,
         BattleUnitStats stats,
         int spawnIndex,
+        UnitCombatContext context,
         Vector3? overridePosition = null)
     {
         var spawnPoint = team == EBattleTeam.Ally
@@ -115,7 +124,7 @@ public class UnitSpawner : MonoBehaviour
         unit.transform.SetPositionAndRotation(position, Quaternion.identity);
         unit.gameObject.SetActive(true);
         unit.name = $"{team}_{unitId}";
-        unit.Initialize(stats);
+        unit.Initialize(stats, context);
     }
 
     private AllyUnit TakeAlly()
