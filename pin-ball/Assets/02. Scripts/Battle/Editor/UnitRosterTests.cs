@@ -39,5 +39,34 @@ public class UnitRosterTests
         Assert.That(roster.OwnedAllyCount, Is.Zero);
         Assert.That(roster.ActiveAllyCount, Is.Zero);
     }
+
+    [Test]
+    public void NotifyUnitDied_AllyIsPermanentlyRemoved()
+    {
+        _allyObject = new GameObject("ally");
+        var ally = _allyObject.AddComponent<AllyUnit>();
+        var roster = new UnitRoster();
+        roster.AddOwnedAlly(ally);
+
+        Assert.That(roster.NotifyUnitDied(ally), Is.True);
+        Assert.That(roster.OwnedAllyCount, Is.Zero);
+        Assert.That(roster.ActiveAllyCount, Is.Zero);
+    }
+
+    [Test]
+    public void NotifyUnitDied_EnemyDoesNotTouchOwnedAllies()
+    {
+        _allyObject = new GameObject("ally");
+        _enemyObject = new GameObject("enemy");
+        var ally = _allyObject.AddComponent<AllyUnit>();
+        var enemy = _enemyObject.AddComponent<EnemyUnit>();
+        var roster = new UnitRoster();
+        roster.AddOwnedAlly(ally);
+        roster.AddEnemy(enemy);
+
+        Assert.That(roster.NotifyUnitDied(enemy), Is.True);
+        Assert.That(roster.OwnedAllyCount, Is.EqualTo(1));
+        Assert.That(roster.ActiveEnemyCount, Is.Zero);
+    }
 }
 #endif

@@ -89,6 +89,18 @@ public class WavePanel : UIBase
         RefreshButtons();
     }
 
+    public static bool IsLaunchAvailable(
+        bool canUsePreparation,
+        EPinballState pinballState,
+        bool hasAvailableBall,
+        bool canAffordLaunch)
+    {
+        return canUsePreparation &&
+               pinballState == EPinballState.Idle &&
+               hasAvailableBall &&
+               canAffordLaunch;
+    }
+
     private void RefreshButtons()
     {
         if (_battleManager == null) return;
@@ -96,9 +108,6 @@ public class WavePanel : UIBase
         bool isPreparation = _battleManager.IsPreparationPhase;
         bool canUsePreparation =
             _battleManager.CanUsePreparationActions;
-        bool canLaunchWithRoster =
-            _unitManager != null &&
-            _unitManager.CanLaunchPinballWithCurrentRoster;
         int launchCost = _pinballManager != null
             ? _pinballManager.CurrentLaunchCost
             : 0;
@@ -118,12 +127,11 @@ public class WavePanel : UIBase
 
         if (launchButton != null)
         {
-            launchButton.interactable =
-                canUsePreparation &&
-                _pinballState == EPinballState.Idle &&
-                hasAvailableBall &&
-                canAffordLaunch &&
-                canLaunchWithRoster;
+            launchButton.interactable = IsLaunchAvailable(
+                canUsePreparation,
+                _pinballState,
+                hasAvailableBall,
+                canAffordLaunch);
         }
 
         if (launchCostText != null)
