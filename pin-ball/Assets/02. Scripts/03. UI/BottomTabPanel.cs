@@ -20,7 +20,7 @@ public class BottomTabPanel : UIBase
     [SerializeField] private GameObject itemsContent;
     [SerializeField] private GameObject shopContent;
 
-    private BottomPanelTab _lastTab = BottomPanelTab.Items;
+    private BottomPanelTab _lastTab = BottomPanelTab.Shop;
 
     public override void Initialize(UIManager manager)
     {

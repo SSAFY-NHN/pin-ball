@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b2db86121404754db890f4c8dfe81b2, type: 3}
   m_Name: Bloom
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   active: 1
   skipIterations:
     m_OverrideState: 1
@@ -21,16 +21,16 @@ MonoBehaviour:
     m_Value: 0.9
   intensity:
     m_OverrideState: 1
-    m_Value: 0.35
+    m_Value: 0.5
   scatter:
     m_OverrideState: 1
-    m_Value: 0.62
+    m_Value: 0.5
   clamp:
     m_OverrideState: 1
     m_Value: 8
   tint:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 0.6536274, g: 0, b: 1, a: 1}
   highQualityFiltering:
     m_OverrideState: 1
     m_Value: 0
@@ -58,6 +58,6 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
   m_Name: TitleBloomProfile
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   components:
   - {fileID: -3978695733392391637}
