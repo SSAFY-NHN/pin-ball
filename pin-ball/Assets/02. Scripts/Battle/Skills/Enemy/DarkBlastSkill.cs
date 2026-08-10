@@ -4,6 +4,7 @@ public sealed class DarkBlastSkill : EnemySkillBase, IBasicAttackHitSkill
     public void OnBasicAttackHit(UnitSkillContext c, EnemySkillData d, UnitBase target, int count)
     {
         if (count % 4 != 0 || target == null) return;
+        c.Caster.PlayEnemySkillFeedback(Id, target, true);
         c.TargetFinder.GetAliveAlliesInRadius(target.transform.position, V(d, 0, 1), c.Targets);
         foreach (var ally in c.Targets)
         {

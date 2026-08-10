@@ -31,6 +31,7 @@ public abstract class UnitBase : MonoBehaviour
 
     private UnitCombatContext _context;
     private SpriteRenderer _renderer;
+    private BattleCombatFeedback _combatFeedback;
     private BattleUnitStats _initialStats;
     private UnitBase _forcedTarget;
     private float _forcedTargetUntil;
@@ -50,6 +51,12 @@ public abstract class UnitBase : MonoBehaviour
         IsInPool = false;
         ResetCombatState();
         _renderer = GetComponentInChildren<SpriteRenderer>();
+        _combatFeedback = GetComponent<BattleCombatFeedback>();
+        if (_combatFeedback == null)
+        {
+            _combatFeedback = gameObject.AddComponent<BattleCombatFeedback>();
+        }
+        _combatFeedback.Initialize(this, _renderer);
         UpdateVisual();
         GetComponent<BattleUnitVisual>()?.ResetFacing();
     }
@@ -141,6 +148,7 @@ public abstract class UnitBase : MonoBehaviour
         _state = EBattleUnitState.Hit;
         _hitUntilTime = now + 0.08f;
         SoundManager.PlaySFXIfAvailable(SoundName.Hit);
+        _combatFeedback?.PlayDamage(result.AppliedDamage);
         OnDamaged();
 
         if (result.Died) Die();
@@ -154,6 +162,7 @@ public abstract class UnitBase : MonoBehaviour
         _health.Heal(amount);
         if (CurrentHp > previousHp)
         {
+            _combatFeedback?.PlayHeal(CurrentHp - previousHp);
             SoundManager.PlaySFXIfAvailable(
                 Team == EBattleTeam.Ally
                     ? SoundName.AllyHealing
@@ -161,10 +170,24 @@ public abstract class UnitBase : MonoBehaviour
         }
     }
 
+    public void PlaySkillFeedback(string skillId, UnitBase target)
+    {
+        _combatFeedback?.PlaySkill(skillId, target);
+    }
+
+    public void PlayEnemySkillFeedback(string skillId, UnitBase target, bool strong)
+    {
+        _combatFeedback?.PlayEnemySkill(skillId, target, strong);
+    }
+
     public void ApplyShield(float amount, float duration)
     {
         if (!IsAlive) return;
         _health.ApplyShield(amount, duration, Time.time);
+        if (amount > 0f && duration > 0f)
+        {
+            _combatFeedback?.PlayShield();
+        }
     }
 
     public void ApplyAttackRateMultiplier(float multiplier, float duration)
@@ -377,6 +400,7 @@ public abstract class UnitBase : MonoBehaviour
 
         _currentTarget.TakeDamage(GetBasicAttackDamage(_currentTarget), 0f, this);
         SoundManager.PlaySFXIfAvailable(BasicAttackSoundName);
+        _combatFeedback?.PlayBasicAttack(_currentTarget);
         OnBasicAttackHit(_currentTarget);
     }
 

@@ -69,6 +69,11 @@ public sealed class BattleCameraController : MonoBehaviour
         PlayShake(goalShakeStrength, 0.16f);
     }
 
+    public void PlayBattleImpactShake(bool strong)
+    {
+        PlayShake(strong ? 0.1f : 0.055f, strong ? 0.13f : 0.08f);
+    }
+
     private void OnBattleStateChanged(EWaveState state)
     {
         ApplyPosition(state, false);

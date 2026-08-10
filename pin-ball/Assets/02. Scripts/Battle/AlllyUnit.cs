@@ -16,6 +16,7 @@ public class AllyUnit : UnitBase
     private AllySkillData _skill;
     private AllySkillController _skillController;
     private UnitAttackEffectPlayer _attackEffectPlayer;
+    private AllyDragLineageHighlight _lineageHighlight;
     private Camera _dragCamera;
     private Vector3 _dragStartPosition;
     private bool _isDragging;
@@ -30,6 +31,11 @@ public class AllyUnit : UnitBase
         _skillController = new AllySkillController(registry ?? UnitSkillRegistry.CreateDefault());
         _skillController.Initialize(common, skill, MaxMana);
         _attackEffectPlayer ??= GetComponent<UnitAttackEffectPlayer>();
+        _lineageHighlight ??= GetComponent<AllyDragLineageHighlight>();
+        if (_lineageHighlight == null)
+        {
+            _lineageHighlight = gameObject.AddComponent<AllyDragLineageHighlight>();
+        }
         _dragCamera = Camera.main;
         _isDragging = false;
         _isMergeReserved = false;
@@ -41,6 +47,7 @@ public class AllyUnit : UnitBase
 
     public void SetMergeReserved(bool reserved)
     {
+        if (reserved) _unitManager?.EndAllyDragHighlight();
         _isMergeReserved = reserved;
         _isDragging = false;
         gameObject.SetActive(!reserved);
@@ -58,6 +65,7 @@ public class AllyUnit : UnitBase
                     Debug.LogWarning))
             {
                 SoundManager.PlaySFXIfAvailable(BasicAttackSoundName);
+                PlaySkillFeedback(_skill?.id, _currentTarget);
             }
             return;
         }
@@ -78,6 +86,7 @@ public class AllyUnit : UnitBase
         if (!Input.GetMouseButton(0) || _isMergeReserved || _unitManager == null || !_unitManager.CanDragAlly(this)) return;
         _dragStartPosition = transform.position;
         _isDragging = true;
+        _unitManager.BeginAllyDragHighlight(this);
     }
 
     private void OnMouseOver()
@@ -100,6 +109,7 @@ public class AllyUnit : UnitBase
     {
         if (!_isDragging) return;
         _isDragging = false;
+        _unitManager.EndAllyDragHighlight();
         if ((EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) || !_unitManager.IsValidAllyPlacement(this, transform.position))
         { transform.position = _dragStartPosition; return; }
         AllyUnit target = null;
@@ -116,5 +126,17 @@ public class AllyUnit : UnitBase
     {
         var collider = GetComponentInChildren<Collider2D>();
         return collider == null ? 0f : Mathf.Max(collider.bounds.extents.x, collider.bounds.extents.y);
+    }
+
+    public void SetLineageHighlighted(bool highlighted)
+    {
+        _lineageHighlight?.SetHighlighted(highlighted);
+    }
+
+    private void OnDisable()
+    {
+        if (_isDragging) _unitManager?.EndAllyDragHighlight();
+        _isDragging = false;
+        _lineageHighlight?.SetHighlighted(false);
     }
 }

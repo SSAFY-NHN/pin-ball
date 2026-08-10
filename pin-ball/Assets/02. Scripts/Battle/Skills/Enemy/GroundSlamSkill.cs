@@ -4,6 +4,7 @@ public sealed class GroundSlamSkill : EnemySkillBase, IBasicAttackHitSkill
     public void OnBasicAttackHit(UnitSkillContext c, EnemySkillData d, UnitBase target, int count)
     {
         if (count % 3 != 0) return;
+        c.Caster.PlayEnemySkillFeedback(Id, null, true);
         c.TargetFinder.GetAliveAlliesInRadius(c.Caster.transform.position, V(d, 0, 1), c.Targets);
         foreach (var ally in c.Targets)
         {

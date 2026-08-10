@@ -6,6 +6,7 @@ public sealed class OrcRageSkill : EnemySkillBase, IUnitDamagedSkill
     {
         if (_activated || c.Caster.HpRatio > 0.5f) return;
         _activated = true;
+        c.Caster.PlayEnemySkillFeedback(Id, null, false);
         c.Caster.ApplyAttackDamageMultiplier(1f + P(V(d, 0, 1)), float.PositiveInfinity);
         c.Caster.ApplyAttackRateMultiplier(1f + P(V(d, 1, 1)), float.PositiveInfinity);
     }

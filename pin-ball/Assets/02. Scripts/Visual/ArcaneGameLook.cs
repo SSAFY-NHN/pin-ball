@@ -71,7 +71,7 @@ public sealed class ArcaneGameLook : MonoBehaviour
         bloom.highQualityFiltering.Override(false);
 
         var color = profile.Add<ColorAdjustments>(true);
-        color.postExposure.Override(-0.12f);
+        color.postExposure.Override(0f);
         color.contrast.Override(13f);
         color.saturation.Override(-7f);
         color.colorFilter.Override(new Color(0.88f, 0.94f, 1f, 1f));
@@ -80,7 +80,7 @@ public sealed class ArcaneGameLook : MonoBehaviour
         tonemapping.mode.Override(TonemappingMode.Neutral);
 
         var vignette = profile.Add<Vignette>(true);
-        vignette.color.Override(new Color(0.025f, 0.015f, 0.055f, 1f));
+        vignette.color.Override(new Color32(0x9A, 0x81, 0xFF, 0xFF));
         vignette.intensity.Override(0.22f);
         vignette.smoothness.Override(0.68f);
         vignette.rounded.Override(false);
