@@ -27,5 +27,18 @@ public class BattleRunStateTests
         Assert.That(state.ApplyPlayerDamage(30), Is.True);
         Assert.That(state.PlayerHp, Is.Zero);
     }
+
+    [Test]
+    public void ChangeState_AcceptsExplicitResolvingState()
+    {
+        var state = new BattleRunState(
+            new[] { new BattleWaveData() },
+            true,
+            20);
+
+        Assert.That(state.ChangeState(EWaveState.Active), Is.True);
+        Assert.That(state.ChangeState(EWaveState.Resolving), Is.True);
+        Assert.That(state.State, Is.EqualTo(EWaveState.Resolving));
+    }
 }
 #endif

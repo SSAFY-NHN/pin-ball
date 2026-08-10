@@ -8,6 +8,7 @@ public class BattleManager : AppService, IItemEventListener
 {
     [Header("Player")]
     [SerializeField, Min(1)] public int playerMaxHp = 20;
+    [SerializeField, Min(0f)] private float waveResolutionDuration = 2f;
 
     public BattleWaveData CurrentWave => _runState?.CurrentWave;
     public int CurrentWaveNumber => _runState?.CurrentWaveNumber ?? 1;
@@ -28,6 +29,7 @@ public class BattleManager : AppService, IItemEventListener
     public event Action<int> OnGoldChanged;
     public event Action<string> OnActionRejected;
     public event Action<bool> OnPreparationAvailabilityChanged;
+    public event Action<EWaveResolutionResult, int> OnWaveResolutionStarted;
 
     private UnitManager _unitManager;
     private BattleRunState _runState;
@@ -35,6 +37,7 @@ public class BattleManager : AppService, IItemEventListener
     private int _barrierDamageReduction;
     private int _minimumBarrierDamage = 1;
     private bool _isPreparationLocked;
+    private readonly WaveResolutionState _waveResolution = new();
 
     protected override void Awake()
     {
@@ -72,15 +75,23 @@ public class BattleManager : AppService, IItemEventListener
 
     private void Update()
     {
-        if (State is not EWaveState.Active) return;
+        if (State == EWaveState.Active)
+        {
+            if (BattleResolutionPolicy.TryDetectWipe(
+                    _unitManager.RemainingAllyCount,
+                    _unitManager.RemainingEnemyCount,
+                    out EWaveResolutionResult result))
+            {
+                BeginWaveResolution(result);
+            }
 
-        if (_unitManager.RemainingEnemyCount <= 0)
-        {
-            CompleteWave();
+            return;
         }
-        else if (_unitManager.RemainingAllyCount <= 0)
+
+        if (State == EWaveState.Resolving &&
+            _waveResolution.IsElapsed(Time.time))
         {
-            DefeatWave();
+            FinishWaveResolution();
         }
     }
     
@@ -157,58 +168,76 @@ public class BattleManager : AppService, IItemEventListener
         _minimumBarrierDamage = Mathf.Max(1, Mathf.RoundToInt(item.Value2));
     }
 
-    private void DefeatWave()
+    private void BeginWaveResolution(EWaveResolutionResult result)
     {
-        if (State is not EWaveState.Active) return;
-        
-        int breachDamage = _unitManager.CalculateRemainingBreachDamage();
-        int damage = BarrierDamageCalculator.Calculate(
-            breachDamage,
-            _barrierDamageReduction,
-            _minimumBarrierDamage);
-        _runState.ApplyPlayerDamage(damage);
-        OnHpChanged?.Invoke(_runState.PlayerHp);
+        if (State != EWaveState.Active ||
+            !_waveResolution.TryBegin(
+                result,
+                CurrentWaveNumber,
+                Time.time,
+                waveResolutionDuration)) return;
 
-        var wave = CurrentWave;
-        _unitManager.ResolveWaveResult();
+        BattleWaveData wave = CurrentWave;
+        bool isFinalWave =
+            _runState.CurrentWaveIndex + 1 >= _runState.TotalWaveCount;
+        ChangeState(EWaveState.Resolving);
 
-        if (_runState.PlayerHp <= 0)
+        if (result == EWaveResolutionResult.Cleared)
         {
-            ChangeState(EWaveState.Defeat);
-            return;
-        }
-
-        AddGold(wave != null ? wave.RetryGoldReward : 0);
-        ChangeState(EWaveState.Pending);
-    }
-
-    private void CompleteWave()
-    {
-        if (State is not EWaveState.Active) return;
-
-        var wave = CurrentWave;
-        _unitManager.ResolveWaveResult();
-
-        if (wave == null)
-        {
-            ChangeState(EWaveState.Defeat);
-            return;
-        }
-
-        if (_runState.CurrentWaveIndex + 1 >= _runState.TotalWaveCount)
-        {
-            AddGold(wave.FinalClearGoldReward);
-            ChangeState(EWaveState.Victory);
+            if (wave != null)
+            {
+                AddGold(isFinalWave
+                    ? wave.FinalClearGoldReward
+                    : wave.WaveClearGoldReward);
+            }
         }
         else
         {
-            AddGold(wave.WaveClearGoldReward);
-            
+            int damage = BarrierDamageCalculator.Calculate(
+                _unitManager.CalculateRemainingBreachDamage(),
+                _barrierDamageReduction,
+                _minimumBarrierDamage);
+            _runState.ApplyPlayerDamage(damage);
+            OnHpChanged?.Invoke(_runState.PlayerHp);
+            if (_runState.PlayerHp > 0 && wave != null)
+            {
+                AddGold(wave.RetryGoldReward);
+            }
+        }
+
+        OnWaveResolutionStarted?.Invoke(result, CurrentWaveNumber);
+    }
+
+    private void FinishWaveResolution()
+    {
+        if (State != EWaveState.Resolving ||
+            !_waveResolution.IsPending) return;
+
+        EWaveResolutionResult result = _waveResolution.Result;
+        bool isFinalWave =
+            _runState.CurrentWaveIndex + 1 >= _runState.TotalWaveCount;
+        bool hasValidWave = CurrentWave != null;
+        _unitManager.ResolveWaveResult();
+        _waveResolution.Clear();
+
+        if (!hasValidWave)
+        {
+            ChangeState(EWaveState.Defeat);
+            return;
+        }
+
+        EWaveState nextState = BattleResolutionPolicy.ResolveNextState(
+            result,
+            isFinalWave,
+            _runState.PlayerHp);
+        if (result == EWaveResolutionResult.Cleared &&
+            nextState == EWaveState.Pending)
+        {
             _runState.AdvanceWave();
             OnWaveChanged?.Invoke(_runState.CurrentWaveIndex);
-            
-            ChangeState(EWaveState.Pending);
         }
+
+        ChangeState(nextState);
     }
 
     private void ChangeState(EWaveState nextState)

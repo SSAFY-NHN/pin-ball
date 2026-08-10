@@ -7,6 +7,7 @@ public class PinballLauncherController : MonoBehaviour
     [SerializeField] private Transform loadPoint;
     [SerializeField] private Transform piston;
     [SerializeField] private Transform spring;
+    [SerializeField] private PinballLauncherGlowController glowController;
     [SerializeField] private Vector2 launchDirection = Vector2.up;
     [SerializeField, Min(0.1f)] private float maximumPullDistance = 1.1f;
     [SerializeField, Range(0f, 1f)] private float minimumPullRatio = 0.1f;
@@ -75,6 +76,16 @@ public class PinballLauncherController : MonoBehaviour
         _pullDistance = 0f;
     }
 
+    private void OnMouseEnter()
+    {
+        glowController?.SetHovered(_hasLoadedBall);
+    }
+
+    private void OnMouseExit()
+    {
+        if (!_isDragging) glowController?.SetHovered(false);
+    }
+
     private void OnMouseDrag()
     {
         if (!_isDragging) return;
@@ -97,7 +108,8 @@ public class PinballLauncherController : MonoBehaviour
                        pinballManager.TryLaunchLoadedBall(pullRatio);
         if (launched)
         {
-            _hasLoadedBall = false;
+            glowController?.PlayLaunch();
+            SetLoaded(false);
         }
 
         ResetVisuals();
@@ -107,11 +119,13 @@ public class PinballLauncherController : MonoBehaviour
     {
         _isDragging = false;
         ResetVisuals();
+        glowController?.ResetInteraction();
     }
 
     public void SetLoaded(bool isLoaded)
     {
         _hasLoadedBall = isLoaded;
+        glowController?.SetLoaded(isLoaded);
     }
 
     private float GetPointerWorldY()
@@ -129,6 +143,7 @@ public class PinballLauncherController : MonoBehaviour
         var pullRatio = maximumPullDistance > 0f
             ? distance / maximumPullDistance
             : 0f;
+        glowController?.SetPullRatio(pullRatio);
         var leverAngle = leverMaximumAngle *
                          pullRatio *
                          _leverRotationDirection;
@@ -174,5 +189,6 @@ public class PinballLauncherController : MonoBehaviour
             spring.localScale = _springStartScale;
         }
         _pullDistance = 0f;
+        glowController?.SetPullRatio(0f);
     }
 }

@@ -39,3 +39,13 @@
 - 사용자 직접 결정/수정 필요 영역: 사용자가 오른쪽 절반, 가로 우선 격자, 캐릭터별 위치 저장 방식을 결정했으며 최종 배치 간격과 체감은 Game View에서 확인 가능
 - 중요한 프롬프트/지시: 기존 구조와 적/전투 이동 보존, 최소 수정, Inspector 참조 유지, SetActive 풀링 유지, `[SerializeField]` underscore 금지
 - 테스트/검증 결과: 새 테스트는 구현 전 7개와 3개가 각각 의도대로 실패했고 구현 후 배치 테스트 10/10, 전체 EditMode 45/45가 통과했다. `dotnet build Assembly-CSharp-Editor.csproj --no-restore`는 오류 0개로 완료됐으며 기존 패키지 참조 경고 9개가 남았다. 프로젝트에 WebGL 배치 빌드 진입점이 없어 실제 WebGL 빌드와 Game View 체감 확인은 수행하지 못했다.
+
+## 2026-08-10 게임플레이 피드백 마일스톤
+
+- 사용한 AI 도구/모델: Codex, GPT-5 계열 모델
+- 사용자 요청: 아군 보유 제한 해제와 5명 웨이브 참가 제한, 아군 영구 사망, 2초 결과 대기 상태, 강화된 HP/골드 피드백, 발사 비용 유지, 보드·손잡이 발광
+- AI 제안 내용: `UnitManager` 영구 사망 정리, 명시적 `Resolving` 상태와 결과 이벤트, UI 비귀속 결과 배너, 기존 mask/additive/Bloom을 재사용하는 발광 상태 컴포넌트
+- AI 실제 수정 영역: 유닛 roster/발사 조건, `BattleManager`와 resolution 도메인, `WaveResultPanel`·`StatusPanel`, 보드/손잡이 발광 코드와 Game 씬 배선, EditMode 테스트
+- 사용자 직접 결정/수정 필요 영역: 사용자가 전용 종료 상태와 2초 대기, 안내 문구 없는 손잡이 발광을 선택했으며 튜토리얼·금색 유닛 조명·접지 그림자는 이번 작업에서 제외했다. 최종 발광 강도와 배너 위치는 Game View에서 미세 조정 가능하다.
+- 중요한 프롬프트/지시: 기존 구조·물리·콜라이더 보존, Inspector 참조 우선, 외부 패키지 금지, `발사 {비용}G` UI 유지, 범위 밖 기능 제외
+- 테스트/검증 결과: Task 1 집중 테스트 18/18 통과. 최종 핵심 EditMode 묶음은 최초 36/37 통과 후 BoardGlow 스프라이트 fileID를 수정했고, 해당 씬 회귀 테스트 1/1이 통과했다. 구현 전 전체 기준선의 기존 `EnemyWaveVisualTests` 3개 실패는 사용자 승인 아래 범위 밖으로 유지했다. Unity 컴파일은 EditMode 실행에서 완료됐고, 별도 `dotnet build`는 설치된 .NET SDK가 없어 실행할 수 없었다. 사용자 요청에 따라 반복 전체 테스트, Play Mode 및 WebGL 빌드는 생략했다.
