@@ -1,104 +1,70 @@
-using System.Collections;
-
 using UnityEngine;
 
-//소유: 개인 전투 상태(HP, 타겟, 쿨다운, 상태이상)
-//책임: 탐색/이동/공격/피격/사망
-//금지: 웨이브 상태 변경, 골드 지급, UI 갱신
+// Owns the Unity lifecycle and coordinates focused unit-domain objects.
 public abstract class UnitBase : MonoBehaviour
 {
     public abstract EBattleTeam Team { get; }
     public EBattleUnitState State => _state;
-    public float CurrentHp { get; private set; }
-    public float MaxHp => _stats.MaxHp;
+    public float CurrentHp => _health.CurrentHp;
+    public float MaxHp => _health.MaxHp;
     public float MaxMana => _stats.MaxMana;
     public float AttackDamage => _stats.AttackDamage;
-    public float CurrentDefense => _stats.Defense * _defenseMultiplier;
+    public float CurrentDefense => _stats.Defense * _statusEffects.DefenseMultiplier;
     public float MoveSpeed => _stats.MoveSpeed;
     public float AttackRate => _stats.AttackRate;
     public float AttackRange => _stats.AttackRange;
-    public float HpRatio => MaxHp > 0f ? Mathf.Clamp01(CurrentHp / MaxHp) : 0f;
+    public float HpRatio => _health.HpRatio;
     public bool IsAlive => _state != EBattleUnitState.Dead;
     public bool IsInPool { get; private set; }
-    public bool IsStunned => Time.time < _stunnedUntil;
-    public float LastDamagedTime { get; private set; }
+    public bool IsStunned => _statusEffects.IsStunned(Time.time);
+    public float LastDamagedTime => _health.LastDamagedTime;
+    public UnitBase CurrentTarget => _currentTarget;
 
     protected BattleUnitStats _stats;
     protected UnitBase _currentTarget;
     protected EBattleUnitState _state;
 
-    private UnitManager _unitManager;
+    private readonly UnitHealth _health = new();
+    private readonly UnitStatusEffects _statusEffects = new();
+    private readonly UnitEffectScheduler _effectScheduler = new();
+    private readonly UnitAttack _attack = new();
+
+    private UnitCombatContext _context;
     private SpriteRenderer _renderer;
     private BattleUnitStats _initialStats;
     private UnitBase _forcedTarget;
     private float _forcedTargetUntil;
-    private float _nextAttackTime;
     private float _hitUntilTime;
-    private float _stunnedUntil;
-    private float _shieldUntil;
-    private float _shieldAmount;
-    private float _attackRateMultiplier = 1f;
-    private float _attackRateMultiplierUntil;
-    private float _moveSpeedMultiplier = 1f;
-    private float _moveSpeedMultiplierUntil;
-    private float _damageReduction;
-    private float _damageReductionUntil;
-    private float _knockbackImmuneUntil;
-    private float _attackDamageMultiplier = 1f;
-    private float _attackDamageMultiplierUntil;
-    private float _defenseMultiplier = 1f;
-    private float _defenseMultiplierUntil;
-    private int _damageOverTimeVersion;
 
     protected virtual Color IdleColor => new(0.8f, 0.8f, 0.8f, 1f);
     private static readonly Color AttackColor = Color.white;
     private static readonly Color HitColor = new(1f, 0.2f, 0.2f, 1f);
     private static readonly Color DeadColor = new(0.3f, 0.3f, 0.3f, 1f);
 
-    public void Initialize(BattleUnitStats stats)
+    public void Initialize(BattleUnitStats stats, UnitCombatContext context)
     {
-        _unitManager = App.Get<UnitManager>();
+        _context = context;
         _stats = stats;
         _initialStats = stats;
-
         IsInPool = false;
         ResetCombatState();
-
         _renderer = GetComponentInChildren<SpriteRenderer>();
-
         UpdateVisual();
+        GetComponent<BattleUnitVisual>()?.ResetFacing();
     }
 
     public void ResetCombatState()
     {
-        StopAllCoroutines();
-        _damageOverTimeVersion++;
-
         _stats = _initialStats;
-
         _state = EBattleUnitState.Idle;
-        CurrentHp = _stats.MaxHp;
-        LastDamagedTime = 0f;
-        _nextAttackTime = 0f;
+        _health.Reset(_stats.MaxHp);
+        _statusEffects.Reset();
+        _effectScheduler.Reset();
+        _attack.Reset();
         _hitUntilTime = 0f;
-        _stunnedUntil = 0f;
-        _shieldUntil = 0f;
-        _shieldAmount = 0f;
         _forcedTargetUntil = 0f;
-        _attackRateMultiplier = 1f;
-        _attackRateMultiplierUntil = 0f;
-        _moveSpeedMultiplier = 1f;
-        _moveSpeedMultiplierUntil = 0f;
-        _damageReduction = 0f;
-        _damageReductionUntil = 0f;
-        _knockbackImmuneUntil = 0f;
-        _attackDamageMultiplier = 1f;
-        _attackDamageMultiplierUntil = 0f;
-        _defenseMultiplier = 1f;
-        _defenseMultiplierUntil = 0f;
         _currentTarget = null;
         _forcedTarget = null;
-
         UpdateVisual();
     }
 
@@ -108,14 +74,16 @@ public abstract class UnitBase : MonoBehaviour
         transform.position = position;
         gameObject.SetActive(true);
         ResetCombatState();
+        GetComponent<BattleUnitVisual>()?.ResetFacing();
     }
 
     public void MarkReturnedToPool()
     {
-        StopAllCoroutines();
-        _damageOverTimeVersion++;
+        _effectScheduler.Reset();
+        _statusEffects.Reset();
+        _attack.Reset();
+        _health.MarkDead();
         _state = EBattleUnitState.Dead;
-        CurrentHp = 0f;
         _currentTarget = null;
         _forcedTarget = null;
         IsInPool = true;
@@ -126,9 +94,13 @@ public abstract class UnitBase : MonoBehaviour
     {
         if (!IsAlive) return;
 
-        RefreshTimedEffects();
+        float now = Time.time;
+        _health.Refresh(now);
+        _statusEffects.Refresh(now);
+        _effectScheduler.Tick(now, ApplyScheduledDamage, ApplyScheduledSlow);
+        if (!IsAlive) return;
 
-        if (Time.time < _stunnedUntil)
+        if (_statusEffects.IsStunned(now))
         {
             _state = EBattleUnitState.Idle;
         }
@@ -137,7 +109,7 @@ public abstract class UnitBase : MonoBehaviour
             Tick();
         }
 
-        if (_state == EBattleUnitState.Hit && Time.time > _hitUntilTime)
+        if (_state == EBattleUnitState.Hit && now > _hitUntilTime)
         {
             _state = EBattleUnitState.Idle;
         }
@@ -154,73 +126,49 @@ public abstract class UnitBase : MonoBehaviour
     {
         if (!IsAlive || damage <= 0f) return;
 
+        float now = Time.time;
         damage = ModifyIncomingDamage(damage, source);
-        var effectiveDefense =
-            CurrentDefense * (1f - Mathf.Clamp01(armorIgnoreRatio));
-        var finalDamage = Mathf.Floor(
-            damage * 100f / (100f + effectiveDefense));
+        _statusEffects.Refresh(now);
+        UnitDamageResult result = _health.TakeDamage(
+            damage,
+            CurrentDefense,
+            armorIgnoreRatio,
+            _statusEffects.DamageReduction,
+            now);
+        if (result.AppliedDamage <= 0f) return;
 
-        if (Time.time < _damageReductionUntil)
-        {
-            finalDamage *= 1f - Mathf.Clamp01(_damageReduction);
-        }
-
-        if (Time.time < _shieldUntil && _shieldAmount > 0f)
-        {
-            float absorbedDamage = Mathf.Min(_shieldAmount, finalDamage);
-            _shieldAmount -= absorbedDamage;
-            finalDamage -= absorbedDamage;
-        }
-
-        if (finalDamage <= 0f) return;
-
-        CurrentHp -= finalDamage;
-        LastDamagedTime = Time.time;
         _state = EBattleUnitState.Hit;
-        _hitUntilTime = Time.time + 0.08f;
+        _hitUntilTime = now + 0.08f;
         OnDamaged();
 
-        if (CurrentHp <= 0f)
-        {
-            Die();
-        }
+        if (result.Died) Die();
     }
 
     public void Heal(float amount)
     {
-        if (!IsAlive || amount <= 0f) return;
-        CurrentHp = Mathf.Min(MaxHp, CurrentHp + amount);
+        if (!IsAlive) return;
+        _health.Heal(amount);
     }
 
     public void ApplyShield(float amount, float duration)
     {
-        if (!IsAlive || amount <= 0f || duration <= 0f) return;
-        _shieldAmount = Mathf.Max(_shieldAmount, amount);
-        _shieldUntil = Mathf.Max(_shieldUntil, Time.time + duration);
+        if (!IsAlive) return;
+        _health.ApplyShield(amount, duration, Time.time);
     }
 
     public void ApplyAttackRateMultiplier(float multiplier, float duration)
     {
-        _attackRateMultiplier = Mathf.Max(0.01f, multiplier);
-        _attackRateMultiplierUntil = Mathf.Max(
-            _attackRateMultiplierUntil,
-            Time.time + duration);
+        _statusEffects.ApplyAttackRateMultiplier(multiplier, duration, Time.time);
     }
 
     public void ApplyAttackDamageMultiplier(float multiplier, float duration)
     {
-        _attackDamageMultiplier = Mathf.Max(0f, multiplier);
-        _attackDamageMultiplierUntil = Mathf.Max(
-            _attackDamageMultiplierUntil,
-            Time.time + duration);
+        _statusEffects.ApplyAttackDamageMultiplier(multiplier, duration, Time.time);
     }
 
     public void ApplyDefenseMultiplier(float multiplier, float duration)
     {
-        _defenseMultiplier = Mathf.Max(0f, multiplier);
-        _defenseMultiplierUntil = Mathf.Max(
-            _defenseMultiplierUntil,
-            Time.time + duration);
+        _statusEffects.ApplyDefenseMultiplier(multiplier, duration, Time.time);
     }
 
     public void ApplyPermanentSpeedMultiplier(
@@ -235,15 +183,8 @@ public abstract class UnitBase : MonoBehaviour
 
     public void ApplyMoveSpeedMultiplier(float multiplier, float duration)
     {
-        if (multiplier < 1f)
-        {
-            duration = ModifyCrowdControlDuration(duration);
-        }
-
-        _moveSpeedMultiplier = Mathf.Max(0f, multiplier);
-        _moveSpeedMultiplierUntil = Mathf.Max(
-            _moveSpeedMultiplierUntil,
-            Time.time + duration);
+        if (multiplier < 1f) duration = ModifyCrowdControlDuration(duration);
+        _statusEffects.ApplyMoveSpeedMultiplier(multiplier, duration, Time.time);
     }
 
     public void ApplySlowAfterDelay(
@@ -252,34 +193,38 @@ public abstract class UnitBase : MonoBehaviour
         float duration,
         float delay)
     {
-        StartCoroutine(ApplySlowAfterDelayRoutine(
+        _effectScheduler.ScheduleSlow(
             moveSpeedMultiplier,
             attackRateMultiplier,
             duration,
-            delay));
+            delay,
+            Time.time);
     }
 
     public void ApplyStun(float duration)
     {
-        duration = ModifyCrowdControlDuration(duration);
-        _stunnedUntil = Mathf.Max(_stunnedUntil, Time.time + duration);
+        _statusEffects.ApplyStun(
+            ModifyCrowdControlDuration(duration),
+            Time.time);
     }
 
     public void ApplyDamageReduction(float ratio, float duration)
     {
-        _damageReduction = Mathf.Max(_damageReduction, Mathf.Clamp01(ratio));
-        _damageReductionUntil = Mathf.Max(_damageReductionUntil, Time.time + duration);
+        _statusEffects.ApplyDamageReduction(ratio, duration, Time.time);
     }
 
     public void ApplyKnockbackImmunity(float duration)
     {
-        _knockbackImmuneUntil = Mathf.Max(_knockbackImmuneUntil, Time.time + duration);
+        _statusEffects.ApplyKnockbackImmunity(duration, Time.time);
     }
 
     public void ApplyKnockback(Vector3 direction, float distance)
     {
-        if (Time.time < _knockbackImmuneUntil || direction.sqrMagnitude <= 0.001f) return;
-        transform.position += direction.normalized * distance;
+        transform.position = UnitMovement.ApplyKnockback(
+            transform.position,
+            direction,
+            distance,
+            _statusEffects.IsKnockbackImmune(Time.time));
     }
 
     public void ApplyDamageOverTime(
@@ -287,13 +232,11 @@ public abstract class UnitBase : MonoBehaviour
         float duration,
         float armorIgnoreRatio = 0f)
     {
-        if (totalDamage <= 0f || duration <= 0f) return;
-        _damageOverTimeVersion++;
-        StartCoroutine(DamageOverTime(
+        _effectScheduler.ScheduleDamageOverTime(
             totalDamage,
             duration,
             armorIgnoreRatio,
-            _damageOverTimeVersion));
+            Time.time);
     }
 
     public void ForceTarget(UnitBase target, float duration)
@@ -312,12 +255,10 @@ public abstract class UnitBase : MonoBehaviour
         if (Team != EBattleTeam.Ally) return;
 
         float previousMaxHp = Mathf.Max(0.01f, _stats.MaxHp);
-        float hpRatio = Mathf.Clamp01(CurrentHp / previousMaxHp);
-
         _stats.AttackDamage = _initialStats.AttackDamage * attackMultiplier;
         _stats.AttackRate = _initialStats.AttackRate * attackRateMultiplier;
         _stats.MaxHp = _initialStats.MaxHp * hpMultiplier;
-        CurrentHp = _stats.MaxHp * hpRatio;
+        _health.ScaleMaximumHp(_stats.MaxHp / previousMaxHp);
     }
 
     protected virtual void OnBasicAttackHit(UnitBase target)
@@ -326,7 +267,7 @@ public abstract class UnitBase : MonoBehaviour
 
     protected virtual float GetBasicAttackDamage(UnitBase target)
     {
-        return _stats.AttackDamage * _attackDamageMultiplier;
+        return _stats.AttackDamage * _statusEffects.AttackDamageMultiplier;
     }
 
     protected virtual float ModifyIncomingDamage(float damage, UnitBase source)
@@ -353,15 +294,16 @@ public abstract class UnitBase : MonoBehaviour
             return true;
         }
 
-        if (_currentTarget != null && _currentTarget.IsAlive)
-        {
-            return true;
-        }
+        if (_currentTarget != null && _currentTarget.IsAlive) return true;
+        if (_context == null) return false;
 
         _currentTarget = Team == EBattleTeam.Ally
-            ? _unitManager.FindClosestAliveEnemy(transform.position, float.MaxValue)
-            : _unitManager.FindClosestAliveAlly(transform.position, float.MaxValue);
-
+            ? _context.TargetFinder.FindClosestAliveEnemy(
+                transform.position,
+                float.MaxValue)
+            : _context.TargetFinder.FindClosestAliveAlly(
+                transform.position,
+                float.MaxValue);
         return _currentTarget != null;
     }
 
@@ -373,30 +315,31 @@ public abstract class UnitBase : MonoBehaviour
             return;
         }
 
-        float distance = Vector2.Distance(transform.position, _currentTarget.transform.position);
+        float distance = Vector2.Distance(
+            transform.position,
+            _currentTarget.transform.position);
         if (distance > _stats.AttackRange)
         {
-            float moveSpeed = _stats.MoveSpeed * _moveSpeedMultiplier;
+            float moveSpeed = _stats.MoveSpeed * _statusEffects.MoveSpeedMultiplier;
             if (moveSpeed <= 0f)
             {
                 _state = EBattleUnitState.Idle;
                 return;
             }
 
-            Vector3 nextPosition = Vector2.MoveTowards(
+            Vector3 nextPosition = UnitMovement.CalculateNextPosition(
                 transform.position,
                 _currentTarget.transform.position,
-                moveSpeed * Time.deltaTime);
-            if (_unitManager != null &&
-                _unitManager.BattleArea != null)
+                moveSpeed,
+                Time.deltaTime);
+            if (_context?.BattleArea != null)
             {
-                nextPosition = _unitManager.BattleArea.Clamp(
+                nextPosition = _context.BattleArea.Clamp(
                     nextPosition,
                     GetMovementPadding());
             }
 
             transform.position = nextPosition;
-
             _state = EBattleUnitState.Moving;
             return;
         }
@@ -411,92 +354,33 @@ public abstract class UnitBase : MonoBehaviour
 
     private void TryAttack()
     {
-        if (Time.time < _nextAttackTime)
-        {
-            _state = EBattleUnitState.Attacking;
-            return;
-        }
-
         if (_currentTarget == null || !_currentTarget.IsAlive)
         {
             _state = EBattleUnitState.Idle;
             return;
         }
 
-        float attackRate = Mathf.Max(0.01f, _stats.AttackRate * _attackRateMultiplier);
-        _nextAttackTime = Time.time + 1f / attackRate;
+        float attackRate = _stats.AttackRate * _statusEffects.AttackRateMultiplier;
         _state = EBattleUnitState.Attacking;
+        if (!_attack.TrySchedule(Time.time, attackRate)) return;
+
         _currentTarget.TakeDamage(GetBasicAttackDamage(_currentTarget), 0f, this);
         OnBasicAttackHit(_currentTarget);
     }
 
-    private void RefreshTimedEffects()
+    private void ApplyScheduledDamage(float damage, float armorIgnoreRatio)
     {
-        if (Time.time >= _attackRateMultiplierUntil)
-        {
-            _attackRateMultiplier = 1f;
-        }
-
-        if (Time.time >= _moveSpeedMultiplierUntil)
-        {
-            _moveSpeedMultiplier = 1f;
-        }
-
-        if (Time.time >= _damageReductionUntil)
-        {
-            _damageReduction = 0f;
-        }
-
-        if (Time.time >= _attackDamageMultiplierUntil)
-        {
-            _attackDamageMultiplier = 1f;
-        }
-
-        if (Time.time >= _defenseMultiplierUntil)
-        {
-            _defenseMultiplier = 1f;
-        }
-
-        if (Time.time >= _shieldUntil)
-        {
-            _shieldAmount = 0f;
-        }
+        TakeDamage(damage, armorIgnoreRatio);
     }
 
-    private IEnumerator DamageOverTime(
-        float totalDamage,
-        float duration,
-        float armorIgnoreRatio,
-        int version)
-    {
-        int tickCount = Mathf.Max(1, Mathf.CeilToInt(duration));
-        float damagePerTick = totalDamage / tickCount;
-        float interval = duration / tickCount;
-
-        for (var i = 0; i < tickCount && IsAlive && version == _damageOverTimeVersion; i++)
-        {
-            yield return new WaitForSeconds(interval);
-            TakeDamage(damagePerTick, armorIgnoreRatio);
-        }
-    }
-
-    private IEnumerator ApplySlowAfterDelayRoutine(
+    private void ApplyScheduledSlow(
         float moveSpeedMultiplier,
         float attackRateMultiplier,
-        float duration,
-        float delay)
+        float duration)
     {
-        yield return new WaitForSeconds(delay);
-        if (!IsAlive) yield break;
-
+        if (!IsAlive) return;
         ApplyMoveSpeedMultiplier(moveSpeedMultiplier, duration);
         ApplyAttackRateMultiplier(attackRateMultiplier, duration);
-    }
-
-    public void ForceRemove()
-    {
-        if (IsInPool) return;
-        _unitManager?.ReleaseUnit(this);
     }
 
     private float GetMovementPadding()
@@ -511,16 +395,14 @@ public abstract class UnitBase : MonoBehaviour
     {
         if (!IsAlive) return;
 
-        CurrentHp = 0f;
+        _health.MarkDead();
         _state = EBattleUnitState.Dead;
-        _unitManager.NotifyUnitDied(this);
+        _effectScheduler.Reset();
+        _context?.NotifyUnitDied(this);
 
-        if (Team == EBattleTeam.Ally)
-        {
-            gameObject.SetActive(false);
-        }
+        if (Team == EBattleTeam.Ally) gameObject.SetActive(false);
     }
-    
+
     private void UpdateVisual()
     {
         if (_renderer == null) return;

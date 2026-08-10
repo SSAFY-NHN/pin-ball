@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public enum EWaveHudNodeState
 {
@@ -62,6 +63,13 @@ public class StatusPanel : UIBase
     [SerializeField] private Color allyCountDefaultColor = Color.white;
     [SerializeField] private Color allyCountOverLimitColor = Color.red;
 
+    [Header("Resource Feedback")]
+    [SerializeField] private Color hpFlashColor =
+        new(1f, 0.2f, 0.2f, 1f);
+    [SerializeField] private Color goldFlashColor =
+        new(1f, 0.82f, 0.2f, 1f);
+    [SerializeField, Min(0f)] private float resourceFeedbackDuration = 0.42f;
+
     [Header("Wave Progress")]
     [SerializeField] private Image[] waveNodes;
     [SerializeField] private Image[] waveConnectors;
@@ -80,6 +88,12 @@ public class StatusPanel : UIBase
     private int _maxHp;
     private int _totalWaveCount;
     private bool _isWaveHudValid;
+    private bool _hasDisplayedHp;
+    private bool _hasDisplayedGold;
+    private Color _hpBaseColor;
+    private Color _goldBaseColor;
+    private Vector3 _hpBaseScale;
+    private Vector3 _goldBaseScale;
     private readonly WaveHudState _waveHudState = new();
 
     public override bool IsDefaultPanel => true;
@@ -93,6 +107,11 @@ public class StatusPanel : UIBase
         _battleManager.OnWaveChanged += OnWaveChanged;
         _battleManager.OnHpChanged += OnHpChanged;
         _battleManager.OnGoldChanged += OnGoldChanged;
+
+        _hpBaseColor = playerHpText.color;
+        _goldBaseColor = goldText.color;
+        _hpBaseScale = playerHpText.rectTransform.localScale;
+        _goldBaseScale = goldText.rectTransform.localScale;
 
         _unitManager = App.Get<UnitManager>();
         _unitManager.OnDeployedAllyCountChanged +=
@@ -137,13 +156,20 @@ public class StatusPanel : UIBase
 
     private void OnHpChanged(int hp)
     {
-        playerHpText.text =
-            $"{Mathf.Max(0, hp)}/{Mathf.Max(1, _maxHp)}";
+        string value = $"{Mathf.Max(0, hp)}/{Mathf.Max(1, _maxHp)}";
+        bool changed = _hasDisplayedHp && playerHpText.text != value;
+        playerHpText.text = value;
+        _hasDisplayedHp = true;
+        if (changed) EmphasizeHp();
     }
 
     private void OnGoldChanged(int gold)
     {
-        goldText.text = Mathf.Max(0, gold).ToString();
+        string value = Mathf.Max(0, gold).ToString();
+        bool changed = _hasDisplayedGold && goldText.text != value;
+        goldText.text = value;
+        _hasDisplayedGold = true;
+        if (changed) EmphasizeGold();
     }
 
     private void OnDeployedAllyCountChanged(int count)
@@ -152,9 +178,90 @@ public class StatusPanel : UIBase
 
         allyCountText.text =
             $"{Mathf.Max(0, count)}/{UnitManager.MaxDeployedAllyCount}";
-        allyCountText.color = count > UnitManager.MaxDeployedAllyCount
+        allyCountText.color = ShouldWarnAllyCount(count)
             ? allyCountOverLimitColor
             : allyCountDefaultColor;
+    }
+
+    public static bool ShouldWarnAllyCount(int count)
+    {
+        return !UnitManager.CanStartWaveWithAllyCount(count);
+    }
+
+    public void EmphasizeAllyCount()
+    {
+        Emphasize(allyCountText);
+    }
+
+    private static void Emphasize(TextMeshProUGUI text)
+    {
+        if (text == null) return;
+
+        RectTransform rect = text.rectTransform;
+        rect.DOKill(true);
+        rect.DOShakeAnchorPos(0.3f, 8f, 14, 90f, false, true);
+        rect.DOPunchScale(Vector3.one * 0.12f, 0.3f, 6, 0.5f);
+    }
+
+    private void EmphasizeHp()
+    {
+        PlayResourceFeedback(
+            playerHpText,
+            _hpBaseColor,
+            hpFlashColor,
+            _hpBaseScale,
+            true);
+    }
+
+    private void EmphasizeGold()
+    {
+        PlayResourceFeedback(
+            goldText,
+            _goldBaseColor,
+            goldFlashColor,
+            _goldBaseScale,
+            false);
+    }
+
+    private void PlayResourceFeedback(
+        TextMeshProUGUI text,
+        Color baseColor,
+        Color flashColor,
+        Vector3 baseScale,
+        bool shake)
+    {
+        if (text == null) return;
+
+        RectTransform rect = text.rectTransform;
+        rect.DOKill();
+        text.DOKill();
+        rect.localScale = baseScale;
+        text.color = baseColor;
+
+        Sequence sequence = DOTween.Sequence();
+        sequence.Join(rect.DOPunchScale(
+            Vector3.one * 0.24f,
+            resourceFeedbackDuration,
+            8,
+            0.55f));
+        sequence.Join(text.DOColor(flashColor, 0.1f)
+            .SetLoops(2, LoopType.Yoyo));
+        if (shake)
+        {
+            sequence.Join(rect.DOShakeAnchorPos(
+                resourceFeedbackDuration,
+                13f,
+                18,
+                90f,
+                false,
+                true));
+        }
+
+        sequence.OnComplete(() =>
+        {
+            if (rect != null) rect.localScale = baseScale;
+            if (text != null) text.color = baseColor;
+        });
     }
 
     private void RefreshWaveProgress(int currentWave)
@@ -235,6 +342,24 @@ public class StatusPanel : UIBase
 
     private void OnDestroy()
     {
+        playerHpText?.rectTransform.DOKill();
+        playerHpText?.DOKill();
+        goldText?.rectTransform.DOKill();
+        goldText?.DOKill();
+        allyCountText?.rectTransform.DOKill();
+
+        if (playerHpText != null)
+        {
+            playerHpText.color = _hpBaseColor;
+            playerHpText.rectTransform.localScale = _hpBaseScale;
+        }
+
+        if (goldText != null)
+        {
+            goldText.color = _goldBaseColor;
+            goldText.rectTransform.localScale = _goldBaseScale;
+        }
+
         if (_battleManager != null)
         {
             _battleManager.OnInitialized -= OnBattleInitialized;

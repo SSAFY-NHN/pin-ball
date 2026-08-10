@@ -15,6 +15,8 @@ public class BottomTabPanel : UIBase
 
     [SerializeField] private Button itemsButton;
     [SerializeField] private Button shopButton;
+    [SerializeField] private Image itemsIconImage;
+    [SerializeField] private Image shopIconImage;
     [SerializeField] private GameObject itemsContent;
     [SerializeField] private GameObject shopContent;
 
@@ -65,6 +67,8 @@ public class BottomTabPanel : UIBase
         bool isValid = true;
         isValid &= ValidateReference(itemsButton, nameof(itemsButton));
         isValid &= ValidateReference(shopButton, nameof(shopButton));
+        isValid &= ValidateReference(itemsIconImage, nameof(itemsIconImage));
+        isValid &= ValidateReference(shopIconImage, nameof(shopIconImage));
         isValid &= ValidateReference(itemsContent, nameof(itemsContent));
         isValid &= ValidateReference(shopContent, nameof(shopContent));
         return isValid;

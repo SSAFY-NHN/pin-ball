@@ -5,6 +5,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CanvasGroup))]
 public class ShopTooltip : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private Vector2 cursorOffset = new(75f, 50f);
 
@@ -24,9 +25,10 @@ public class ShopTooltip : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void Show(ShopSlot owner, string description, Vector2 screenPosition)
+    public void Show(ShopSlot owner, string name, string description, Vector2 screenPosition)
     {
         _owner = owner;
+        nameText.text = name;
         descriptionText.text = description;
         gameObject.SetActive(true);
         transform.SetAsLastSibling();

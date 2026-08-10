@@ -17,16 +17,37 @@ public class AllyDeploymentLimitTests
             Is.EqualTo(expected));
     }
 
+    [TestCase(true, EPinballState.Idle, true, true, true)]
+    [TestCase(false, EPinballState.Idle, true, true, false)]
+    [TestCase(true, EPinballState.Launched, true, true, false)]
+    [TestCase(true, EPinballState.Idle, false, true, false)]
+    [TestCase(true, EPinballState.Idle, true, false, false)]
+    public void IsLaunchAvailable_UsesPreparationBallStateAndGoldOnly(
+        bool canUsePreparation,
+        EPinballState pinballState,
+        bool hasAvailableBall,
+        bool canAffordLaunch,
+        bool expected)
+    {
+        Assert.That(
+            WavePanel.IsLaunchAvailable(
+                canUsePreparation,
+                pinballState,
+                hasAvailableBall,
+                canAffordLaunch),
+            Is.EqualTo(expected));
+    }
+
     [TestCase(0, true)]
-    [TestCase(5, true)]
+    [TestCase(1, false)]
+    [TestCase(5, false)]
     [TestCase(6, true)]
-    [TestCase(7, false)]
-    public void CanLaunchPinballWithAllyCount_AllowsExactlySix(
+    public void ShouldWarnAllyCount_WarnsWhenWaveCannotStart(
         int count,
         bool expected)
     {
         Assert.That(
-            UnitManager.CanLaunchPinballWithAllyCount(count),
+            StatusPanel.ShouldWarnAllyCount(count),
             Is.EqualTo(expected));
     }
 }

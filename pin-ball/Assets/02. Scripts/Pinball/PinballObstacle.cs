@@ -1,4 +1,5 @@
 using UnityEngine;
+using DG.Tweening;
 
 public enum EPinballObstacle
 {
@@ -35,5 +36,16 @@ public class PinballObstacle : MonoBehaviour
             bumperMinimumExitSpeed,
             bumperSpeedBonus));
         glow?.Pulse(2.2f, 0.2f);
+        transform.DOKill(true);
+        transform.DOPunchScale(
+            new Vector3(0.18f, -0.12f, 0f),
+            0.25f,
+            6,
+            0.5f);
+    }
+
+    private void OnDestroy()
+    {
+        transform.DOKill();
     }
 }
