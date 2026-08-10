@@ -33,7 +33,7 @@ public class AllySkillData
 [Serializable]
 public class AllyUnitData
 {
-    private const float CombatStatMultiplier = 1.15f;
+    private const float CombatStatMultiplier = 1.5f;
 
     public string id;
     public string previousJob;

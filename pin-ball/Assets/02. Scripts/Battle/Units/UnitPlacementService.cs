@@ -44,22 +44,28 @@ public sealed class UnitPlacementService
 
         float padding = GetPadding(ally);
         float minimumDistance = padding * 2f + 0.15f;
+        bool hasFallback = false;
+        Vector3 fallback = default;
         for (var gridIndex = 0; _battleArea.TryGetAllyGridPosition(
                  gridIndex,
                  padding,
                  out Vector3 candidate); gridIndex++)
         {
+            if (!hasFallback)
+            {
+                fallback = candidate;
+                hasFallback = true;
+            }
+
             if (IsGridPositionOccupied(
                     candidate,
                     _savedPositions.Values,
                     minimumDistance)) continue;
 
-            ally.transform.position = candidate;
-            _savedPositions[ally] = candidate;
-            return true;
+            return Place(ally, candidate);
         }
 
-        return false;
+        return hasFallback && Place(ally, fallback);
     }
 
     public void Remove(AllyUnit ally)
@@ -77,6 +83,13 @@ public sealed class UnitPlacementService
             : Mathf.Max(
                 unitCollider.bounds.extents.x,
                 unitCollider.bounds.extents.y);
+    }
+
+    private bool Place(AllyUnit ally, Vector3 position)
+    {
+        ally.transform.position = position;
+        _savedPositions[ally] = position;
+        return true;
     }
 
     private static bool IsGridPositionOccupied(
