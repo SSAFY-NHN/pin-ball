@@ -51,9 +51,7 @@ public class PinballManager : AppService, IItemEventListener
     private int _selectedGoalIndex;
     private int _pendingSwapGoalIndex = -1;
 
-    private int _goldenBallRequiredHits;
-    private int _goldenBallReward;
-    private int _goldenBallMaxReward;
+    private int _goldenBallReward = 1;
     private int _launchCostDiscount;
     private int _minimumLaunchCost;
     private float _targetMagnetDistanceMultiplier;
@@ -188,11 +186,11 @@ public class PinballManager : AppService, IItemEventListener
         if (obstacle == EPinballObstacle.SmallPin)
         {
             ball.SmallPinHitCount++;
-            ApplyGoldenBall(ball);
             return;
         }
 
         ball.BigBumperHitCount++;
+        _battleManager.AddGold(_goldenBallReward);
         ApplyGoldenBumper(ball);
         ApplySplitCapsule(ball);
     }
@@ -333,9 +331,7 @@ public class PinballManager : AppService, IItemEventListener
         switch (item.Key)
         {
             case EItem.GoldenBall:
-                _goldenBallRequiredHits = Mathf.RoundToInt(item.Value1);
-                _goldenBallReward = Mathf.RoundToInt(item.Value2);
-                _goldenBallMaxReward = Mathf.RoundToInt(item.Value3);
+                _goldenBallReward = Mathf.Max(1, Mathf.RoundToInt(item.Value1));
                 break;
             case EItem.AutoBallFeeder:
                 _launchCostDiscount = Mathf.RoundToInt(item.Value1);
@@ -374,20 +370,6 @@ public class PinballManager : AppService, IItemEventListener
                 _overloadMaxCount = Mathf.RoundToInt(item.Value3);
                 break;
         }
-    }
-
-    private void ApplyGoldenBall(Pinball ball)
-    {
-        if (_goldenBallRequiredHits <= 0) return;
-        if (ball.SmallPinHitCount % _goldenBallRequiredHits != 0) return;
-        if (ball.GoldenBallGold >= _goldenBallMaxReward) return;
-
-        var reward = Mathf.Min(
-            _goldenBallReward,
-            _goldenBallMaxReward - ball.GoldenBallGold);
-
-        ball.GoldenBallGold += reward;
-        _battleManager.AddGold(reward);
     }
 
     private void ApplyGoldenBumper(Pinball ball)

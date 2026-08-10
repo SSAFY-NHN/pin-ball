@@ -19,7 +19,6 @@ public class Pinball : MonoBehaviour
     internal bool HasSplit { get; set; }
     internal int SmallPinHitCount { get; set; }
     internal int BigBumperHitCount { get; set; }
-    internal int GoldenBallGold { get; set; }
     internal int GoldenBumperGold { get; set; }
     internal int TargetMagnetUseCount { get; set; }
     internal int OverloadUseCount { get; set; }
@@ -184,7 +183,6 @@ public class Pinball : MonoBehaviour
         HasSplit = isClone;
         SmallPinHitCount = 0;
         BigBumperHitCount = 0;
-        GoldenBallGold = 0;
         GoldenBumperGold = 0;
         TargetMagnetUseCount = 0;
         OverloadUseCount = 0;
