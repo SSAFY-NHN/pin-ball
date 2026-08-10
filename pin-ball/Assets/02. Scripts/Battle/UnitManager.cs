@@ -62,10 +62,8 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         _battleManager.OnStateChanged += OnStateChanged;
 
         var itemManager = App.Get<ItemManager>();
-        itemManager.Subscribe(EItem.AttackManual, this);
         itemManager.Subscribe(EItem.BattleClock, this);
         itemManager.Subscribe(EItem.FieldArmor, this);
-        itemManager.Subscribe(EItem.DuplicationSeal, this);
         itemManager.Subscribe(EItem.DiversityEmblem, this);
     }
 
@@ -128,21 +126,6 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
 
         AddOwnedAlly(spawnedUnit);
         return spawnedUnit;
-    }
-
-    public bool TryDuplicateAlly(BattleUnitSpawnData unitData)
-    {
-        if (!_unitModifiers.ShouldDuplicate(
-                unitData,
-                UnityEngine.Random.value,
-                out int count)) return false;
-
-        for (var i = 0; i < count; i++)
-        {
-            SpawnAlly(unitData);
-        }
-
-        return true;
     }
 
     private void SpawnEnemies(BattleWaveData wave)
@@ -582,10 +565,8 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
 
         if (App.TryGet<ItemManager>(out var itemManager))
         {
-            itemManager.Unsubscribe(EItem.AttackManual, this);
             itemManager.Unsubscribe(EItem.BattleClock, this);
             itemManager.Unsubscribe(EItem.FieldArmor, this);
-            itemManager.Unsubscribe(EItem.DuplicationSeal, this);
             itemManager.Unsubscribe(EItem.DiversityEmblem, this);
         }
 
