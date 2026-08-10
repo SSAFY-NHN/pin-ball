@@ -30,6 +30,7 @@ public class AllyUnit : UnitBase
         _isDragging = false;
         _isMergeReserved = false;
         GetComponent<BattleUnitVisual>()?.SetUnitId(unitId);
+        ResetMana();
     }
 
     public void ResetMana() => _skillController?.Reset(MaxMana);
