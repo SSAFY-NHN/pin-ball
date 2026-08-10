@@ -1,10 +1,22 @@
 fileFormatVersion: 2
-guid: 9254be8cd8cb51b458b0669bb907afb0
+guid: f71cf7b545c9acf4bba2d3b32269ad2e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6743054834431506250
-    second: ui_evolution_book_base_0
+      213: -7998230008103073620
+    second: ui_shop_slot_sold_out_0
+  - first:
+      213: -3700007596261914182
+    second: ui_shop_slot_sold_out_1
+  - first:
+      213: 4311728944010352853
+    second: ui_shop_slot_sold_out_2
+  - first:
+      213: -6841337056252259836
+    second: ui_shop_slot_sold_out_3
+  - first:
+      213: -6113996576570624940
+    second: ui_shop_slot_sold_out_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +125,111 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ui_evolution_book_base_0
+      name: ui_shop_slot_sold_out_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 1536
-        height: 1024
+        y: 17
+        width: 512
+        height: 495
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6b8cab4ba5bdb62a0800000000000000
-      internalID: -6743054834431506250
+      spriteID: ca8852f1f24900190800000000000000
+      internalID: -7998230008103073620
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_shop_slot_sold_out_1
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 89
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab9cf86d1bee6acc0800000000000000
+      internalID: -3700007596261914182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_shop_slot_sold_out_2
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 79
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d8d18b41a656db30800000000000000
+      internalID: 4311728944010352853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_shop_slot_sold_out_3
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 99
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4021e5db130be01a0800000000000000
+      internalID: -6841337056252259836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_shop_slot_sold_out_4
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 17
+        width: 11
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 454bd87c188b62ba0800000000000000
+      internalID: -6113996576570624940
       vertices: []
       indices: 
       edges: []
@@ -138,7 +238,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +248,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ui_evolution_book_base_0: -6743054834431506250
+      ui_shop_slot_sold_out_0: -7998230008103073620
+      ui_shop_slot_sold_out_1: -3700007596261914182
+      ui_shop_slot_sold_out_2: 4311728944010352853
+      ui_shop_slot_sold_out_3: -6841337056252259836
+      ui_shop_slot_sold_out_4: -6113996576570624940
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

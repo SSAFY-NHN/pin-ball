@@ -9,7 +9,6 @@ public class WavePanel : UIBase
     [SerializeField] private Button startButton;
     [SerializeField] private Button launchButton;
     [SerializeField] private TextMeshProUGUI launchCostText;
-    [SerializeField] private TextMeshProUGUI feedbackText;
     [SerializeField] private Color availableCostColor = Color.white;
     [SerializeField] private Color unavailableCostColor = Color.red;
     
@@ -40,11 +39,6 @@ public class WavePanel : UIBase
 
         startButton.onClick.AddListener(OnStartButtonClicked);
         launchButton.onClick.AddListener(_pinballManager.LaunchBall);
-
-        if (feedbackText != null)
-        {
-            feedbackText.gameObject.SetActive(false);
-        }
 
         if (launchCostText == null)
         {

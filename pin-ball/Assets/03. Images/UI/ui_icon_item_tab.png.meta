@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9254be8cd8cb51b458b0669bb907afb0
+guid: 397d03dc9e6d2d543b810baafbe7f472
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6743054834431506250
-    second: ui_evolution_book_base_0
+      213: -7206650091561853834
+    second: ui_icon_item_tab_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ui_evolution_book_base_0
+      name: ui_icon_item_tab_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 31
         y: 0
-        width: 1536
-        height: 1024
+        width: 339
+        height: 357
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6b8cab4ba5bdb62a0800000000000000
-      internalID: -6743054834431506250
+      spriteID: 67c5be79ce5dcfb90800000000000000
+      internalID: -7206650091561853834
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ui_evolution_book_base_0: -6743054834431506250
+      ui_icon_item_tab_0: -7206650091561853834
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

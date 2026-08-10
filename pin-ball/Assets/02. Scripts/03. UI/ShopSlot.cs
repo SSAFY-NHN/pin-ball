@@ -13,6 +13,11 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerMoveHandler
     [SerializeField] private Button purchaseButton;
     [SerializeField] private ShopTooltip tooltip;
 
+    [Header("Slot Visuals")]
+    [SerializeField] private Sprite ballNormalSprite;
+    [SerializeField] private Sprite boardNormalSprite;
+    [SerializeField] private Sprite battleNormalSprite;
+
     [SerializeField] private Color availableCostColor = Color.white;
     [SerializeField] private Color unavailableCostColor = Color.red;
 
@@ -35,11 +40,40 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerMoveHandler
         Item = item;
         _onPurchase = onPurchase;
 
+        if (item != null && purchaseButton.targetGraphic is Image slotImage)
+        {
+            var normalSprite = ResolveNormalSprite(
+                item.Category,
+                ballNormalSprite,
+                boardNormalSprite,
+                battleNormalSprite);
+            if (normalSprite != null)
+            {
+                slotImage.sprite = normalSprite;
+            }
+        }
+
         nameText.text = item?.Name ?? string.Empty;
         costText.text = item != null ? item.Cost.ToString() : string.Empty;
 
         iconImage.sprite = item?.Icon;
         iconImage.enabled = item?.Icon != null;
+    }
+
+    public static Sprite ResolveNormalSprite(
+        EItemCategory category,
+        Sprite ballSprite,
+        Sprite boardSprite,
+        Sprite battleSprite)
+    {
+        var resolved = category switch
+        {
+            EItemCategory.Board => boardSprite,
+            EItemCategory.Battle => battleSprite,
+            _ => ballSprite
+        };
+
+        return resolved != null ? resolved : ballSprite;
     }
 
     public void RefreshState(
@@ -88,7 +122,7 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerMoveHandler
     {
         if (Item == null) return;
 
-        tooltip.Show(this, Item.Description, eventData.position);
+        tooltip.Show(this, Item.Name, Item.Description, eventData.position);
     }
 
     public void OnPointerMove(PointerEventData eventData)
