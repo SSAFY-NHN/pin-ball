@@ -62,8 +62,8 @@ public class UnitCreationServiceTests
         Assert.That(created, Is.True);
         Assert.That(allyData.id, Is.EqualTo("warrior"));
         Assert.That(spawnData.Level, Is.EqualTo(3));
-        Assert.That(stats.MaxHp, Is.EqualTo(138f).Within(0.001f));
-        Assert.That(stats.AttackDamage, Is.EqualTo(27.6f).Within(0.001f));
+        Assert.That(stats.MaxHp, Is.EqualTo(180f).Within(0.001f));
+        Assert.That(stats.AttackDamage, Is.EqualTo(36f).Within(0.001f));
         Assert.That(stats.Defense, Is.EqualTo(7f));
         Assert.That(stats.AttackRate, Is.EqualTo(1.2f));
     }
@@ -85,8 +85,8 @@ public class UnitCreationServiceTests
 
         Assert.That(created, Is.True);
         Assert.That(spawnData.Level, Is.EqualTo(5));
-        Assert.That(stats.MaxHp, Is.EqualTo(115f).Within(0.001f));
-        Assert.That(stats.AttackDamage, Is.EqualTo(23f).Within(0.001f));
+        Assert.That(stats.MaxHp, Is.EqualTo(150f).Within(0.001f));
+        Assert.That(stats.AttackDamage, Is.EqualTo(30f).Within(0.001f));
     }
 
     [Test]
@@ -113,8 +113,8 @@ public class UnitCreationServiceTests
             out BattleUnitStats stats);
 
         Assert.That(created, Is.True);
-        Assert.That(stats.AttackDamage, Is.EqualTo(33.66f).Within(0.001f));
-        Assert.That(stats.MaxHp, Is.EqualTo(166f).Within(0.001f));
+        Assert.That(stats.AttackDamage, Is.EqualTo(42.9f).Within(0.001f));
+        Assert.That(stats.MaxHp, Is.EqualTo(215f).Within(0.001f));
     }
 
     [Test]

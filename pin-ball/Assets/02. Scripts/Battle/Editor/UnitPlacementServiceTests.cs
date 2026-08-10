@@ -72,12 +72,45 @@ public class UnitPlacementServiceTests
         Assert.That(service.TryGetSavedPosition(ally, out _), Is.False);
     }
 
+    [Test]
+    public void TryPlaceInFreeGridSlot_UsesInBoundsFallbackWhenFull()
+    {
+        UnitPlacementService service = CreateService(
+            out BattleAreaBounds bounds);
+        AllyUnit ally = CreateAlly("fallback-ally");
+        ally.gameObject.AddComponent<CircleCollider2D>().radius = 0.5f;
+        float padding = UnitPlacementService.GetPadding(ally);
+        Vector3 expectedFallback = default;
+
+        for (var gridIndex = 0; bounds.TryGetAllyGridPosition(
+                 gridIndex,
+                 padding,
+                 out Vector3 candidate); gridIndex++)
+        {
+            if (gridIndex == 0) expectedFallback = candidate;
+            AllyUnit occupied = CreateAlly($"occupied-{gridIndex}");
+            Assert.That(service.TrySave(occupied, candidate), Is.True);
+        }
+
+        Assert.That(service.TryPlaceInFreeGridSlot(ally), Is.True);
+        Assert.That(ally.transform.position, Is.EqualTo(expectedFallback));
+        Assert.That(
+            bounds.ContainsAllyPlacement(ally.transform.position, padding),
+            Is.True);
+    }
+
     private UnitPlacementService CreateService()
+    {
+        return CreateService(out _);
+    }
+
+    private UnitPlacementService CreateService(
+        out BattleAreaBounds bounds)
     {
         var gameObject = new GameObject("battle-area");
         gameObject.SetActive(false);
         _objects.Add(gameObject);
-        var bounds = gameObject.AddComponent<BattleAreaBounds>();
+        bounds = gameObject.AddComponent<BattleAreaBounds>();
         SetField(bounds, "_worldMin", new Vector2(0f, 0f));
         SetField(bounds, "_worldMax", new Vector2(10f, 8f));
         SetField(bounds, "<IsValid>k__BackingField", true);
