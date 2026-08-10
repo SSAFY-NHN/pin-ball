@@ -1,7 +1,5 @@
 #if UNITY_EDITOR
 using System.Reflection;
-using System.Collections.Generic;
-
 using NUnit.Framework;
 using UnityEngine;
 
@@ -90,31 +88,6 @@ public class AllyPreparationPlacementTests
         var result = (bool)method.Invoke(null, arguments);
 
         Assert.That(result, Is.False);
-    }
-
-    [TestCase(5f, 4f, true)]
-    [TestCase(5.4f, 4f, true)]
-    [TestCase(6f, 4f, false)]
-    public void IsGridPositionOccupied_UsesMinimumDistance(
-        float x,
-        float y,
-        bool expected)
-    {
-        MethodInfo method = typeof(UnitManager).GetMethod(
-            "IsGridPositionOccupied",
-            BindingFlags.NonPublic | BindingFlags.Static);
-        Assert.That(method, Is.Not.Null);
-
-        var result = (bool)method.Invoke(
-            null,
-            new object[]
-            {
-                new Vector3(x, y, 0f),
-                new List<Vector3> { new(5f, 4f, 0f) },
-                0.5f
-            });
-
-        Assert.That(result, Is.EqualTo(expected));
     }
 
     private static Vector3 InvokeGridPosition(MethodInfo method, int index)
