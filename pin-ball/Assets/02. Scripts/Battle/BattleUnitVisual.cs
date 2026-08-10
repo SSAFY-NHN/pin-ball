@@ -108,6 +108,21 @@ public sealed class BattleUnitVisual : MonoBehaviour
         }
     }
 
+    public void ResetFacing()
+    {
+        _previousPosition = transform.position;
+
+        _unit ??= GetComponent<UnitBase>();
+        _spriteRenderer ??= GetComponent<SpriteRenderer>();
+
+        if (_unit == null || _spriteRenderer == null)
+        {
+            return;
+        }
+
+        UpdateFacing();
+    }
+
     private void LateUpdate()
     {
         if (_unit == null || _spriteRenderer == null)

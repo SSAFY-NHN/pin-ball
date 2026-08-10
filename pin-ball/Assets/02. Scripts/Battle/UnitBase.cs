@@ -37,6 +37,7 @@ public abstract class UnitBase : MonoBehaviour
     private float _hitUntilTime;
 
     protected virtual Color IdleColor => new(0.8f, 0.8f, 0.8f, 1f);
+    protected virtual string BasicAttackSoundName => SoundName.ClassicPunch;
     private static readonly Color AttackColor = Color.white;
     private static readonly Color HitColor = new(1f, 0.2f, 0.2f, 1f);
     private static readonly Color DeadColor = new(0.3f, 0.3f, 0.3f, 1f);
@@ -50,6 +51,7 @@ public abstract class UnitBase : MonoBehaviour
         ResetCombatState();
         _renderer = GetComponentInChildren<SpriteRenderer>();
         UpdateVisual();
+        GetComponent<BattleUnitVisual>()?.ResetFacing();
     }
 
     public void ResetCombatState()
@@ -73,6 +75,7 @@ public abstract class UnitBase : MonoBehaviour
         transform.position = position;
         gameObject.SetActive(true);
         ResetCombatState();
+        GetComponent<BattleUnitVisual>()?.ResetFacing();
     }
 
     public void MarkReturnedToPool()
@@ -137,6 +140,7 @@ public abstract class UnitBase : MonoBehaviour
 
         _state = EBattleUnitState.Hit;
         _hitUntilTime = now + 0.08f;
+        SoundManager.PlaySFXIfAvailable(SoundName.Hit);
         OnDamaged();
 
         if (result.Died) Die();
@@ -145,7 +149,16 @@ public abstract class UnitBase : MonoBehaviour
     public void Heal(float amount)
     {
         if (!IsAlive) return;
+
+        float previousHp = CurrentHp;
         _health.Heal(amount);
+        if (CurrentHp > previousHp)
+        {
+            SoundManager.PlaySFXIfAvailable(
+                Team == EBattleTeam.Ally
+                    ? SoundName.AllyHealing
+                    : SoundName.EnemyHealing);
+        }
     }
 
     public void ApplyShield(float amount, float duration)
@@ -363,6 +376,7 @@ public abstract class UnitBase : MonoBehaviour
         if (!_attack.TrySchedule(Time.time, attackRate)) return;
 
         _currentTarget.TakeDamage(GetBasicAttackDamage(_currentTarget), 0f, this);
+        SoundManager.PlaySFXIfAvailable(BasicAttackSoundName);
         OnBasicAttackHit(_currentTarget);
     }
 

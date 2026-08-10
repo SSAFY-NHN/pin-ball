@@ -112,6 +112,18 @@ public sealed class UnitMergeService
         return true;
     }
 
+    public bool TryChooseAutomaticEvolution(
+        out UnitMergeDecision decision)
+    {
+        decision = null;
+        // TODO: Restore a configurable choice when the alternate jobs are ready.
+        if (_pendingEvolution?.SecondChoice == null) return false;
+
+        return TryChooseEvolution(
+            _pendingEvolution.SecondChoice.id,
+            out decision);
+    }
+
     public void Complete(UnitMergeDecision decision)
     {
         if (decision == null) return;

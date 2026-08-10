@@ -154,6 +154,7 @@ public class PinballManager : AppService, IItemEventListener
         _activeBalls.Add(ball);
         _successfulLaunchCount++;
         NotifyLaunchCostChanged();
+        SoundManager.PlaySFXIfAvailable(SoundName.Spring);
         OnStateChanged?.Invoke(EPinballState.Launched);
         return true;
     }
@@ -189,15 +190,39 @@ public class PinballManager : AppService, IItemEventListener
 
         if (obstacle == EPinballObstacle.SmallPin)
         {
+            SoundManager.PlaySFXIfAvailable(SoundName.SmallPinHit);
             ball.SmallPinHitCount++;
             return;
         }
 
+        SoundManager.PlaySFXIfAvailable(SoundName.BumperHit);
         ball.BigBumperHitCount++;
         _battleManager.AddGold(_goldenBallReward);
         int totalReward = _goldenBallReward + ApplyGoldenBumper(ball);
         ball.PlayGoldRewardFeedback(hitPosition, totalReward);
         ApplySplitCapsule(ball);
+    }
+
+    internal void OnBallHitSurface()
+    {
+        SoundManager.PlaySFXIfAvailable(SoundName.BallHit);
+    }
+
+    internal void ApplyCollisionRetention(Pinball ball, Vector2 previousVelocity)
+    {
+        if (_collisionRetentionBonus <= 0f || ball == null) return;
+
+        var previousSpeed = previousVelocity.magnitude;
+        var currentVelocity = ball.Velocity;
+        var currentSpeed = currentVelocity.magnitude;
+        if (previousSpeed <= 0.001f || currentSpeed <= 0.001f) return;
+
+        var currentRetention = currentSpeed / previousSpeed;
+        var targetRetention = Mathf.Min(
+            _maxCollisionRetention,
+            currentRetention + _collisionRetentionBonus);
+
+        ball.SetVelocity(currentVelocity.normalized * previousSpeed * targetRetention);
     }
 
     internal void ApplyTargetMagnet(Pinball ball)

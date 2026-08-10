@@ -5,6 +5,26 @@ using UnityEngine.TestTools.Utils;
 
 public class PinballMotionTests
 {
+    [TestCase(false, 0f, false)]
+    [TestCase(false, 0.01f, true)]
+    [TestCase(true, 1f, false)]
+    public void ShouldPlayPullSound_PlaysOnceAfterLeverActuallyMoves(
+        bool hasPlayedPullSound,
+        float pullDistance,
+        bool expected)
+    {
+        var method = typeof(PinballLauncherController).GetMethod(
+            "ShouldPlayPullSound",
+            BindingFlags.Static | BindingFlags.NonPublic);
+
+        Assert.That(method, Is.Not.Null);
+        Assert.That(
+            method?.Invoke(
+                null,
+                new object[] { hasPlayedPullSound, pullDistance }),
+            Is.EqualTo(expected));
+    }
+
     [Test]
     public void Magnet_IsActiveOnlyWhileMouseIsHeld()
     {

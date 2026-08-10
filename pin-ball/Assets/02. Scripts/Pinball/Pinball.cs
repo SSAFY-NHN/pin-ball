@@ -52,6 +52,7 @@ public class Pinball : MonoBehaviour
             : (Vector2)transform.position;
 
         var obstacle = collision.collider.GetComponentInParent<PinballObstacle>();
+
         float emphasis = obstacle == null
             ? 0.75f
             : obstacle.Type == EPinballObstacle.BigBumper ? 1.35f : 1f;
@@ -59,7 +60,11 @@ public class Pinball : MonoBehaviour
             contactPoint,
             collision.relativeVelocity.magnitude,
             emphasis);
-        if (obstacle == null) return;
+        if (obstacle == null) 
+        {
+            _manager.OnBallHitSurface();
+            return;
+        }
 
         _manager.OnBallHit(this, obstacle.Type, contactPoint);
     }

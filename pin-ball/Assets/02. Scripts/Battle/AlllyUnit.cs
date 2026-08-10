@@ -9,10 +9,13 @@ public class AllyUnit : UnitBase
     public int Level { get; private set; }
     public float CurrentMana => _skillController?.CurrentMana ?? 0f;
     public AllySkillData Skill => _skill;
+    protected override string BasicAttackSoundName =>
+        SoundName.GetAttack(UnitId);
 
     private UnitManager _unitManager;
     private AllySkillData _skill;
     private AllySkillController _skillController;
+    private UnitAttackEffectPlayer _attackEffectPlayer;
     private Camera _dragCamera;
     private Vector3 _dragStartPosition;
     private bool _isDragging;
@@ -26,6 +29,7 @@ public class AllyUnit : UnitBase
         _unitManager = unitManager;
         _skillController = new AllySkillController(registry ?? UnitSkillRegistry.CreateDefault());
         _skillController.Initialize(common, skill, MaxMana);
+        _attackEffectPlayer ??= GetComponent<UnitAttackEffectPlayer>();
         _dragCamera = Camera.main;
         _isDragging = false;
         _isMergeReserved = false;
@@ -48,13 +52,23 @@ public class AllyUnit : UnitBase
         if (_skillController != null && _skillController.CanCast(MaxMana))
         {
             _state = EBattleUnitState.Attacking;
-            _skillController.TryCast(CreateSkillContext(), MaxMana, Debug.LogWarning);
+            if (_skillController.TryCast(
+                    CreateSkillContext(),
+                    MaxMana,
+                    Debug.LogWarning))
+            {
+                SoundManager.PlaySFXIfAvailable(BasicAttackSoundName);
+            }
             return;
         }
         MoveOrAttackTarget();
     }
 
-    protected override void OnBasicAttackHit(UnitBase target) => _skillController?.GainFromBasicAttack(MaxMana);
+    protected override void OnBasicAttackHit(UnitBase target)
+    {
+        _attackEffectPlayer?.Play(UnitId, target);
+        _skillController?.GainFromBasicAttack(MaxMana);
+    }
     protected override void OnDamaged() => _skillController?.GainFromDamage(Time.time, MaxMana);
 
     private UnitSkillContext CreateSkillContext() => new(this, _currentTarget, _unitManager.TargetFinder);

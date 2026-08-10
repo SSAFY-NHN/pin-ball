@@ -10,7 +10,7 @@
   },
   "units": [
     {
-      "name": "고블린",
+      "name": "로그",
       "role": "기본 근접형",
       "id": "goblin",
       "rank": 0,
@@ -53,7 +53,7 @@
       ]
     },
     {
-      "name": "고블린 궁수",
+      "name": "궁수",
       "role": "원거리 공격형",
       "id": "goblin_archer",
       "rank": 0,
@@ -82,8 +82,8 @@
       ]
     },
     {
-      "name": "방패병",
-      "role": "높은 방어력",
+      "name": "메이스 전사",
+      "role": "방패를 사용하는 근접 방어형",
       "id": "shield_guard",
       "rank": 0,
       "health": 180,
@@ -118,7 +118,7 @@
       ]
     },
     {
-      "name": "오크 전사",
+      "name": "검방 전사",
       "role": "강한 근접형",
       "id": "orc_warrior",
       "rank": 0,
@@ -341,7 +341,7 @@
       ]
     },
     {
-      "name": "고블린 왕",
+      "name": "기마 마도사",
       "role": "보스",
       "id": "goblin_king",
       "rank": 2,

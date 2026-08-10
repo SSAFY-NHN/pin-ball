@@ -217,6 +217,7 @@ public class ItemManager : AppService
         if (!battleManager.TrySpendPreparationGold(item.Cost)) return false;
 
         Raise(item.Key);
+        SoundManager.PlaySFXIfAvailable(SoundName.BuyItem);
         return true;
     }
 

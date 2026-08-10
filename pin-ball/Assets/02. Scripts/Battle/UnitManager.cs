@@ -37,6 +37,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     private UnitSpawner _spawner;
     private TitleData _titleData;
     [SerializeField] private BattleAreaBounds battleArea;
+    [SerializeField] private EvolutionGlowEffect evolutionGlowEffect;
     private int _enemySpawnIndex;
     private ItemManager _itemManager;
 
@@ -156,6 +157,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         }
 
         AddOwnedAlly(spawnedUnit);
+        SoundManager.PlaySFXIfAvailable(SoundName.UnitSpawn);
         return spawnedUnit;
     }
 
@@ -415,13 +417,23 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             return true;
         }
 
-        source.SetMergeReserved(true);
-        target.SetMergeReserved(true);
-        _battleManager.SetPreparationLock(true);
-        OnEvolutionRequested?.Invoke(
-            decision.FirstChoice,
-            decision.SecondChoice);
+        if (!ChooseAutomaticEvolution())
+        {
+            source.transform.position = sourceOriginalPosition;
+            _mergeService.CancelPendingEvolution();
+            return false;
+        }
+
         return true;
+    }
+
+    private bool ChooseAutomaticEvolution()
+    {
+        if (_mergeService == null ||
+            !_mergeService.TryChooseAutomaticEvolution(
+                out UnitMergeDecision decision)) return false;
+
+        return CompleteEvolution(decision);
     }
 
     public bool ChooseEvolution(string unitId)
@@ -431,13 +443,25 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
                 unitId,
                 out UnitMergeDecision decision)) return false;
 
+        return CompleteEvolution(decision);
+    }
+
+    private bool CompleteEvolution(UnitMergeDecision decision)
+    {
         ConsumeReservedInputs(decision);
-        SpawnMergedAlly(
+        AllyUnit evolvedAlly = SpawnMergedAlly(
             decision.ResultUnitId,
             decision.ResultLevel,
             decision.ResultPosition);
         _mergeService.Complete(decision);
         _battleManager.SetPreparationLock(false);
+
+        if (evolvedAlly != null)
+        {
+            evolutionGlowEffect?.Play(evolvedAlly.transform.position);
+            SoundManager.PlaySFXIfAvailable(SoundName.Evolution);
+        }
+
         return true;
     }
 
@@ -447,7 +471,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         ReleaseUnit(decision.Target);
     }
 
-    private void SpawnMergedAlly(
+    private AllyUnit SpawnMergedAlly(
         string unitId,
         int level,
         Vector3 position)
@@ -463,6 +487,8 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             result.transform.position = position;
             _placementService.TrySave(result, position);
         }
+
+        return result;
     }
 
     public UnitBase FindClosestAliveEnemy(Vector3 fromPosition, float maxDistance)

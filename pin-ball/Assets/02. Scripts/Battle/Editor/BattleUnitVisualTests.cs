@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.Linq;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -7,6 +8,33 @@ public class BattleUnitVisualTests
 {
     private const string AllyPrefabPath =
         "Assets/04. Prefabs/AllyUnit.prefab";
+
+    [Test]
+    public void ResetFacing_AfterSpawnPositionChange_FacesAllyLeftImmediately()
+    {
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(AllyPrefabPath);
+        Assert.That(prefab, Is.Not.Null);
+
+        var instance = Object.Instantiate(prefab);
+        try
+        {
+            var visual = instance.GetComponent<BattleUnitVisual>();
+            var spriteRenderer = instance.GetComponent<SpriteRenderer>();
+            Assert.That(visual, Is.Not.Null);
+            Assert.That(spriteRenderer, Is.Not.Null);
+
+            instance.transform.position = new Vector3(4f, 0f, 0f);
+            spriteRenderer.flipX = false;
+
+            visual.ResetFacing();
+
+            Assert.That(spriteRenderer.flipX, Is.False);
+        }
+        finally
+        {
+            Object.DestroyImmediate(instance);
+        }
+    }
 
     [TestCase(
         "warrior",
@@ -23,6 +51,20 @@ public class BattleUnitVisualTests
         12f,
         12f)]
     [TestCase(
+        "ranger",
+        "Cat2_gunslinger_Tiny32",
+        "Cat2_gunslinger_Tiny32_Walk_",
+        "Cat2_gunslinger_Tiny32_Attack_",
+        12f,
+        12f)]
+    [TestCase(
+        "knight",
+        "dog2_Warrior",
+        "dog2_Warrior_Walk_",
+        "dog2_Warrior_Attack_",
+        12f,
+        12f)]
+    [TestCase(
         "mage",
         "Rabbit1_Mage_Tiny32",
         "Rabbit1_Mage_Walk_",
@@ -30,10 +72,24 @@ public class BattleUnitVisualTests
         12f,
         10f)]
     [TestCase(
-        "lancer",
+        "pyromancer",
+        "Rabbit2_Healer_Tiny32",
+        "Rabbit2_Healer_Walk_",
+        "Rabbit2_Healer_Attack_",
+        12f,
+        10f)]
+    [TestCase(
+        "spearman",
         "Bear1_Fighter_Tiny32",
         "Bear1_Fighter_Walk_",
         "Bear1_Fighter_Attack_",
+        12f,
+        12f)]
+    [TestCase(
+        "lancer",
+        "Bear1_Fighter_Evolved_Tiny32",
+        "Bear2_Fighter_Walk_",
+        "Bear2_Fighter_Attack_",
         12f,
         12f)]
     public void AllyPrefab_UnitProfileUsesExpectedMotionFrames(
@@ -96,6 +152,9 @@ public class BattleUnitVisualTests
         Assert.That(
             unitProfile.FindPropertyRelative("attackFramesPerSecond").floatValue,
             Is.EqualTo(attackFramesPerSecond));
+        Assert.That(
+            unitProfile.FindPropertyRelative("sourceFacesRight").boolValue,
+            Is.False);
     }
 
     [TestCase(
@@ -109,6 +168,16 @@ public class BattleUnitVisualTests
         8,
         false)]
     [TestCase(
+        "Assets/05. Animations/Rabbit/Rabbit2_Healer_Walk.anim",
+        "Rabbit2_Healer_Walk_",
+        9,
+        true)]
+    [TestCase(
+        "Assets/05. Animations/Rabbit/Rabbit2_Healer_Attack.anim",
+        "Rabbit2_Healer_Attack_",
+        8,
+        false)]
+    [TestCase(
         "Assets/05. Animations/Bear/Bear1_Fighter_Walk.anim",
         "Bear1_Fighter_Walk_",
         10,
@@ -117,6 +186,26 @@ public class BattleUnitVisualTests
         "Assets/05. Animations/Bear/Bear1_Fighter_Attack.anim",
         "Bear1_Fighter_Attack_",
         13,
+        false)]
+    [TestCase(
+        "Assets/05. Animations/Bear/Bear2_Fighter_Walk.anim",
+        "Bear2_Fighter_Walk_",
+        8,
+        true)]
+    [TestCase(
+        "Assets/05. Animations/Bear/Bear2_Fighter_Attack.anim",
+        "Bear2_Fighter_Attack_",
+        10,
+        false)]
+    [TestCase(
+        "Assets/05. Animations/Cat/Cat2_gunslinger_Tiny32_Walk.anim",
+        "Cat2_gunslinger_Tiny32_Walk_",
+        10,
+        true)]
+    [TestCase(
+        "Assets/05. Animations/Cat/Cat2_gunslinger_Tiny32_Attack.anim",
+        "Cat2_gunslinger_Tiny32_Attack_",
+        10,
         false)]
     public void AnimalClip_UsesCurrentSpriteAssets(
         string clipPath,
@@ -140,6 +229,27 @@ public class BattleUnitVisualTests
 
         Assert.That(AnimationUtility.GetAnimationClipSettings(clip).loopTime,
             Is.EqualTo(expectedLoop));
+    }
+
+    [TestCase(
+        "Assets/03. Images/Animals/Dog/dog2_Warrior_Walk.png",
+        "dog2_Warrior_Walk_",
+        5)]
+    [TestCase(
+        "Assets/03. Images/Animals/Dog/dog2_Warrior_Attack.png",
+        "dog2_Warrior_Attack_",
+        9)]
+    public void DogEvolutionSheet_HasExpectedImportedFrames(
+        string sheetPath,
+        string spritePrefix,
+        int expectedFrameCount)
+    {
+        var frames = AssetDatabase.LoadAllAssetsAtPath(sheetPath)
+            .OfType<Sprite>()
+            .Where(sprite => sprite.name.StartsWith(spritePrefix))
+            .ToArray();
+
+        Assert.That(frames, Has.Length.EqualTo(expectedFrameCount));
     }
 }
 #endif
