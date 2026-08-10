@@ -147,7 +147,6 @@ public class PinballLauncherController : MonoBehaviour
     {
         _isDragging = false;
         _hasPlayedPullSound = false;
-        ResetVisuals();
         StopSnap();
         ResetVisualsImmediate();
         glowController?.ResetInteraction();

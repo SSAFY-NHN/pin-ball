@@ -208,23 +208,6 @@ public class PinballManager : AppService, IItemEventListener
         SoundManager.PlaySFXIfAvailable(SoundName.BallHit);
     }
 
-    internal void ApplyCollisionRetention(Pinball ball, Vector2 previousVelocity)
-    {
-        if (_collisionRetentionBonus <= 0f || ball == null) return;
-
-        var previousSpeed = previousVelocity.magnitude;
-        var currentVelocity = ball.Velocity;
-        var currentSpeed = currentVelocity.magnitude;
-        if (previousSpeed <= 0.001f || currentSpeed <= 0.001f) return;
-
-        var currentRetention = currentSpeed / previousSpeed;
-        var targetRetention = Mathf.Min(
-            _maxCollisionRetention,
-            currentRetention + _collisionRetentionBonus);
-
-        ball.SetVelocity(currentVelocity.normalized * previousSpeed * targetRetention);
-    }
-
     internal void ApplyTargetMagnet(Pinball ball)
     {
         if (_targetMagnetCount <= 0 ||
