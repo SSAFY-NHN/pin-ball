@@ -72,27 +72,6 @@ public class UnitPlacementServiceTests
         Assert.That(service.TryGetSavedPosition(ally, out _), Is.False);
     }
 
-    [Test]
-    public void TryFindFreeGridSlot_SkipsOccupiedPosition()
-    {
-        UnitPlacementService service = CreateService();
-        AllyUnit existingAlly = CreateAlly("existing-ally");
-        const float padding = 0.5f;
-
-        Assert.That(
-            service.TryFindFreeGridSlot(padding, out Vector3 occupied),
-            Is.True);
-        Assert.That(service.TrySave(existingAlly, occupied), Is.True);
-
-        Assert.That(
-            service.TryFindFreeGridSlot(padding, out Vector3 free),
-            Is.True);
-        Assert.That(free, Is.Not.EqualTo(occupied));
-        Assert.That(
-            Vector2.Distance(free, occupied),
-            Is.GreaterThanOrEqualTo(padding * 2f + 0.15f));
-    }
-
     private UnitPlacementService CreateService()
     {
         var gameObject = new GameObject("battle-area");

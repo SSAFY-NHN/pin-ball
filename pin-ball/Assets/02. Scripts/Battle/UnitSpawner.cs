@@ -21,24 +21,12 @@ public class UnitSpawner : MonoBehaviour
     private readonly Queue<EnemyUnit> _enemyPool = new();
     private readonly HashSet<UnitBase> _pooledUnits = new();
 
-    public float AllyPlacementPadding
-    {
-        get
-        {
-            var ally = allyPrefab != null
-                ? allyPrefab.GetComponent<AllyUnit>()
-                : null;
-            return UnitPlacementService.GetPadding(ally);
-        }
-    }
-
     public AllyUnit SpawnAlly(
         BattleUnitSpawnData data,
         AllyUnitData allyData,
         AllyCommonData commonData,
         BattleUnitStats stats,
         UnitCombatContext context,
-        Vector3 spawnPosition,
         UnitManager unitManager = null,
         UnitSkillRegistry skillRegistry = null)
     {
@@ -47,7 +35,7 @@ public class UnitSpawner : MonoBehaviour
             return null;
         }
 
-        var ally = TakeAlly(spawnPosition);
+        var ally = TakeAlly();
         if (ally == null) return null;
 
         ActivateUnit(
@@ -56,9 +44,7 @@ public class UnitSpawner : MonoBehaviour
             data.UnitId,
             stats,
             0,
-            context,
-            spawnPosition,
-            false);
+            context);
         ally.SetData(data.UnitId, data.Level, allyData?.skill, commonData, unitManager, skillRegistry);
         return ally;
     }
@@ -121,18 +107,14 @@ public class UnitSpawner : MonoBehaviour
         BattleUnitStats stats,
         int spawnIndex,
         UnitCombatContext context,
-        Vector3? overridePosition = null,
-        bool addHorizontalJitter = true)
+        Vector3? overridePosition = null)
     {
         var spawnPoint = team == EBattleTeam.Ally
             ? allySpawnPoint
             : enemySpawnPoint;
         var position = overridePosition ??
             (spawnPoint != null ? spawnPoint.position : transform.position);
-        if (addHorizontalJitter)
-        {
-            position.x += Random.Range(-0.15f, 0.15f);
-        }
+        position.x += Random.Range(-0.15f, 0.15f);
         if (team == EBattleTeam.Enemy)
         {
             position.y += GetFormationOffset(spawnIndex);
@@ -145,7 +127,7 @@ public class UnitSpawner : MonoBehaviour
         unit.Initialize(stats, context);
     }
 
-    private AllyUnit TakeAlly(Vector3 spawnPosition)
+    private AllyUnit TakeAlly()
     {
         while (_allyPool.Count > 0)
         {
@@ -161,10 +143,7 @@ public class UnitSpawner : MonoBehaviour
             return null;
         }
 
-        return Instantiate(
-            allyPrefab,
-            spawnPosition,
-            Quaternion.identity).GetComponent<AllyUnit>();
+        return Instantiate(allyPrefab).GetComponent<AllyUnit>();
     }
 
     private EnemyUnit TakeEnemy()
