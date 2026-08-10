@@ -79,7 +79,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 20
-  m_Sprite: {fileID: -2585921302918180035, guid: 195a8010b1fa3944ca79bb8555abe9a4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fd781e315322b924cbb007d3e534c412, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -166,17 +166,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   launchSpeed: 8
-  allyData:
-    UnitId: DefaultAlly
-    BaseStats:
-      MaxHp: 24
-      AttackDamage: 5
-      AttackRate: 1.2
-      AttackRange: 1.6
-      MoveSpeed: 3.2
-    Modifier:
-      MergeTier: 1
-      MergeAttackBonusPerTier: 0.2
-      MergeHpBonusPerTier: 0.25
-      EquipmentAttackBonus: 2
-      EquipmentHpBonus: 4
