@@ -9,17 +9,24 @@ public class PinballMotionTests
     public void Magnet_IsActiveOnlyWhileMouseIsHeld()
     {
         var gameObject = new GameObject("Magnet Test");
+        gameObject.AddComponent<BoxCollider2D>();
         var magnet = gameObject.AddComponent<PinballMagnetController>();
         var activeField = typeof(PinballMagnetController).GetField(
             "_isActive",
             BindingFlags.Instance | BindingFlags.NonPublic);
+        var mouseDownMethod = typeof(PinballMagnetController).GetMethod(
+            "OnMouseDown",
+            BindingFlags.Instance | BindingFlags.NonPublic);
+        var mouseUpMethod = typeof(PinballMagnetController).GetMethod(
+            "OnMouseUp",
+            BindingFlags.Instance | BindingFlags.NonPublic);
 
         try
         {
-            gameObject.SendMessage("OnMouseDown");
+            mouseDownMethod?.Invoke(magnet, null);
             Assert.That(activeField?.GetValue(magnet), Is.EqualTo(true));
 
-            gameObject.SendMessage("OnMouseUp");
+            mouseUpMethod?.Invoke(magnet, null);
             Assert.That(activeField?.GetValue(magnet), Is.EqualTo(false));
         }
         finally
