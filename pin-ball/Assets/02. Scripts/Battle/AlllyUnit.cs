@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,50 +5,34 @@ public class AllyUnit : UnitBase
 {
     public override EBattleTeam Team => EBattleTeam.Ally;
     protected override Color IdleColor => Color.white;
-
     public string UnitId { get; private set; }
     public int Level { get; private set; }
-    public float CurrentMana { get; private set; }
+    public float CurrentMana => _skillController?.CurrentMana ?? 0f;
     public AllySkillData Skill => _skill;
-
-    private readonly List<UnitBase> _targets = new();
 
     private UnitManager _unitManager;
     private AllySkillData _skill;
-    private AllyCommonData _common;
-    private float _nextHitManaTime;
+    private AllySkillController _skillController;
     private Camera _dragCamera;
     private Vector3 _dragStartPosition;
     private bool _isDragging;
     private bool _isMergeReserved;
 
-    public void SetData(
-        string unitId,
-        int level,
-        AllySkillData skill,
-        AllyCommonData common)
+    public void SetData(string unitId, int level, AllySkillData skill, AllyCommonData common, UnitManager unitManager = null, UnitSkillRegistry registry = null)
     {
         UnitId = unitId;
         Level = level;
         _skill = skill;
-        _common = common;
-        _unitManager = App.Get<UnitManager>();
+        _unitManager = unitManager;
+        _skillController = new AllySkillController(registry ?? UnitSkillRegistry.CreateDefault());
+        _skillController.Initialize(common, skill, MaxMana);
         _dragCamera = Camera.main;
         _isDragging = false;
         _isMergeReserved = false;
         GetComponent<BattleUnitVisual>()?.SetUnitId(unitId);
-        ResetMana();
     }
 
-    public void ResetMana()
-    {
-        CurrentMana = Mathf.Clamp(
-            _common?.startMana ?? 0f,
-            0f,
-            _stats.MaxMana);
-        _nextHitManaTime = 0f;
-        _targets.Clear();
-    }
+    public void ResetMana() => _skillController?.Reset(MaxMana);
 
     public void SetMergeReserved(bool reserved)
     {
@@ -59,390 +41,65 @@ public class AllyUnit : UnitBase
         gameObject.SetActive(!reserved);
     }
 
+    protected override void Tick()
+    {
+        if (!TryKeepOrAcquireTarget()) { _state = EBattleUnitState.Idle; ClearTarget(); return; }
+        if (_skillController != null && _skillController.CanCast(MaxMana))
+        {
+            _state = EBattleUnitState.Attacking;
+            _skillController.TryCast(CreateSkillContext(), MaxMana, Debug.LogWarning);
+            return;
+        }
+        MoveOrAttackTarget();
+    }
+
+    protected override void OnBasicAttackHit(UnitBase target) => _skillController?.GainFromBasicAttack(MaxMana);
+    protected override void OnDamaged() => _skillController?.GainFromDamage(Time.time, MaxMana);
+
+    private UnitSkillContext CreateSkillContext() => new(this, _currentTarget, _unitManager.TargetFinder);
+
     private void OnMouseDown()
     {
-        if (!Input.GetMouseButton(0)) return;
-        if (_isMergeReserved || _unitManager == null) return;
-        if (!_unitManager.CanDragAlly(this)) return;
-
+        if (!Input.GetMouseButton(0) || _isMergeReserved || _unitManager == null || !_unitManager.CanDragAlly(this)) return;
         _dragStartPosition = transform.position;
         _isDragging = true;
     }
 
     private void OnMouseOver()
     {
-        if (_isDragging || !Input.GetMouseButtonDown(1)) return;
-        _unitManager?.RequestAllyDetail(this);
+        if (!_isDragging && Input.GetMouseButtonDown(1)) _unitManager?.RequestAllyDetail(this);
     }
 
     private void OnMouseDrag()
     {
         if (!_isDragging) return;
-
-        if (_dragCamera == null)
-        {
-            _dragCamera = Camera.main;
-        }
-
+        if (_dragCamera == null) _dragCamera = Camera.main;
         if (_dragCamera == null) return;
-
-        Vector3 worldPosition =
-            _dragCamera.ScreenToWorldPoint(Input.mousePosition);
-        worldPosition.z = _dragStartPosition.z;
-        if (_unitManager.BattleArea != null)
-        {
-            worldPosition = _unitManager.BattleArea.ClampAllyPlacement(
-                worldPosition,
-                GetPlacementPadding());
-        }
-
-        transform.position = worldPosition;
+        var position = _dragCamera.ScreenToWorldPoint(Input.mousePosition);
+        position.z = _dragStartPosition.z;
+        if (_unitManager.BattleArea != null) position = _unitManager.BattleArea.ClampAllyPlacement(position, GetPlacementPadding());
+        transform.position = position;
     }
 
     private void OnMouseUp()
     {
         if (!_isDragging) return;
         _isDragging = false;
-
-        if ((EventSystem.current != null &&
-             EventSystem.current.IsPointerOverGameObject()) ||
-            !_unitManager.IsValidAllyPlacement(this, transform.position))
-        {
-            transform.position = _dragStartPosition;
-            return;
-        }
-
-        var colliders = Physics2D.OverlapPointAll(transform.position);
+        if ((EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) || !_unitManager.IsValidAllyPlacement(this, transform.position))
+        { transform.position = _dragStartPosition; return; }
         AllyUnit target = null;
-        foreach (var candidateCollider in colliders)
+        foreach (var candidate in Physics2D.OverlapPointAll(transform.position))
         {
-            var candidate =
-                candidateCollider.GetComponentInParent<AllyUnit>();
-            if (candidate == null || candidate == this) continue;
-
-            target = candidate;
-            break;
+            var ally = candidate.GetComponentInParent<AllyUnit>();
+            if (ally != null && ally != this) { target = ally; break; }
         }
-
-        if (target != null)
-        {
-            _unitManager.TryMergeAllies(
-                this,
-                target,
-                _dragStartPosition);
-            return;
-        }
-
+        if (target != null) { _unitManager.TryMergeAllies(this, target, _dragStartPosition); return; }
         _unitManager.SaveAllyPreparationPosition(this);
     }
 
     private float GetPlacementPadding()
     {
-        var unitCollider = GetComponentInChildren<Collider2D>();
-        if (unitCollider == null) return 0f;
-
-        return Mathf.Max(
-            unitCollider.bounds.extents.x,
-            unitCollider.bounds.extents.y);
-    }
-
-    protected override void Tick()
-    {
-        if (!TryKeepOrAcquireTarget())
-        {
-            _state = EBattleUnitState.Idle;
-            ClearTarget();
-            return;
-        }
-
-        if (_skill != null &&
-            _stats.MaxMana > 0f &&
-            CurrentMana >= _stats.MaxMana)
-        {
-            CastSkill();
-            return;
-        }
-
-        MoveOrAttackTarget();
-    }
-
-    protected override void OnBasicAttackHit(UnitBase target)
-    {
-        AddMana(_common?.basicAttackManaGain ?? 0f);
-    }
-
-    protected override void OnDamaged()
-    {
-        if (_common == null || Time.time < _nextHitManaTime) return;
-
-        AddMana(_common.hitManaGain);
-        _nextHitManaTime = Time.time + _common.hitManaGainCooldown;
-    }
-
-    private void AddMana(float amount)
-    {
-        if (_stats.MaxMana <= 0f || amount <= 0f) return;
-        CurrentMana = Mathf.Min(_stats.MaxMana, CurrentMana + amount);
-    }
-
-    private void CastSkill()
-    {
-        CurrentMana = 0f;
-        _state = EBattleUnitState.Attacking;
-
-        switch (_skill.id)
-        {
-            case "shield_judgment":
-                CastShieldJudgment();
-                break;
-            case "blood_whirlwind":
-                CastBloodWhirlwind();
-                break;
-            case "arrow_rain":
-                CastArrowRain();
-                break;
-            case "piercing_shot":
-                CastPiercingShot();
-                break;
-            case "explosive_fireball":
-                CastExplosiveFireball();
-                break;
-            case "frost_storm":
-                CastFrostStorm();
-                break;
-            case "piercing_charge":
-                CastPiercingCharge();
-                break;
-            case "phalanx_formation":
-                CastPhalanxFormation();
-                break;
-            default:
-                Debug.LogWarning($"[AllyUnit] Skill not implemented: {_skill.id}");
-                break;
-        }
-    }
-
-    private void CastShieldJudgment()
-    {
-        if (_currentTarget == null) return;
-
-        _currentTarget.TakeDamage(
-            AttackDamage * Percent(Value(0, 1)),
-            0f,
-            this);
-        _unitManager.GetAliveEnemiesInRadius(
-            _currentTarget.transform.position,
-            Value(1, 1),
-            _targets);
-
-        foreach (var enemy in _targets)
-        {
-            enemy.ForceTarget(this, Value(1, 2));
-        }
-
-        ApplyShield(MaxHp * Percent(Value(2, 2)), Value(2, 1));
-    }
-
-    private void CastBloodWhirlwind()
-    {
-        _unitManager.GetAliveEnemiesInRadius(
-            transform.position,
-            Value(0, 1),
-            _targets);
-
-        foreach (var enemy in _targets)
-        {
-            enemy.TakeDamage(
-                AttackDamage * Percent(Value(0, 2)),
-                0f,
-                this);
-        }
-
-        float healRatio = Mathf.Min(
-            Percent(Value(1, 2)),
-            _targets.Count * Percent(Value(1, 1)));
-        Heal(MaxHp * healRatio);
-        ApplyAttackRateMultiplier(
-            1f + Percent(Value(2, 2)),
-            Value(2, 1));
-    }
-
-    private void CastArrowRain()
-    {
-        if (_currentTarget == null) return;
-
-        _unitManager.GetAliveEnemiesInRadius(
-            _currentTarget.transform.position,
-            Value(0, 1),
-            _targets);
-
-        foreach (var enemy in _targets)
-        {
-            enemy.TakeDamage(
-                AttackDamage * Percent(Value(0, 2)),
-                0f,
-                this);
-            enemy.ApplyMoveSpeedMultiplier(
-                1f - Percent(Value(1, 2)),
-                Value(1, 1));
-        }
-    }
-
-    private void CastPiercingShot()
-    {
-        if (_currentTarget == null) return;
-
-        Vector3 direction = _currentTarget.transform.position - transform.position;
-        _unitManager.GetEnemiesInLine(
-            transform.position,
-            direction,
-            _stats.AttackRange * 2f,
-            0.5f,
-            _targets);
-
-        float armorIgnore = Percent(Value(4, 1));
-        int hitCount = Mathf.Min(4, _targets.Count);
-        for (var i = 0; i < hitCount; i++)
-        {
-            _targets[i].TakeDamage(
-                AttackDamage * Percent(Value(i, 1)),
-                armorIgnore,
-                this);
-        }
-    }
-
-    private void CastExplosiveFireball()
-    {
-        if (_currentTarget == null) return;
-
-        _unitManager.GetAliveEnemiesInRadius(
-            _currentTarget.transform.position,
-            Value(0, 1),
-            _targets);
-
-        float armorIgnore = Percent(Value(2, 1));
-        foreach (var enemy in _targets)
-        {
-            enemy.TakeDamage(
-                AttackDamage * Percent(Value(0, 2)),
-                armorIgnore,
-                this);
-            enemy.ApplyDamageOverTime(
-                AttackDamage * Percent(Value(1, 2)),
-                Mathf.Max(1f, Value(1, 3)),
-                armorIgnore);
-        }
-    }
-
-    private void CastFrostStorm()
-    {
-        if (_currentTarget == null) return;
-
-        _unitManager.GetAliveEnemiesInRadius(
-            _currentTarget.transform.position,
-            Value(0, 1),
-            _targets);
-
-        float armorIgnore = Percent(Value(4, 1));
-        foreach (var enemy in _targets)
-        {
-            enemy.TakeDamage(
-                AttackDamage * Percent(Value(0, 2)),
-                armorIgnore,
-                this);
-            enemy.ApplyStun(Value(1, 1));
-            enemy.ApplySlowAfterDelay(
-                1f - Percent(Value(2, 2)),
-                1f - Percent(Value(3, 2)),
-                Value(2, 1),
-                Value(1, 1));
-        }
-    }
-
-    private void CastPiercingCharge()
-    {
-        if (_currentTarget == null) return;
-
-        Vector3 direction = (_currentTarget.transform.position - transform.position).normalized;
-        float distance = Value(0, 1);
-        int maxTargets = Mathf.RoundToInt(Value(0, 2));
-
-        _unitManager.GetEnemiesInLine(
-            transform.position,
-            direction,
-            distance,
-            0.6f,
-            _targets);
-
-        int hitCount = Mathf.Min(maxTargets, _targets.Count);
-        for (var i = 0; i < hitCount; i++)
-        {
-            _targets[i].TakeDamage(
-                AttackDamage * Percent(Value(2, 1)),
-                0f,
-                this);
-            _targets[i].ApplyKnockback(direction, Value(1, 1));
-        }
-
-        transform.position += direction * distance;
-    }
-
-    private void CastPhalanxFormation()
-    {
-        if (_currentTarget == null) return;
-
-        Vector3 direction = (_currentTarget.transform.position - transform.position).normalized;
-        _unitManager.GetEnemiesInLine(
-            transform.position,
-            direction,
-            2.5f,
-            1.5f,
-            _targets);
-
-        foreach (var enemy in _targets)
-        {
-            enemy.TakeDamage(
-                AttackDamage * Percent(Value(1, 1)),
-                0f,
-                this);
-            enemy.ApplyStun(Value(2, 1));
-        }
-
-        _unitManager.GetAliveAlliesInRadius(
-            transform.position,
-            Value(3, 1),
-            _targets);
-
-        foreach (var ally in _targets)
-        {
-            ally.ApplyDamageReduction(
-                Percent(Value(3, 3)),
-                Value(3, 2));
-            ally.ApplyKnockbackImmunity(Value(4, 2));
-        }
-    }
-
-    private float Value(int effectIndex, int valueIndex)
-    {
-        if (_skill?.effects == null ||
-            effectIndex < 0 ||
-            effectIndex >= _skill.effects.Length)
-        {
-            return 0f;
-        }
-
-        var effect = _skill.effects[effectIndex];
-        return valueIndex switch
-        {
-            1 => effect.value1,
-            2 => effect.value2,
-            3 => effect.value3,
-            _ => 0f
-        };
-    }
-
-    private static float Percent(float value)
-    {
-        return value * 0.01f;
+        var collider = GetComponentInChildren<Collider2D>();
+        return collider == null ? 0f : Mathf.Max(collider.bounds.extents.x, collider.bounds.extents.y);
     }
 }

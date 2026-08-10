@@ -38,7 +38,7 @@ public sealed class SceneManager : AppService
     {
         return eSceneName switch
         {
-            ESceneName.Developer => "00 .Developer",
+            ESceneName.Developer => "00. Developer",
             ESceneName.Title => "01. Title",
             ESceneName.Game => "02. Game",
             ESceneName.Empty => "Empty",
