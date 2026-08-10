@@ -19,17 +19,21 @@ public sealed class UnitTargetTestUnit : UnitBase
 
     public static void SetCurrentHp(UnitBase unit, float currentHp)
     {
-        var field = typeof(UnitBase).GetField(
+        var healthField = typeof(UnitBase).GetField(
+            "_health",
+            BindingFlags.Instance | BindingFlags.NonPublic);
+        var health = healthField?.GetValue(unit);
+        var currentHpField = typeof(UnitHealth).GetField(
             "<CurrentHp>k__BackingField",
             BindingFlags.Instance | BindingFlags.NonPublic);
-        if (field == null)
+        if (health == null || currentHpField == null)
         {
             throw new MissingFieldException(
-                typeof(UnitBase).FullName,
+                typeof(UnitHealth).FullName,
                 "<CurrentHp>k__BackingField");
         }
 
-        field.SetValue(unit, currentHp);
+        currentHpField.SetValue(health, currentHp);
     }
 
     protected override void Tick()

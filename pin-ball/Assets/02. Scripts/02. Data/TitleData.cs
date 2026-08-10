@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 [Serializable]
 public class ItemData
@@ -17,7 +16,7 @@ public class ItemData
     public string desc;
 }
 
-public class TitleData : AppService
+public class TitleData : AppService, IUnitDataSource
 {
     public Dictionary<string, ItemData> Item { get; private set; } = new();
     public Dictionary<string, AllyUnitData> AllyUnit { get; private set; } = new();
