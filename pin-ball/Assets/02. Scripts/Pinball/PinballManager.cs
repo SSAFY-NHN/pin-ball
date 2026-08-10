@@ -150,6 +150,7 @@ public class PinballManager : AppService, IItemEventListener
             maximumLaunchSpeed,
             Mathf.Clamp01(normalizedPull));
         ball.LaunchLoaded(direction.normalized * speed);
+        ball.PlayLaunchCameraFeedback(normalizedPull);
         _activeBalls.Add(ball);
         _successfulLaunchCount++;
         NotifyLaunchCostChanged();
@@ -191,7 +192,8 @@ public class PinballManager : AppService, IItemEventListener
 
         ball.BigBumperHitCount++;
         _battleManager.AddGold(_goldenBallReward);
-        ApplyGoldenBumper(ball);
+        int totalReward = _goldenBallReward + ApplyGoldenBumper(ball);
+        ball.PlayGoldRewardFeedback(totalReward);
         ApplySplitCapsule(ball);
     }
 
@@ -372,9 +374,10 @@ public class PinballManager : AppService, IItemEventListener
         }
     }
 
-    private void ApplyGoldenBumper(Pinball ball)
+    private int ApplyGoldenBumper(Pinball ball)
     {
-        if (_goldenBumperReward <= 0 || ball.GoldenBumperGold >= _goldenBumperMaxReward) return;
+        if (_goldenBumperReward <= 0 ||
+            ball.GoldenBumperGold >= _goldenBumperMaxReward) return 0;
 
         var reward = Mathf.Min(
             _goldenBumperReward,
@@ -382,6 +385,7 @@ public class PinballManager : AppService, IItemEventListener
 
         ball.GoldenBumperGold += reward;
         _battleManager.AddGold(reward);
+        return reward;
     }
 
     private void ApplySplitCapsule(Pinball source)
@@ -471,6 +475,7 @@ public class PinballManager : AppService, IItemEventListener
             : launchPosition;
         launchPosition = position;
         _loadedBall.LoadAt(position);
+        _loadedBall.PlayLoadedFeedback();
         launcherController?.SetLoaded(true);
     }
 

@@ -50,9 +50,15 @@ public class Pinball : MonoBehaviour
         var contactPoint = collision.contactCount > 0
             ? collision.GetContact(0).point
             : (Vector2)transform.position;
-        _arcaneVfx?.PlayCollision(contactPoint, collision.relativeVelocity.magnitude);
 
         var obstacle = collision.collider.GetComponentInParent<PinballObstacle>();
+        float emphasis = obstacle == null
+            ? 0.75f
+            : obstacle.Type == EPinballObstacle.BigBumper ? 1.35f : 1f;
+        _arcaneVfx?.PlayCollision(
+            contactPoint,
+            collision.relativeVelocity.magnitude,
+            emphasis);
         if (obstacle == null) return;
 
         _manager.OnBallHit(this, obstacle.Type);
@@ -98,6 +104,22 @@ public class Pinball : MonoBehaviour
         _rigidBody2D.angularVelocity = 0f;
         _arcaneVfx?.OnActivated();
         _arcaneVfx?.OnVelocityChanged(launchVelocity);
+        _arcaneVfx?.PlayLaunch();
+    }
+
+    internal void PlayLoadedFeedback()
+    {
+        _arcaneVfx?.PlayLoaded();
+    }
+
+    internal void PlayLaunchCameraFeedback(float normalizedPull)
+    {
+        _arcaneVfx?.PlayLaunchCamera(normalizedPull);
+    }
+
+    internal void PlayGoldRewardFeedback(int amount)
+    {
+        _arcaneVfx?.PlayGoldReward(amount);
     }
 
     internal void ResetPosition(Vector2 worldPosition, Vector2 launchDirection)
