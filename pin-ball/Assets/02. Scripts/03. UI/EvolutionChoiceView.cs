@@ -9,6 +9,7 @@ public class EvolutionChoiceView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI roleText;
     [SerializeField] private TextMeshProUGUI skillText;
+    [SerializeField] private Image portraitImage;
     [SerializeField] private Button selectButton;
 
     private string _unitId;
@@ -30,6 +31,7 @@ public class EvolutionChoiceView : MonoBehaviour
             nameText == null ||
             roleText == null ||
             skillText == null ||
+            portraitImage == null ||
             selectButton == null)
         {
             Debug.LogError("[EvolutionChoiceView] UI 참조가 설정되지 않았습니다.");
@@ -43,6 +45,8 @@ public class EvolutionChoiceView : MonoBehaviour
         skillText.text = data.skill == null
             ? "스킬 없음"
             : $"{data.skill.name}\n{data.skill.description}";
+        portraitImage.sprite = AllyPortraitProvider.Load(data.id);
+        portraitImage.enabled = portraitImage.sprite != null;
         selectButton.interactable = true;
         return true;
     }

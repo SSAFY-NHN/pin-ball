@@ -13,6 +13,7 @@ public sealed class ArcaneSpriteEffect : MonoBehaviour
     private float startedAt;
     private float duration;
     private Vector3 worldPosition;
+    private Vector3 endWorldPosition;
     private Vector3 startScale;
     private Vector3 endScale;
     private Color startColor;
@@ -35,9 +36,21 @@ public sealed class ArcaneSpriteEffect : MonoBehaviour
         Vector3 finalScale,
         Color color)
     {
+        Play(position, position, lifetime, initialScale, finalScale, color);
+    }
+
+    public void Play(
+        Vector3 position,
+        Vector3 finalPosition,
+        float lifetime,
+        Vector3 initialScale,
+        Vector3 finalScale,
+        Color color)
+    {
         if (frames == null || frames.Length == 0 || targetRenderer == null) return;
 
         worldPosition = position;
+        endWorldPosition = finalPosition;
         duration = Mathf.Max(0.01f, lifetime);
         startScale = initialScale;
         endScale = finalScale;
@@ -62,7 +75,7 @@ public sealed class ArcaneSpriteEffect : MonoBehaviour
         if (!playing) return;
 
         var normalized = NormalizedLifetime(Time.time - startedAt, duration);
-        transform.position = worldPosition;
+        transform.position = Vector3.Lerp(worldPosition, endWorldPosition, normalized);
         transform.localScale = Vector3.Lerp(startScale, endScale, normalized);
         targetRenderer.color = new Color(
             startColor.r,

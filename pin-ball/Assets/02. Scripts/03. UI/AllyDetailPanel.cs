@@ -23,6 +23,7 @@ public class AllyDetailPanel : UIBase
     [Header("Unit")]
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI detailText;
+    [SerializeField] private Image portraitImage;
 
     private UnitManager _unitManager;
     private TitleData _titleData;
@@ -81,6 +82,9 @@ public class AllyDetailPanel : UIBase
         {
             titleText.text = $"{data.name}  Lv. {ally.Level}";
         }
+
+        portraitImage.sprite = AllyPortraitProvider.Load(ally.UnitId);
+        portraitImage.enabled = portraitImage.sprite != null;
 
         string role = data == null ? "-" : data.role;
         AllySkillData skill = ally.Skill;
@@ -159,6 +163,7 @@ public class AllyDetailPanel : UIBase
         isValid &= ValidateReference(emptyAreaButton, nameof(emptyAreaButton));
         isValid &= ValidateReference(titleText, nameof(titleText));
         isValid &= ValidateReference(detailText, nameof(detailText));
+        isValid &= ValidateReference(portraitImage, nameof(portraitImage));
         return isValid;
     }
 

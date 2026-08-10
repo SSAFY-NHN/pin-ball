@@ -1,3 +1,5 @@
+using System.Collections;
+
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
@@ -13,6 +15,7 @@ public class PinballLauncherController : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float minimumPullRatio = 0.1f;
     [SerializeField, Range(0f, 60f)] private float leverMaximumAngle = 28f;
     [SerializeField, Range(0f, 1f)] private float pistonTravelRatio = 0.65f;
+    [SerializeField, Min(0.01f)] private float snapDuration = 0.11f;
 
     public Vector2 LoadPosition => loadPoint != null
         ? loadPoint.position
@@ -35,7 +38,9 @@ public class PinballLauncherController : MonoBehaviour
     private bool _isDragging;
     private bool _hasPlayedPullSound;
     private bool _hasLoadedBall;
+    private bool _crossedMinimumPull;
     private float _leverRotationDirection;
+    private Coroutine _snapCoroutine;
 
     private void Awake()
     {
@@ -55,6 +60,7 @@ public class PinballLauncherController : MonoBehaviour
             _springOriginalHeight = renderer != null && renderer.sprite != null
                 ? renderer.sprite.bounds.size.y * Mathf.Abs(_springStartScale.y)
                 : 1f;
+            glowController?.InitializeSpring(renderer);
         }
 
         var leverRenderer = GetComponent<SpriteRenderer>();
@@ -72,10 +78,12 @@ public class PinballLauncherController : MonoBehaviour
     private void OnMouseDown()
     {
         if (!_hasLoadedBall) return;
+        StopSnap();
         _isDragging = true;
         _hasPlayedPullSound = false;
         _pointerStartY = GetPointerWorldY();
         _pullDistance = 0f;
+        _crossedMinimumPull = false;
     }
 
     private void OnMouseEnter()
@@ -102,6 +110,18 @@ public class PinballLauncherController : MonoBehaviour
             SoundManager.PlaySFXIfAvailable(SoundName.SpringPull);
         }
 
+        var pullRatio = maximumPullDistance > 0f
+            ? _pullDistance / maximumPullDistance
+            : 0f;
+        if (!_crossedMinimumPull && pullRatio >= minimumPullRatio)
+        {
+            _crossedMinimumPull = true;
+            glowController?.PlayThresholdReached();
+        }
+        else if (_crossedMinimumPull && pullRatio < minimumPullRatio)
+        {
+            _crossedMinimumPull = false;
+        }
         ApplyVisualPull(_pullDistance);
     }
 
@@ -120,7 +140,7 @@ public class PinballLauncherController : MonoBehaviour
             SetLoaded(false);
         }
 
-        ResetVisuals();
+        StartSnap();
     }
 
     private void OnDisable()
@@ -128,6 +148,8 @@ public class PinballLauncherController : MonoBehaviour
         _isDragging = false;
         _hasPlayedPullSound = false;
         ResetVisuals();
+        StopSnap();
+        ResetVisualsImmediate();
         glowController?.ResetInteraction();
     }
 
@@ -193,7 +215,65 @@ public class PinballLauncherController : MonoBehaviour
         }
     }
 
-    private void ResetVisuals()
+    private void StartSnap()
+    {
+        StopSnap();
+        if (!isActiveAndEnabled)
+        {
+            ResetVisualsImmediate();
+            return;
+        }
+
+        _snapCoroutine = StartCoroutine(SnapBack());
+    }
+
+    private IEnumerator SnapBack()
+    {
+        var leverPosition = transform.localPosition;
+        var leverRotation = transform.localRotation;
+        var pistonPosition = piston != null ? piston.localPosition : Vector3.zero;
+        var loadPosition = loadPoint != null ? loadPoint.localPosition : Vector3.zero;
+        var springPosition = spring != null ? spring.localPosition : Vector3.zero;
+        var springScale = spring != null ? spring.localScale : Vector3.one;
+        float elapsed = 0f;
+
+        while (elapsed < snapDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float progress = Mathf.Clamp01(elapsed / snapDuration);
+            float eased = 1f - Mathf.Pow(1f - progress, 4f);
+            transform.localPosition = Vector3.Lerp(leverPosition, _leverStartPosition, eased);
+            transform.localRotation = Quaternion.Slerp(leverRotation, _leverStartRotation, eased);
+            if (piston != null)
+            {
+                piston.localPosition = Vector3.Lerp(pistonPosition, _pistonStartPosition, eased);
+            }
+            if (loadPoint != null)
+            {
+                loadPoint.localPosition = Vector3.Lerp(loadPosition, _loadPointStartPosition, eased);
+                pinballManager?.MoveLoadedBall(loadPoint.position);
+            }
+            if (spring != null)
+            {
+                spring.localPosition = Vector3.Lerp(springPosition, _springStartPosition, eased);
+                spring.localScale = Vector3.Lerp(springScale, _springStartScale, eased);
+            }
+            glowController?.SetPullRatio(1f - eased);
+            yield return null;
+        }
+
+        ResetVisualsImmediate();
+        _snapCoroutine = null;
+    }
+
+    private void StopSnap()
+    {
+        if (_snapCoroutine == null) return;
+        StopCoroutine(_snapCoroutine);
+        _snapCoroutine = null;
+    }
+
+    private void ResetVisualsImmediate()
     {
         transform.localPosition = _leverStartPosition;
         transform.localRotation = _leverStartRotation;
@@ -205,6 +285,7 @@ public class PinballLauncherController : MonoBehaviour
             spring.localScale = _springStartScale;
         }
         _pullDistance = 0f;
+        _crossedMinimumPull = false;
         glowController?.SetPullRatio(0f);
     }
 }

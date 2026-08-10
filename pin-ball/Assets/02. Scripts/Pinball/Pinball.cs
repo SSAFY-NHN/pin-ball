@@ -11,18 +11,14 @@ public class Pinball : MonoBehaviour
     [SerializeField, Min(0f)] private float gravityScale = 0.35f;
 
     public Vector2 Velocity => _rigidBody2D.linearVelocity;
-    public Vector2 PreviousVelocity { get; private set; }
     public float Diameter =>
         _collider.radius * 2f *
         Mathf.Max(transform.lossyScale.x, transform.lossyScale.y);
 
-    internal int PaidLaunchCost { get; private set; }
     internal bool IsClone { get; private set; }
-    internal bool WasRescued { get; set; }
     internal bool HasSplit { get; set; }
     internal int SmallPinHitCount { get; set; }
     internal int BigBumperHitCount { get; set; }
-    internal int GoldenBallGold { get; set; }
     internal int GoldenBumperGold { get; set; }
     internal int TargetMagnetUseCount { get; set; }
     internal int OverloadUseCount { get; set; }
@@ -47,26 +43,30 @@ public class Pinball : MonoBehaviour
             _rigidBody2D.linearVelocity,
             maximumSpeed);
         _arcaneVfx?.OnVelocityChanged(_rigidBody2D.linearVelocity);
-        PreviousVelocity = _rigidBody2D.linearVelocity;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        _manager.ApplyCollisionRetention(this, PreviousVelocity);
-
         var contactPoint = collision.contactCount > 0
             ? collision.GetContact(0).point
             : (Vector2)transform.position;
-        _arcaneVfx?.PlayCollision(contactPoint, collision.relativeVelocity.magnitude);
 
         var obstacle = collision.collider.GetComponentInParent<PinballObstacle>();
-        if (obstacle == null)
+
+        float emphasis = obstacle == null
+            ? 0.75f
+            : obstacle.Type == EPinballObstacle.BigBumper ? 1.35f : 1f;
+        _arcaneVfx?.PlayCollision(
+            contactPoint,
+            collision.relativeVelocity.magnitude,
+            emphasis);
+        if (obstacle == null) 
         {
             _manager.OnBallHitSurface();
             return;
         }
 
-        _manager.OnBallHit(this, obstacle.Type);
+        _manager.OnBallHit(this, obstacle.Type, contactPoint);
     }
 
     internal void SetManager(PinballManager manager)
@@ -78,11 +78,10 @@ public class Pinball : MonoBehaviour
     internal void Activate(
         Vector2 worldPosition,
         Vector2 launchDirection,
-        int paidLaunchCost,
         bool isClone)
     {
         EnsureInitialized();
-        ResetRunState(paidLaunchCost, isClone);
+        ResetRunState(isClone);
         transform.position = worldPosition;
         gameObject.SetActive(true);
         _rigidBody2D.simulated = true;
@@ -93,7 +92,7 @@ public class Pinball : MonoBehaviour
     internal void LoadAt(Vector2 worldPosition)
     {
         EnsureInitialized();
-        ResetRunState(0, false);
+        ResetRunState(false);
         transform.position = worldPosition;
         gameObject.SetActive(true);
         _rigidBody2D.linearVelocity = Vector2.zero;
@@ -102,16 +101,30 @@ public class Pinball : MonoBehaviour
         _arcaneVfx?.OnDeactivated();
     }
 
-    internal void LaunchLoaded(Vector2 launchVelocity, int paidLaunchCost)
+    internal void LaunchLoaded(Vector2 launchVelocity)
     {
         EnsureInitialized();
-        PaidLaunchCost = paidLaunchCost;
         _rigidBody2D.simulated = true;
         _rigidBody2D.linearVelocity = launchVelocity;
         _rigidBody2D.angularVelocity = 0f;
-        PreviousVelocity = launchVelocity;
         _arcaneVfx?.OnActivated();
         _arcaneVfx?.OnVelocityChanged(launchVelocity);
+        _arcaneVfx?.PlayLaunch();
+    }
+
+    internal void PlayLoadedFeedback()
+    {
+        _arcaneVfx?.PlayLoaded();
+    }
+
+    internal void PlayLaunchCameraFeedback(float normalizedPull)
+    {
+        _arcaneVfx?.PlayLaunchCamera(normalizedPull);
+    }
+
+    internal void PlayGoldRewardFeedback(Vector2 worldPosition, int amount)
+    {
+        _arcaneVfx?.PlayGoldReward(worldPosition, amount);
     }
 
     internal void ResetPosition(Vector2 worldPosition, Vector2 launchDirection)
@@ -126,7 +139,6 @@ public class Pinball : MonoBehaviour
         }
 
         _rigidBody2D.linearVelocity = launchDirection.normalized * launchSpeed;
-        PreviousVelocity = _rigidBody2D.linearVelocity;
     }
 
     internal void SetVelocity(Vector2 velocity)
@@ -192,15 +204,12 @@ public class Pinball : MonoBehaviour
         }
     }
 
-    private void ResetRunState(int paidLaunchCost, bool isClone)
+    private void ResetRunState(bool isClone)
     {
-        PaidLaunchCost = paidLaunchCost;
         IsClone = isClone;
-        WasRescued = false;
         HasSplit = isClone;
         SmallPinHitCount = 0;
         BigBumperHitCount = 0;
-        GoldenBallGold = 0;
         GoldenBumperGold = 0;
         TargetMagnetUseCount = 0;
         OverloadUseCount = 0;

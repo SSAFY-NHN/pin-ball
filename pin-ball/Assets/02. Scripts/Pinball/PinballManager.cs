@@ -7,19 +7,12 @@ public class PinballManager : AppService, IItemEventListener
 {
     private static readonly EItem[] SupportedItems =
     {
-        EItem.PrecisionAimRail,
-        EItem.WeightedCore,
-        EItem.ElasticCoating,
-        EItem.RecoveryInsurance,
         EItem.GoldenBall,
         EItem.AutoBallFeeder,
         EItem.TargetMagnet,
         EItem.SplitCapsule,
-        EItem.ReinforcedBumper,
         EItem.GoldenBumper,
-        EItem.WidePocket,
         EItem.FocusedPocket,
-        EItem.SafetyNet,
         EItem.SwapLever,
         EItem.ChargedPin,
         EItem.OverloadBumper
@@ -58,15 +51,7 @@ public class PinballManager : AppService, IItemEventListener
     private int _selectedGoalIndex;
     private int _pendingSwapGoalIndex = -1;
 
-    private float _precisionSpeedMultiplier = 1f;
-    private float _precisionRangeBonus;
-    private float _horizontalChangeReduction;
-    private float _collisionRetentionBonus;
-    private float _maxCollisionRetention = 1f;
-    private float _recoveryRefundRatio;
-    private int _goldenBallRequiredHits;
-    private int _goldenBallReward;
-    private int _goldenBallMaxReward;
+    private int _goldenBallReward = 1;
     private int _launchCostDiscount;
     private int _minimumLaunchCost;
     private float _targetMagnetDistanceMultiplier;
@@ -74,13 +59,10 @@ public class PinballManager : AppService, IItemEventListener
     private int _targetMagnetCount;
     private int _splitCount;
     private float _splitSpeedMultiplier;
-    private float _bumperForceBonus;
     private int _goldenBumperReward;
     private int _goldenBumperMaxReward;
-    private float _widePocketBonus;
     private float _focusedPocketBonus;
     private float _otherPocketPenalty;
-    private int _safetyNetCount;
     private int _swapCount;
     private int _chargedPinRequiredHits;
     private float _chargedPinAttackBonus;
@@ -88,7 +70,6 @@ public class PinballManager : AppService, IItemEventListener
     private int _overloadSpawnCount;
     private int _overloadMaxCount;
 
-    private int _remainingSafetyNetCount;
     private int _remainingSwapCount;
 
     private void Start()
@@ -168,7 +149,8 @@ public class PinballManager : AppService, IItemEventListener
             minimumLaunchSpeed,
             maximumLaunchSpeed,
             Mathf.Clamp01(normalizedPull));
-        ball.LaunchLoaded(direction.normalized * speed, cost);
+        ball.LaunchLoaded(direction.normalized * speed);
+        ball.PlayLaunchCameraFeedback(normalizedPull);
         _activeBalls.Add(ball);
         _successfulLaunchCount++;
         NotifyLaunchCostChanged();
@@ -199,7 +181,10 @@ public class PinballManager : AppService, IItemEventListener
         OnLaunchCostChanged?.Invoke(CurrentLaunchCost);
     }
 
-    internal void OnBallHit(Pinball ball, EPinballObstacle obstacle)
+    internal void OnBallHit(
+        Pinball ball,
+        EPinballObstacle obstacle,
+        Vector2 hitPosition)
     {
         if (ball == null) return;
 
@@ -207,15 +192,14 @@ public class PinballManager : AppService, IItemEventListener
         {
             SoundManager.PlaySFXIfAvailable(SoundName.SmallPinHit);
             ball.SmallPinHitCount++;
-            ApplyWeightedCore(ball);
-            ApplyGoldenBall(ball);
             return;
         }
 
         SoundManager.PlaySFXIfAvailable(SoundName.BumperHit);
         ball.BigBumperHitCount++;
-        ApplyReinforcedBumper(ball);
-        ApplyGoldenBumper(ball);
+        _battleManager.AddGold(_goldenBallReward);
+        int totalReward = _goldenBallReward + ApplyGoldenBumper(ball);
+        ball.PlayGoldRewardFeedback(hitPosition, totalReward);
         ApplySplitCapsule(ball);
     }
 
@@ -291,30 +275,12 @@ public class PinballManager : AppService, IItemEventListener
             ball.OverloadUseCount++;
         }
 
-        _unitManager.TryDuplicateAlly(unitData);
         ReleaseBall(ball);
     }
 
     public void OnMissedBall(Pinball ball)
     {
         if (ball == null) return;
-
-        if (_recoveryRefundRatio > 0f && !ball.IsClone)
-        {
-            _battleManager.AddGold(Mathf.FloorToInt(ball.PaidLaunchCost * _recoveryRefundRatio));
-        }
-
-        if (_remainingSafetyNetCount > 0 && !ball.WasRescued && !ball.IsClone)
-        {
-            _remainingSafetyNetCount--;
-            ball.WasRescued = true;
-            var direction = launcherController != null
-                ? launcherController.LaunchDirection
-                : Vector2.up;
-            ball.ResetPosition(launchPosition, direction);
-            return;
-        }
-
         ReleaseBall(ball);
     }
 
@@ -394,24 +360,8 @@ public class PinballManager : AppService, IItemEventListener
     {
         switch (item.Key)
         {
-            case EItem.PrecisionAimRail:
-                _precisionSpeedMultiplier = item.Value1;
-                _precisionRangeBonus = item.Value2;
-                break;
-            case EItem.WeightedCore:
-                _horizontalChangeReduction = item.Value1;
-                break;
-            case EItem.ElasticCoating:
-                _collisionRetentionBonus = item.Value1;
-                _maxCollisionRetention = item.Value2;
-                break;
-            case EItem.RecoveryInsurance:
-                _recoveryRefundRatio = item.Value1;
-                break;
             case EItem.GoldenBall:
-                _goldenBallRequiredHits = Mathf.RoundToInt(item.Value1);
-                _goldenBallReward = Mathf.RoundToInt(item.Value2);
-                _goldenBallMaxReward = Mathf.RoundToInt(item.Value3);
+                _goldenBallReward = Mathf.Max(1, Mathf.RoundToInt(item.Value1));
                 break;
             case EItem.AutoBallFeeder:
                 _launchCostDiscount = Mathf.RoundToInt(item.Value1);
@@ -427,25 +377,14 @@ public class PinballManager : AppService, IItemEventListener
                 _splitCount = Mathf.RoundToInt(item.Value1);
                 _splitSpeedMultiplier = item.Value2;
                 break;
-            case EItem.ReinforcedBumper:
-                _bumperForceBonus = item.Value1;
-                break;
             case EItem.GoldenBumper:
                 _goldenBumperReward = Mathf.RoundToInt(item.Value1);
                 _goldenBumperMaxReward = Mathf.RoundToInt(item.Value2);
-                break;
-            case EItem.WidePocket:
-                _widePocketBonus = item.Value1;
-                RefreshGoalWidths();
                 break;
             case EItem.FocusedPocket:
                 _focusedPocketBonus = item.Value1;
                 _otherPocketPenalty = item.Value2;
                 RefreshGoalWidths();
-                break;
-            case EItem.SafetyNet:
-                _safetyNetCount = Mathf.RoundToInt(item.Value1);
-                _remainingSafetyNetCount = _safetyNetCount;
                 break;
             case EItem.SwapLever:
                 _swapCount = Mathf.RoundToInt(item.Value1);
@@ -463,39 +402,10 @@ public class PinballManager : AppService, IItemEventListener
         }
     }
 
-    private void ApplyWeightedCore(Pinball ball)
+    private int ApplyGoldenBumper(Pinball ball)
     {
-        if (_horizontalChangeReduction <= 0f) return;
-
-        var velocity = ball.Velocity;
-        var horizontalChange = velocity.x - ball.PreviousVelocity.x;
-        velocity.x = ball.PreviousVelocity.x + horizontalChange * (1f - _horizontalChangeReduction);
-        ball.SetVelocity(velocity);
-    }
-
-    private void ApplyGoldenBall(Pinball ball)
-    {
-        if (_goldenBallRequiredHits <= 0) return;
-        if (ball.SmallPinHitCount % _goldenBallRequiredHits != 0) return;
-        if (ball.GoldenBallGold >= _goldenBallMaxReward) return;
-
-        var reward = Mathf.Min(
-            _goldenBallReward,
-            _goldenBallMaxReward - ball.GoldenBallGold);
-
-        ball.GoldenBallGold += reward;
-        _battleManager.AddGold(reward);
-    }
-
-    private void ApplyReinforcedBumper(Pinball ball)
-    {
-        if (_bumperForceBonus <= 0f) return;
-        ball.SetVelocity(ball.Velocity * (1f + _bumperForceBonus));
-    }
-
-    private void ApplyGoldenBumper(Pinball ball)
-    {
-        if (_goldenBumperReward <= 0 || ball.GoldenBumperGold >= _goldenBumperMaxReward) return;
+        if (_goldenBumperReward <= 0 ||
+            ball.GoldenBumperGold >= _goldenBumperMaxReward) return 0;
 
         var reward = Mathf.Min(
             _goldenBumperReward,
@@ -503,6 +413,7 @@ public class PinballManager : AppService, IItemEventListener
 
         ball.GoldenBumperGold += reward;
         _battleManager.AddGold(reward);
+        return reward;
     }
 
     private void ApplySplitCapsule(Pinball source)
@@ -518,7 +429,6 @@ public class PinballManager : AppService, IItemEventListener
             clone.Activate(
                 source.transform.position,
                 source.Velocity.normalized,
-                0,
                 true);
             clone.SetVelocity(source.Velocity * _splitSpeedMultiplier);
             _activeBalls.Add(clone);
@@ -529,7 +439,7 @@ public class PinballManager : AppService, IItemEventListener
     {
         for (var i = 0; i < _goals.Count; i++)
         {
-            var multiplier = 1f + _widePocketBonus;
+            var multiplier = 1f;
             if (_focusedPocketBonus > 0f)
             {
                 multiplier += i == _selectedGoalIndex
@@ -573,7 +483,6 @@ public class PinballManager : AppService, IItemEventListener
         if (state != EWaveState.Pending) return;
 
         _successfulLaunchCount = 0;
-        _remainingSafetyNetCount = _safetyNetCount;
         _remainingSwapCount = _swapCount;
         _pendingSwapGoalIndex = -1;
         RefreshGoalWidths();
@@ -594,6 +503,7 @@ public class PinballManager : AppService, IItemEventListener
             : launchPosition;
         launchPosition = position;
         _loadedBall.LoadAt(position);
+        _loadedBall.PlayLoadedFeedback();
         launcherController?.SetLoaded(true);
     }
 

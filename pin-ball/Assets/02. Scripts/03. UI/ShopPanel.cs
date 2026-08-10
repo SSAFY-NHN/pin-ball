@@ -43,7 +43,7 @@ public class ShopPanel : UIBase
         _itemSlots = GetComponentsInChildren<ShopSlot>();
 
         ValidateItemSlots();
-        RerollItems();
+        RerollItems(true);
     }
 
     private void OnRerollButtonClicked()
@@ -61,13 +61,19 @@ public class ShopPanel : UIBase
             return;
         }
 
-        RerollItems();
+        RerollItems(false);
     }
 
-    private void RerollItems()
+    private void RerollItems(bool guaranteePotions)
     {
         BuildCandidateItems();
         ShuffleCandidates();
+
+        if (guaranteePotions)
+        {
+            PinGuaranteedItem(EItem.PartyHealingPotion, 0);
+            PinGuaranteedItem(EItem.PersonalHealingPotion, 1);
+        }
 
         if (_itemSlots == null) return;
 
@@ -96,7 +102,17 @@ public class ShopPanel : UIBase
         _itemManager.GetItems(_candidateItems);
         _candidateItems.RemoveAll(item =>
             item == null ||
-            _itemManager.HasItem(item.Key));
+            item.Key != EItem.PersonalHealingPotion &&
+            item.Key != EItem.PartyHealingPotion &&
+            !_itemManager.CanPurchase(item.Key));
+    }
+
+    private void PinGuaranteedItem(EItem key, int slotIndex)
+    {
+        int itemIndex = _candidateItems.FindIndex(item => item.Key == key);
+        if (itemIndex < 0 || slotIndex >= DefaultShopItemCount) return;
+        (_candidateItems[slotIndex], _candidateItems[itemIndex]) =
+            (_candidateItems[itemIndex], _candidateItems[slotIndex]);
     }
 
     private void ShuffleCandidates()
@@ -123,6 +139,12 @@ public class ShopPanel : UIBase
 
     private void OnBattleStateChanged(EWaveState _)
     {
+        if (_battleManager.State == EWaveState.Pending)
+        {
+            RerollItems(true);
+            return;
+        }
+
         RefreshPurchaseStates();
     }
 
@@ -141,7 +163,7 @@ public class ShopPanel : UIBase
             if (slot == null) continue;
 
             var item = slot.Item;
-            var isPurchased = item != null && _itemManager.HasItem(item.Key);
+            var isPurchased = item != null && !_itemManager.CanPurchase(item.Key);
             slot.RefreshState(
                 _battleManager.Gold,
                 isPurchased,

@@ -17,7 +17,10 @@ public sealed class PinballArcaneVfx : MonoBehaviour
     private TrailRenderer _trail;
     private ArcaneSpriteEffect _impact;
     private ArcaneSpriteEffect _ring;
+    private PinballGoldPopup[] _goldPopups;
+    private int _nextGoldPopupIndex;
     private Material _additiveMaterial;
+    private BattleCameraController _cameraFeedback;
     private bool _initialized;
 
     public void Initialize(SpriteRenderer sourceRenderer, Rigidbody2D body)
@@ -44,9 +47,21 @@ public sealed class PinballArcaneVfx : MonoBehaviour
         _additiveMaterial.SetFloat("_Intensity", 1.65f);
         _additiveMaterial.SetFloat("_GlowSpread", 1.2f);
         _glow = GetComponent<ArcaneMaskGlowController>();
+        _cameraFeedback = Camera.main != null
+            ? Camera.main.GetComponent<BattleCameraController>()
+            : null;
         CreateTrail(catalog.ballTrail);
         _impact = CreateSpriteEffect("Arcane Impact", catalog.ballImpact, _sourceRenderer.sortingOrder + 3);
         _ring = CreateSpriteEffect("Arcane Ring", catalog.ballRing, _sourceRenderer.sortingOrder + 2);
+        _goldPopups = new PinballGoldPopup[4];
+        for (var index = 0; index < _goldPopups.Length; index++)
+        {
+            var popupObject = new GameObject($"Gold Popup {index + 1}");
+            _goldPopups[index] = popupObject.AddComponent<PinballGoldPopup>();
+            _goldPopups[index].Initialize(
+                catalog.goldIcon,
+                _sourceRenderer.sortingOrder + 4);
+        }
         _initialized = true;
         OnDeactivated();
     }
@@ -89,14 +104,70 @@ public sealed class PinballArcaneVfx : MonoBehaviour
 
     public void PlayCollision(Vector2 worldPoint, float relativeSpeed)
     {
+        PlayCollision(worldPoint, relativeSpeed, 1f);
+    }
+
+    public void PlayCollision(
+        Vector2 worldPoint,
+        float relativeSpeed,
+        float emphasis)
+    {
         if (!_initialized || !isActiveAndEnabled) return;
 
         var strength = Mathf.Clamp01(relativeSpeed / (ReferenceSpeed * 1.25f));
+        emphasis = Mathf.Max(0.5f, emphasis);
         var color = Color.Lerp(TrailLow, TrailHigh, strength);
         var position = new Vector3(worldPoint.x, worldPoint.y, transform.position.z);
-        _impact.Play(position, 0.18f, Vector3.one * 0.28f, Vector3.one * 0.65f, color);
-        _ring.Play(position, 0.24f, Vector3.one * 0.2f, Vector3.one * 0.9f, color);
-        _glow?.Pulse(2f, 0.16f);
+        _impact.Play(position, 0.18f + 0.04f * (emphasis - 1f),
+            Vector3.one * 0.28f,
+            Vector3.one * 0.65f * emphasis,
+            color);
+        _ring.Play(position, 0.24f + 0.05f * (emphasis - 1f),
+            Vector3.one * 0.2f,
+            Vector3.one * 0.9f * emphasis,
+            color);
+        _glow?.Pulse(Mathf.Lerp(1.8f, 2.35f, strength) * emphasis, 0.16f);
+        if (emphasis >= 1.25f) _cameraFeedback?.PlayPinballBumperShake();
+    }
+
+    public void PlayLoaded()
+    {
+        if (!_initialized || !isActiveAndEnabled) return;
+
+        _ring.Play(transform.position, 0.26f,
+            Vector3.one * 0.3f,
+            Vector3.one * 0.8f,
+            TrailLow);
+        _glow?.Pulse(1.85f, 0.22f);
+    }
+
+    public void PlayLaunch()
+    {
+        if (!_initialized || !isActiveAndEnabled) return;
+
+        _impact.Play(transform.position, 0.16f,
+            Vector3.one * 0.35f,
+            Vector3.one * 0.85f,
+            TrailHigh);
+        _ring.Play(transform.position, 0.24f,
+            Vector3.one * 0.25f,
+            Vector3.one * 1.15f,
+            TrailLow);
+        _glow?.Pulse(2.5f, 0.2f);
+    }
+
+    public void PlayLaunchCamera(float normalizedPull)
+    {
+        _cameraFeedback?.PlayPinballLaunchShake(normalizedPull);
+    }
+
+    public void PlayGoldReward(Vector2 worldPosition, int amount)
+    {
+        if (!_initialized || _goldPopups == null || amount <= 0) return;
+
+        var popup = _goldPopups[_nextGoldPopupIndex];
+        _nextGoldPopupIndex = (_nextGoldPopupIndex + 1) % _goldPopups.Length;
+        popup.Play(new Vector3(worldPosition.x, worldPosition.y, transform.position.z), amount);
     }
 
     private void CreateTrail(Sprite[] trailSprites)
@@ -137,7 +208,6 @@ public sealed class PinballArcaneVfx : MonoBehaviour
     private ArcaneSpriteEffect CreateSpriteEffect(string effectName, Sprite[] sprites, int sortingOrder)
     {
         var effectObject = new GameObject(effectName);
-        effectObject.transform.SetParent(transform, false);
         var effect = effectObject.AddComponent<ArcaneSpriteEffect>();
         effect.Initialize(sprites, _additiveMaterial, sortingOrder);
         return effect;
@@ -145,6 +215,15 @@ public sealed class PinballArcaneVfx : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (_impact != null) Destroy(_impact.gameObject);
+        if (_ring != null) Destroy(_ring.gameObject);
+        if (_goldPopups != null)
+        {
+            foreach (var popup in _goldPopups)
+            {
+                if (popup != null) Destroy(popup.gameObject);
+            }
+        }
         if (_additiveMaterial != null) Destroy(_additiveMaterial);
     }
 }

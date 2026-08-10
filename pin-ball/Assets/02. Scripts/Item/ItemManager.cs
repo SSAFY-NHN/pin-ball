@@ -17,6 +17,7 @@ public class ItemManager : AppService
 
     private readonly Dictionary<EItem, Item> _items = new();
     private readonly HashSet<EItem> _activeItems = new();
+    private readonly Dictionary<EItem, int> _itemCounts = new();
     private readonly Dictionary<EItem, List<IItemEventListener>> _subscribers = new();
     private readonly Queue<EItem> _eventQueue = new();
 
@@ -114,7 +115,10 @@ public class ItemManager : AppService
     {
         InitializeItems();
 
-        if (!_activeItems.Add(item)) return;
+        _itemCounts.TryGetValue(item, out int count);
+        _itemCounts[item] = count + 1;
+
+        _activeItems.Add(item);
 
         if (_items.TryGetValue(item, out var itemData))
         {
@@ -164,6 +168,7 @@ public class ItemManager : AppService
         _subscribers.Clear();
         _eventQueue.Clear();
         _activeItems.Clear();
+        _itemCounts.Clear();
         StopAllCoroutines();
     }
 
@@ -172,9 +177,41 @@ public class ItemManager : AppService
         return _activeItems.Contains(item);
     }
 
+    public int GetItemCount(EItem item) =>
+        _itemCounts.TryGetValue(item, out int count) ? count : 0;
+
+    public int GetPurchaseLimit(EItem item) => item switch
+    {
+        EItem.PersonalHealingPotion => 3,
+        EItem.PartyHealingPotion => 1,
+        _ => 1
+    };
+
+    public bool CanPurchase(EItem item) =>
+        GetItemCount(item) < GetPurchaseLimit(item);
+
+    public bool TryConsume(EItem item)
+    {
+        int count = GetItemCount(item);
+        if (count <= 0) return false;
+
+        count--;
+        if (count == 0)
+        {
+            _itemCounts.Remove(item);
+            _activeItems.Remove(item);
+        }
+        else
+        {
+            _itemCounts[item] = count;
+        }
+
+        return true;
+    }
+
     public bool TryPurchase(Item item)
     {
-        if (item == null || HasItem(item.Key)) return false;
+        if (item == null || !CanPurchase(item.Key)) return false;
 
         var battleManager = App.Get<BattleManager>();
         if (!battleManager.TrySpendPreparationGold(item.Cost)) return false;

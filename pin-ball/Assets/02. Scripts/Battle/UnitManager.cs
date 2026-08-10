@@ -39,6 +39,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     [SerializeField] private BattleAreaBounds battleArea;
     [SerializeField] private EvolutionGlowEffect evolutionGlowEffect;
     private int _enemySpawnIndex;
+    private ItemManager _itemManager;
 
     protected override void Awake()
     {
@@ -62,12 +63,40 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             NotifyUnitDied);
         _battleManager.OnStateChanged += OnStateChanged;
 
-        var itemManager = App.Get<ItemManager>();
-        itemManager.Subscribe(EItem.AttackManual, this);
-        itemManager.Subscribe(EItem.BattleClock, this);
-        itemManager.Subscribe(EItem.FieldArmor, this);
-        itemManager.Subscribe(EItem.DuplicationSeal, this);
-        itemManager.Subscribe(EItem.DiversityEmblem, this);
+        _itemManager = App.Get<ItemManager>();
+        _itemManager.Subscribe(EItem.BattleClock, this);
+        _itemManager.Subscribe(EItem.FieldArmor, this);
+        _itemManager.Subscribe(EItem.DiversityEmblem, this);
+    }
+
+    private void Update()
+    {
+        if (_battleManager == null || _battleManager.State != EWaveState.Active) return;
+
+        for (int i = 0; i < _roster.ActiveAllies.Count; i++)
+        {
+            var ally = _roster.ActiveAllies[i];
+            if (ally == null || !ally.IsAlive || ally.HpRatio >= 0.5f) continue;
+
+            if (_itemManager.TryConsume(EItem.PartyHealingPotion))
+            {
+                HealAllActiveAllies(0.25f);
+            }
+            else if (_itemManager.TryConsume(EItem.PersonalHealingPotion))
+            {
+                ally.Heal(ally.MaxHp * 0.5f);
+            }
+
+            break;
+        }
+    }
+
+    private void HealAllActiveAllies(float ratio)
+    {
+        foreach (var ally in _roster.ActiveAllies)
+        {
+            if (ally != null && ally.IsAlive) ally.Heal(ally.MaxHp * ratio);
+        }
     }
 
     private void OnStateChanged(EWaveState state)
@@ -130,21 +159,6 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         AddOwnedAlly(spawnedUnit);
         SoundManager.PlaySFXIfAvailable(SoundName.UnitSpawn);
         return spawnedUnit;
-    }
-
-    public bool TryDuplicateAlly(BattleUnitSpawnData unitData)
-    {
-        if (!_unitModifiers.ShouldDuplicate(
-                unitData,
-                UnityEngine.Random.value,
-                out int count)) return false;
-
-        for (var i = 0; i < count; i++)
-        {
-            SpawnAlly(unitData);
-        }
-
-        return true;
     }
 
     private void SpawnEnemies(BattleWaveData wave)
@@ -608,10 +622,8 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
 
         if (App.TryGet<ItemManager>(out var itemManager))
         {
-            itemManager.Unsubscribe(EItem.AttackManual, this);
             itemManager.Unsubscribe(EItem.BattleClock, this);
             itemManager.Unsubscribe(EItem.FieldArmor, this);
-            itemManager.Unsubscribe(EItem.DuplicationSeal, this);
             itemManager.Unsubscribe(EItem.DiversityEmblem, this);
         }
 
