@@ -17,6 +17,13 @@ public class WavePanel : UIBase
     private UnitManager _unitManager;
     private StatusPanel _statusPanel;
     private EPinballState _pinballState = EPinballState.Idle;
+
+    public Button StartButton => startButton;
+
+    public void RefreshTutorialState()
+    {
+        RefreshButtons();
+    }
     
     public override void Initialize(UIManager manager)
     {

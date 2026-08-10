@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ public enum BottomPanelTab
 
 public class BottomTabPanel : UIBase
 {
+    public event Action<BottomPanelTab> OnTabChanged;
     public override bool IsDefaultPanel => true;
 
     [SerializeField] private Button itemsButton;
@@ -22,6 +24,15 @@ public class BottomTabPanel : UIBase
 
     private BottomPanelTab _lastTab = BottomPanelTab.Shop;
 
+    public Button ItemsButton => itemsButton;
+    public Button ShopButton => shopButton;
+    public BottomPanelTab CurrentTab => _lastTab;
+
+    public void RefreshCurrentTab()
+    {
+        ApplyTab();
+    }
+
     public override void Initialize(UIManager manager)
     {
         base.Initialize(manager);
@@ -31,6 +42,7 @@ public class BottomTabPanel : UIBase
         itemsButton.onClick.AddListener(ShowItems);
         shopButton.onClick.AddListener(ShowShop);
         StartCoroutine(ApplyInitialTabNextFrame());
+
     }
 
     public void ShowShop()
@@ -60,6 +72,7 @@ public class BottomTabPanel : UIBase
         shopContent.SetActive(!showItems);
         itemsButton.interactable = !showItems;
         shopButton.interactable = showItems;
+        OnTabChanged?.Invoke(_lastTab);
     }
 
     private bool ValidateReferences()
@@ -74,7 +87,7 @@ public class BottomTabPanel : UIBase
         return isValid;
     }
 
-    private bool ValidateReference(Object reference, string fieldName)
+    private bool ValidateReference(UnityEngine.Object reference, string fieldName)
     {
         if (reference != null) return true;
         Debug.LogError($"[BottomTabPanel] Missing reference: {fieldName}");

@@ -22,6 +22,7 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerMoveHandler
     [SerializeField] private Color unavailableCostColor = Color.red;
 
     public Item Item { get; private set; }
+    public Button PurchaseButton => purchaseButton;
 
     private Action<Item> _onPurchase;
 

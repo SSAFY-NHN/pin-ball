@@ -14,6 +14,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     public event Action<AllyUnitData, AllyUnitData> OnEvolutionRequested;
     public event Action<AllyUnit> OnAllyDetailRequested;
     public event Action<int> OnDeployedAllyCountChanged;
+    public event Action<int> OnAlliesMerged;
 
     private UnitRoster _roster;
     private UnitTargetFinder _targetFinder;
@@ -446,6 +447,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
                 decision.ResultLevel,
                 decision.ResultPosition);
             _mergeService.Complete(decision);
+            OnAlliesMerged?.Invoke(decision.ResultLevel);
             return true;
         }
 
@@ -456,6 +458,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             return false;
         }
 
+        OnAlliesMerged?.Invoke(decision.ResultLevel);
         return true;
     }
 

@@ -11,6 +11,8 @@ public interface IItemEventListener
 
 public class ItemManager : AppService
 {
+    public event Action<Item> OnItemPurchased;
+    public event Action<Item> OnItemConsumed;
     private const string ItemIconPath = "ItemIcons/";
 
     public event Action<Item> OnItemAcquired;
@@ -192,6 +194,7 @@ public class ItemManager : AppService
 
     public bool TryConsume(EItem item)
     {
+        InitializeItems();
         int count = GetItemCount(item);
         if (count <= 0) return false;
 
@@ -206,6 +209,10 @@ public class ItemManager : AppService
             _itemCounts[item] = count;
         }
 
+        if (_items.TryGetValue(item, out var consumedItem))
+        {
+            OnItemConsumed?.Invoke(consumedItem);
+        }
         return true;
     }
 
@@ -217,6 +224,7 @@ public class ItemManager : AppService
         if (!battleManager.TrySpendPreparationGold(item.Cost)) return false;
 
         Raise(item.Key);
+        OnItemPurchased?.Invoke(item);
         SoundManager.PlaySFXIfAvailable(SoundName.BuyItem);
         return true;
     }

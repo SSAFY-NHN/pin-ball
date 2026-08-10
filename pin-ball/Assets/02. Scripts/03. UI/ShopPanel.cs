@@ -19,6 +19,26 @@ public class ShopPanel : UIBase
     private ItemManager _itemManager;
     private BattleManager _battleManager;
     private ShopSlot[] _itemSlots;
+    private EItem? _tutorialPurchaseRestriction;
+
+    public void SetTutorialPurchaseRestriction(EItem? item)
+    {
+        _tutorialPurchaseRestriction = item;
+        RefreshPurchaseStates();
+    }
+
+    public ShopSlot FindSlot(EItem item)
+    {
+        if (_itemSlots == null) return null;
+        foreach (var slot in _itemSlots)
+        {
+            if (slot != null && slot.Item != null && slot.Item.Key == item)
+            {
+                return slot;
+            }
+        }
+        return null;
+    }
 
     public override void Initialize(UIManager manager)
     {
@@ -164,6 +184,12 @@ public class ShopPanel : UIBase
 
             var item = slot.Item;
             var isPurchased = item != null && !_itemManager.CanPurchase(item.Key);
+            if (item != null &&
+                _tutorialPurchaseRestriction.HasValue &&
+                item.Key != _tutorialPurchaseRestriction.Value)
+            {
+                isPurchased = true;
+            }
             slot.RefreshState(
                 _battleManager.Gold,
                 isPurchased,

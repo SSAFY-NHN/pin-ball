@@ -19,6 +19,7 @@ public class ItemPanel : UIBase
 
         _itemManager = App.Get<ItemManager>();
         _itemManager.OnItemAcquired += OnItemAcquired;
+        _itemManager.OnItemConsumed += OnItemConsumed;
         
         _itemSlots = GetComponentsInChildren<ItemSlot>();
 
@@ -26,6 +27,11 @@ public class ItemPanel : UIBase
     }
 
     private void OnItemAcquired(Item _)
+    {
+        RefreshItems();
+    }
+
+    private void OnItemConsumed(Item _)
     {
         RefreshItems();
     }
@@ -59,5 +65,12 @@ public class ItemPanel : UIBase
                 $"[ItemPanel] 슬롯이 부족합니다. " +
                 $"보유 아이템: {_activeItems.Count}, 슬롯: {_itemSlots.Length}");
         }
+    }
+
+    private void OnDestroy()
+    {
+        if (_itemManager == null) return;
+        _itemManager.OnItemAcquired -= OnItemAcquired;
+        _itemManager.OnItemConsumed -= OnItemConsumed;
     }
 }

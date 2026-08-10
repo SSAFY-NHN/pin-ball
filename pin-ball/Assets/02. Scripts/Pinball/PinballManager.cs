@@ -20,6 +20,7 @@ public class PinballManager : AppService, IItemEventListener
 
     public event Action<EPinballState> OnStateChanged;
     public event Action<int> OnLaunchCostChanged;
+    public event Action<BattleUnitSpawnData> OnGoalReached;
 
     public int CurrentLaunchCost => CalculateLaunchCost();
     public bool HasAvailableBall => _loadedBall != null || _availableBalls.Count > 0;
@@ -238,7 +239,13 @@ public class PinballManager : AppService, IItemEventListener
     {
         if (ball == null || goal == null) return;
 
-        var unitData = goal.UnitData;
+        var goalUnitData = goal.UnitData;
+        var unitData = new BattleUnitSpawnData
+        {
+            UnitId = goalUnitData.UnitId,
+            Level = goalUnitData.Level
+        };
+        OnGoalReached?.Invoke(unitData);
 
         var attackBonus = ball.SmallPinHitCount >= _chargedPinRequiredHits
             ? _chargedPinAttackBonus
