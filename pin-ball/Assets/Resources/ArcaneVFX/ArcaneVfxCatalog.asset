@@ -41,3 +41,4 @@ MonoBehaviour:
   - {fileID: 21300000, guid: e46f340dff7b6104c94cb5e8975d942d, type: 3}
   goalSpark:
   - {fileID: 21300000, guid: 83c002777b7d09b46abcd45d078a8824, type: 3}
+  goldIcon: {fileID: 3421197206251385701, guid: a5c6aaddbf7ed934da1f0309132a4e6f, type: 3}

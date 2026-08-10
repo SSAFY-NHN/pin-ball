@@ -32,6 +32,9 @@ public sealed class ArcaneVfxCatalog : ScriptableObject
     public Sprite[] goalArcBottomRight;
     public Sprite[] goalSpark;
 
+    [Header("Reward")]
+    public Sprite goldIcon;
+
     private static ArcaneVfxCatalog cached;
 
     public static ArcaneVfxCatalog Load()

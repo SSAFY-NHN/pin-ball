@@ -61,7 +61,7 @@ public class Pinball : MonoBehaviour
             emphasis);
         if (obstacle == null) return;
 
-        _manager.OnBallHit(this, obstacle.Type);
+        _manager.OnBallHit(this, obstacle.Type, contactPoint);
     }
 
     internal void SetManager(PinballManager manager)
@@ -117,9 +117,9 @@ public class Pinball : MonoBehaviour
         _arcaneVfx?.PlayLaunchCamera(normalizedPull);
     }
 
-    internal void PlayGoldRewardFeedback(int amount)
+    internal void PlayGoldRewardFeedback(Vector2 worldPosition, int amount)
     {
-        _arcaneVfx?.PlayGoldReward(amount);
+        _arcaneVfx?.PlayGoldReward(worldPosition, amount);
     }
 
     internal void ResetPosition(Vector2 worldPosition, Vector2 launchDirection)

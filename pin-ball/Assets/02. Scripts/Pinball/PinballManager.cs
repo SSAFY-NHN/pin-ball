@@ -180,7 +180,10 @@ public class PinballManager : AppService, IItemEventListener
         OnLaunchCostChanged?.Invoke(CurrentLaunchCost);
     }
 
-    internal void OnBallHit(Pinball ball, EPinballObstacle obstacle)
+    internal void OnBallHit(
+        Pinball ball,
+        EPinballObstacle obstacle,
+        Vector2 hitPosition)
     {
         if (ball == null) return;
 
@@ -193,7 +196,7 @@ public class PinballManager : AppService, IItemEventListener
         ball.BigBumperHitCount++;
         _battleManager.AddGold(_goldenBallReward);
         int totalReward = _goldenBallReward + ApplyGoldenBumper(ball);
-        ball.PlayGoldRewardFeedback(totalReward);
+        ball.PlayGoldRewardFeedback(hitPosition, totalReward);
         ApplySplitCapsule(ball);
     }
 
