@@ -7,14 +7,14 @@ using UnityEngine;
 public sealed class RabbitAttackPreviewWindow : EditorWindow
 {
     private const string SpriteSheetPath =
-        "Assets/03. Images/Animals/Rabbit/Rabbit1_Mage_HWarriorStyle_Attack.png";
+        "Assets/03. Images/Animals/Rabbit/Rabbit_mage_Attack.png";
     private const string AnimationFolder = "Assets/05. Animations/Rabbit";
     private const string ClipPath = AnimationFolder + "/Rabbit1_Mage_Attack.anim";
     private const string ControllerPath = AnimationFolder + "/Rabbit1_Mage_Attack.controller";
     private const string PrefabFolder = "Assets/04. Prefabs/Rabbit";
     private const string PrefabPath = PrefabFolder + "/Rabbit1_Mage_AttackPreview.prefab";
     private const string SessionKey = "PinBall.RabbitAttackPreview.Opened";
-    private const int FrameCount = 5;
+    private const int FrameCount = 8;
     private const float FramesPerSecond = 10f;
 
     private Texture2D spriteSheet;
@@ -76,7 +76,7 @@ public sealed class RabbitAttackPreviewWindow : EditorWindow
             }
 
             clip.frameRate = FramesPerSecond;
-            var keyframes = new ObjectReferenceKeyframe[FrameCount + 1];
+            var keyframes = new ObjectReferenceKeyframe[FrameCount];
             for (var i = 0; i < FrameCount; i++)
             {
                 keyframes[i] = new ObjectReferenceKeyframe
@@ -85,12 +85,6 @@ public sealed class RabbitAttackPreviewWindow : EditorWindow
                     value = sprites[i]
                 };
             }
-
-            keyframes[FrameCount] = new ObjectReferenceKeyframe
-            {
-                time = FrameCount / FramesPerSecond,
-                value = sprites[FrameCount - 1]
-            };
 
             var binding = new EditorCurveBinding
             {
@@ -185,7 +179,9 @@ public sealed class RabbitAttackPreviewWindow : EditorWindow
 
         EditorGUILayout.Space(8f);
         EditorGUILayout.LabelField("Rabbit Mage Attack", EditorStyles.boldLabel);
-        EditorGUILayout.LabelField("5 frames · 10 FPS · 0.5 seconds", EditorStyles.miniLabel);
+        EditorGUILayout.LabelField(
+            $"{FrameCount} frames · {FramesPerSecond:0} FPS",
+            EditorStyles.miniLabel);
         EditorGUILayout.Space(6f);
 
         var previewArea = GUILayoutUtility.GetAspectRect(1f, GUILayout.ExpandWidth(true));

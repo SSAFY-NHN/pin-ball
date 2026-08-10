@@ -38,6 +38,7 @@ public class AllyUnit : UnitBase
         _dragCamera = Camera.main;
         _isDragging = false;
         _isMergeReserved = false;
+        GetComponent<BattleUnitVisual>()?.SetUnitId(unitId);
         ResetMana();
     }
 
