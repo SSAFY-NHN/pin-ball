@@ -1,0 +1,429 @@
+{
+  "common": {
+    "baseWave": 1,
+    "healthGrowthPerWave": 0.12,
+    "attackGrowthPerWave": 0.08,
+    "defenseGrowthInterval": 3,
+    "defenseGrowthValue": 2,
+    "moveSpeedGrowthPerWave": 0,
+    "attackSpeedGrowthPerWave": 0
+  },
+  "units": [
+    {
+      "name": "로그",
+      "role": "기본 근접형",
+      "id": "goblin",
+      "rank": 0,
+      "health": 90,
+      "attack": 12,
+      "defense": 2,
+      "moveSpeed": 2.5,
+      "attackSpeed": 0.9,
+      "attackRange": 1.1,
+      "breachDamage": 1,
+      "skills": []
+    },
+    {
+      "name": "늑대",
+      "role": "빠른 돌파형",
+      "id": "wolf",
+      "rank": 0,
+      "health": 65,
+      "attack": 10,
+      "defense": 1,
+      "moveSpeed": 3.8,
+      "attackSpeed": 1.2,
+      "attackRange": 1,
+      "breachDamage": 1,
+      "skills": [
+        {
+          "id": "wolf_sprint",
+          "name": "질주",
+          "description": "전투 시작 후 3초간 이동속도 30% 증가",
+          "effects": [
+            {
+              "effect": 3,
+              "target": 4,
+              "value1": 3,
+              "value2": 30,
+              "value3": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "궁수",
+      "role": "원거리 공격형",
+      "id": "goblin_archer",
+      "rank": 0,
+      "health": 75,
+      "attack": 14,
+      "defense": 1,
+      "moveSpeed": 2.2,
+      "attackSpeed": 0.85,
+      "attackRange": 5,
+      "breachDamage": 1,
+      "skills": [
+        {
+          "id": "focused_fire",
+          "name": "집중 사격",
+          "description": "동일 대상 연속 공격 시 공격력 중첩 증가",
+          "effects": [
+            {
+              "effect": 3,
+              "target": 4,
+              "value1": 5,
+              "value2": 4,
+              "value3": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "메이스 전사",
+      "role": "방패를 사용하는 근접 방어형",
+      "id": "shield_guard",
+      "rank": 0,
+      "health": 180,
+      "attack": 10,
+      "defense": 14,
+      "moveSpeed": 1.8,
+      "attackSpeed": 0.65,
+      "attackRange": 1.1,
+      "breachDamage": 2,
+      "skills": [
+        {
+          "id": "shield_block",
+          "name": "방패 방어",
+          "description": "전방 피해 감소 및 제어 지속시간 감소",
+          "effects": [
+            {
+              "effect": 3,
+              "target": 4,
+              "value1": 25,
+              "value2": 0,
+              "value3": 0
+            },
+            {
+              "effect": 3,
+              "target": 4,
+              "value1": 30,
+              "value2": 0,
+              "value3": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "검방 전사",
+      "role": "강한 근접형",
+      "id": "orc_warrior",
+      "rank": 0,
+      "health": 210,
+      "attack": 22,
+      "defense": 6,
+      "moveSpeed": 2.1,
+      "attackSpeed": 0.75,
+      "attackRange": 1.2,
+      "breachDamage": 2,
+      "skills": [
+        {
+          "id": "orc_rage",
+          "name": "분노",
+          "description": "체력 50% 이하에서 공격력과 공격속도 증가",
+          "effects": [
+            {
+              "effect": 3,
+              "target": 4,
+              "value1": 25,
+              "value2": 0,
+              "value3": 0
+            },
+            {
+              "effect": 3,
+              "target": 4,
+              "value1": 20,
+              "value2": 0,
+              "value3": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "주술사",
+      "role": "범위 마법형",
+      "id": "shaman",
+      "rank": 0,
+      "health": 105,
+      "attack": 19,
+      "defense": 3,
+      "moveSpeed": 2,
+      "attackSpeed": 0.6,
+      "attackRange": 4.5,
+      "breachDamage": 2,
+      "skills": [
+        {
+          "id": "dark_blast",
+          "name": "어둠 폭발",
+          "description": "4회 공격마다 범위 피해와 공격속도 감소",
+          "effects": [
+            {
+              "effect": 0,
+              "target": 1,
+              "value1": 1.8,
+              "value2": 140,
+              "value3": 0
+            },
+            {
+              "effect": 4,
+              "target": 1,
+              "value1": 15,
+              "value2": 3,
+              "value3": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "암살자",
+      "role": "후열 공격형",
+      "id": "assassin",
+      "rank": 0,
+      "health": 85,
+      "attack": 24,
+      "defense": 3,
+      "moveSpeed": 3.2,
+      "attackSpeed": 1.25,
+      "attackRange": 1,
+      "breachDamage": 2,
+      "skills": [
+        {
+          "id": "shadow_leap",
+          "name": "그림자 도약",
+          "description": "가장 먼 적 주변으로 이동 후 강한 피해",
+          "effects": [
+            {
+              "effect": 9,
+              "target": 3,
+              "value1": 0,
+              "value2": 0,
+              "value3": 0
+            },
+            {
+              "effect": 0,
+              "target": 3,
+              "value1": 180,
+              "value2": 0,
+              "value3": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "트롤",
+      "role": "고체력 재생형",
+      "id": "troll",
+      "rank": 0,
+      "health": 360,
+      "attack": 27,
+      "defense": 8,
+      "moveSpeed": 1.5,
+      "attackSpeed": 0.55,
+      "attackRange": 1.4,
+      "breachDamage": 3,
+      "skills": [
+        {
+          "id": "troll_regeneration",
+          "name": "재생",
+          "description": "지속 회복, 비전투 상태에서 회복량 증가",
+          "effects": [
+            {
+              "effect": 2,
+              "target": 4,
+              "value1": 1.5,
+              "value2": 0,
+              "value3": 0
+            },
+            {
+              "effect": 2,
+              "target": 4,
+              "value1": 3,
+              "value2": 3,
+              "value3": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "오우거",
+      "role": "정예 광역 제어형",
+      "id": "ogre_elite",
+      "rank": 1,
+      "health": 700,
+      "attack": 42,
+      "defense": 12,
+      "moveSpeed": 1.4,
+      "attackSpeed": 0.45,
+      "attackRange": 1.6,
+      "breachDamage": 5,
+      "skills": [
+        {
+          "id": "ground_slam",
+          "name": "지면 강타",
+          "description": "3회 공격마다 광역 피해·기절·밀쳐내기",
+          "effects": [
+            {
+              "effect": 0,
+              "target": 1,
+              "value1": 2.2,
+              "value2": 170,
+              "value3": 0
+            },
+            {
+              "effect": 4,
+              "target": 1,
+              "value1": 1,
+              "value2": 0,
+              "value3": 0
+            },
+            {
+              "effect": 7,
+              "target": 1,
+              "value1": 1,
+              "value2": 0,
+              "value3": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "흑마도사",
+      "role": "정예 약화 원거리형",
+      "id": "dark_mage_elite",
+      "rank": 1,
+      "health": 420,
+      "attack": 38,
+      "defense": 7,
+      "moveSpeed": 1.8,
+      "attackSpeed": 0.55,
+      "attackRange": 5.5,
+      "breachDamage": 4,
+      "skills": [
+        {
+          "id": "weakening_curse",
+          "name": "약화의 저주",
+          "description": "4회 공격마다 고체력 적에게 피해와 방어력 감소",
+          "effects": [
+            {
+              "effect": 0,
+              "target": 3,
+              "value1": 160,
+              "value2": 0,
+              "value3": 0
+            },
+            {
+              "effect": 4,
+              "target": 3,
+              "value1": 30,
+              "value2": 5,
+              "value3": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "기마 마도사",
+      "role": "보스",
+      "id": "goblin_king",
+      "rank": 2,
+      "health": 1800,
+      "attack": 48,
+      "defense": 16,
+      "moveSpeed": 1.5,
+      "attackSpeed": 0.65,
+      "attackRange": 1.5,
+      "breachDamage": 10,
+      "skills": [
+        {
+          "id": "summon_minions",
+          "name": "부하 소환",
+          "description": "체력 75/50/25%에서 고블린과 늑대 소환",
+          "effects": [
+            {
+              "effect": 8,
+              "target": 4,
+              "value1": 3,
+              "value2": 0,
+              "value3": 0
+            },
+            {
+              "effect": 8,
+              "target": 4,
+              "value1": 2,
+              "value2": 0,
+              "value3": 0
+            }
+          ]
+        },
+        {
+          "id": "king_slam",
+          "name": "왕의 내려찍기",
+          "description": "4회 공격마다 단일 피해와 주변 피해·기절",
+          "effects": [
+            {
+              "effect": 0,
+              "target": 0,
+              "value1": 220,
+              "value2": 0,
+              "value3": 0
+            },
+            {
+              "effect": 0,
+              "target": 1,
+              "value1": 2,
+              "value2": 120,
+              "value3": 0
+            },
+            {
+              "effect": 4,
+              "target": 0,
+              "value1": 1.5,
+              "value2": 0,
+              "value3": 0
+            }
+          ]
+        },
+        {
+          "id": "final_order",
+          "name": "최후의 명령",
+          "description": "체력 25% 이하에서 모든 적의 이동·공격속도 증가",
+          "effects": [
+            {
+              "effect": 3,
+              "target": 6,
+              "value1": 20,
+              "value2": 0,
+              "value3": 0
+            },
+            {
+              "effect": 3,
+              "target": 6,
+              "value1": 20,
+              "value2": 0,
+              "value3": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

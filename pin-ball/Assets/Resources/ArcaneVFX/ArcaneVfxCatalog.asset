@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf3058a4f0f8e9c429616620dd8d4fb4, type: 3}
+  m_Name: ArcaneVfxCatalog
+  m_EditorClassIdentifier: 
+  ballMask: {fileID: 21300000, guid: a35c1ff83fe71c54783197d1f648a53d, type: 3}
+  standardBumperMask: {fileID: 21300000, guid: 5aa0264be9482eb4090a000837a91dd9, type: 3}
+  specialBumperMask: {fileID: 21300000, guid: 0824cc86f16da1645a9bce6a1c9fa92d, type: 3}
+  magnetMask: {fileID: 21300000, guid: 6a3b612269308a146aa2767e2f71158e, type: 3}
+  reflectorMask: {fileID: 21300000, guid: 191ef223fd7b8a24090123d41abbfeba, type: 3}
+  guardianRuneMask: {fileID: 21300000, guid: e6cde8f9bd3030f4ebae4b3c306101ff, type: 3}
+  rangerRuneMask: {fileID: 21300000, guid: 95be83e67ac1cc94bb13873fd4421bcd, type: 3}
+  mageRuneMask: {fileID: 21300000, guid: ef7ca1930b30c44429ba1fe3550d61dc, type: 3}
+  lancerRuneMask: {fileID: 21300000, guid: f86a7cc687c96344d81a64603ee69e58, type: 3}
+  ballTrail:
+  - {fileID: 21300000, guid: 8dbb66acd00a80f4f982c8a407eab549, type: 3}
+  ballImpact:
+  - {fileID: 21300000, guid: 6b80e38a9cf6f8840a2ec44e5562145e, type: 3}
+  ballRing:
+  - {fileID: 21300000, guid: f80c38f2ceb346e4c9157ac2a137a06c, type: 3}
+  magnetArc:
+  - {fileID: 21300000, guid: 642ef3af8f168d948abcc51c4f76b2b0, type: 3}
+  magnetSpark:
+  - {fileID: 21300000, guid: 3cebd186cab7f2f4d9ab12978fe48686, type: 3}
+  goalArcTopLeft:
+  - {fileID: 21300000, guid: 4dd0c6b1a08924a4094fe40521d77ca9, type: 3}
+  goalArcTopRight:
+  - {fileID: 21300000, guid: 21502c8b95d3d9d49b9c9261bddd55a0, type: 3}
+  goalArcBottomLeft:
+  - {fileID: 21300000, guid: 9cb2a413677004243b4340b71aff48f1, type: 3}
+  goalArcBottomRight:
+  - {fileID: 21300000, guid: e46f340dff7b6104c94cb5e8975d942d, type: 3}
+  goalSpark:
+  - {fileID: 21300000, guid: 83c002777b7d09b46abcd45d078a8824, type: 3}
+  goldIcon: {fileID: 3421197206251385701, guid: a5c6aaddbf7ed934da1f0309132a4e6f, type: 3}
