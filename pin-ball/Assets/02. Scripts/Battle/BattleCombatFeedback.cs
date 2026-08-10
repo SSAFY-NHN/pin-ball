@@ -66,6 +66,66 @@ public sealed class BattleCombatFeedback : MonoBehaviour
         popup.Play(transform.position, damage, _unit.Team);
     }
 
+    public void PlaySkill(string skillId, UnitBase target)
+    {
+        if (_attackEffects == null) return;
+
+        var effect = _attackEffects[_nextAttackEffect];
+        _nextAttackEffect = (_nextAttackEffect + 1) % _attackEffects.Length;
+        bool targetsEnemy = IsTargetedSkill(skillId) && target != null;
+        Vector3 center = targetsEnemy ? target.transform.position : transform.position;
+        StartCoroutine(AnimateSkillPulse(
+            effect,
+            center,
+            ResolveSkillColor(skillId),
+            targetsEnemy ? 1.25f : 1f));
+        if (targetsEnemy)
+        {
+            Camera.main?.GetComponent<BattleCameraController>()
+                ?.PlayBattleImpactShake(false);
+        }
+    }
+
+    public void PlayEnemySkill(string skillId, UnitBase target, bool strong)
+    {
+        if (_attackEffects == null) return;
+
+        var effect = _attackEffects[_nextAttackEffect];
+        _nextAttackEffect = (_nextAttackEffect + 1) % _attackEffects.Length;
+        Vector3 center = target != null ? target.transform.position : transform.position;
+        StartCoroutine(AnimateSkillPulse(
+            effect,
+            center,
+            strong
+                ? new Color(1f, 0.08f, 0.03f, 1f)
+                : new Color(1f, 0.3f, 0.08f, 1f),
+            strong ? 1.45f : 1.05f));
+        Camera.main?.GetComponent<BattleCameraController>()
+            ?.PlayBattleImpactShake(strong);
+    }
+
+    public void PlayHeal(float amount)
+    {
+        if (amount <= 0f || _damagePopups == null) return;
+
+        var popup = _damagePopups[_nextDamagePopup];
+        _nextDamagePopup = (_nextDamagePopup + 1) % _damagePopups.Length;
+        popup.PlayHeal(transform.position, amount);
+    }
+
+    public void PlayShield()
+    {
+        if (_attackEffects == null) return;
+
+        var effect = _attackEffects[_nextAttackEffect];
+        _nextAttackEffect = (_nextAttackEffect + 1) % _attackEffects.Length;
+        StartCoroutine(AnimateSkillPulse(
+            effect,
+            transform.position,
+            new Color(0.15f, 0.95f, 1f, 1f),
+            0.9f));
+    }
+
     private void LateUpdate()
     {
         if (_renderer == null || Time.unscaledTime >= _flashUntil) return;
@@ -146,6 +206,67 @@ public sealed class BattleCombatFeedback : MonoBehaviour
         }
 
         line.enabled = false;
+    }
+
+    private IEnumerator AnimateSkillPulse(
+        LineRenderer line,
+        Vector3 center,
+        Color color,
+        float radius)
+    {
+        const int segments = 32;
+        const float duration = 0.34f;
+        float startedAt = Time.unscaledTime;
+        line.loop = true;
+        line.positionCount = segments;
+        line.startWidth = 0.13f;
+        line.endWidth = 0.13f;
+        line.enabled = true;
+
+        while (Time.unscaledTime - startedAt < duration)
+        {
+            float progress = Mathf.Clamp01((Time.unscaledTime - startedAt) / duration);
+            float currentRadius = Mathf.Lerp(radius * 0.2f, radius, Mathf.SmoothStep(0f, 1f, progress));
+            float alpha = 1f - progress;
+            Color faded = new(color.r, color.g, color.b, alpha);
+            line.startColor = faded;
+            line.endColor = faded;
+
+            for (var index = 0; index < segments; index++)
+            {
+                float angle = index * Mathf.PI * 2f / segments;
+                line.SetPosition(index, center + new Vector3(
+                    Mathf.Cos(angle) * currentRadius,
+                    Mathf.Sin(angle) * currentRadius * 0.52f));
+            }
+            yield return null;
+        }
+
+        line.enabled = false;
+        line.loop = false;
+        line.positionCount = 2;
+    }
+
+    private static bool IsTargetedSkill(string skillId)
+    {
+        if (string.IsNullOrEmpty(skillId)) return false;
+        string id = skillId.ToLowerInvariant();
+        return id.Contains("arrow") ||
+               id.Contains("shot") ||
+               id.Contains("fireball") ||
+               id.Contains("frost");
+    }
+
+    private static Color ResolveSkillColor(string skillId)
+    {
+        if (string.IsNullOrEmpty(skillId)) return MagicColor;
+        string id = skillId.ToLowerInvariant();
+        if (id.Contains("blood")) return new Color(1f, 0.1f, 0.16f, 1f);
+        if (id.Contains("frost")) return new Color(0.2f, 0.85f, 1f, 1f);
+        if (id.Contains("arrow") || id.Contains("shot")) return ArrowColor;
+        if (id.Contains("shield") || id.Contains("phalanx")) return new Color(0.2f, 1f, 0.75f, 1f);
+        if (id.Contains("fire")) return new Color(1f, 0.32f, 0.08f, 1f);
+        return MagicColor;
     }
 
     private EBattleAttackStyle ResolveStyle()

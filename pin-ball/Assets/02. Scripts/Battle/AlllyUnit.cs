@@ -58,6 +58,7 @@ public class AllyUnit : UnitBase
                     Debug.LogWarning))
             {
                 SoundManager.PlaySFXIfAvailable(BasicAttackSoundName);
+                PlaySkillFeedback(_skill?.id, _currentTarget);
             }
             return;
         }

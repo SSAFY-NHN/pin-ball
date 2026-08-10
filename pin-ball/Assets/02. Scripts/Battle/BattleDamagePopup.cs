@@ -27,13 +27,27 @@ public sealed class BattleDamagePopup : MonoBehaviour
 
     public void Play(Vector3 position, float damage, EBattleTeam damagedTeam)
     {
-        _origin = position + Vector3.up * 0.35f;
-        _startedAt = Time.unscaledTime;
-        _color = damagedTeam == EBattleTeam.Ally
+        Color color = damagedTeam == EBattleTeam.Ally
             ? new Color(1f, 0.2f, 0.2f, 1f)
             : new Color(1f, 0.72f, 0.18f, 1f);
+        PlayValue(position, Mathf.CeilToInt(damage).ToString(), color);
+    }
+
+    public void PlayHeal(Vector3 position, float amount)
+    {
+        PlayValue(
+            position,
+            $"+{Mathf.CeilToInt(amount)}",
+            new Color(0.25f, 1f, 0.42f, 1f));
+    }
+
+    private void PlayValue(Vector3 position, string value, Color color)
+    {
+        _origin = position + Vector3.up * 0.35f;
+        _startedAt = Time.unscaledTime;
+        _color = color;
         gameObject.SetActive(true);
-        _text.text = Mathf.CeilToInt(damage).ToString();
+        _text.text = value;
         _text.color = _color;
         _text.ForceMeshUpdate(true);
         transform.position = _origin;

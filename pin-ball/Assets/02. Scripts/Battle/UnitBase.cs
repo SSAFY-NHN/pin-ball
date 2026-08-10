@@ -162,6 +162,7 @@ public abstract class UnitBase : MonoBehaviour
         _health.Heal(amount);
         if (CurrentHp > previousHp)
         {
+            _combatFeedback?.PlayHeal(CurrentHp - previousHp);
             SoundManager.PlaySFXIfAvailable(
                 Team == EBattleTeam.Ally
                     ? SoundName.AllyHealing
@@ -169,10 +170,24 @@ public abstract class UnitBase : MonoBehaviour
         }
     }
 
+    public void PlaySkillFeedback(string skillId, UnitBase target)
+    {
+        _combatFeedback?.PlaySkill(skillId, target);
+    }
+
+    public void PlayEnemySkillFeedback(string skillId, UnitBase target, bool strong)
+    {
+        _combatFeedback?.PlayEnemySkill(skillId, target, strong);
+    }
+
     public void ApplyShield(float amount, float duration)
     {
         if (!IsAlive) return;
         _health.ApplyShield(amount, duration, Time.time);
+        if (amount > 0f && duration > 0f)
+        {
+            _combatFeedback?.PlayShield();
+        }
     }
 
     public void ApplyAttackRateMultiplier(float multiplier, float duration)
