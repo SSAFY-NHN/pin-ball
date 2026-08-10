@@ -23,6 +23,8 @@ public class ItemCatalogTests
             ["field_armor"] = EItem.FieldArmor,
             ["diversity_emblem"] = EItem.DiversityEmblem,
             ["barrier_reinforcement"] = EItem.BarrierReinforcement,
+            ["personal_healing_potion"] = EItem.PersonalHealingPotion,
+            ["party_healing_potion"] = EItem.PartyHealingPotion,
         };
 
     [Test]
@@ -64,6 +66,8 @@ public class ItemCatalogTests
             Assert.That((int)EItem.FieldArmor, Is.EqualTo(18));
             Assert.That((int)EItem.DiversityEmblem, Is.EqualTo(20));
             Assert.That((int)EItem.BarrierReinforcement, Is.EqualTo(21));
+            Assert.That((int)EItem.PersonalHealingPotion, Is.EqualTo(22));
+            Assert.That((int)EItem.PartyHealingPotion, Is.EqualTo(23));
             Assert.That((int)EItemCategory.Ball, Is.Zero);
             Assert.That((int)EItemCategory.Board, Is.EqualTo(1));
             Assert.That((int)EItemCategory.Battle, Is.EqualTo(2));

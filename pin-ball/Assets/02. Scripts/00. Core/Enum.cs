@@ -71,4 +71,6 @@ public enum EItem
     FieldArmor = 18,
     DiversityEmblem = 20,
     BarrierReinforcement = 21,
+    PersonalHealingPotion = 22,
+    PartyHealingPotion = 23,
 }
