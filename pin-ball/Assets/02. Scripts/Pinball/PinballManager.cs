@@ -21,10 +21,14 @@ public class PinballManager : AppService, IItemEventListener
     public event Action<EPinballState> OnStateChanged;
     public event Action<int> OnLaunchCostChanged;
     public event Action<BattleUnitSpawnData> OnGoalReached;
+    public event Action<int> OnComboChanged;
 
     public int CurrentLaunchCost => _launchState.CurrentCost;
     public bool HasAvailableBall => _ballPool?.HasAvailableBall ?? false;
     public bool HasActiveBalls => _ballPool?.HasActiveBalls ?? false;
+    public int CurrentCombo => _comboController.Count;
+    public float CurrentComboProgress =>
+        _comboController.GetRemainingProgress(Time.unscaledTime);
     public IReadOnlyCollection<Pinball> ActiveBalls =>
         _ballPool?.ActiveBalls ?? Array.Empty<Pinball>();
 
@@ -45,12 +49,21 @@ public class PinballManager : AppService, IItemEventListener
     private PinballLaunchState _launchState = new(50, 30);
     private readonly PinballItemModifiers _itemModifiers = new();
     private readonly PinballGoalController _goalController = new();
+    private readonly PinballComboController _comboController = new();
     private PinballRewardController _rewardController;
     private bool _isRunInitialized;
 
     private void Start()
     {
         InitializeNewRun();
+    }
+
+    private void Update()
+    {
+        if (_comboController.TryExpire(Time.unscaledTime))
+        {
+            OnComboChanged?.Invoke(0);
+        }
     }
 
     internal void InitializeNewRun()
@@ -165,6 +178,8 @@ public class PinballManager : AppService, IItemEventListener
         ball.BigBumperHitCount++;
         int totalReward = _rewardController.ApplyBumperReward(ball);
         ball.PlayGoldRewardFeedback(hitPosition, totalReward);
+        OnComboChanged?.Invoke(
+            _comboController.RegisterBumperHit(Time.unscaledTime));
     }
 
     internal void OnBallHitSurface()
@@ -328,6 +343,7 @@ public class PinballManager : AppService, IItemEventListener
         _ballPool?.ResetForNewRun();
         _launchState.ResetForNewRun();
         _goalController.ResetForNewRun();
+        _comboController.Reset();
         _itemModifiers.ResetForNewRun();
         launcherController?.SetLoaded(false);
         LoadNextBall();
