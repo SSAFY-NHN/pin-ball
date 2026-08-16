@@ -1,3 +1,5 @@
+using System.Collections;
+
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +20,8 @@ public sealed class TutorialManager : MonoBehaviour
     [SerializeField] private Button shopButton;
     [SerializeField] private Button itemsButton;
     [SerializeField] private Button waveStartButton;
+    [SerializeField] private ShopPanel shopPanel;
+    [SerializeField] private WavePanel wavePanel;
     [SerializeField] private Transform goalFocusTarget;
     [SerializeField] private Transform magnetFocusTarget;
     [SerializeField] private Transform launcherFocusTarget;
@@ -28,23 +32,20 @@ public sealed class TutorialManager : MonoBehaviour
     private PinballManager _pinballManager;
     private UnitManager _unitManager;
     private ItemManager _itemManager;
-    private ShopPanel _shopPanel;
-    private WavePanel _wavePanel;
-    private float _startedAt;
-    private string _firstUnitId;
+    private TutorialUIController _uiController;
+    private TutorialInteractionController _interactionController;
+    private TutorialGameRuleController _gameRuleController;
     private bool _initialized;
     private bool _isCompleting;
 
     private void Start()
     {
         if (_initialized) return;
-#if UNITY_EDITOR
-        PlayerPrefs.DeleteKey(CompletionKey);
-#endif
         if (PlayerPrefs.GetInt(CompletionKey, 0) != 0)
         {
             if (overlay != null) overlay.SetActive(false);
             focusIndicator?.Hide();
+            focusIndicator?.SetInputBlocked(false);
             enabled = false;
             return;
         }
@@ -54,11 +55,20 @@ public sealed class TutorialManager : MonoBehaviour
         _pinballManager = App.Get<PinballManager>();
         _unitManager = App.Get<UnitManager>();
         _itemManager = App.Get<ItemManager>();
-        _shopPanel = FindFirstObjectByType<ShopPanel>();
-        _wavePanel = FindFirstObjectByType<WavePanel>();
         _progress = new TutorialProgress();
-        _startedAt = Time.unscaledTime;
-        _battleManager.AddGold(_pinballManager.CurrentLaunchCost * 3);
+        _uiController = new TutorialUIController(
+            overlay,
+            messageText,
+            continueButton);
+        _interactionController = new TutorialInteractionController(
+            shopButton,
+            itemsButton,
+            waveStartButton,
+            focusIndicator);
+        _gameRuleController = new TutorialGameRuleController(
+            _battleManager,
+            _pinballManager);
+        _gameRuleController.GrantStartingGold();
 
         continueButton.onClick.AddListener(OnContinue);
         skipButton.onClick.AddListener(CompleteTutorial);
@@ -68,16 +78,8 @@ public sealed class TutorialManager : MonoBehaviour
         _itemManager.OnItemPurchased += OnItemPurchased;
         _battleManager.OnStateChanged += OnBattleStateChanged;
 
+        StartCoroutine(CompleteAfterMaximumDuration());
         ShowCurrentStep();
-    }
-
-    private void Update()
-    {
-        if (_progress != null &&
-            Time.unscaledTime - _startedAt >= maximumDuration)
-        {
-            CompleteTutorial();
-        }
     }
 
     private void OnContinue()
@@ -88,15 +90,7 @@ public sealed class TutorialManager : MonoBehaviour
 
     private void OnGoalReached(BattleUnitSpawnData _)
     {
-        if (_progress.Step == TutorialStep.FirstLaunch)
-        {
-            _firstUnitId = _.UnitId;
-        }
-        else if (_progress.Step == TutorialStep.SecondLaunch &&
-                 !string.IsNullOrEmpty(_firstUnitId))
-        {
-            _.UnitId = _firstUnitId;
-        }
+        _gameRuleController.ApplyGoalRule(_progress.Step, _);
         _progress.NotifyGoalReached();
         ShowCurrentStep();
     }
@@ -117,7 +111,7 @@ public sealed class TutorialManager : MonoBehaviour
     private void OnItemPurchased(Item item)
     {
         if (item == null || item.Key != EItem.PersonalHealingPotion) return;
-        _shopPanel?.SetTutorialPurchaseRestriction(null);
+        shopPanel?.SetTutorialPurchaseRestriction(null);
         _progress.NotifyPersonalPotionPurchased();
         ShowCurrentStep();
     }
@@ -171,12 +165,12 @@ public sealed class TutorialManager : MonoBehaviour
                     allyTarget);
                 break;
             case TutorialStep.BuyPersonalPotion:
-                _shopPanel?.SetTutorialPurchaseRestriction(EItem.PersonalHealingPotion);
+                shopPanel?.SetTutorialPurchaseRestriction(EItem.PersonalHealingPotion);
                 if (bottomTabPanel.CurrentTab != BottomPanelTab.Shop)
                 {
                     bottomTabPanel.ShowShop();
                 }
-                ShopSlot potionSlot = _shopPanel?.FindSlot(EItem.PersonalHealingPotion);
+                ShopSlot potionSlot = shopPanel?.FindSlot(EItem.PersonalHealingPotion);
                 ShowAction(
                     "상점에서 개인 회복 포션을 하나 구매하세요.",
                     potionSlot != null ? potionSlot.PurchaseButton : null,
@@ -199,12 +193,8 @@ public sealed class TutorialManager : MonoBehaviour
 
     private void ShowMessage(string message, Transform focusTarget = null)
     {
-        overlay.SetActive(true);
-        messageText.text = message;
-        continueButton.gameObject.SetActive(true);
-        SetOnlyTargetInteractable(null);
-        focusIndicator?.SetInputBlocked(true);
-        Focus(focusTarget);
+        _uiController.Show(message, true);
+        _interactionController.Show(null, focusTarget, true);
     }
 
     private void ShowAction(
@@ -212,41 +202,30 @@ public sealed class TutorialManager : MonoBehaviour
         Button targetButton = null,
         Transform focusTarget = null)
     {
-        overlay.SetActive(true);
-        messageText.text = message;
-        continueButton.gameObject.SetActive(false);
-        SetOnlyTargetInteractable(targetButton);
-        focusIndicator?.SetInputBlocked(false);
-        Focus(focusTarget);
-    }
-
-    private void Focus(Transform target)
-    {
-        if (target == null) focusIndicator?.Hide();
-        else focusIndicator?.Focus(target, new Vector2(24f, 20f));
-    }
-
-    private void SetOnlyTargetInteractable(Button target)
-    {
-        if (shopButton != null) shopButton.interactable = target == shopButton;
-        if (itemsButton != null) itemsButton.interactable = target == itemsButton;
-        if (waveStartButton != null) waveStartButton.interactable = target == waveStartButton;
+        _uiController.Show(message, false);
+        _interactionController.Show(targetButton, focusTarget, false);
     }
 
     private void CompleteTutorial()
     {
         if (_isCompleting) return;
         _isCompleting = true;
+        StopAllCoroutines();
         Unsubscribe();
-        _shopPanel?.SetTutorialPurchaseRestriction(null);
-        focusIndicator?.Hide();
-        focusIndicator?.SetInputBlocked(false);
+        shopPanel?.SetTutorialPurchaseRestriction(null);
+        _interactionController?.Clear();
         bottomTabPanel?.RefreshCurrentTab();
-        _wavePanel?.RefreshTutorialState();
+        wavePanel?.RefreshTutorialState();
         PlayerPrefs.SetInt(CompletionKey, 1);
         PlayerPrefs.Save();
-        if (overlay != null) overlay.SetActive(false);
+        _uiController?.Hide();
         enabled = false;
+    }
+
+    private IEnumerator CompleteAfterMaximumDuration()
+    {
+        yield return new WaitForSecondsRealtime(maximumDuration);
+        CompleteTutorial();
     }
 
     private void OnDestroy()

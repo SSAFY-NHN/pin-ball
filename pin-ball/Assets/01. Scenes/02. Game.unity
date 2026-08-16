@@ -7661,6 +7661,8 @@ MonoBehaviour:
   shopButton: {fileID: 1960021617}
   itemsButton: {fileID: 342894298}
   waveStartButton: {fileID: 1314551025}
+  shopPanel: {fileID: 496806370}
+  wavePanel: {fileID: 2615215758285947731}
   goalFocusTarget: {fileID: 1244877836}
   magnetFocusTarget: {fileID: 565351585}
   launcherFocusTarget: {fileID: 1424973156}
