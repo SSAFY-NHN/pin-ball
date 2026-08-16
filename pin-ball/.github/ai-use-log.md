@@ -157,3 +157,33 @@
 - 사용자 직접 결정/수정 필요 영역: 실제 플레이에서 회오리 크기·위치·재생 시간과 `boss_wind`·버튼 클릭음 볼륨 체감 조정 가능
 - 중요한 프롬프트/지침: 기존 보스 이펙트 프리팹 재사용, 반복 생성 대신 캐릭터별 인스턴스 재사용, Title·Game 씬 버튼 공통 적용, 기존 변경 보존
 - 테스트/검증 결과: 사용자 요청에 따라 리컴파일·자동 테스트·플레이 검증을 실행하지 않고 구현 상태로 인계
+
+## 2026-08-16 핀볼 객체지향 리팩터링
+
+- 사용한 AI 도구/모델: Codex, GPT-5 계열 모델
+- 사용자 요청: 기존 핀볼 동작과 프로젝트 고정 구조를 유지하면서 `PinballManager`에 집중된 책임을 별도 워크트리에서 객체 합성으로 분리
+- AI 제안 내용: `PinballManager`를 기존 공개 Facade로 유지하고 공 풀, 발사 상태, 아이템 보정, 골 선택 상태를 각각 `PinballBallPool`, `PinballLaunchState`, `PinballItemModifiers`, `PinballGoalController`로 분리
+- AI 실제 수정 영역: `PinballManager`, `Pinball`, `PinballReflectorController`, 신규 일반 C# 책임 객체 4개와 설계 문서
+- 사용자 직접 결정/수정 필요 영역: 사용자가 별도 워크트리 방식과 전체 핀볼 내부 책임 분리를 승인했으며, `Pinball` 초기화 시 Manager를 명시적으로 전달하지 않고 `App.Get<PinballManager>()`를 사용하도록 결정
+- 중요한 프롬프트/지시: 기존 Scene·Prefab·공개 API·이벤트 순서·SetActive 풀링 보존, 새 interface 및 전역 상태 금지, 테스트·빌드·Unity·정적 분석 실행 금지
+- 테스트/검증 결과: 사용자 지시에 따라 테스트, 빌드, Unity Editor, 정적 분석과 별도 validation을 실행하지 않았으며 코드 수정과 커밋만 수행
+
+## 2026-08-16 아이템 객체지향 리팩터링
+
+- 사용한 AI 도구/모델: Codex, GPT-5 계열 모델
+- 사용자 요청: 핀볼 작업과 분리된 새 워크트리에서 `ItemManager`의 남은 책임을 기존 동작과 공개 API를 유지한 채 리팩터링
+- AI 제안 내용: `ItemManager`를 구매와 Unity 생명주기 조정 Facade로 유지하고 카탈로그, 보유 상태, 구독·이벤트 큐를 각각 `ItemCatalogController`, `ItemInventoryController`, `ItemEventController`로 분리
+- AI 실제 수정 영역: `ItemManager`와 신규 Controller 3개 및 Unity meta 파일
+- 사용자 직접 결정/수정 필요 영역: 사용자가 별도 워크트리를 선택했고, 구현 후 보고된 책임 분리안을 승인된 설계로 간주하기로 결정
+- 중요한 프롬프트/지시: 외부 호출부와 이벤트 순서 보존, 기존 App 구조 유지, 범위 밖 UI·전투·튜토리얼 수정 금지, 테스트·빌드·Unity·정적 분석 실행 금지
+- 테스트/검증 결과: 사용자 지시에 따라 테스트, 빌드, Unity Editor, 정적 분석과 별도 validation을 실행하지 않았으며 코드 수정과 커밋만 수행
+
+## 2026-08-16 리팩터링 M0 브랜치 통합
+
+- 사용한 AI 도구/모델: Codex, GPT-5 계열 모델
+- 사용자 요청: 별도 승인 절차 없이 M0를 바로 수행해 아이템 리팩터링을 커밋하고 핀볼·아이템 브랜치를 `Dev`에 통합
+- AI 제안 내용: 아이템 변경만 먼저 독립 커밋한 뒤 핀볼, 아이템 순서로 비강제 병합하고 작업 브랜치와 워크트리는 삭제하지 않고 보존
+- AI 실제 수정 영역: `codex/item-oop-refactor` 구현 커밋, `codex/pinball-oop-refactor`와 `codex/item-oop-refactor`의 `Dev` 병합, 본 AI 사용 기록
+- 사용자 직접 결정/수정 필요 영역: 사용자가 로컬 `Dev` 통합을 직접 지시했으며 후속 M1 범위와 시작 시점은 별도 결정 필요
+- 중요한 프롬프트/지시: 설계 승인 없이 M0 즉시 수행, 기존 변경 보존, 테스트·빌드·Unity·정적 분석 실행 금지
+- 테스트/검증 결과: 두 브랜치는 Git 충돌 없이 `Dev`에 병합됐으며 사용자 지시에 따라 테스트, 빌드, Unity Editor, 정적 분석과 별도 validation은 실행하지 않음
