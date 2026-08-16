@@ -34,14 +34,14 @@ public class SoundManagerTests
                 Is.EqualTo(SoundName.MainBgm));
 
             Dictionary<string, string> bgm = ReadClipPaths(
-                serializedManager.FindProperty("_bgmClips"));
+                serializedManager.FindProperty("bgmClips"));
             Assert.That(bgm, Has.Count.EqualTo(1));
             Assert.That(
                 bgm[SoundName.MainBgm],
                 Is.EqualTo("Assets/06. Sounds/BGM/main2.mp3"));
 
             Dictionary<string, string> sfx = ReadClipPaths(
-                serializedManager.FindProperty("_sfxClips"));
+                serializedManager.FindProperty("sfxClips"));
             var expectedSfx = new Dictionary<string, string>
             {
                 [SoundName.Arrow] = "arrow_sound.mp3",
@@ -73,7 +73,7 @@ public class SoundManagerTests
             }
 
             var bgmPlayer = serializedManager
-                .FindProperty("_bgmPlayer")
+                .FindProperty("bgmPlayer")
                 .objectReferenceValue as AudioSource;
             Assert.That(bgmPlayer, Is.Not.Null);
             Assert.That(bgmPlayer.loop, Is.True);
