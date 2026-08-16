@@ -5,6 +5,8 @@ using UnityEngine;
 public sealed class PinballGoalController
 {
     private readonly List<PinballGoal> _goals = new();
+    private readonly Dictionary<PinballGoal, BattleUnitSpawnData>
+        _initialUnitData = new();
 
     private int _selectedGoalIndex;
     private int _pendingSwapGoalIndex = -1;
@@ -38,6 +40,7 @@ public sealed class PinballGoalController
         }
 
         _goals.Add(goal);
+        _initialUnitData[goal] = CopyUnitData(goal.UnitData);
         _goals.Sort((left, right) =>
             left.transform.position.x.CompareTo(
                 right.transform.position.x));
@@ -47,6 +50,7 @@ public sealed class PinballGoalController
     public void Unregister(PinballGoal goal)
     {
         _goals.Remove(goal);
+        _initialUnitData.Remove(goal);
         _selectedGoalIndex = Mathf.Clamp(
             _selectedGoalIndex,
             0,
@@ -112,6 +116,40 @@ public sealed class PinballGoalController
         _remainingSwapCount = _swapCount;
         _pendingSwapGoalIndex = -1;
         RefreshGoalWidths();
+    }
+
+    public void ResetForNewRun()
+    {
+        _selectedGoalIndex = 0;
+        _pendingSwapGoalIndex = -1;
+        _swapCount = 0;
+        _remainingSwapCount = 0;
+        _focusedPocketBonus = 0f;
+        _otherPocketPenalty = 0f;
+
+        foreach (var goal in _goals)
+        {
+            if (goal != null &&
+                _initialUnitData.TryGetValue(goal, out var initialData))
+            {
+                goal.SetUnitData(CopyUnitData(initialData));
+            }
+        }
+
+        RefreshGoalWidths();
+    }
+
+    private static BattleUnitSpawnData CopyUnitData(
+        BattleUnitSpawnData source)
+    {
+        return source == null
+            ? new BattleUnitSpawnData()
+            : new BattleUnitSpawnData
+            {
+                UnitId = source.UnitId,
+                Level = source.Level,
+                Modifier = source.Modifier
+            };
     }
 
     private void RefreshGoalWidths()

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 public sealed class PinballBallPool
 {
+    private readonly List<Pinball> _pooledBalls = new();
     private readonly Queue<Pinball> _availableBalls = new();
     private readonly HashSet<Pinball> _activeBalls = new();
 
@@ -15,10 +16,25 @@ public sealed class PinballBallPool
     {
         foreach (var ball in pooledBalls)
         {
-            if (ball != null)
+            if (ball != null && !_pooledBalls.Contains(ball))
             {
-                _availableBalls.Enqueue(ball);
+                _pooledBalls.Add(ball);
             }
+        }
+
+        ResetForNewRun();
+    }
+
+    public void ResetForNewRun()
+    {
+        LoadedBall = null;
+        _activeBalls.Clear();
+        _availableBalls.Clear();
+        foreach (var ball in _pooledBalls)
+        {
+            if (ball == null) continue;
+            ball.Deactivate();
+            _availableBalls.Enqueue(ball);
         }
     }
 

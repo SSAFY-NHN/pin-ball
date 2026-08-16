@@ -45,6 +45,7 @@ public class PinballManager : AppService, IItemEventListener
     private PinballLaunchState _launchState = new(50, 30);
     private readonly PinballItemModifiers _itemModifiers = new();
     private readonly PinballGoalController _goalController = new();
+    private PinballRewardController _rewardController;
 
     private void Start()
     {
@@ -64,12 +65,15 @@ public class PinballManager : AppService, IItemEventListener
         _launchState = new PinballLaunchState(
             baseLaunchCost,
             launchCostIncrease);
+        _ballPool = new PinballBallPool(pooledBalls);
+        _rewardController = new PinballRewardController(
+            _battleManager,
+            _unitManager,
+            _ballPool,
+            _itemModifiers);
+        ResetForNewRun();
         SubscribeItems();
         _battleManager.OnStateChanged += OnBattleStateChanged;
-
-        _ballPool = new PinballBallPool(pooledBalls);
-        LoadNextBall();
-        NotifyLaunchCostChanged();
     }
 
     private void SubscribeItems()
@@ -150,11 +154,8 @@ public class PinballManager : AppService, IItemEventListener
 
         SoundManager.PlaySFXIfAvailable(SoundName.BumperHit);
         ball.BigBumperHitCount++;
-        int baseReward = _itemModifiers.GoldenBallReward;
-        _battleManager.AddGold(baseReward);
-        int totalReward = baseReward + ApplyGoldenBumper(ball);
+        int totalReward = _rewardController.ApplyBumperReward(ball);
         ball.PlayGoldRewardFeedback(hitPosition, totalReward);
-        ApplySplitCapsule(ball);
     }
 
     internal void OnBallHitSurface()
@@ -205,25 +206,7 @@ public class PinballManager : AppService, IItemEventListener
         };
         OnGoalReached?.Invoke(unitData);
 
-        var attackBonus =
-            _itemModifiers.CalculateChargedPinAttackBonus(
-                ball.SmallPinHitCount);
-
-        _unitManager.SpawnAlly(unitData, attackBonus);
-
-        if (_itemModifiers.CanApplyOverload(
-                ball.BigBumperHitCount,
-                ball.OverloadUseCount))
-        {
-            for (var i = 0;
-                 i < _itemModifiers.OverloadSpawnCount;
-                 i++)
-            {
-                _unitManager.SpawnAlly(unitData, attackBonus);
-            }
-
-            ball.OverloadUseCount++;
-        }
+        _rewardController.ApplyGoalReward(ball, unitData);
 
         ReleaseBall(ball);
     }
@@ -301,46 +284,6 @@ public class PinballManager : AppService, IItemEventListener
         }
     }
 
-    private int ApplyGoldenBumper(Pinball ball)
-    {
-        int reward =
-            _itemModifiers.CalculateGoldenBumperReward(
-                ball.GoldenBumperGold);
-        if (reward <= 0) return 0;
-
-        ball.GoldenBumperGold += reward;
-        _battleManager.AddGold(reward);
-        return reward;
-    }
-
-    private void ApplySplitCapsule(Pinball source)
-    {
-        if (_itemModifiers.SplitCount <= 0 ||
-            source.IsClone ||
-            source.HasSplit)
-        {
-            return;
-        }
-
-        source.HasSplit = true;
-        for (var i = 0; i < _itemModifiers.SplitCount; i++)
-        {
-            if (_ballPool == null ||
-                !_ballPool.TryAcquireActive(out var clone))
-            {
-                break;
-            }
-
-            clone.Activate(
-                source.transform.position,
-                source.Velocity.normalized,
-                true);
-            clone.SetVelocity(
-                source.Velocity *
-                _itemModifiers.SplitSpeedMultiplier);
-        }
-    }
-
     private void OnBattleStateChanged(EWaveState state)
     {
         if (state != EWaveState.Pending) return;
@@ -369,6 +312,17 @@ public class PinballManager : AppService, IItemEventListener
         ball.LoadAt(position);
         ball.PlayLoadedFeedback();
         launcherController?.SetLoaded(true);
+    }
+
+    internal void ResetForNewRun()
+    {
+        _ballPool?.ResetForNewRun();
+        _launchState.ResetForNewRun();
+        _goalController.ResetForNewRun();
+        _itemModifiers.ResetForNewRun();
+        launcherController?.SetLoaded(false);
+        LoadNextBall();
+        NotifyLaunchCostChanged();
     }
 
     protected override void OnDestroy()

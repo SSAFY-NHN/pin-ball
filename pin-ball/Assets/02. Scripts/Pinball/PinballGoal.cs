@@ -12,16 +12,23 @@ public class PinballGoal : MonoBehaviour
 
     public BattleUnitSpawnData UnitData => unitData;
 
+    [Header("VFX")]
+    [SerializeField] private Material effectMaterial;
+    [SerializeField] private ArcaneSpriteEffect runeBurst;
+    [SerializeField] private ArcaneSpriteEffect absorptionRing;
+    [SerializeField] private ArcaneSpriteEffect goalBurst;
+    [SerializeField] private ArcaneSpriteEffect arcTopLeft;
+    [SerializeField] private ArcaneSpriteEffect arcTopRight;
+    [SerializeField] private ArcaneSpriteEffect arcBottomLeft;
+    [SerializeField] private ArcaneSpriteEffect arcBottomRight;
+    [SerializeField] private ArcaneSpriteEffect goalSpark;
+
     private PinballManager _pinballManager;
     private BoxCollider2D _collider;
     private float _baseWidth;
     private ArcaneMaskGlowController _runeGlow;
     private Transform _runeTransform;
     private ArcaneSpriteEffect[] _goalEffects;
-    private ArcaneSpriteEffect _runeBurst;
-    private ArcaneSpriteEffect _absorptionRing;
-    private ArcaneSpriteEffect _goalBurst;
-    private Material _effectMaterial;
     private BattleCameraController _cameraFeedback;
 
     private void Awake()
@@ -51,7 +58,6 @@ public class PinballGoal : MonoBehaviour
     {
         _pinballManager?.UnregisterGoal(this);
         _runeTransform?.DOKill();
-        if (_effectMaterial != null) Destroy(_effectMaterial);
     }
 
     private void OnMouseDown()
@@ -105,16 +111,6 @@ public class PinballGoal : MonoBehaviour
         _runeGlow = _runeTransform?
             .GetComponent<ArcaneMaskGlowController>();
 
-        var shader = Resources.Load<Shader>("ArcaneVFX/ArcaneAdditive");
-        if (shader == null) return;
-
-        _effectMaterial = new Material(shader)
-        {
-            name = "Arcane Goal VFX (Runtime)",
-            hideFlags = HideFlags.HideAndDontSave
-        };
-        _effectMaterial.SetFloat("_Intensity", 1.8f);
-        _effectMaterial.SetFloat("_GlowSpread", 1.25f);
         _cameraFeedback = Camera.main != null
             ? Camera.main.GetComponent<BattleCameraController>()
             : null;
@@ -123,30 +119,26 @@ public class PinballGoal : MonoBehaviour
             : null;
         if (runeRenderer != null)
         {
-            _runeBurst = CreateEffect(
-                "Goal Rune Burst",
+            runeBurst?.Initialize(
                 new[] { runeRenderer.sprite },
+                effectMaterial,
                 25);
         }
-        _absorptionRing = CreateEffect("Goal Absorption Ring", catalog.ballRing, 24);
-        _goalBurst = CreateEffect("Goal Burst Ring", catalog.ballRing, 25);
+        absorptionRing?.Initialize(catalog.ballRing, effectMaterial, 24);
+        goalBurst?.Initialize(catalog.ballRing, effectMaterial, 25);
+        arcTopLeft?.Initialize(catalog.goalArcTopLeft, effectMaterial, 23);
+        arcTopRight?.Initialize(catalog.goalArcTopRight, effectMaterial, 23);
+        arcBottomLeft?.Initialize(catalog.goalArcBottomLeft, effectMaterial, 23);
+        arcBottomRight?.Initialize(catalog.goalArcBottomRight, effectMaterial, 23);
+        goalSpark?.Initialize(catalog.goalSpark, effectMaterial, 24);
         _goalEffects = new[]
         {
-            CreateEffect("Goal Arc Top Left", catalog.goalArcTopLeft, 23),
-            CreateEffect("Goal Arc Top Right", catalog.goalArcTopRight, 23),
-            CreateEffect("Goal Arc Bottom Left", catalog.goalArcBottomLeft, 23),
-            CreateEffect("Goal Arc Bottom Right", catalog.goalArcBottomRight, 23),
-            CreateEffect("Goal Spark", catalog.goalSpark, 24)
+            arcTopLeft,
+            arcTopRight,
+            arcBottomLeft,
+            arcBottomRight,
+            goalSpark
         };
-    }
-
-    private ArcaneSpriteEffect CreateEffect(string effectName, Sprite[] sprites, int sortingOrder)
-    {
-        var child = new GameObject(effectName);
-        child.transform.SetParent(transform, false);
-        var effect = child.AddComponent<ArcaneSpriteEffect>();
-        effect.Initialize(sprites, _effectMaterial, sortingOrder);
-        return effect;
     }
 
     private void PlayGoalEffect(Vector2 ballPosition)
@@ -168,20 +160,20 @@ public class PinballGoal : MonoBehaviour
         var runePosition = _runeTransform != null
             ? _runeTransform.position
             : position;
-        _runeBurst?.Play(
+        runeBurst?.Play(
             runePosition,
             0.42f,
             Vector3.one * 0.42f,
             Vector3.one * 0.78f,
             new Color(0.25f, 0.9f, 1f, 1f));
-        _absorptionRing?.Play(
+        absorptionRing?.Play(
             ballPosition,
             runePosition,
             0.22f,
             Vector3.one * 1.15f,
             Vector3.one * 0.18f,
             new Color(0.55f, 0.12f, 1f, 1f));
-        _goalBurst?.Play(
+        goalBurst?.Play(
             runePosition,
             0.38f,
             Vector3.one * 0.25f,

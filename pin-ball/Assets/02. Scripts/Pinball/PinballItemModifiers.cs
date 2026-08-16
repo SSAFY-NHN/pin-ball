@@ -22,6 +22,28 @@ public sealed class PinballItemModifiers
     private int _overloadRequiredHits;
     private int _overloadMaxCount;
 
+    public void ResetForNewRun()
+    {
+        GoldenBallReward = 1;
+        LaunchCostDiscount = 0;
+        MinimumLaunchCost = 0;
+        TargetMagnetDistanceMultiplier = 0f;
+        TargetMagnetStrength = 0f;
+        TargetMagnetCount = 0;
+        SplitCount = 0;
+        SplitSpeedMultiplier = 0f;
+        FocusedPocketBonus = 0f;
+        OtherPocketPenalty = 0f;
+        SwapCount = 0;
+        OverloadSpawnCount = 0;
+        _goldenBumperReward = 0;
+        _goldenBumperMaxReward = 0;
+        _chargedPinRequiredHits = 0;
+        _chargedPinAttackBonus = 0f;
+        _overloadRequiredHits = 0;
+        _overloadMaxCount = 0;
+    }
+
     public void Apply(Item item)
     {
         switch (item.Key)

@@ -43,4 +43,11 @@ public sealed class PinballLaunchState
     {
         _successfulLaunchCount = 0;
     }
+
+    public void ResetForNewRun()
+    {
+        _successfulLaunchCount = 0;
+        _launchCostDiscount = 0;
+        _minimumLaunchCost = 0;
+    }
 }
