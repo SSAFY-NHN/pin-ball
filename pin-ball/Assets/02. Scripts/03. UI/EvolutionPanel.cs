@@ -29,7 +29,12 @@ public class EvolutionPanel : UIBase
     {
         bool firstReady = firstChoice.Bind(first, OnChoiceSelected);
         bool secondReady = secondChoice.Bind(second, OnChoiceSelected);
-        if (!firstReady || !secondReady) return;
+        if (!firstReady || !secondReady)
+        {
+            _unitManager.CancelPendingEvolution();
+            gameObject.SetActive(false);
+            return;
+        }
 
         gameObject.SetActive(true);
         transform.SetAsLastSibling();

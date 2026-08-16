@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,14 +16,14 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     public event Action<AllyUnit> OnAllyDetailRequested;
     public event Action<int> OnDeployedAllyCountChanged;
     public event Action<int> OnAlliesMerged;
+    internal event Action OnBattleRosterChanged;
 
     private UnitRoster _roster;
     private UnitTargetFinder _targetFinder;
-    private UnitCreationService _creationService;
-    private BattleUnitModifiers _unitModifiers;
-    private UnitPlacementService _placementService;
-    private UnitMergeService _mergeService;
     private UnitCombatContext _combatContext;
+    private UnitSpawnController _spawnController;
+    private UnitPreparationController _preparationController;
+    private UnitItemController _itemController;
 
     public IReadOnlyList<AllyUnit> OwnedAllies => _roster.OwnedAllies;
     public BattleAreaBounds BattleArea => battleArea;
@@ -39,8 +40,8 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     private TitleData _titleData;
     [SerializeField] private BattleAreaBounds battleArea;
     [SerializeField] private EvolutionGlowEffect evolutionGlowEffect;
-    private int _enemySpawnIndex;
     private ItemManager _itemManager;
+    private Coroutine _automaticPotionCoroutine;
 
     protected override void Awake()
     {
@@ -48,55 +49,50 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         _spawner = GetComponent<UnitSpawner>();
         _roster = new UnitRoster();
         _targetFinder = new UnitTargetFinder(_roster);
-        _unitModifiers = new BattleUnitModifiers();
-        _placementService = new UnitPlacementService(battleArea);
     }
 
     private void Start()
     {
         _battleManager = App.Get<BattleManager>();
         _titleData = App.Get<TitleData>();
-        _creationService = new UnitCreationService(_titleData);
-        _mergeService = new UnitMergeService(_titleData);
         _combatContext = new UnitCombatContext(
             _targetFinder,
             battleArea,
-            NotifyUnitDied);
+            NotifyUnitDied,
+            NotifyUnitDamaged);
+        _spawnController = new UnitSpawnController(
+            _titleData,
+            _spawner,
+            _combatContext,
+            this);
+        _preparationController = new UnitPreparationController(
+            _roster,
+            _titleData,
+            battleArea);
         _battleManager.OnStateChanged += OnStateChanged;
 
         _itemManager = App.Get<ItemManager>();
+        _itemController = new UnitItemController(_itemManager);
         _itemManager.Subscribe(EItem.BattleClock, this);
         _itemManager.Subscribe(EItem.FieldArmor, this);
         _itemManager.Subscribe(EItem.DiversityEmblem, this);
     }
 
-    private void Update()
+    private void NotifyUnitDamaged(UnitBase unit)
     {
-        if (_battleManager == null || _battleManager.State != EWaveState.Active) return;
+        if (unit == null || unit.Team != EBattleTeam.Ally ||
+            _automaticPotionCoroutine != null) return;
 
-        for (int i = 0; i < _roster.ActiveAllies.Count; i++)
-        {
-            var ally = _roster.ActiveAllies[i];
-            if (ally == null || !ally.IsAlive || ally.HpRatio >= 0.5f) continue;
-
-            if (_itemManager.TryConsume(EItem.PartyHealingPotion))
-            {
-                HealAllActiveAllies(0.25f);
-            }
-            else if (_itemManager.TryConsume(EItem.PersonalHealingPotion))
-            {
-                ally.Heal(ally.MaxHp * 0.5f);
-            }
-
-            break;
-        }
+        _automaticPotionCoroutine = StartCoroutine(CheckAutomaticPotionNextFrame());
     }
 
-    private void HealAllActiveAllies(float ratio)
+    private IEnumerator CheckAutomaticPotionNextFrame()
     {
-        foreach (var ally in _roster.ActiveAllies)
+        yield return null;
+        _automaticPotionCoroutine = null;
+        if (_battleManager != null && _battleManager.State == EWaveState.Active)
         {
-            if (ally != null && ally.IsAlive) ally.Heal(ally.MaxHp * ratio);
+            _itemController.TryUseAutomaticPotion(_roster.ActiveAllies);
         }
     }
 
@@ -125,31 +121,15 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             return null;
         }
 
-        if (_creationService == null ||
-            !_creationService.TryCreateAlly(
-                unitData,
-                temporaryAttackBonus,
-                out AllyUnitData allyData,
-                out BattleUnitStats finalStats))
-        {
-            Debug.LogWarning($"[UnitManager] Invalid ally stats: {unitData.UnitId}");
-            return null;
-        }
-
-        var spawnedUnit = _spawner.SpawnAlly(
+        var spawnedUnit = _spawnController?.SpawnAlly(
             unitData,
-            allyData,
-            _titleData.AllyCommon,
-            finalStats,
-            _combatContext,
-            this,
-            UnitSkillRegistry.CreateDefault());
+            temporaryAttackBonus);
         if (spawnedUnit == null)
         {
             return null;
         }
 
-        if (!_placementService.TryPlaceInFreeGridSlot(spawnedUnit))
+        if (!_preparationController.TryPlaceInFreeGridSlot(spawnedUnit))
         {
             Debug.LogWarning(
                 "[UnitManager] No available ally preparation grid slot.");
@@ -169,7 +149,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             return;
         }
 
-        _enemySpawnIndex = 0;
+        _spawnController.BeginEnemyWave();
         for (var entryIndex = 0; entryIndex < wave.Enemies.Count; entryIndex++)
         {
             var spawnData = wave.Enemies[entryIndex];
@@ -192,25 +172,10 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             : _titleData != null && _titleData.EnemyCommon != null
                 ? _titleData.EnemyCommon.BaseWave
                 : 0;
-        if (_creationService == null ||
-            !_creationService.TryCreateEnemy(
-                enemyId,
-                wave,
-                out EnemyUnitData enemyData,
-                out BattleUnitStats stats))
-        {
-            Debug.LogWarning($"[UnitManager] Invalid enemy stats: {enemyId}");
-            return null;
-        }
-
-        var enemy = _spawner.SpawnEnemy(
-            enemyData,
-            stats,
-            _enemySpawnIndex++,
-            _combatContext,
-            spawnPosition,
-            this,
-            UnitSkillRegistry.CreateDefault());
+        var enemy = _spawnController?.SpawnEnemy(
+            enemyId,
+            wave,
+            spawnPosition);
         AddEnemy(enemy);
         return enemy;
     }
@@ -242,6 +207,8 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         {
             OnDeployedAllyCountChanged?.Invoke(DeployedAllyCount);
         }
+
+        OnBattleRosterChanged?.Invoke();
     }
 
     private bool RemoveOwnedAlly(AllyUnit ally)
@@ -250,11 +217,12 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
 
         int previousOwnedCount = _roster.OwnedAllyCount;
         _roster.RemoveUnit(ally);
-        _placementService.Remove(ally);
+        _preparationController.Remove(ally);
         bool removed = _roster.OwnedAllyCount != previousOwnedCount;
         if (removed)
         {
             OnDeployedAllyCountChanged?.Invoke(DeployedAllyCount);
+            OnBattleRosterChanged?.Invoke();
         }
 
         return removed;
@@ -262,7 +230,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
 
     public void AddEnemy(UnitBase enemy)
     {
-        _roster.AddEnemy(enemy);
+        if (_roster.AddEnemy(enemy)) OnBattleRosterChanged?.Invoke();
     }
 
     public void NotifyUnitDied(UnitBase unit)
@@ -279,11 +247,19 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
 
         _roster.NotifyUnitDied(unit);
         _spawner.ReturnUnit(unit);
+        OnBattleRosterChanged?.Invoke();
     }
 
     public void CleanupDestroyedUnits()
     {
+        int previousAllyCount = _roster.ActiveAllyCount;
+        int previousEnemyCount = _roster.ActiveEnemyCount;
         _roster.CleanupDestroyedUnits();
+        if (previousAllyCount != _roster.ActiveAllyCount ||
+            previousEnemyCount != _roster.ActiveEnemyCount)
+        {
+            OnBattleRosterChanged?.Invoke();
+        }
     }
 
     public void ResolveWaveResult()
@@ -302,7 +278,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         }
         else
         {
-            _roster.RemoveUnit(unit);
+            if (_roster.RemoveUnit(unit)) OnBattleRosterChanged?.Invoke();
         }
 
         _spawner.ReturnUnit(unit);
@@ -334,11 +310,11 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             var ally = _roster.OwnedAllies[i];
             if (ally == null) continue;
 
-            if (!_placementService.TryGetSavedPosition(
+            if (!_preparationController.TryGetSavedPosition(
                     ally,
                     out Vector3 preparationPosition) &&
-                (!_placementService.TryPlaceInFreeGridSlot(ally) ||
-                 !_placementService.TryGetSavedPosition(
+                (!_preparationController.TryPlaceInFreeGridSlot(ally) ||
+                 !_preparationController.TryGetSavedPosition(
                      ally,
                      out preparationPosition)))
             {
@@ -357,44 +333,21 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
 
     public bool CanDragAlly(AllyUnit ally)
     {
-        return ally != null &&
-               _battleManager != null &&
-               _battleManager.CanUsePreparationActions &&
-               _roster.OwnedAllies.Contains(ally) &&
-               (_mergeService == null || !_mergeService.IsReserved(ally)) &&
-               ally.IsAlive;
+        return _preparationController != null &&
+               _preparationController.CanDrag(
+                   ally,
+                   _battleManager != null &&
+                   _battleManager.CanUsePreparationActions);
     }
 
     public void BeginAllyDragHighlight(AllyUnit source)
     {
-        EndAllyDragHighlight();
-        if (source == null || _titleData == null ||
-            !_titleData.TryGetRootAllyJob(source.UnitId, out var sourceRoot))
-        {
-            return;
-        }
-
-        foreach (var ally in _roster.OwnedAllies)
-        {
-            if (ally == null || ally == source || ally.IsInPool ||
-                !ally.IsAlive || !ally.gameObject.activeInHierarchy ||
-                !_titleData.TryGetRootAllyJob(ally.UnitId, out var allyRoot))
-            {
-                continue;
-            }
-
-            ally.SetLineageHighlighted(allyRoot.id == sourceRoot.id);
-        }
+        _preparationController?.BeginLineageHighlight(source);
     }
 
     public void EndAllyDragHighlight()
     {
-        if (_roster == null) return;
-
-        foreach (var ally in _roster.OwnedAllies)
-        {
-            ally?.SetLineageHighlighted(false);
-        }
+        _preparationController?.EndLineageHighlight();
     }
 
     public void RequestAllyDetail(AllyUnit ally)
@@ -411,7 +364,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         Vector3 position)
     {
         return CanDragAlly(ally) &&
-               _placementService.IsValidPlacement(ally, position);
+               _preparationController.IsValidPlacement(ally, position);
     }
 
     public void SaveAllyPreparationPosition(AllyUnit ally)
@@ -419,7 +372,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         if (!CanDragAlly(ally) ||
             !IsValidAllyPlacement(ally, ally.transform.position)) return;
 
-        _placementService.TrySave(ally, ally.transform.position);
+        _preparationController.TrySave(ally, ally.transform.position);
     }
 
     public bool TryMergeAllies(
@@ -428,16 +381,11 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         Vector3 sourceOriginalPosition)
     {
         if (!CanDragAlly(source) || !CanDragAlly(target)) return false;
-        UnitMergeDecision decision = _mergeService.TryBegin(source, target);
-        if (decision.Type == UnitMergeDecisionType.Rejected)
-        {
-            if (decision.RestoreSourcePosition)
-            {
-                source.transform.position = sourceOriginalPosition;
-            }
-
-            return false;
-        }
+        UnitMergeDecision decision = _preparationController.TryBeginMerge(
+            source,
+            target,
+            sourceOriginalPosition);
+        if (decision.Type == UnitMergeDecisionType.Rejected) return false;
 
         if (decision.Type == UnitMergeDecisionType.Immediate)
         {
@@ -446,35 +394,26 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
                 decision.ResultUnitId,
                 decision.ResultLevel,
                 decision.ResultPosition);
-            _mergeService.Complete(decision);
+            _preparationController.Complete(decision);
             OnAlliesMerged?.Invoke(decision.ResultLevel);
             return true;
         }
 
-        if (!ChooseAutomaticEvolution())
+        _battleManager.SetPreparationLock(true);
+        if (OnEvolutionRequested == null)
         {
-            source.transform.position = sourceOriginalPosition;
-            _mergeService.CancelPendingEvolution();
+            CancelPendingEvolution();
             return false;
         }
 
-        OnAlliesMerged?.Invoke(decision.ResultLevel);
+        OnEvolutionRequested.Invoke(decision.FirstChoice, decision.SecondChoice);
         return true;
-    }
-
-    private bool ChooseAutomaticEvolution()
-    {
-        if (_mergeService == null ||
-            !_mergeService.TryChooseAutomaticEvolution(
-                out UnitMergeDecision decision)) return false;
-
-        return CompleteEvolution(decision);
     }
 
     public bool ChooseEvolution(string unitId)
     {
-        if (_mergeService == null ||
-            !_mergeService.TryChooseEvolution(
+        if (_preparationController == null ||
+            !_preparationController.TryChooseEvolution(
                 unitId,
                 out UnitMergeDecision decision)) return false;
 
@@ -488,7 +427,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             decision.ResultUnitId,
             decision.ResultLevel,
             decision.ResultPosition);
-        _mergeService.Complete(decision);
+        _preparationController.Complete(decision);
         _battleManager.SetPreparationLock(false);
 
         if (evolvedAlly != null)
@@ -497,7 +436,14 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             SoundManager.PlaySFXIfAvailable(SoundName.Evolution);
         }
 
+        OnAlliesMerged?.Invoke(decision.ResultLevel);
         return true;
+    }
+
+    internal void CancelPendingEvolution()
+    {
+        _preparationController?.CancelPendingEvolution();
+        _battleManager?.SetPreparationLock(false);
     }
 
     private void ConsumeReservedInputs(UnitMergeDecision decision)
@@ -520,7 +466,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         if (result != null)
         {
             result.transform.position = position;
-            _placementService.TrySave(result, position);
+            _preparationController.TrySave(result, position);
         }
 
         return result;
@@ -608,43 +554,22 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
 
     public void OnItemEvent(Item item)
     {
-        _unitModifiers.Apply(
-            item.Key,
-            item.Value1,
-            item.Value2,
-            item.Value3);
-
-        RefreshAllyItemModifiers();
+        _itemController.Apply(item, _roster.ActiveAllies);
     }
 
     private void RefreshAllyItemModifiers()
     {
-        var unitTypes = new HashSet<string>();
-        foreach (var ally in _roster.ActiveAllies)
-        {
-            if (ally != null)
-            {
-                unitTypes.Add(ally.name);
-            }
-        }
-
-        UnitModifierSnapshot snapshot =
-            _unitModifiers.GetRosterSnapshot(unitTypes.Count);
-
-        foreach (var ally in _roster.ActiveAllies)
-        {
-            if (ally == null) continue;
-
-            ally.ApplyItemModifiers(
-                snapshot.AttackMultiplier,
-                snapshot.AttackRateMultiplier,
-                snapshot.HpMultiplier);
-        }
+        _itemController?.Refresh(_roster.ActiveAllies);
     }
 
     protected override void OnDestroy()
     {
-        _mergeService?.CancelPendingEvolution();
+        if (_automaticPotionCoroutine != null)
+        {
+            StopCoroutine(_automaticPotionCoroutine);
+            _automaticPotionCoroutine = null;
+        }
+        _preparationController?.CancelPendingEvolution();
         if (App.TryGet<BattleManager>(out var registeredBattleManager))
         {
             registeredBattleManager.SetPreparationLock(false);

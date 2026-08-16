@@ -151,7 +151,14 @@ public abstract class UnitBase : MonoBehaviour
         _combatFeedback?.PlayDamage(result.AppliedDamage);
         OnDamaged();
 
-        if (result.Died) Die();
+        if (result.Died)
+        {
+            Die();
+        }
+        else if (Team == EBattleTeam.Ally)
+        {
+            _context?.NotifyUnitDamaged?.Invoke(this);
+        }
     }
 
     public void Heal(float amount)
