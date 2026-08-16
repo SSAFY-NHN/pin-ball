@@ -8,7 +8,10 @@ public class ShopPanel : UIBase
 {
     public override bool IsDefaultPanel => true;
     public override bool IsManagedByStack => false;
-    private int DefaultShopItemCount => _itemSlots.Length;
+    private int DefaultShopItemCount => itemSlots?.Length ?? 0;
+
+    [Header("Slots")]
+    [SerializeField] private ShopSlot[] itemSlots;
     
     [Header("Reroll")]
     [SerializeField] private Button rerollButton;
@@ -18,19 +21,19 @@ public class ShopPanel : UIBase
     private readonly List<Item> _candidateItems = new();
     private ItemManager _itemManager;
     private BattleManager _battleManager;
-    private ShopSlot[] _itemSlots;
-    private EItem? _tutorialPurchaseRestriction;
+    private ShopRerollController _rerollController;
+    private ShopPurchasePolicyController _purchasePolicy;
 
     public void SetTutorialPurchaseRestriction(EItem? item)
     {
-        _tutorialPurchaseRestriction = item;
+        _purchasePolicy?.SetTutorialRestriction(item);
         RefreshPurchaseStates();
     }
 
     public ShopSlot FindSlot(EItem item)
     {
-        if (_itemSlots == null) return null;
-        foreach (var slot in _itemSlots)
+        if (itemSlots == null) return null;
+        foreach (var slot in itemSlots)
         {
             if (slot != null && slot.Item != null && slot.Item.Key == item)
             {
@@ -46,6 +49,12 @@ public class ShopPanel : UIBase
 
         _itemManager = App.Get<ItemManager>();
         _battleManager = App.Get<BattleManager>();
+        var offerController = new ShopOfferController(_itemManager);
+        _rerollController = new ShopRerollController(
+            _battleManager,
+            offerController,
+            rerollCost);
+        _purchasePolicy = new ShopPurchasePolicyController(_itemManager);
         _battleManager.OnGoldChanged += OnGoldChanged;
         _battleManager.OnStateChanged += OnBattleStateChanged;
         _battleManager.OnPreparationAvailabilityChanged +=
@@ -60,46 +69,39 @@ public class ShopPanel : UIBase
                 : rerollCost.ToString();
         }
         
-        _itemSlots = GetComponentsInChildren<ShopSlot>();
-
         ValidateItemSlots();
-        RerollItems(true);
+        RefreshItems(true);
     }
 
     private void OnRerollButtonClicked()
     {
-        if (!_battleManager.CanUsePreparationActions)
+        if (!_rerollController.TryReroll(
+                _candidateItems,
+                DefaultShopItemCount))
         {
             RefreshPurchaseStates();
             return;
         }
 
-        if (rerollCost > 0 &&
-            !_battleManager.TrySpendPreparationGold(rerollCost))
-        {
-            RefreshPurchaseStates();
-            return;
-        }
-
-        RerollItems(false);
+        DisplayItems();
     }
 
-    private void RerollItems(bool guaranteePotions)
+    private void RefreshItems(bool guaranteePotions)
     {
-        BuildCandidateItems();
-        ShuffleCandidates();
+        _rerollController.RefreshOffers(
+            _candidateItems,
+            DefaultShopItemCount,
+            guaranteePotions);
+        DisplayItems();
+    }
 
-        if (guaranteePotions)
+    private void DisplayItems()
+    {
+        if (itemSlots == null) return;
+
+        for (var i = 0; i < itemSlots.Length; i++)
         {
-            PinGuaranteedItem(EItem.PartyHealingPotion, 0);
-            PinGuaranteedItem(EItem.PersonalHealingPotion, 1);
-        }
-
-        if (_itemSlots == null) return;
-
-        for (var i = 0; i < _itemSlots.Length; i++)
-        {
-            var slot = _itemSlots[i];
+            var slot = itemSlots[i];
             if (slot == null) continue;
 
             if (i < DefaultShopItemCount && i < _candidateItems.Count)
@@ -117,35 +119,6 @@ public class ShopPanel : UIBase
         RefreshPurchaseStates();
     }
 
-    private void BuildCandidateItems()
-    {
-        _itemManager.GetItems(_candidateItems);
-        _candidateItems.RemoveAll(item =>
-            item == null ||
-            item.Key != EItem.PersonalHealingPotion &&
-            item.Key != EItem.PartyHealingPotion &&
-            !_itemManager.CanPurchase(item.Key));
-    }
-
-    private void PinGuaranteedItem(EItem key, int slotIndex)
-    {
-        int itemIndex = _candidateItems.FindIndex(item => item.Key == key);
-        if (itemIndex < 0 || slotIndex >= DefaultShopItemCount) return;
-        (_candidateItems[slotIndex], _candidateItems[itemIndex]) =
-            (_candidateItems[itemIndex], _candidateItems[slotIndex]);
-    }
-
-    private void ShuffleCandidates()
-    {
-        var drawCount = Mathf.Min(DefaultShopItemCount, _candidateItems.Count);
-        for (var i = 0; i < drawCount; i++)
-        {
-            var randomIndex = Random.Range(i, _candidateItems.Count);
-            (_candidateItems[i], _candidateItems[randomIndex]) =
-                (_candidateItems[randomIndex], _candidateItems[i]);
-        }
-    }
-
     private void OnPurchaseButtonClicked(Item item)
     {
         _itemManager.TryPurchase(item);
@@ -161,7 +134,7 @@ public class ShopPanel : UIBase
     {
         if (_battleManager.State == EWaveState.Pending)
         {
-            RerollItems(true);
+            RefreshItems(true);
             return;
         }
 
@@ -176,20 +149,15 @@ public class ShopPanel : UIBase
     private void RefreshPurchaseStates()
     {
         if (_battleManager == null || _itemManager == null) return;
-        if (_itemSlots == null) return;
+        if (itemSlots == null) return;
 
-        foreach (var slot in _itemSlots)
+        foreach (var slot in itemSlots)
         {
             if (slot == null) continue;
 
             var item = slot.Item;
-            var isPurchased = item != null && !_itemManager.CanPurchase(item.Key);
-            if (item != null &&
-                _tutorialPurchaseRestriction.HasValue &&
-                item.Key != _tutorialPurchaseRestriction.Value)
-            {
-                isPurchased = true;
-            }
+            var isPurchased = item != null &&
+                              !_purchasePolicy.CanPurchase(item);
             slot.RefreshState(
                 _battleManager.Gold,
                 isPurchased,
@@ -206,10 +174,10 @@ public class ShopPanel : UIBase
 
     private void ValidateItemSlots()
     {
-        if (_itemSlots == null || _itemSlots.Length != DefaultShopItemCount)
+        if (itemSlots == null || itemSlots.Length == 0)
         {
             Debug.LogWarning(
-                $"[ShopPanel] Item Slot은 {DefaultShopItemCount}개를 등록해야 합니다.");
+                "[ShopPanel] Item Slot을 Inspector에 등록해야 합니다.");
         }
     }
 

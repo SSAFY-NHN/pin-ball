@@ -3326,6 +3326,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee0439321f56fa94ba1c04b907efdea2, type: 3}
   m_Name:
   m_EditorClassIdentifier:
+  itemSlots:
+  - {fileID: 942406774}
+  - {fileID: 1931393913}
+  - {fileID: 1544616344207679749}
   rerollButton: {fileID: 141975117}
   rerollCostText: {fileID: 144916057}
   rerollCost: 0
