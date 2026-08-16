@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using DG.Tweening;
 
 public enum EWaveHudNodeState
 {
@@ -54,9 +53,6 @@ public sealed class WaveHudState
 
 public class StatusPanel : UIBase
 {
-    private const int WaveNodeCount = 10;
-    private const int WaveConnectorCount = WaveNodeCount - 1;
-
     [SerializeField] private TextMeshProUGUI playerHpText;
     [SerializeField] private TextMeshProUGUI goldText;
     [SerializeField] private TextMeshProUGUI allyCountText;
@@ -90,11 +86,8 @@ public class StatusPanel : UIBase
     private bool _isWaveHudValid;
     private bool _hasDisplayedHp;
     private bool _hasDisplayedGold;
-    private Color _hpBaseColor;
-    private Color _goldBaseColor;
-    private Vector3 _hpBaseScale;
-    private Vector3 _goldBaseScale;
-    private readonly WaveHudState _waveHudState = new();
+    private StatusFeedbackController _feedbackController;
+    private StatusWaveHudController _waveHudController;
 
     public override bool IsDefaultPanel => true;
 
@@ -108,17 +101,32 @@ public class StatusPanel : UIBase
         _battleManager.OnHpChanged += OnHpChanged;
         _battleManager.OnGoldChanged += OnGoldChanged;
 
-        _hpBaseColor = playerHpText.color;
-        _goldBaseColor = goldText.color;
-        _hpBaseScale = playerHpText.rectTransform.localScale;
-        _goldBaseScale = goldText.rectTransform.localScale;
+        _feedbackController = new StatusFeedbackController(
+            playerHpText,
+            goldText,
+            allyCountText,
+            hpFlashColor,
+            goldFlashColor,
+            resourceFeedbackDuration);
+        _waveHudController = new StatusWaveHudController(
+            waveNodes,
+            waveConnectors,
+            idleNodeSprite,
+            lockedNodeSprite,
+            currentNodeSprite,
+            completeNodeSprite,
+            elite05NodeSprite,
+            elite09NodeSprite,
+            boss10NodeSprite,
+            idleConnectorSprite,
+            completeConnectorSprite);
 
         _unitManager = App.Get<UnitManager>();
         _unitManager.OnDeployedAllyCountChanged +=
             OnDeployedAllyCountChanged;
         OnDeployedAllyCountChanged(_unitManager.DeployedAllyCount);
 
-        _isWaveHudValid = ValidateHudReferences();
+        _isWaveHudValid = _waveHudController.ValidateReferences();
 
         _maxHp = _battleManager.playerMaxHp;
         if (_battleManager.IsInitialized)
@@ -130,7 +138,7 @@ public class StatusPanel : UIBase
     private void OnBattleInitialized()
     {
         _totalWaveCount = _battleManager.TotalWaveCount;
-        if (!_waveHudState.IsSupportedWaveCount(_totalWaveCount))
+        if (!_waveHudController.SupportsWaveCount(_totalWaveCount))
         {
             Debug.LogError(
                 $"[StatusPanel] Wave HUD requires exactly 10 waves. " +
@@ -151,7 +159,7 @@ public class StatusPanel : UIBase
             waveIndex + 1,
             1,
             Mathf.Max(1, _totalWaveCount));
-        RefreshWaveProgress(currentWave);
+        _waveHudController.Display(currentWave);
     }
 
     private void OnHpChanged(int hp)
@@ -160,7 +168,7 @@ public class StatusPanel : UIBase
         bool changed = _hasDisplayedHp && playerHpText.text != value;
         playerHpText.text = value;
         _hasDisplayedHp = true;
-        if (changed) EmphasizeHp();
+        if (changed) _feedbackController.EmphasizeHp();
     }
 
     private void OnGoldChanged(int gold)
@@ -169,7 +177,7 @@ public class StatusPanel : UIBase
         bool changed = _hasDisplayedGold && goldText.text != value;
         goldText.text = value;
         _hasDisplayedGold = true;
-        if (changed) EmphasizeGold();
+        if (changed) _feedbackController.EmphasizeGold();
     }
 
     private void OnDeployedAllyCountChanged(int count)
@@ -190,175 +198,12 @@ public class StatusPanel : UIBase
 
     public void EmphasizeAllyCount()
     {
-        Emphasize(allyCountText);
-    }
-
-    private static void Emphasize(TextMeshProUGUI text)
-    {
-        if (text == null) return;
-
-        RectTransform rect = text.rectTransform;
-        rect.DOKill(true);
-        rect.DOShakeAnchorPos(0.3f, 8f, 14, 90f, false, true);
-        rect.DOPunchScale(Vector3.one * 0.12f, 0.3f, 6, 0.5f);
-    }
-
-    private void EmphasizeHp()
-    {
-        PlayResourceFeedback(
-            playerHpText,
-            _hpBaseColor,
-            hpFlashColor,
-            _hpBaseScale,
-            true);
-    }
-
-    private void EmphasizeGold()
-    {
-        PlayResourceFeedback(
-            goldText,
-            _goldBaseColor,
-            goldFlashColor,
-            _goldBaseScale,
-            false);
-    }
-
-    private void PlayResourceFeedback(
-        TextMeshProUGUI text,
-        Color baseColor,
-        Color flashColor,
-        Vector3 baseScale,
-        bool shake)
-    {
-        if (text == null) return;
-
-        RectTransform rect = text.rectTransform;
-        rect.DOKill();
-        text.DOKill();
-        rect.localScale = baseScale;
-        text.color = baseColor;
-
-        Sequence sequence = DOTween.Sequence();
-        sequence.Join(rect.DOPunchScale(
-            Vector3.one * 0.24f,
-            resourceFeedbackDuration,
-            8,
-            0.55f));
-        sequence.Join(text.DOColor(flashColor, 0.1f)
-            .SetLoops(2, LoopType.Yoyo));
-        if (shake)
-        {
-            sequence.Join(rect.DOShakeAnchorPos(
-                resourceFeedbackDuration,
-                13f,
-                18,
-                90f,
-                false,
-                true));
-        }
-
-        sequence.OnComplete(() =>
-        {
-            if (rect != null) rect.localScale = baseScale;
-            if (text != null) text.color = baseColor;
-        });
-    }
-
-    private void RefreshWaveProgress(int currentWave)
-    {
-        for (int index = 0; index < WaveNodeCount; index++)
-        {
-            int nodeWave = index + 1;
-            waveNodes[index].sprite = GetNodeSprite(
-                _waveHudState.ResolveNodeState(currentWave, nodeWave));
-        }
-
-        for (int index = 0; index < WaveConnectorCount; index++)
-        {
-            int connectorAfterWave = index + 1;
-            waveConnectors[index].sprite =
-                _waveHudState.IsConnectorComplete(
-                    currentWave,
-                    connectorAfterWave)
-                    ? completeConnectorSprite
-                    : idleConnectorSprite;
-        }
-    }
-
-    private Sprite GetNodeSprite(EWaveHudNodeState state)
-    {
-        return state switch
-        {
-            EWaveHudNodeState.Current => currentNodeSprite,
-            EWaveHudNodeState.Complete => completeNodeSprite,
-            EWaveHudNodeState.Elite05 => elite05NodeSprite,
-            EWaveHudNodeState.Elite09 => elite09NodeSprite,
-            EWaveHudNodeState.Boss10 => boss10NodeSprite,
-            EWaveHudNodeState.Locked => lockedNodeSprite,
-            _ => idleNodeSprite,
-        };
-    }
-
-    private bool ValidateHudReferences()
-    {
-        bool valid =
-            waveNodes != null &&
-            waveNodes.Length == WaveNodeCount &&
-            waveConnectors != null &&
-            waveConnectors.Length == WaveConnectorCount;
-
-        if (valid)
-        {
-            for (int index = 0; index < WaveNodeCount; index++)
-            {
-                valid &= waveNodes[index] != null;
-            }
-
-            for (int index = 0; index < WaveConnectorCount; index++)
-            {
-                valid &= waveConnectors[index] != null;
-            }
-        }
-
-        valid &= idleNodeSprite != null;
-        valid &= lockedNodeSprite != null;
-        valid &= currentNodeSprite != null;
-        valid &= completeNodeSprite != null;
-        valid &= elite05NodeSprite != null;
-        valid &= elite09NodeSprite != null;
-        valid &= boss10NodeSprite != null;
-        valid &= idleConnectorSprite != null;
-        valid &= completeConnectorSprite != null;
-
-        if (!valid)
-        {
-            Debug.LogError(
-                "[StatusPanel] Wave HUD requires 10 nodes, " +
-                "9 connectors, standard-wave labels, and all state Sprites.");
-        }
-
-        return valid;
+        _feedbackController?.EmphasizeAllyCount();
     }
 
     private void OnDestroy()
     {
-        playerHpText?.rectTransform.DOKill();
-        playerHpText?.DOKill();
-        goldText?.rectTransform.DOKill();
-        goldText?.DOKill();
-        allyCountText?.rectTransform.DOKill();
-
-        if (playerHpText != null)
-        {
-            playerHpText.color = _hpBaseColor;
-            playerHpText.rectTransform.localScale = _hpBaseScale;
-        }
-
-        if (goldText != null)
-        {
-            goldText.color = _goldBaseColor;
-            goldText.rectTransform.localScale = _goldBaseScale;
-        }
+        _feedbackController?.Clear();
 
         if (_battleManager != null)
         {

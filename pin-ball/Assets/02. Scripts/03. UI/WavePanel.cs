@@ -17,6 +17,8 @@ public class WavePanel : UIBase
     private UnitManager _unitManager;
     private StatusPanel _statusPanel;
     private EPinballState _pinballState = EPinballState.Idle;
+    private readonly WaveButtonStateController _buttonStateController = new();
+    private bool _hasValidReferences;
 
     public Button StartButton => startButton;
 
@@ -44,13 +46,13 @@ public class WavePanel : UIBase
         _pinballManager.OnStateChanged += OnPinballStateChanged;
         _pinballManager.OnLaunchCostChanged += OnLaunchCostChanged;
 
-        startButton.onClick.AddListener(OnStartButtonClicked);
-        launchButton.onClick.AddListener(_pinballManager.LaunchBall);
-
-        if (launchCostText == null)
+        _hasValidReferences = ValidateReferences();
+        if (_hasValidReferences)
         {
-            Debug.LogError("[WavePanel] launchCostText가 설정되지 않았습니다.");
+            startButton.onClick.AddListener(OnStartButtonClicked);
+            launchButton.onClick.AddListener(_pinballManager.LaunchBall);
         }
+
         OnBattleStateChanged(_battleManager.State);
     }
     
@@ -102,53 +104,51 @@ public class WavePanel : UIBase
         bool hasAvailableBall,
         bool canAffordLaunch)
     {
-        return canUsePreparation &&
-               pinballState == EPinballState.Idle &&
-               hasAvailableBall &&
-               canAffordLaunch;
+        return WaveButtonStateController.IsLaunchAvailable(
+            canUsePreparation,
+            pinballState,
+            hasAvailableBall,
+            canAffordLaunch);
     }
 
     private void RefreshButtons()
     {
-        if (_battleManager == null) return;
+        if (_battleManager == null || !_hasValidReferences) return;
 
-        bool isPreparation = _battleManager.IsPreparationPhase;
-        bool canUsePreparation =
-            _battleManager.CanUsePreparationActions;
         int launchCost = _pinballManager != null
             ? _pinballManager.CurrentLaunchCost
             : 0;
-        bool canAffordLaunch =
-            _battleManager.Gold >= launchCost;
-        bool hasAvailableBall =
-            _pinballManager != null &&
-            _pinballManager.HasAvailableBall;
+        WaveButtonState state = _buttonStateController.Calculate(
+            _battleManager.IsPreparationPhase,
+            _battleManager.CanUsePreparationActions,
+            _pinballState,
+            _pinballManager != null && _pinballManager.HasAvailableBall,
+            _battleManager.Gold,
+            launchCost);
 
-        if (startButton != null)
+        startButton.gameObject.SetActive(state.ShowStartButton);
+        startButton.interactable = state.EnableStartButton;
+        launchButton.interactable = state.EnableLaunchButton;
+        launchCostText.text = $"발사 {state.LaunchCost}G";
+        launchCostText.color = state.CanAffordLaunch
+            ? availableCostColor
+            : unavailableCostColor;
+    }
+
+    private bool ValidateReferences()
+    {
+        bool valid =
+            startButton != null &&
+            launchButton != null &&
+            launchCostText != null;
+        if (!valid)
         {
-            startButton.gameObject.SetActive(isPreparation);
-            startButton.interactable =
-                canUsePreparation &&
-                _pinballState == EPinballState.Idle;
+            Debug.LogError(
+                "[WavePanel] startButton, launchButton, and " +
+                "launchCostText must be assigned.");
         }
 
-        if (launchButton != null)
-        {
-            launchButton.interactable = IsLaunchAvailable(
-                canUsePreparation,
-                _pinballState,
-                hasAvailableBall,
-                canAffordLaunch);
-        }
-
-        if (launchCostText != null)
-        {
-            launchCostText.text = $"발사 {launchCost}G";
-            launchCostText.color = canAffordLaunch
-                ? availableCostColor
-                : unavailableCostColor;
-        }
-
+        return valid;
     }
 
     private void OnDestroy()
