@@ -27,11 +27,21 @@ public sealed class SceneManager : AppService
 
     private void OnScreenCovered(ESceneName eSceneName)
     {
+        ResetRunStateIfNeeded(eSceneName);
         UnityEngine.SceneManagement.SceneManager.LoadScene(GetSceneName(eSceneName));
 
         PlaySceneBgm(eSceneName);
 
         _isTransitioning = false;
+    }
+
+    private static void ResetRunStateIfNeeded(ESceneName sceneName)
+    {
+        if (sceneName == ESceneName.Game &&
+            App.TryGet<ItemManager>(out var itemManager))
+        {
+            itemManager.ResetRunState();
+        }
     }
 
     private string GetSceneName(ESceneName eSceneName)
