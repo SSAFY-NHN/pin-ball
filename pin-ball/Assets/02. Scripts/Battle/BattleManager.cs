@@ -40,9 +40,18 @@ public class BattleManager : AppService, IItemEventListener
     private bool _isPreparationLocked;
     private readonly WaveResolutionState _waveResolution = new();
     private Coroutine _waveResolutionCoroutine;
+    private bool _isRunInitialized;
 
     private void Start()
     {
+        InitializeNewRun();
+    }
+
+    internal void InitializeNewRun()
+    {
+        if (_isRunInitialized) return;
+        _isRunInitialized = true;
+
         _unitManager = App.Get<UnitManager>();
         _unitManager.OnBattleRosterChanged += OnBattleRosterChanged;
 

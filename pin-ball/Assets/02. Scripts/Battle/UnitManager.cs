@@ -42,6 +42,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     [SerializeField] private EvolutionGlowEffect evolutionGlowEffect;
     private ItemManager _itemManager;
     private Coroutine _automaticPotionCoroutine;
+    private bool _isRunInitialized;
 
     protected override void Awake()
     {
@@ -53,6 +54,14 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
 
     private void Start()
     {
+        InitializeNewRun();
+    }
+
+    internal void InitializeNewRun()
+    {
+        if (_isRunInitialized) return;
+        _isRunInitialized = true;
+
         _battleManager = App.Get<BattleManager>();
         _titleData = App.Get<TitleData>();
         _combatContext = new UnitCombatContext(

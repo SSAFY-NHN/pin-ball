@@ -46,9 +46,18 @@ public class PinballManager : AppService, IItemEventListener
     private readonly PinballItemModifiers _itemModifiers = new();
     private readonly PinballGoalController _goalController = new();
     private PinballRewardController _rewardController;
+    private bool _isRunInitialized;
 
     private void Start()
     {
+        InitializeNewRun();
+    }
+
+    internal void InitializeNewRun()
+    {
+        if (_isRunInitialized) return;
+        _isRunInitialized = true;
+
         _battleManager = App.Get<BattleManager>();
         _unitManager = App.Get<UnitManager>();
         _itemManager = App.Get<ItemManager>();

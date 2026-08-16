@@ -11,6 +11,7 @@ public sealed class SceneManager : AppService
 
     private bool _isTransitioning;
     private ESceneName _activeScene;
+    private readonly GameRunController _gameRunController = new();
 
     public void Load(ESceneName eSceneName)
     {
@@ -27,21 +28,21 @@ public sealed class SceneManager : AppService
 
     private void OnScreenCovered(ESceneName eSceneName)
     {
-        ResetRunStateIfNeeded(eSceneName);
+        if (eSceneName == ESceneName.Game)
+        {
+            _gameRunController.PrepareForSceneLoad();
+        }
+
         UnityEngine.SceneManagement.SceneManager.LoadScene(GetSceneName(eSceneName));
+
+        if (eSceneName == ESceneName.Game)
+        {
+            _gameRunController.InitializeLoadedScene();
+        }
 
         PlaySceneBgm(eSceneName);
 
         _isTransitioning = false;
-    }
-
-    private static void ResetRunStateIfNeeded(ESceneName sceneName)
-    {
-        if (sceneName == ESceneName.Game &&
-            App.TryGet<ItemManager>(out var itemManager))
-        {
-            itemManager.ResetRunState();
-        }
     }
 
     private string GetSceneName(ESceneName eSceneName)
