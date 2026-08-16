@@ -29,6 +29,8 @@
 
 이를 위해 `ItemEventController`의 현재 `Clear()`를 `ClearQueuedEvents()`와 `ClearSubscribers()`로 분리한다. 기존 `ItemManager.Clear()` 공개 API는 유지한다.
 
+새 런의 명확한 경계는 `SceneManager`가 `ESceneName.Game`을 실제로 로드하기 직전이다. 타이틀 시작과 게임 재시작이 모두 이 경로를 사용하므로 `SceneManager.OnScreenCovered()`에서 `ItemManager.ResetRunState()`를 한 번 호출한다. 이때 `ItemCatalogController`는 초기화하지 않거나 비우지 않으며, 보유 수량과 활성 아이템만 제거한다. ItemManager가 존재하지 않는 진입 경로도 허용하기 위해 `App.TryGet<ItemManager>()`를 사용한다.
+
 ## 보존 사항
 
 - `ItemManager`의 기존 공개 구매·조회·구독 API
