@@ -29,6 +29,19 @@ public class Pinball : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
     private PinballArcaneVfx _arcaneVfx;
 
+    private PinballManager Manager
+    {
+        get
+        {
+            if (_manager == null)
+            {
+                _manager = App.Get<PinballManager>();
+            }
+
+            return _manager;
+        }
+    }
+
     private void Awake()
     {
         EnsureInitialized();
@@ -38,7 +51,7 @@ public class Pinball : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _manager?.ApplyTargetMagnet(this);
+        Manager.ApplyTargetMagnet(this);
         _rigidBody2D.linearVelocity = PinballMotionMath.CapVelocity(
             _rigidBody2D.linearVelocity,
             maximumSpeed);
@@ -62,17 +75,11 @@ public class Pinball : MonoBehaviour
             emphasis);
         if (obstacle == null) 
         {
-            _manager.OnBallHitSurface();
+            Manager.OnBallHitSurface();
             return;
         }
 
-        _manager.OnBallHit(this, obstacle.Type, contactPoint);
-    }
-
-    internal void SetManager(PinballManager manager)
-    {
-        EnsureInitialized();
-        _manager = manager;
+        Manager.OnBallHit(this, obstacle.Type, contactPoint);
     }
 
     internal void Activate(
