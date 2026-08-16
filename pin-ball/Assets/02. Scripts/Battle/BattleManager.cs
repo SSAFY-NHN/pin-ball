@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 //소유: 웨이브 인덱스, 플레이어 HP, 골드, EWaveState
@@ -38,15 +39,12 @@ public class BattleManager : AppService, IItemEventListener
     private int _minimumBarrierDamage = 1;
     private bool _isPreparationLocked;
     private readonly WaveResolutionState _waveResolution = new();
-
-    protected override void Awake()
-    {
-        base.Awake();
-    }
+    private Coroutine _waveResolutionCoroutine;
 
     private void Start()
     {
         _unitManager = App.Get<UnitManager>();
+        _unitManager.OnBattleRosterChanged += OnBattleRosterChanged;
 
         var titleData = App.Get<TitleData>();
         _runState = new BattleRunState(
@@ -73,25 +71,15 @@ public class BattleManager : AppService, IItemEventListener
         OnWaveChanged?.Invoke(_runState.CurrentWaveIndex);
     }
 
-    private void Update()
+    private void OnBattleRosterChanged()
     {
-        if (State == EWaveState.Active)
+        if (State == EWaveState.Active &&
+            BattleResolutionPolicy.TryDetectWipe(
+                _unitManager.RemainingAllyCount,
+                _unitManager.RemainingEnemyCount,
+                out EWaveResolutionResult result))
         {
-            if (BattleResolutionPolicy.TryDetectWipe(
-                    _unitManager.RemainingAllyCount,
-                    _unitManager.RemainingEnemyCount,
-                    out EWaveResolutionResult result))
-            {
-                BeginWaveResolution(result);
-            }
-
-            return;
-        }
-
-        if (State == EWaveState.Resolving &&
-            _waveResolution.IsElapsed(Time.time))
-        {
-            FinishWaveResolution();
+            BeginWaveResolution(result);
         }
     }
     
@@ -211,6 +199,14 @@ public class BattleManager : AppService, IItemEventListener
                 ? SoundName.WaveWin
                 : SoundName.WaveFailed);
         OnWaveResolutionStarted?.Invoke(result, CurrentWaveNumber);
+        _waveResolutionCoroutine = StartCoroutine(WaitForWaveResolution());
+    }
+
+    private IEnumerator WaitForWaveResolution()
+    {
+        yield return new WaitForSeconds(waveResolutionDuration);
+        _waveResolutionCoroutine = null;
+        FinishWaveResolution();
     }
 
     private void FinishWaveResolution()
@@ -259,6 +255,17 @@ public class BattleManager : AppService, IItemEventListener
 
     protected override void OnDestroy()
     {
+        if (_waveResolutionCoroutine != null)
+        {
+            StopCoroutine(_waveResolutionCoroutine);
+            _waveResolutionCoroutine = null;
+        }
+
+        if (_unitManager != null)
+        {
+            _unitManager.OnBattleRosterChanged -= OnBattleRosterChanged;
+        }
+
         if (App.TryGet<ItemManager>(out var itemManager))
         {
             itemManager.Unsubscribe(EItem.BarrierReinforcement, this);

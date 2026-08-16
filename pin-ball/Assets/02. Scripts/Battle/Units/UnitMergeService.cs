@@ -116,7 +116,7 @@ public sealed class UnitMergeService
         out UnitMergeDecision decision)
     {
         decision = null;
-        // TODO: Restore a configurable choice when the alternate jobs are ready.
+        // Kept for compatibility with existing callers; runtime evolution uses UI choice.
         if (_pendingEvolution?.SecondChoice == null) return false;
 
         return TryChooseEvolution(
