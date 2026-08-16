@@ -78,10 +78,14 @@ internal sealed class ItemEventController
         Dispatch(item, catalog);
     }
 
-    public void Clear()
+    public void ClearQueuedEvents()
+    {
+        _eventQueue.Clear();
+    }
+
+    public void ClearSubscribers()
     {
         _subscribers.Clear();
-        _eventQueue.Clear();
     }
 
     private void Dispatch(EItem item, ItemCatalogController catalog)

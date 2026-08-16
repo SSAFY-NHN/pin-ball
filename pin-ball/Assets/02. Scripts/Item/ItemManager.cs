@@ -18,15 +18,14 @@ public class ItemManager : AppService
     private readonly ItemCatalogController _catalog = new();
     private readonly ItemInventoryController _inventory = new();
     private readonly ItemEventController _events = new();
+    private ItemPurchaseController _purchaseController;
+
+    private Coroutine _queuedEventCoroutine;
 
     private void Start()
     {
         _catalog.EnsureInitialized();
-    }
-
-    private void Update()
-    {
-        DispatchQueuedEvents();
+        _purchaseController = new ItemPurchaseController(_inventory);
     }
 
     /// <summary>특정 아이템 이벤트를 구독한다.</summary>
@@ -56,6 +55,7 @@ public class ItemManager : AppService
     {
         NotifyItemAcquired(item);
         _events.Enqueue(item);
+        ScheduleQueuedEvents();
     }
 
     /// <summary>아이템 이벤트를 큐를 거치지 않고 즉시 전달한다.</summary>
@@ -91,15 +91,29 @@ public class ItemManager : AppService
     /// <summary>현재 큐에 들어 있는 아이템 이벤트를 모두 처리한다.</summary>
     public void DispatchQueuedEvents()
     {
+        if (_queuedEventCoroutine != null)
+        {
+            StopCoroutine(_queuedEventCoroutine);
+            _queuedEventCoroutine = null;
+        }
+
         _events.DispatchQueued(_catalog);
     }
 
     /// <summary>모든 구독과 대기 중인 아이템 이벤트를 제거한다.</summary>
     public void Clear()
     {
-        _events.Clear();
-        _inventory.Clear();
+        ResetRunState();
+        _events.ClearSubscribers();
+    }
+
+    /// <summary>구독을 유지하고 현재 런의 아이템 상태만 초기화한다.</summary>
+    public void ResetRunState()
+    {
         StopAllCoroutines();
+        _queuedEventCoroutine = null;
+        _events.ClearQueuedEvents();
+        _inventory.Clear();
     }
 
     public bool HasItem(EItem item)
@@ -130,15 +144,11 @@ public class ItemManager : AppService
 
     public bool TryPurchase(Item item)
     {
-        if (item == null || !CanPurchase(item.Key)) return false;
-
-        var battleManager = App.Get<BattleManager>();
-        if (!battleManager.TrySpendPreparationGold(item.Cost)) return false;
-
-        Raise(item.Key);
-        OnItemPurchased?.Invoke(item);
-        SoundManager.PlaySFXIfAvailable(SoundName.BuyItem);
-        return true;
+        _purchaseController ??= new ItemPurchaseController(_inventory);
+        return _purchaseController.TryPurchase(
+            item,
+            Raise,
+            NotifyItemPurchased);
     }
 
     public bool TryGetItem(EItem item, out Item result)
@@ -167,5 +177,25 @@ public class ItemManager : AppService
     {
         yield return new WaitForSeconds(delaySeconds);
         Raise(item);
+    }
+
+    private void ScheduleQueuedEvents()
+    {
+        if (_queuedEventCoroutine != null) return;
+
+        _queuedEventCoroutine = StartCoroutine(
+            DispatchQueuedEventsNextFrame());
+    }
+
+    private IEnumerator DispatchQueuedEventsNextFrame()
+    {
+        yield return null;
+        _events.DispatchQueued(_catalog);
+        _queuedEventCoroutine = null;
+    }
+
+    private void NotifyItemPurchased(Item item)
+    {
+        OnItemPurchased?.Invoke(item);
     }
 }
