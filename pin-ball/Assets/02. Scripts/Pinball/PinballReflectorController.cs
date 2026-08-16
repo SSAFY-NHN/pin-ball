@@ -18,10 +18,14 @@ public class PinballReflectorController : MonoBehaviour
 
     private void Awake()
     {
-        _pinballManager = Object.FindFirstObjectByType<PinballManager>();
         _restAngle = transform.localEulerAngles.z;
         var renderer = GetComponent<SpriteRenderer>();
         _glow = GetComponent<ArcaneMaskGlowController>();
+    }
+
+    private void Start()
+    {
+        _pinballManager = App.Get<PinballManager>();
     }
 
     private void FixedUpdate()
