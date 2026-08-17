@@ -165,4 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be19b35ed6f314c4c955dbf0934a56a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launchSpeed: 8
+  launchSpeed: 12
+  maximumSpeed: 12
+  linearDamping: 0.35
+  gravityScale: 0.35

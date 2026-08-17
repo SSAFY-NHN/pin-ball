@@ -1,6 +1,6 @@
 {
   "common": {
-    "StartingGold": 800,
+    "StartingGold": 0,
     "BaseLaunchCost": 50,
     "LaunchCostIncrease": 30
   },
