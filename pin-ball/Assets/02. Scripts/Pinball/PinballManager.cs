@@ -22,15 +22,21 @@ public class PinballManager : AppService, IItemEventListener
     public event Action<int> OnLaunchCostChanged;
     public event Action<BattleUnitSpawnData> OnGoalReached;
     public event Action<int> OnComboChanged;
+    public event Action OnProductionChanged;
 
     public int CurrentLaunchCost => _launchState.CurrentCost;
-    public bool HasAvailableBall => _ballPool?.HasAvailableBall ?? false;
+    public bool HasAvailableBall => false;
     public bool HasActiveBalls => _ballPool?.HasActiveBalls ?? false;
     public int CurrentCombo => _comboController.Count;
     public float CurrentComboProgress =>
         _comboController.GetRemainingProgress(Time.unscaledTime);
     public IReadOnlyCollection<Pinball> ActiveBalls =>
         _ballPool?.ActiveBalls ?? Array.Empty<Pinball>();
+    public int BumperIncome => _productionUpgradeController?.BumperIncome ?? 1;
+    public int PermanentBallCount =>
+        _productionUpgradeController?.PermanentBallCount ?? 1;
+    public float RespawnDelay =>
+        _productionUpgradeController?.RespawnDelay ?? 3f;
 
     [Header("Launcher")]
     [SerializeField] private Vector2 launchPosition = new(6.4f, 10f);
@@ -38,10 +44,22 @@ public class PinballManager : AppService, IItemEventListener
     [SerializeField, Min(0f)] private float maximumLaunchSpeed = 8f;
     [SerializeField] private PinballLauncherController launcherController;
 
-    [SerializeField] private List<Pinball> pooledBalls = new();
+    [Header("Automatic Cycle")]
+    [SerializeField] private Transform autoSpawnPoint;
+    [SerializeField] private Vector2 autoSpawnDirection = Vector2.down;
+    [SerializeField] private List<Pinball> permanentBalls = new();
+    [SerializeField] private List<Pinball> cloneBalls = new();
+
+    [Header("Production Upgrades")]
+    [SerializeField] private PinballProductionUpgradeSettings bumperIncomeSettings =
+        new(1, 1, 25, 1.6f, 20);
+    [SerializeField] private PinballProductionUpgradeSettings addBallSettings =
+        new(1, 1, 150, 2f, 9);
+    [SerializeField] private PinballProductionUpgradeSettings supplySpeedSettings =
+        new(3f, -0.25f, 50, 1.7f, 9);
+    [SerializeField, Min(0.01f)] private float minimumRespawnDelay = 0.75f;
 
     private BattleManager _battleManager;
-    private UnitManager _unitManager;
     private ItemManager _itemManager;
 
     private Vector2 _currentLaunchPosition;
@@ -51,6 +69,8 @@ public class PinballManager : AppService, IItemEventListener
     private readonly PinballGoalController _goalController = new();
     private readonly PinballComboController _comboController = new();
     private PinballRewardController _rewardController;
+    private PinballProductionUpgradeController _productionUpgradeController;
+    private readonly PinballAutoCycleController _autoCycleController = new();
     private bool _isRunInitialized;
 
     private void Start()
@@ -64,6 +84,11 @@ public class PinballManager : AppService, IItemEventListener
         {
             OnComboChanged?.Invoke(0);
         }
+
+        while (_autoCycleController.TryTakeReady(Time.time, out var ball))
+        {
+            ReactivateBall(ball);
+        }
     }
 
     internal void InitializeNewRun()
@@ -72,7 +97,6 @@ public class PinballManager : AppService, IItemEventListener
         _isRunInitialized = true;
 
         _battleManager = App.Get<BattleManager>();
-        _unitManager = App.Get<UnitManager>();
         _itemManager = App.Get<ItemManager>();
 
         int baseLaunchCost = 50;
@@ -87,10 +111,14 @@ public class PinballManager : AppService, IItemEventListener
         _launchState = new PinballLaunchState(
             baseLaunchCost,
             launchCostIncrease);
-        _ballPool = new PinballBallPool(pooledBalls);
+        _ballPool = new PinballBallPool(permanentBalls, cloneBalls);
+        _productionUpgradeController = new PinballProductionUpgradeController(
+            bumperIncomeSettings,
+            addBallSettings,
+            supplySpeedSettings,
+            minimumRespawnDelay);
         _rewardController = new PinballRewardController(
             _battleManager,
-            _unitManager,
             _ballPool,
             _itemModifiers);
         ResetForNewRun();
@@ -108,51 +136,19 @@ public class PinballManager : AppService, IItemEventListener
 
     public void LaunchBall()
     {
-        TryLaunchLoadedBall(1f);
     }
 
     public void LaunchBall(Vector2 position)
     {
-        launchPosition = position;
-        if (_ballPool?.LoadedBall != null)
-        {
-            _ballPool.LoadedBall.LoadAt(position);
-        }
-
-        TryLaunchLoadedBall(1f);
     }
 
     public bool TryLaunchLoadedBall(float normalizedPull)
     {
-        if (_battleManager == null ||
-            !_battleManager.CanUsePreparationActions) return false;
-        if (_ballPool?.LoadedBall == null) return false;
-
-        var cost = CurrentLaunchCost;
-        if (!_battleManager.TrySpendPreparationGold(cost)) return false;
-
-        if (!_ballPool.TryLaunchLoaded(out var ball)) return false;
-        var direction = launcherController != null
-            ? launcherController.LaunchDirection
-            : Vector2.up;
-        var speed = Mathf.Lerp(
-            minimumLaunchSpeed,
-            maximumLaunchSpeed,
-            Mathf.Clamp01(normalizedPull));
-        ball.LaunchLoaded(direction.normalized * speed);
-        ball.PlayLaunchCameraFeedback(normalizedPull);
-        _launchState.RecordSuccessfulLaunch();
-        NotifyLaunchCostChanged();
-        SoundManager.PlaySFXIfAvailable(SoundName.Spring);
-        OnStateChanged?.Invoke(EPinballState.Launched);
-        return true;
+        return false;
     }
 
     internal void MoveLoadedBall(Vector2 position)
     {
-        if (_ballPool?.LoadedBall == null) return;
-        _ballPool.LoadedBall.LoadAt(position);
-        launchPosition = position;
     }
 
     private void NotifyLaunchCostChanged()
@@ -176,7 +172,9 @@ public class PinballManager : AppService, IItemEventListener
 
         SoundManager.PlaySFXIfAvailable(SoundName.BumperHit);
         ball.BigBumperHitCount++;
-        int totalReward = _rewardController.ApplyBumperReward(ball);
+        int totalReward = _rewardController.ApplyBumperReward(
+            ball,
+            _productionUpgradeController.BumperIncome);
         ball.PlayGoldRewardFeedback(hitPosition, totalReward);
         OnComboChanged?.Invoke(
             _comboController.RegisterBumperHit(Time.unscaledTime));
@@ -221,17 +219,6 @@ public class PinballManager : AppService, IItemEventListener
     public void OnGoalBall(Pinball ball, PinballGoal goal)
     {
         if (ball == null || goal == null) return;
-
-        var goalUnitData = goal.UnitData;
-        var unitData = new BattleUnitSpawnData
-        {
-            UnitId = goalUnitData.UnitId,
-            Level = goalUnitData.Level
-        };
-        OnGoalReached?.Invoke(unitData);
-
-        _rewardController.ApplyGoalReward(ball, unitData);
-
         ReleaseBall(ball);
     }
 
@@ -243,17 +230,75 @@ public class PinballManager : AppService, IItemEventListener
 
     public void ReleaseBall(Pinball ball)
     {
-        if (_ballPool == null ||
-            !_ballPool.Release(ball, out bool hasNoActiveBalls))
+        if (_ballPool == null) return;
+        EPinballReleaseType releaseType = _ballPool.Release(ball);
+        if (releaseType == EPinballReleaseType.Permanent)
         {
-            return;
+            _autoCycleController.Schedule(ball, Time.time + RespawnDelay);
+        }
+    }
+
+    public int GetProductionLevel(EPinballProductionUpgrade upgrade)
+    {
+        return _productionUpgradeController?.GetLevel(upgrade) ?? 0;
+    }
+
+    public int GetProductionMaxLevel(EPinballProductionUpgrade upgrade)
+    {
+        return _productionUpgradeController?.GetMaxLevel(upgrade) ?? 0;
+    }
+
+    public int GetProductionCost(EPinballProductionUpgrade upgrade)
+    {
+        return _productionUpgradeController?.GetNextCost(upgrade) ?? 0;
+    }
+
+    public float GetProductionEffect(EPinballProductionUpgrade upgrade)
+    {
+        return _productionUpgradeController?.GetEffect(upgrade) ?? 0f;
+    }
+
+    public float GetNextProductionEffect(EPinballProductionUpgrade upgrade)
+    {
+        return _productionUpgradeController?.GetNextEffect(upgrade) ?? 0f;
+    }
+
+    public bool CanPurchaseProductionUpgrade(EPinballProductionUpgrade upgrade)
+    {
+        if (_battleManager == null || _productionUpgradeController == null)
+        {
+            return false;
         }
 
-        if (hasNoActiveBalls)
+        if (upgrade == EPinballProductionUpgrade.AddBall &&
+            PermanentBallCount >= permanentBalls.Count)
         {
-            OnStateChanged?.Invoke(EPinballState.Idle);
-            LoadNextBall();
+            return false;
         }
+
+        return _productionUpgradeController.CanPurchase(
+            upgrade,
+            _battleManager.Gold);
+    }
+
+    public bool TryPurchaseProductionUpgrade(EPinballProductionUpgrade upgrade)
+    {
+        if (!CanPurchaseProductionUpgrade(upgrade)) return false;
+        int cost = _productionUpgradeController.GetNextCost(upgrade);
+        if (!_battleManager.TrySpendGold(cost)) return false;
+        if (!_productionUpgradeController.TryPurchase(upgrade, int.MaxValue))
+        {
+            _battleManager.AddGold(cost);
+            return false;
+        }
+
+        if (upgrade == EPinballProductionUpgrade.AddBall)
+        {
+            SpawnNextPermanentBall();
+        }
+
+        OnProductionChanged?.Invoke();
+        return true;
     }
 
     internal void RegisterGoal(PinballGoal goal)
@@ -314,40 +359,55 @@ public class PinballManager : AppService, IItemEventListener
 
         _launchState.ResetSuccessfulLaunches();
         _goalController.ResetForPreparation();
-        if (_ballPool == null || !_ballPool.HasActiveBalls)
-        {
-            LoadNextBall();
-        }
         NotifyLaunchCostChanged();
+    }
+
+    private void SpawnInitialBall()
+    {
+        if (_ballPool == null ||
+            !_ballPool.TryAcquirePermanent(out var ball)) return;
+
+        ActivateAtSpawnPoint(ball);
+    }
+
+    private void ReactivateBall(Pinball ball)
+    {
+        if (_ballPool == null || !_ballPool.TryReactivatePermanent(ball)) return;
+        ActivateAtSpawnPoint(ball);
+    }
+
+    private void ActivateAtSpawnPoint(Pinball ball)
+    {
+        var position = autoSpawnPoint != null
+            ? (Vector2)autoSpawnPoint.position
+            : launchPosition;
+        ball.Activate(position, autoSpawnDirection, false);
+    }
+
+    private void SpawnNextPermanentBall()
+    {
+        if (_ballPool == null ||
+            !_ballPool.TryAcquirePermanent(out var ball)) return;
+        ActivateAtSpawnPoint(ball);
     }
 
     private void LoadNextBall()
     {
-        if (_ballPool == null ||
-            !_ballPool.TryLoadNext(out var ball))
-        {
-            return;
-        }
-
-        var position = launcherController != null
-            ? launcherController.LoadPosition
-            : launchPosition;
-        launchPosition = position;
-        ball.LoadAt(position);
-        ball.PlayLoadedFeedback();
-        launcherController?.SetLoaded(true);
     }
 
     internal void ResetForNewRun()
     {
         _ballPool?.ResetForNewRun();
+        _autoCycleController.Reset();
+        _productionUpgradeController?.ResetForNewRun();
         _launchState.ResetForNewRun();
         _goalController.ResetForNewRun();
         _comboController.Reset();
         _itemModifiers.ResetForNewRun();
         launcherController?.SetLoaded(false);
-        LoadNextBall();
+        SpawnInitialBall();
         NotifyLaunchCostChanged();
+        OnProductionChanged?.Invoke();
     }
 
     protected override void OnDestroy()
