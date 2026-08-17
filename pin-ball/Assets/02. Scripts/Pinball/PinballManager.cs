@@ -22,6 +22,7 @@ public class PinballManager : AppService, IItemEventListener
     public event Action<int> OnLaunchCostChanged;
     public event Action<BattleUnitSpawnData> OnGoalReached;
     public event Action<int> OnComboChanged;
+    public event Action<Pinball, int> OnJackpotTriggered;
     public event Action OnProductionChanged;
 
     public int CurrentLaunchCost => _launchState.CurrentCost;
@@ -30,6 +31,10 @@ public class PinballManager : AppService, IItemEventListener
     public int CurrentCombo => _comboController.Count;
     public float CurrentComboProgress =>
         _comboController.GetRemainingProgress(Time.unscaledTime);
+    public float CurrentComboMultiplier => _comboController.GetRewardMultiplier(
+        comboHitsPerStep,
+        comboMultiplierPerStep,
+        maximumComboMultiplier);
     public IReadOnlyCollection<Pinball> ActiveBalls =>
         _ballPool?.ActiveBalls ?? Array.Empty<Pinball>();
     public int BumperIncome => _productionUpgradeController?.BumperIncome ?? 1;
@@ -58,6 +63,22 @@ public class PinballManager : AppService, IItemEventListener
     [SerializeField] private PinballProductionUpgradeSettings supplySpeedSettings =
         new(3f, -0.25f, 50, 1.7f, 9);
     [SerializeField, Min(0.01f)] private float minimumRespawnDelay = 0.75f;
+
+    [Header("Golden Ball")]
+    // TODO: Tune golden ball values after production-rate measurement.
+    [SerializeField, Range(0f, 1f)] private float goldenChance = 0.05f;
+    [SerializeField, Min(1f)] private float goldenRewardMultiplier = 3f;
+
+    [Header("Combo Reward")]
+    [SerializeField, Min(1)] private int comboHitsPerStep = 2;
+    [SerializeField, Min(0f)] private float comboMultiplierPerStep = 0.5f;
+    [SerializeField, Min(1f)] private float maximumComboMultiplier = 2f;
+
+    [Header("Jackpot")]
+    // TODO: Tune jackpot values against the 30-90 second production target.
+    [SerializeField, Min(1)] private int jackpotRequiredCombo = 5;
+    [SerializeField, Min(0)] private int jackpotBaseReward = 100;
+    [SerializeField, Min(0f)] private float jackpotIncomeMultiplier = 30f;
 
     private BattleManager _battleManager;
     private ItemManager _itemManager;
@@ -157,12 +178,12 @@ public class PinballManager : AppService, IItemEventListener
 
     internal void OnBallHit(
         Pinball ball,
-        EPinballObstacle obstacle,
+        PinballObstacle obstacle,
         Vector2 hitPosition)
     {
-        if (ball == null) return;
+        if (ball == null || obstacle == null) return;
 
-        if (obstacle == EPinballObstacle.SmallPin)
+        if (obstacle.Type == EPinballObstacle.SmallPin)
         {
             SoundManager.PlaySFXIfAvailable(SoundName.SmallPinHit);
             ball.SmallPinHitCount++;
@@ -171,12 +192,34 @@ public class PinballManager : AppService, IItemEventListener
 
         SoundManager.PlaySFXIfAvailable(SoundName.BumperHit);
         ball.BigBumperHitCount++;
-        int totalReward = _rewardController.ApplyBumperReward(
+        int combo = _comboController.RegisterBumperHit(Time.unscaledTime);
+        float comboMultiplier = CurrentComboMultiplier;
+        bool grantsJackpot =
+            !ball.IsClone &&
+            ball.IsGolden &&
+            !ball.HasTriggeredJackpot &&
+            combo >= Mathf.Max(1, jackpotRequiredCombo) &&
+            obstacle.IsJackpotBumper;
+        if (grantsJackpot) ball.HasTriggeredJackpot = true;
+
+        PinballRewardResult reward = _rewardController.ApplyBumperReward(
             ball,
-            _productionUpgradeController.BumperIncome);
-        ball.PlayGoldRewardFeedback(hitPosition, totalReward);
-        OnComboChanged?.Invoke(
-            _comboController.RegisterBumperHit(Time.unscaledTime));
+            _productionUpgradeController.BumperIncome,
+            comboMultiplier,
+            goldenRewardMultiplier,
+            grantsJackpot,
+            jackpotBaseReward,
+            jackpotIncomeMultiplier);
+        int normalReward = reward.TotalReward - reward.JackpotReward;
+        ball.PlayGoldRewardFeedback(hitPosition, normalReward);
+        OnComboChanged?.Invoke(combo);
+
+        if (!grantsJackpot) return;
+
+        ball.PlayJackpotFeedback(hitPosition, reward.JackpotReward);
+        obstacle.PlayJackpotFeedback();
+        OnJackpotTriggered?.Invoke(ball, reward.JackpotReward);
+        // TODO: Play a dedicated jackpot SFX when a suitable project asset exists.
     }
 
     internal void OnBallHitSurface()
@@ -372,7 +415,8 @@ public class PinballManager : AppService, IItemEventListener
         var position = autoSpawnPoint != null
             ? (Vector2)autoSpawnPoint.position
             : launchPosition;
-        ball.Activate(position, autoSpawnDirection, false);
+        bool isGolden = UnityEngine.Random.value < Mathf.Clamp01(goldenChance);
+        ball.Activate(position, autoSpawnDirection, false, isGolden);
     }
 
     private void SpawnNextPermanentBall()

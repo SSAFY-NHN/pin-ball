@@ -46,7 +46,8 @@ public sealed class PinballComboDisplay : MonoBehaviour
         textGroup.gameObject.SetActive(visible);
         if (!visible) return;
 
-        string comboText = $"{combo} COMBO";
+        string comboText =
+            $"{combo} COMBO x{_pinballManager.CurrentComboMultiplier:0.#}";
         backgroundText.text = comboText;
         foregroundText.text = comboText;
         SetFill(1f);

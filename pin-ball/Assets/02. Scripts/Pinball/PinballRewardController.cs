@@ -16,24 +16,41 @@ public sealed class PinballRewardController
         _itemModifiers = itemModifiers;
     }
 
-    public int ApplyBumperReward(Pinball ball, int bumperIncome)
+    public PinballRewardResult ApplyBumperReward(
+        Pinball ball,
+        int bumperIncome,
+        float comboMultiplier,
+        float goldenMultiplier,
+        bool grantsJackpot,
+        int jackpotBaseReward,
+        float jackpotIncomeMultiplier)
     {
-        if (ball == null) return 0;
+        if (ball == null) return default;
 
-        int baseReward = Mathf.Max(0, bumperIncome) *
-                         _itemModifiers.GoldenBallReward;
-        _battleManager.AddGold(baseReward);
+        int safeIncome = Mathf.Max(0, bumperIncome);
+        float normalReward = safeIncome *
+                             Mathf.Max(0, _itemModifiers.GoldenBallReward) *
+                             Mathf.Max(1f, comboMultiplier) *
+                             (ball.IsGolden ? Mathf.Max(1f, goldenMultiplier) : 1f);
+        int collisionReward = Mathf.Max(0, Mathf.RoundToInt(normalReward));
 
         int bumperReward = _itemModifiers.CalculateGoldenBumperReward(
             ball.GoldenBumperGold);
         if (bumperReward > 0)
         {
             ball.GoldenBumperGold += bumperReward;
-            _battleManager.AddGold(bumperReward);
         }
 
+        int jackpotReward = grantsJackpot
+            ? Mathf.Max(0, jackpotBaseReward) + Mathf.Max(
+                0,
+                Mathf.RoundToInt(safeIncome * Mathf.Max(0f, jackpotIncomeMultiplier)))
+            : 0;
+        int totalReward = collisionReward + bumperReward + jackpotReward;
+        _battleManager.AddGold(totalReward);
+
         ApplySplitCapsule(ball);
-        return baseReward + bumperReward;
+        return new PinballRewardResult(totalReward, jackpotReward);
     }
 
     private void ApplySplitCapsule(Pinball source)
@@ -53,10 +70,23 @@ public sealed class PinballRewardController
             clone.Activate(
                 source.transform.position,
                 source.Velocity.normalized,
-                true);
+                true,
+                false);
             clone.SetVelocity(
                 source.Velocity *
                 _itemModifiers.SplitSpeedMultiplier);
         }
+    }
+}
+
+public readonly struct PinballRewardResult
+{
+    public int TotalReward { get; }
+    public int JackpotReward { get; }
+
+    public PinballRewardResult(int totalReward, int jackpotReward)
+    {
+        TotalReward = totalReward;
+        JackpotReward = jackpotReward;
     }
 }

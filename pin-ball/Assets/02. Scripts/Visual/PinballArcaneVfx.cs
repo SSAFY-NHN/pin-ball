@@ -10,6 +10,9 @@ public sealed class PinballArcaneVfx : MonoBehaviour
     private const float ReferenceSpeed = 8f;
     private static readonly Color TrailLow = new(0.02f, 0.55f, 1f, 0.78f);
     private static readonly Color TrailHigh = new(0.55f, 0.12f, 1f, 0.9f);
+    private static readonly Color GoldenLow = new(1f, 0.45f, 0.04f, 0.85f);
+    private static readonly Color GoldenHigh = new(1f, 0.95f, 0.45f, 1f);
+    private static readonly Color GoldenBody = new(1f, 0.72f, 0.12f, 1f);
 
     private SpriteRenderer _sourceRenderer;
     private Rigidbody2D _body;
@@ -22,6 +25,8 @@ public sealed class PinballArcaneVfx : MonoBehaviour
     private Material _additiveMaterial;
     private BattleCameraController _cameraFeedback;
     private bool _initialized;
+    private bool _isGolden;
+    private Color _originalSourceColor;
 
     public void Initialize(SpriteRenderer sourceRenderer, Rigidbody2D body)
     {
@@ -29,6 +34,7 @@ public sealed class PinballArcaneVfx : MonoBehaviour
 
         _sourceRenderer = sourceRenderer;
         _body = body;
+        _originalSourceColor = _sourceRenderer.color;
 
         var additiveShader = Resources.Load<Shader>("ArcaneVFX/ArcaneAdditive");
         var catalog = ArcaneVfxCatalog.Load();
@@ -70,7 +76,7 @@ public sealed class PinballArcaneVfx : MonoBehaviour
     {
         if (!_initialized) return;
 
-        _glow?.SetActiveIntensity(1.65f);
+        _glow?.SetActiveIntensity(_isGolden ? 2.25f : 1.65f);
         _trail.Clear();
         _trail.emitting = true;
         OnVelocityChanged(_body != null ? _body.linearVelocity : Vector2.zero);
@@ -80,6 +86,7 @@ public sealed class PinballArcaneVfx : MonoBehaviour
     {
         if (!_initialized) return;
 
+        SetGolden(false);
         _trail.emitting = false;
         _trail.Clear();
         _glow?.SetActiveIntensity(1.15f);
@@ -95,11 +102,15 @@ public sealed class PinballArcaneVfx : MonoBehaviour
         _trail.time = Mathf.Lerp(0.08f, 0.2f, speed01);
         _trail.widthMultiplier = Mathf.Lerp(0.28f, 0.6f, speed01);
 
-        var hdrColor = Color.Lerp(TrailLow, TrailHigh, speed01);
+        var hdrColor = _isGolden
+            ? Color.Lerp(GoldenLow, GoldenHigh, speed01)
+            : Color.Lerp(TrailLow, TrailHigh, speed01);
         _trail.startColor = hdrColor;
         _trail.endColor = new Color(hdrColor.r * 0.2f, hdrColor.g * 0.2f, hdrColor.b * 0.2f, 0f);
 
-        _glow?.SetActiveIntensity(Mathf.Lerp(1.35f, 1.9f, speed01));
+        _glow?.SetActiveIntensity(_isGolden
+            ? Mathf.Lerp(2f, 2.65f, speed01)
+            : Mathf.Lerp(1.35f, 1.9f, speed01));
     }
 
     public void PlayCollision(Vector2 worldPoint, float relativeSpeed)
@@ -116,7 +127,9 @@ public sealed class PinballArcaneVfx : MonoBehaviour
 
         var strength = Mathf.Clamp01(relativeSpeed / (ReferenceSpeed * 1.25f));
         emphasis = Mathf.Max(0.5f, emphasis);
-        var color = Color.Lerp(TrailLow, TrailHigh, strength);
+        var color = _isGolden
+            ? Color.Lerp(GoldenLow, GoldenHigh, strength)
+            : Color.Lerp(TrailLow, TrailHigh, strength);
         var position = new Vector3(worldPoint.x, worldPoint.y, transform.position.z);
         _impact.Play(position, 0.18f + 0.04f * (emphasis - 1f),
             Vector3.one * 0.28f,
@@ -168,6 +181,39 @@ public sealed class PinballArcaneVfx : MonoBehaviour
         var popup = _goldPopups[_nextGoldPopupIndex];
         _nextGoldPopupIndex = (_nextGoldPopupIndex + 1) % _goldPopups.Length;
         popup.Play(new Vector3(worldPosition.x, worldPosition.y, transform.position.z), amount);
+    }
+
+    public void SetGolden(bool isGolden)
+    {
+        _isGolden = isGolden;
+        if (!_initialized || _sourceRenderer == null) return;
+
+        _sourceRenderer.color = isGolden ? GoldenBody : _originalSourceColor;
+        _glow?.SetActiveIntensity(isGolden ? 2.25f : 1.65f);
+        if (_trail != null && _trail.emitting)
+        {
+            OnVelocityChanged(_body != null ? _body.linearVelocity : Vector2.zero);
+        }
+    }
+
+    public void PlayJackpot(Vector2 worldPosition, int amount)
+    {
+        if (!_initialized || _goldPopups == null || amount <= 0) return;
+
+        var position = new Vector3(worldPosition.x, worldPosition.y, transform.position.z);
+        var popup = _goldPopups[_nextGoldPopupIndex];
+        _nextGoldPopupIndex = (_nextGoldPopupIndex + 1) % _goldPopups.Length;
+        popup.PlayJackpot(position, amount);
+        _impact.Play(position, 0.42f,
+            Vector3.one * 0.5f,
+            Vector3.one * 1.8f,
+            Color.white);
+        _ring.Play(position, 0.52f,
+            Vector3.one * 0.35f,
+            Vector3.one * 2.2f,
+            GoldenHigh);
+        _glow?.Pulse(4f, 0.42f);
+        _cameraFeedback?.PlayPinballGoalShake();
     }
 
     private void CreateTrail(Sprite[] trailSprites)

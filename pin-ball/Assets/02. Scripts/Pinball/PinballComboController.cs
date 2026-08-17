@@ -15,6 +15,18 @@ public sealed class PinballComboController
         return Count;
     }
 
+    public float GetRewardMultiplier(
+        int hitsPerStep,
+        float multiplierPerStep,
+        float maximumMultiplier)
+    {
+        int safeHitsPerStep = Mathf.Max(1, hitsPerStep);
+        float safeStep = Mathf.Max(0f, multiplierPerStep);
+        float safeMaximum = Mathf.Max(1f, maximumMultiplier);
+        int completedSteps = Mathf.Max(0, (Count - 1) / safeHitsPerStep);
+        return Mathf.Min(1f + completedSteps * safeStep, safeMaximum);
+    }
+
     public bool TryExpire(float currentTime)
     {
         if (Count <= 0 || currentTime < _expiresAt) return false;
