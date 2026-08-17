@@ -385,31 +385,36 @@ public abstract class UnitBase : MonoBehaviour
             _currentTarget.transform.position);
         if (distance > _stats.AttackRange)
         {
-            float moveSpeed = _stats.MoveSpeed * _statusEffects.MoveSpeedMultiplier;
-            if (moveSpeed <= 0f)
-            {
-                _state = EBattleUnitState.Idle;
-                return;
-            }
-
-            Vector3 nextPosition = UnitMovement.CalculateNextPosition(
-                transform.position,
-                _currentTarget.transform.position,
-                moveSpeed,
-                Time.deltaTime);
-            if (_context?.BattleArea != null)
-            {
-                nextPosition = _context.BattleArea.Clamp(
-                    nextPosition,
-                    GetMovementPadding());
-            }
-
-            transform.position = nextPosition;
-            _state = EBattleUnitState.Moving;
+            MoveTowardsPosition(_currentTarget.transform.position);
             return;
         }
 
         TryAttack();
+    }
+
+    protected void MoveTowardsPosition(Vector3 targetPosition)
+    {
+        float moveSpeed = _stats.MoveSpeed * _statusEffects.MoveSpeedMultiplier;
+        if (moveSpeed <= 0f)
+        {
+            _state = EBattleUnitState.Idle;
+            return;
+        }
+
+        Vector3 nextPosition = UnitMovement.CalculateNextPosition(
+            transform.position,
+            targetPosition,
+            moveSpeed,
+            Time.deltaTime);
+        if (_context?.BattleArea != null)
+        {
+            nextPosition = _context.BattleArea.Clamp(
+                nextPosition,
+                GetMovementPadding());
+        }
+
+        transform.position = nextPosition;
+        _state = EBattleUnitState.Moving;
     }
 
     protected void ClearTarget()

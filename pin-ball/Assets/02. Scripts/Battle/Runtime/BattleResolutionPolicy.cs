@@ -11,12 +11,6 @@ public static class BattleResolutionPolicy
             return true;
         }
 
-        if (allyCount <= 0)
-        {
-            result = EWaveResolutionResult.Failed;
-            return true;
-        }
-
         result = default;
         return false;
     }

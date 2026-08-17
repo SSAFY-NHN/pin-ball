@@ -83,6 +83,7 @@ public class BattleManager : AppService, IItemEventListener
     private bool isPreparationLocked;
     private float currentStageStartedAt;
     private bool currentBossDefeated;
+    private int currentStageDefenseLineDamage;
 
     private void Start()
     {
@@ -166,6 +167,7 @@ public class BattleManager : AppService, IItemEventListener
 
         currentStageStartedAt = Time.time;
         currentBossDefeated = false;
+        currentStageDefenseLineDamage = 0;
         OnStateChanged?.Invoke(State);
         OnWaveChanged?.Invoke(CurrentStageNumber);
         OnStageStarted?.Invoke(new BattleStageStartedData(
@@ -197,6 +199,28 @@ public class BattleManager : AppService, IItemEventListener
         }
     }
 
+    public void TryResolveEnemyBreach(EnemyUnit enemy)
+    {
+        if (State != EWaveState.Active || enemy == null ||
+            !unitManager.IsActiveEnemy(enemy) || !enemy.TryConsumeBreach()) return;
+
+        int defenseLineDamage = BarrierDamageCalculator.Calculate(
+            enemy.BreachDamage,
+            barrierDamageReduction,
+            minimumBarrierDamage);
+        runState.ApplyPlayerDamage(defenseLineDamage);
+        currentStageDefenseLineDamage += defenseLineDamage;
+        OnHpChanged?.Invoke(PlayerHp);
+
+        if (PlayerHp <= 0)
+        {
+            BeginStageTransition(EWaveResolutionResult.Failed);
+            return;
+        }
+
+        unitManager.ReleaseBreachedEnemy(enemy);
+    }
+
     private void BeginStageTransition(EWaveResolutionResult result)
     {
         float duration = result == EWaveResolutionResult.Cleared
@@ -207,17 +231,6 @@ public class BattleManager : AppService, IItemEventListener
                 Time.time,
                 duration)) return;
 
-        int defenseLineDamage = 0;
-        if (result == EWaveResolutionResult.Failed)
-        {
-            defenseLineDamage = BarrierDamageCalculator.Calculate(
-                unitManager.CalculateRemainingBreachDamage(),
-                barrierDamageReduction,
-                minimumBarrierDamage);
-            runState.ApplyPlayerDamage(defenseLineDamage);
-            OnHpChanged?.Invoke(PlayerHp);
-        }
-
         float battleDuration = Mathf.Max(0f, Time.time - currentStageStartedAt);
         unitManager.ResolveStageResult();
         OnStateChanged?.Invoke(State);
@@ -226,7 +239,7 @@ public class BattleManager : AppService, IItemEventListener
             CurrentStageNumber,
             result,
             battleDuration,
-            defenseLineDamage,
+            currentStageDefenseLineDamage,
             IsCurrentStageBoss));
         SoundManager.PlaySFXIfAvailable(
             result == EWaveResolutionResult.Cleared

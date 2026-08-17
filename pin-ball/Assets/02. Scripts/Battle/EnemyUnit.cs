@@ -11,12 +11,14 @@ public class EnemyUnit : UnitBase
     private readonly EnemySkillController _skills = new();
     private UnitManager _unitManager;
     private UnitAttackEffectPlayer _attackEffectPlayer;
+    private bool _breachConsumed;
 
     public void SetData(EnemyUnitData data, UnitManager unitManager = null, UnitSkillRegistry registry = null)
     {
         UnitId = data?.id ?? string.Empty;
         Rank = data?.rank ?? 0;
         BreachDamage = Mathf.Max(0, data?.BreachDamage ?? 0);
+        _breachConsumed = false;
         _unitManager = unitManager;
         _attackEffectPlayer ??= GetComponent<UnitAttackEffectPlayer>();
         _skills.Initialize(data, registry ?? UnitSkillRegistry.CreateDefault());
@@ -28,8 +30,23 @@ public class EnemyUnit : UnitBase
     {
         _skills.Tick(CreateContext(_currentTarget), Time.time);
         if (TryKeepOrAcquireTarget()) { MoveOrAttackTarget(); return; }
+        if (_unitManager != null &&
+            _unitManager.TryGetDefenseLinePosition(out Vector3 defenseLinePosition))
+        {
+            MoveTowardsPosition(defenseLinePosition);
+            ClearTarget();
+            return;
+        }
         _state = EBattleUnitState.Idle;
         ClearTarget();
+    }
+
+    public bool TryConsumeBreach()
+    {
+        if (_breachConsumed || !IsAlive || IsInPool) return false;
+
+        _breachConsumed = true;
+        return true;
     }
 
     protected override float GetBasicAttackDamage(UnitBase target) => _skills.ModifyBasicAttackDamage(CreateContext(target), target, base.GetBasicAttackDamage(target));

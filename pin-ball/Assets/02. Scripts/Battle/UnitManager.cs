@@ -48,6 +48,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         Level = 1
     };
     [SerializeField] private BattleAreaBounds battleArea;
+    [SerializeField] private DefenseLineTrigger defenseLine;
     [SerializeField] private EvolutionGlowEffect evolutionGlowEffect;
     private ItemManager _itemManager;
     private Coroutine _automaticPotionCoroutine;
@@ -355,6 +356,32 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         _spawner.ReturnUnit(unit);
     }
 
+    public bool IsActiveEnemy(EnemyUnit enemy)
+    {
+        return enemy != null && _roster.ActiveEnemies.Contains(enemy);
+    }
+
+    public bool ReleaseBreachedEnemy(EnemyUnit enemy)
+    {
+        if (!IsActiveEnemy(enemy) || !_roster.RemoveUnit(enemy)) return false;
+
+        _spawner.ReturnUnit(enemy);
+        OnBattleRosterChanged?.Invoke();
+        return true;
+    }
+
+    public bool TryGetDefenseLinePosition(out Vector3 position)
+    {
+        if (defenseLine == null)
+        {
+            position = default;
+            return false;
+        }
+
+        position = defenseLine.transform.position;
+        return true;
+    }
+
     public static bool CanStartWaveWithAllyCount(int count)
     {
         return count >= 1 && count <= MaxDeployedAllyCount;
@@ -575,21 +602,6 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
                 moveSpeedMultiplier,
                 attackRateMultiplier);
         }
-    }
-
-    public int CalculateRemainingBreachDamage()
-    {
-        int damage = 0;
-
-        foreach (var enemy in _roster.ActiveEnemies)
-        {
-            if (enemy is EnemyUnit enemyUnit && enemyUnit.IsAlive)
-            {
-                damage += enemyUnit.BreachDamage;
-            }
-        }
-
-        return damage;
     }
 
     public void GetAliveEnemiesInRadius(
