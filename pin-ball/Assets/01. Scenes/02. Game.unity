@@ -3221,6 +3221,29 @@ MonoBehaviour:
   enemyCountGrowthInterval: 3
   enemyCountGrowthAmount: 1
   maximumEnemyCount: 10
+  purchasedAlly:
+    UnitId: warrior
+    Level: 1
+    Modifier:
+      MergeTier: 0
+      MergeAttackBonusPerTier: 0
+      MergeHpBonusPerTier: 0
+      EquipmentAttackBonus: 0
+      EquipmentHpBonus: 0
+  unitPurchaseBaseCost: 100
+  unitPurchaseCostMultiplier: 1.8
+  allyAttackSettings:
+    BaseEffect: 1
+    EffectPerLevel: 0.25
+    BaseCost: 75
+    CostMultiplier: 1.7
+    MaxLevel: 20
+  defenseLineHpSettings:
+    BaseEffect: 0
+    EffectPerLevel: 10
+    BaseCost: 80
+    CostMultiplier: 1.7
+    MaxLevel: 20
 --- !u!4 &492424497
 Transform:
   m_ObjectHideFlags: 0
@@ -30769,12 +30792,15 @@ RectTransform:
   - {fileID: 1378846282}
   - {fileID: 1606217192}
   - {fileID: 998132106}
+  - {fileID: 910000002}
+  - {fileID: 920000002}
+  - {fileID: 930000002}
   m_Father: {fileID: 2000230547}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -24, y: -100}
-  m_SizeDelta: {x: 360, y: 300}
+  m_SizeDelta: {x: 360, y: 585}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &2132965198
 MonoBehaviour:
@@ -30814,6 +30840,685 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2132965196}
   m_CullTransparentMesh: 1
+--- !u!1 &910000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 910000002}
+  - component: {fileID: 910000003}
+  - component: {fileID: 910000004}
+  - component: {fileID: 910000005}
+  - component: {fileID: 910000006}
+  m_Layer: 5
+  m_Name: UnitPurchaseUpgrade
+  m_TagString: Untagged
+  m_IsActive: 1
+--- !u!224 &910000002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 910000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 911000002}
+  - {fileID: 912000002}
+  - {fileID: 913000002}
+  - {fileID: 914000002}
+  m_Father: {fileID: 2132965197}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -335}
+  m_SizeDelta: {x: 336, y: 84}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &910000003
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 910000001}
+  m_CullTransparentMesh: 1
+--- !u!114 &910000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 910000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Color: {r: 0.09, g: 0.15, b: 0.25, a: 0.95}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_Type: 0
+--- !u!114 &910000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 910000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 910000004}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &910000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 910000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 534d374bd25b44ad8b8929355b37a462, type: 3}
+  upgrade: 0
+  purchaseButton: {fileID: 910000005}
+  nameText: {fileID: 911000004}
+  levelText: {fileID: 912000004}
+  effectText: {fileID: 913000004}
+  costText: {fileID: 914000004}
+--- !u!1 &911000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_Component:
+  - component: {fileID: 911000002}
+  - component: {fileID: 911000003}
+  - component: {fileID: 911000004}
+  m_Layer: 5
+  m_Name: Name
+  m_IsActive: 1
+--- !u!224 &911000002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 911000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 910000002}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 12, y: -8}
+  m_SizeDelta: {x: 180, y: 26}
+  m_Pivot: {x: 0, y: 1}
+--- !u!222 &911000003
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 911000001}
+--- !u!114 &911000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 911000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_text: UNIT
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSize: 20
+  m_fontSizeBase: 20
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+--- !u!1 &912000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_Component:
+  - component: {fileID: 912000002}
+  - component: {fileID: 912000003}
+  - component: {fileID: 912000004}
+  m_Layer: 5
+  m_Name: Level
+  m_IsActive: 1
+--- !u!224 &912000002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 912000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 910000002}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 12, y: -34}
+  m_SizeDelta: {x: 90, y: 22}
+  m_Pivot: {x: 0, y: 1}
+--- !u!222 &912000003
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 912000001}
+--- !u!114 &912000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 912000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_text: Lv. 1
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSize: 16
+  m_fontSizeBase: 16
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+--- !u!1 &913000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_Component:
+  - component: {fileID: 913000002}
+  - component: {fileID: 913000003}
+  - component: {fileID: 913000004}
+  m_Layer: 5
+  m_Name: Effect
+  m_IsActive: 1
+--- !u!224 &913000002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 913000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 910000002}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 100, y: -34}
+  m_SizeDelta: {x: 220, y: 22}
+  m_Pivot: {x: 0, y: 1}
+--- !u!222 &913000003
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 913000001}
+--- !u!114 &913000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 913000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_text: 1/5 > 2/5
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSize: 16
+  m_fontSizeBase: 16
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+--- !u!1 &914000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_Component:
+  - component: {fileID: 914000002}
+  - component: {fileID: 914000003}
+  - component: {fileID: 914000004}
+  m_Layer: 5
+  m_Name: Cost
+  m_IsActive: 1
+--- !u!224 &914000002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 914000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 910000002}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 230, y: -8}
+  m_SizeDelta: {x: 90, y: 26}
+  m_Pivot: {x: 0, y: 1}
+--- !u!222 &914000003
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 914000001}
+--- !u!114 &914000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 914000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_text: 100G
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSize: 16
+  m_fontSizeBase: 16
+  m_HorizontalAlignment: 4
+  m_VerticalAlignment: 256
+--- !u!1 &920000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_Component:
+  - component: {fileID: 920000002}
+  - component: {fileID: 920000003}
+  - component: {fileID: 920000004}
+  - component: {fileID: 920000005}
+  - component: {fileID: 920000006}
+  m_Layer: 5
+  m_Name: AllyAttackUpgrade
+  m_IsActive: 1
+--- !u!224 &920000002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 920000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 921000002}
+  - {fileID: 922000002}
+  - {fileID: 923000002}
+  - {fileID: 924000002}
+  m_Father: {fileID: 2132965197}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -430}
+  m_SizeDelta: {x: 336, y: 84}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &920000003
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 920000001}
+--- !u!114 &920000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 920000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Color: {r: 0.09, g: 0.15, b: 0.25, a: 0.95}
+  m_RaycastTarget: 1
+--- !u!114 &920000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 920000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 920000004}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &920000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 920000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 534d374bd25b44ad8b8929355b37a462, type: 3}
+  upgrade: 1
+  purchaseButton: {fileID: 920000005}
+  nameText: {fileID: 921000004}
+  levelText: {fileID: 922000004}
+  effectText: {fileID: 923000004}
+  costText: {fileID: 924000004}
+--- !u!1 &921000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_Component:
+  - component: {fileID: 921000002}
+  - component: {fileID: 921000003}
+  - component: {fileID: 921000004}
+  m_Layer: 5
+  m_Name: Name
+  m_IsActive: 1
+--- !u!224 &921000002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 921000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 920000002}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 12, y: -8}
+  m_SizeDelta: {x: 180, y: 26}
+  m_Pivot: {x: 0, y: 1}
+--- !u!222 &921000003
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 921000001}
+--- !u!114 &921000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 921000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_text: ATTACK
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSize: 20
+  m_fontSizeBase: 20
+--- !u!1 &922000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_Component:
+  - component: {fileID: 922000002}
+  - component: {fileID: 922000003}
+  - component: {fileID: 922000004}
+  m_Layer: 5
+  m_Name: Level
+  m_IsActive: 1
+--- !u!224 &922000002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 922000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 920000002}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 12, y: -34}
+  m_SizeDelta: {x: 90, y: 22}
+  m_Pivot: {x: 0, y: 1}
+--- !u!222 &922000003
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 922000001}
+--- !u!114 &922000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 922000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_text: Lv. 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSize: 16
+  m_fontSizeBase: 16
+--- !u!1 &923000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_Component:
+  - component: {fileID: 923000002}
+  - component: {fileID: 923000003}
+  - component: {fileID: 923000004}
+  m_Layer: 5
+  m_Name: Effect
+  m_IsActive: 1
+--- !u!224 &923000002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 923000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 920000002}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 100, y: -34}
+  m_SizeDelta: {x: 220, y: 22}
+  m_Pivot: {x: 0, y: 1}
+--- !u!222 &923000003
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 923000001}
+--- !u!114 &923000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 923000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_text: x1.00 > x1.25
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSize: 16
+  m_fontSizeBase: 16
+--- !u!1 &924000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_Component:
+  - component: {fileID: 924000002}
+  - component: {fileID: 924000003}
+  - component: {fileID: 924000004}
+  m_Layer: 5
+  m_Name: Cost
+  m_IsActive: 1
+--- !u!224 &924000002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 924000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 920000002}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 230, y: -8}
+  m_SizeDelta: {x: 90, y: 26}
+  m_Pivot: {x: 0, y: 1}
+--- !u!222 &924000003
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 924000001}
+--- !u!114 &924000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 924000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_text: 75G
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSize: 16
+  m_fontSizeBase: 16
+--- !u!1 &930000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_Component:
+  - component: {fileID: 930000002}
+  - component: {fileID: 930000003}
+  - component: {fileID: 930000004}
+  - component: {fileID: 930000005}
+  - component: {fileID: 930000006}
+  m_Layer: 5
+  m_Name: DefenseLineHpUpgrade
+  m_IsActive: 1
+--- !u!224 &930000002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 930000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 931000002}
+  - {fileID: 932000002}
+  - {fileID: 933000002}
+  - {fileID: 934000002}
+  m_Father: {fileID: 2132965197}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -525}
+  m_SizeDelta: {x: 336, y: 84}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &930000003
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 930000001}
+--- !u!114 &930000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 930000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Color: {r: 0.09, g: 0.15, b: 0.25, a: 0.95}
+  m_RaycastTarget: 1
+--- !u!114 &930000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 930000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 930000004}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &930000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 930000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: 534d374bd25b44ad8b8929355b37a462, type: 3}
+  upgrade: 2
+  purchaseButton: {fileID: 930000005}
+  nameText: {fileID: 931000004}
+  levelText: {fileID: 932000004}
+  effectText: {fileID: 933000004}
+  costText: {fileID: 934000004}
+--- !u!1 &931000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_Component:
+  - component: {fileID: 931000002}
+  - component: {fileID: 931000003}
+  - component: {fileID: 931000004}
+  m_Layer: 5
+  m_Name: Name
+  m_IsActive: 1
+--- !u!224 &931000002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 931000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 930000002}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 12, y: -8}
+  m_SizeDelta: {x: 180, y: 26}
+  m_Pivot: {x: 0, y: 1}
+--- !u!222 &931000003
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 931000001}
+--- !u!114 &931000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 931000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_text: DEFENSE HP
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSize: 20
+  m_fontSizeBase: 20
+--- !u!1 &932000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_Component:
+  - component: {fileID: 932000002}
+  - component: {fileID: 932000003}
+  - component: {fileID: 932000004}
+  m_Layer: 5
+  m_Name: Level
+  m_IsActive: 1
+--- !u!224 &932000002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 932000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 930000002}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 12, y: -34}
+  m_SizeDelta: {x: 90, y: 22}
+  m_Pivot: {x: 0, y: 1}
+--- !u!222 &932000003
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 932000001}
+--- !u!114 &932000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 932000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_text: Lv. 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSize: 16
+  m_fontSizeBase: 16
+--- !u!1 &933000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_Component:
+  - component: {fileID: 933000002}
+  - component: {fileID: 933000003}
+  - component: {fileID: 933000004}
+  m_Layer: 5
+  m_Name: Effect
+  m_IsActive: 1
+--- !u!224 &933000002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 933000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 930000002}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 100, y: -34}
+  m_SizeDelta: {x: 220, y: 22}
+  m_Pivot: {x: 0, y: 1}
+--- !u!222 &933000003
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 933000001}
+--- !u!114 &933000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 933000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_text: +0 HP > +10 HP
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSize: 16
+  m_fontSizeBase: 16
+--- !u!1 &934000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_Component:
+  - component: {fileID: 934000002}
+  - component: {fileID: 934000003}
+  - component: {fileID: 934000004}
+  m_Layer: 5
+  m_Name: Cost
+  m_IsActive: 1
+--- !u!224 &934000002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 934000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 930000002}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 230, y: -8}
+  m_SizeDelta: {x: 90, y: 26}
+  m_Pivot: {x: 0, y: 1}
+--- !u!222 &934000003
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 934000001}
+--- !u!114 &934000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 934000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_text: 80G
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSize: 16
+  m_fontSizeBase: 16
 --- !u!1 &7648392017564938201
 GameObject:
   m_ObjectHideFlags: 0
