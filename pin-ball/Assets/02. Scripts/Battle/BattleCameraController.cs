@@ -137,7 +137,7 @@ public sealed class BattleCameraController : MonoBehaviour
         Vector3 battlePosition,
         Vector3 pinballPosition)
     {
-        return state == EWaveState.Pending
+        return state == EWaveState.Starting
             ? pinballPosition
             : battlePosition;
     }

@@ -132,7 +132,7 @@ public class ShopPanel : UIBase
 
     private void OnBattleStateChanged(EWaveState _)
     {
-        if (_battleManager.State == EWaveState.Pending)
+        if (_battleManager.State == EWaveState.Starting)
         {
             RefreshItems(true);
             return;

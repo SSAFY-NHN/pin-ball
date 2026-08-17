@@ -43,7 +43,7 @@ public sealed class GameSpeedController : MonoBehaviour
     {
         EWaveState state = _battleManager != null
             ? _battleManager.State
-            : EWaveState.Pending;
+            : EWaveState.Starting;
         Time.timeScale = ResolveAppliedTimeScale(
             state,
             _selectedMultiplier);

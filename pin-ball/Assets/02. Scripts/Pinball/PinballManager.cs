@@ -123,7 +123,6 @@ public class PinballManager : AppService, IItemEventListener
             _itemModifiers);
         ResetForNewRun();
         SubscribeItems();
-        _battleManager.OnStateChanged += OnBattleStateChanged;
     }
 
     private void SubscribeItems()
@@ -353,14 +352,6 @@ public class PinballManager : AppService, IItemEventListener
         }
     }
 
-    private void OnBattleStateChanged(EWaveState state)
-    {
-        if (state != EWaveState.Pending) return;
-
-        _launchState.ResetSuccessfulLaunches();
-        _goalController.ResetForPreparation();
-        NotifyLaunchCostChanged();
-    }
 
     private void SpawnInitialBall()
     {
@@ -412,11 +403,6 @@ public class PinballManager : AppService, IItemEventListener
 
     protected override void OnDestroy()
     {
-        if (_battleManager != null)
-        {
-            _battleManager.OnStateChanged -= OnBattleStateChanged;
-        }
-
         if (_itemManager != null)
         {
             foreach (var item in SupportedItems)
