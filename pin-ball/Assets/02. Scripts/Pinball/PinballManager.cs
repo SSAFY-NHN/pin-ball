@@ -24,6 +24,10 @@ public class PinballManager : AppService, IItemEventListener
     public event Action<int> OnComboChanged;
     public event Action<Pinball, int> OnJackpotTriggered;
     public event Action OnProductionChanged;
+    public event Action<PinballBallActivatedData> OnPermanentBallActivated;
+    public event Action<PinballBallReleasedData> OnPermanentBallReleased;
+    public event Action<PinballBumperRewardData> OnBumperRewarded;
+    public event Action<PinballUpgradePurchasedData> OnProductionUpgradePurchased;
 
     public int CurrentLaunchCost => _launchState.CurrentCost;
     public bool HasAvailableBall => false;
@@ -42,6 +46,7 @@ public class PinballManager : AppService, IItemEventListener
         _productionUpgradeController?.PermanentBallCount ?? 1;
     public float RespawnDelay =>
         _productionUpgradeController?.RespawnDelay ?? 3f;
+    public int ActiveCloneCount => _ballPool?.ActiveCloneCount ?? 0;
 
     [Header("Launcher")]
     [SerializeField] private Vector2 launchPosition = new(6.4f, 10f);
@@ -211,6 +216,10 @@ public class PinballManager : AppService, IItemEventListener
             jackpotBaseReward,
             jackpotIncomeMultiplier);
         int normalReward = reward.TotalReward - reward.JackpotReward;
+        OnBumperRewarded?.Invoke(new PinballBumperRewardData(
+            ball.IsClone,
+            normalReward,
+            reward.JackpotReward));
         ball.PlayGoldRewardFeedback(hitPosition, normalReward);
         OnComboChanged?.Invoke(combo);
 
@@ -273,9 +282,12 @@ public class PinballManager : AppService, IItemEventListener
     public void ReleaseBall(Pinball ball)
     {
         if (_ballPool == null) return;
+        int bumperHitCount = ball != null ? ball.BigBumperHitCount : 0;
         EPinballReleaseType releaseType = _ballPool.Release(ball);
         if (releaseType == EPinballReleaseType.Permanent)
         {
+            OnPermanentBallReleased?.Invoke(new PinballBallReleasedData(
+                bumperHitCount));
             _autoCycleController.Schedule(ball, Time.time + RespawnDelay);
         }
     }
@@ -340,6 +352,10 @@ public class PinballManager : AppService, IItemEventListener
         }
 
         OnProductionChanged?.Invoke();
+        OnProductionUpgradePurchased?.Invoke(new PinballUpgradePurchasedData(
+            upgrade,
+            _productionUpgradeController.GetLevel(upgrade),
+            cost));
         return true;
     }
 
@@ -417,6 +433,7 @@ public class PinballManager : AppService, IItemEventListener
             : launchPosition;
         bool isGolden = UnityEngine.Random.value < Mathf.Clamp01(goldenChance);
         ball.Activate(position, autoSpawnDirection, false, isGolden);
+        OnPermanentBallActivated?.Invoke(new PinballBallActivatedData(isGolden));
     }
 
     private void SpawnNextPermanentBall()
@@ -456,5 +473,59 @@ public class PinballManager : AppService, IItemEventListener
         }
 
         base.OnDestroy();
+    }
+}
+
+public readonly struct PinballBallActivatedData
+{
+    public bool IsGolden { get; }
+
+    public PinballBallActivatedData(bool isGolden)
+    {
+        IsGolden = isGolden;
+    }
+}
+
+public readonly struct PinballBallReleasedData
+{
+    public int BumperHitCount { get; }
+
+    public PinballBallReleasedData(int bumperHitCount)
+    {
+        BumperHitCount = bumperHitCount;
+    }
+}
+
+public readonly struct PinballBumperRewardData
+{
+    public bool IsClone { get; }
+    public int NormalGold { get; }
+    public int JackpotGold { get; }
+
+    public PinballBumperRewardData(
+        bool isClone,
+        int normalGold,
+        int jackpotGold)
+    {
+        IsClone = isClone;
+        NormalGold = normalGold;
+        JackpotGold = jackpotGold;
+    }
+}
+
+public readonly struct PinballUpgradePurchasedData
+{
+    public EPinballProductionUpgrade Upgrade { get; }
+    public int Level { get; }
+    public int Cost { get; }
+
+    public PinballUpgradePurchasedData(
+        EPinballProductionUpgrade upgrade,
+        int level,
+        int cost)
+    {
+        Upgrade = upgrade;
+        Level = level;
+        Cost = cost;
     }
 }

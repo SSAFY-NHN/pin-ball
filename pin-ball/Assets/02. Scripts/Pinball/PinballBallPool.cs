@@ -19,6 +19,7 @@ public sealed class PinballBallPool
     public bool HasActiveBalls =>
         _activePermanentBalls.Count > 0 || _activeCloneBalls.Count > 0;
     public IReadOnlyCollection<Pinball> ActiveBalls => _activePermanentBalls;
+    public int ActiveCloneCount => _activeCloneBalls.Count;
 
     public PinballBallPool(IEnumerable<Pinball> permanentBalls)
         : this(permanentBalls, null)
