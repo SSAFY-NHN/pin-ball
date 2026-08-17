@@ -54,6 +54,22 @@ public class UnitRosterTests
     }
 
     [Test]
+    public void AddOwnedAlly_AfterWipe_RegistersReinforcementAsActive()
+    {
+        _allyObject = new GameObject("defeated ally");
+        _enemyObject = new GameObject("reinforcement");
+        var defeatedAlly = _allyObject.AddComponent<AllyUnit>();
+        var reinforcement = _enemyObject.AddComponent<AllyUnit>();
+        var roster = new UnitRoster();
+        roster.AddOwnedAlly(defeatedAlly);
+        roster.NotifyUnitDied(defeatedAlly);
+
+        Assert.That(roster.AddOwnedAlly(reinforcement), Is.True);
+        Assert.That(roster.OwnedAllies, Is.EqualTo(new[] { reinforcement }));
+        Assert.That(roster.ActiveAllies, Is.EqualTo(new UnitBase[] { reinforcement }));
+    }
+
+    [Test]
     public void NotifyUnitDied_EnemyDoesNotTouchOwnedAllies()
     {
         _allyObject = new GameObject("ally");

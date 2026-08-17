@@ -101,6 +101,26 @@ public class UnitTargetFinderTests
             Is.EqualTo(new UnitBase[] { near, farInLine }));
     }
 
+    [Test]
+    public void FindClosestAliveAlly_AfterEmptyRoster_FindsNewReinforcement()
+    {
+        var roster = new UnitRoster();
+        var finder = new UnitTargetFinder(roster);
+        var reinforcement = CreateAlly(
+            "reinforcement",
+            new Vector3(2f, 0f));
+
+        Assert.That(
+            finder.FindClosestAliveAlly(Vector3.zero, float.MaxValue),
+            Is.Null);
+
+        roster.AddOwnedAlly(reinforcement);
+
+        Assert.That(
+            finder.FindClosestAliveAlly(Vector3.zero, float.MaxValue),
+            Is.SameAs(reinforcement));
+    }
+
     private UnitTargetTestUnit CreateTestUnit(
         string name,
         EBattleTeam team,
