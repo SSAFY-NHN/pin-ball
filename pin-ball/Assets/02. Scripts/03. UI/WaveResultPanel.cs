@@ -9,8 +9,8 @@ public sealed class WaveResultPanel : UIBase
     [SerializeField] private RectTransform panelRect;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private TextMeshProUGUI resultText;
-    [SerializeField] private string clearedCopy = "웨이브 클리어";
-    [SerializeField] private string failedCopy = "방어 실패";
+    [SerializeField] private string clearedCopy = "다음 단계 준비 중";
+    [SerializeField] private string failedCopy = "같은 단계 재정비";
     [SerializeField] private Color clearedColor =
         new(1f, 0.78f, 0.22f, 1f);
     [SerializeField] private Color failedColor =

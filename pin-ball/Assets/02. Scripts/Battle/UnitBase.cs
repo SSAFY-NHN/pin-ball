@@ -441,9 +441,8 @@ public abstract class UnitBase : MonoBehaviour
         _health.MarkDead();
         _state = EBattleUnitState.Dead;
         _effectScheduler.Reset();
-        _context?.NotifyUnitDied(this);
-
         if (Team == EBattleTeam.Ally) gameObject.SetActive(false);
+        _context?.NotifyUnitDied(this);
     }
 
     private void UpdateVisual()

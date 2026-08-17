@@ -2,45 +2,56 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-//소유: 웨이브 인덱스, 플레이어 HP, 골드, EWaveState
-//책임: 시작/종료 결정, 보상 지급, 패배 판정, UI 이벤트 발행
-//금지: 유닛 탐색/이동/공격, Instantiate 직접 처리
+// 소유: 전투 단계, 방어선 HP, 골드, 지속 전투 상태
+// 책임: 자동 단계 시작/전환/재정비 결정과 UI 이벤트 발행
+// 금지: 유닛 탐색/이동/공격, Instantiate 직접 처리
 public class BattleManager : AppService, IItemEventListener
 {
-    [Header("Player")]
+    [Header("Defense Line")]
     [SerializeField, Min(1)] public int playerMaxHp = 20;
-    [SerializeField, Min(0f)] private float waveResolutionDuration = 2f;
+    [SerializeField, Range(0f, 1f)] private float recoveryHpRatio = 1f;
 
-    public BattleWaveData CurrentWave => _runState?.CurrentWave;
-    public int CurrentWaveNumber => _runState?.CurrentWaveNumber ?? 1;
-    public int TotalWaveCount => _runState?.TotalWaveCount ?? 0;
-    public int PlayerHp => _runState?.PlayerHp ?? playerMaxHp;
-    public int Gold => _economy?.Gold ?? 0;
+    [Header("Stage Transition")]
+    [SerializeField, Min(0f)] private float stageTransitionDuration = 2f;
+    [SerializeField, Min(0f)] private float recoveryDuration = 3f;
+
+    [Header("Enemy Stage Prototype")]
+    // TODO: 플레이 테스트 후 프로토타입 적 수와 증가 구간을 조정한다.
+    [SerializeField] private string stageEnemyId = "goblin";
+    [SerializeField, Min(1)] private int baseEnemyCount = 3;
+    [SerializeField, Min(1)] private int enemyCountGrowthInterval = 3;
+    [SerializeField, Min(0)] private int enemyCountGrowthAmount = 1;
+    [SerializeField, Min(1)] private int maximumEnemyCount = 10;
+
+    public int CurrentWaveNumber => stageController?.CurrentStage ?? 1;
+    public int CurrentStageNumber => CurrentWaveNumber;
+    public int PlayerHp => runState?.PlayerHp ?? playerMaxHp;
+    public int MaximumPlayerHp => runState?.MaximumPlayerHp ?? playerMaxHp;
+    public int Gold => economy?.Gold ?? 0;
     public bool IsInitialized { get; private set; }
-    public EWaveState State => _runState?.State ?? EWaveState.Pending;
-    public bool IsPreparationPhase => State == EWaveState.Pending;
+    public EWaveState State => stageController?.State ?? EWaveState.Starting;
+    public bool IsPreparationPhase => State != EWaveState.Active;
     public bool CanUsePreparationActions =>
-        IsPreparationPhase && !_isPreparationLocked;
-    public bool HasValidCurrentWave => _runState?.HasValidCurrentWave ?? false;
-    
+        IsPreparationPhase && !isPreparationLocked;
+
     public event Action<EWaveState> OnStateChanged;
     public event Action OnInitialized;
     public event Action<int> OnWaveChanged;
     public event Action<int> OnHpChanged;
     public event Action<int> OnGoldChanged;
-    public event Action<string> OnActionRejected;
     public event Action<bool> OnPreparationAvailabilityChanged;
     public event Action<EWaveResolutionResult, int> OnWaveResolutionStarted;
 
-    private UnitManager _unitManager;
-    private BattleRunState _runState;
-    private BattleEconomy _economy = new(0);
-    private int _barrierDamageReduction;
-    private int _minimumBarrierDamage = 1;
-    private bool _isPreparationLocked;
-    private readonly WaveResolutionState _waveResolution = new();
-    private Coroutine _waveResolutionCoroutine;
-    private bool _isRunInitialized;
+    private UnitManager unitManager;
+    private BattleRunState runState;
+    private BattleStageController stageController;
+    private EnemyStageScalingController enemyScalingController;
+    private BattleEconomy economy = new(0);
+    private int barrierDamageReduction;
+    private int minimumBarrierDamage = 1;
+    private Coroutine transitionCoroutine;
+    private bool isRunInitialized;
+    private bool isPreparationLocked;
 
     private void Start()
     {
@@ -49,230 +60,164 @@ public class BattleManager : AppService, IItemEventListener
 
     internal void InitializeNewRun()
     {
-        if (_isRunInitialized) return;
-        _isRunInitialized = true;
+        if (isRunInitialized) return;
+        isRunInitialized = true;
 
-        _unitManager = App.Get<UnitManager>();
-        _unitManager.OnBattleRosterChanged += OnBattleRosterChanged;
+        unitManager = App.Get<UnitManager>();
+        unitManager.InitializeNewRun();
+        unitManager.OnBattleRosterChanged += OnBattleRosterChanged;
 
         var titleData = App.Get<TitleData>();
-        _runState = new BattleRunState(
-            titleData.BattleWaves,
-            titleData.HasValidBattleRun,
-            playerMaxHp);
-        _economy = new BattleEconomy(
+        runState = new BattleRunState(playerMaxHp);
+        stageController = new BattleStageController();
+        enemyScalingController = new EnemyStageScalingController(
+            baseEnemyCount,
+            enemyCountGrowthInterval,
+            enemyCountGrowthAmount,
+            maximumEnemyCount);
+        economy = new BattleEconomy(
             titleData.BattleRunCommon?.StartingGold ?? 0);
-
-        if (!titleData.HasValidBattleRun)
-        {
-            Debug.LogError(
-                "[BattleManager] Battle wave data is invalid. " +
-                "Wave start is disabled.");
-        }
 
         App.Get<ItemManager>().Subscribe(EItem.BarrierReinforcement, this);
 
         IsInitialized = true;
         OnInitialized?.Invoke();
-        OnStateChanged?.Invoke(_runState.State);
-        OnHpChanged?.Invoke(_runState.PlayerHp);
-        OnGoldChanged?.Invoke(_economy.Gold);
-        OnWaveChanged?.Invoke(_runState.CurrentWaveIndex);
+        OnStateChanged?.Invoke(State);
+        OnHpChanged?.Invoke(PlayerHp);
+        OnGoldChanged?.Invoke(Gold);
+
+        StartCurrentStage();
+    }
+
+    private void StartCurrentStage()
+    {
+        if (unitManager == null || unitManager.DeployedAllyCount <= 0)
+        {
+            Debug.LogError(
+                "[BattleManager] 지속 전투를 시작할 기본 아군이 없습니다.");
+            return;
+        }
+
+        bool canStart = State == EWaveState.Starting
+            ? stageController.TryStart()
+            : State == EWaveState.Active;
+        if (!canStart) return;
+
+        int enemyCount = enemyScalingController.CalculateEnemyCount(
+            CurrentStageNumber);
+        unitManager.BeginStage(stageEnemyId, enemyCount, CurrentStageNumber);
+        OnStateChanged?.Invoke(State);
+        OnWaveChanged?.Invoke(CurrentStageNumber);
+        SoundManager.PlaySFXIfAvailable(SoundName.WaveStart);
     }
 
     private void OnBattleRosterChanged()
     {
-        if (State == EWaveState.Active &&
-            BattleResolutionPolicy.TryDetectWipe(
-                _unitManager.RemainingAllyCount,
-                _unitManager.RemainingEnemyCount,
+        if (State != EWaveState.Active) return;
+
+        if (BattleResolutionPolicy.TryDetectWipe(
+                unitManager.RemainingAllyCount,
+                unitManager.RemainingEnemyCount,
                 out EWaveResolutionResult result))
         {
-            BeginWaveResolution(result);
+            BeginStageTransition(result);
         }
     }
-    
-    public bool TryStartWave()
+
+    private void BeginStageTransition(EWaveResolutionResult result)
     {
-        if (!CanUsePreparationActions)
+        float duration = result == EWaveResolutionResult.Cleared
+            ? stageTransitionDuration
+            : recoveryDuration;
+        if (!stageController.TryBeginTransition(
+                result,
+                Time.time,
+                duration)) return;
+
+        if (result == EWaveResolutionResult.Failed)
         {
-            RejectAction("전투 준비 단계에서만 웨이브를 시작할 수 있습니다.");
-            return false;
+            int damage = BarrierDamageCalculator.Calculate(
+                unitManager.CalculateRemainingBreachDamage(),
+                barrierDamageReduction,
+                minimumBarrierDamage);
+            runState.ApplyPlayerDamage(damage);
+            OnHpChanged?.Invoke(PlayerHp);
         }
 
-        if (!HasValidCurrentWave)
-        {
-            RejectAction("시작할 웨이브 데이터가 없습니다.");
-            return false;
-        }
+        unitManager.ResolveStageResult();
+        OnStateChanged?.Invoke(State);
+        OnWaveResolutionStarted?.Invoke(result, CurrentStageNumber);
+        SoundManager.PlaySFXIfAvailable(
+            result == EWaveResolutionResult.Cleared
+                ? SoundName.WaveWin
+                : SoundName.WaveFailed);
 
-        if (_unitManager == null || _unitManager.DeployedAllyCount <= 0)
-        {
-            RejectAction("아군 유닛을 한 명 이상 준비해야 합니다.");
-            return false;
-        }
-
-        if (!_unitManager.CanStartWaveWithCurrentRoster)
-        {
-            RejectAction("배치 아군은 5마리까지 웨이브에 참가할 수 있습니다.");
-            return false;
-        }
-
-        ChangeState(EWaveState.Active);
-        SoundManager.PlaySFXIfAvailable(SoundName.WaveStart);
-        return true;
+        transitionCoroutine = StartCoroutine(WaitForTransition(duration));
     }
 
-    public void StartWave()
+    private IEnumerator WaitForTransition(float duration)
     {
-        TryStartWave();
+        yield return new WaitForSeconds(duration);
+        transitionCoroutine = null;
+
+        bool wasRecovering = State == EWaveState.Recovering;
+        if (!stageController.TryCompleteTransition(Time.time)) yield break;
+
+        if (wasRecovering)
+        {
+            runState.RestorePlayerHp(recoveryHpRatio);
+            OnHpChanged?.Invoke(PlayerHp);
+        }
+
+        StartCurrentStage();
     }
 
     public bool TrySpendGold(int amount)
     {
-        int previousGold = _economy.Gold;
-        if (!_economy.TrySpend(amount)) return false;
-        if (_economy.Gold != previousGold)
+        int previousGold = economy.Gold;
+        if (!economy.TrySpend(amount)) return false;
+        if (economy.Gold != previousGold)
         {
-            OnGoldChanged?.Invoke(_economy.Gold);
+            OnGoldChanged?.Invoke(economy.Gold);
         }
         return true;
     }
 
     public bool TrySpendPreparationGold(int amount)
     {
-        if (!CanUsePreparationActions) return false;
-        return TrySpendGold(amount);
+        return CanUsePreparationActions && TrySpendGold(amount);
     }
 
     public void SetPreparationLock(bool isLocked)
     {
-        if (_isPreparationLocked == isLocked) return;
-
-        _isPreparationLocked = isLocked;
-        OnPreparationAvailabilityChanged?.Invoke(
-            CanUsePreparationActions);
+        if (isPreparationLocked == isLocked) return;
+        isPreparationLocked = isLocked;
+        OnPreparationAvailabilityChanged?.Invoke(CanUsePreparationActions);
     }
 
     public void AddGold(int amount)
     {
-        if (!_economy.Add(amount)) return;
-        OnGoldChanged?.Invoke(_economy.Gold);
+        if (!economy.Add(amount)) return;
+        OnGoldChanged?.Invoke(economy.Gold);
     }
 
     public void OnItemEvent(Item item)
     {
-        _barrierDamageReduction = Mathf.RoundToInt(item.Value1);
-        _minimumBarrierDamage = Mathf.Max(1, Mathf.RoundToInt(item.Value2));
-    }
-
-    private void BeginWaveResolution(EWaveResolutionResult result)
-    {
-        if (State != EWaveState.Active ||
-            !_waveResolution.TryBegin(
-                result,
-                CurrentWaveNumber,
-                Time.time,
-                waveResolutionDuration)) return;
-
-        BattleWaveData wave = CurrentWave;
-        bool isFinalWave =
-            _runState.CurrentWaveIndex + 1 >= _runState.TotalWaveCount;
-        ChangeState(EWaveState.Resolving);
-
-        if (result == EWaveResolutionResult.Cleared)
-        {
-            if (wave != null)
-            {
-                AddGold(isFinalWave
-                    ? wave.FinalClearGoldReward
-                    : wave.WaveClearGoldReward);
-            }
-        }
-        else
-        {
-            int damage = BarrierDamageCalculator.Calculate(
-                _unitManager.CalculateRemainingBreachDamage(),
-                _barrierDamageReduction,
-                _minimumBarrierDamage);
-            _runState.ApplyPlayerDamage(damage);
-            OnHpChanged?.Invoke(_runState.PlayerHp);
-            if (_runState.PlayerHp > 0 && wave != null)
-            {
-                AddGold(wave.RetryGoldReward);
-            }
-        }
-
-        SoundManager.PlaySFXIfAvailable(
-            result == EWaveResolutionResult.Cleared
-                ? SoundName.WaveWin
-                : SoundName.WaveFailed);
-        OnWaveResolutionStarted?.Invoke(result, CurrentWaveNumber);
-        _waveResolutionCoroutine = StartCoroutine(WaitForWaveResolution());
-    }
-
-    private IEnumerator WaitForWaveResolution()
-    {
-        yield return new WaitForSeconds(waveResolutionDuration);
-        _waveResolutionCoroutine = null;
-        FinishWaveResolution();
-    }
-
-    private void FinishWaveResolution()
-    {
-        if (State != EWaveState.Resolving ||
-            !_waveResolution.IsPending) return;
-
-        EWaveResolutionResult result = _waveResolution.Result;
-        bool isFinalWave =
-            _runState.CurrentWaveIndex + 1 >= _runState.TotalWaveCount;
-        bool hasValidWave = CurrentWave != null;
-        _unitManager.ResolveWaveResult();
-        _waveResolution.Clear();
-
-        if (!hasValidWave)
-        {
-            ChangeState(EWaveState.Defeat);
-            return;
-        }
-
-        EWaveState nextState = BattleResolutionPolicy.ResolveNextState(
-            result,
-            isFinalWave,
-            _runState.PlayerHp);
-        if (result == EWaveResolutionResult.Cleared &&
-            nextState == EWaveState.Pending)
-        {
-            _runState.AdvanceWave();
-            OnWaveChanged?.Invoke(_runState.CurrentWaveIndex);
-        }
-
-        ChangeState(nextState);
-    }
-
-    private void ChangeState(EWaveState nextState)
-    {
-        if (!_runState.ChangeState(nextState)) return;
-        OnStateChanged?.Invoke(_runState.State);
-    }
-
-    private void RejectAction(string message)
-    {
-        Debug.LogWarning($"[BattleManager] {message}");
-        OnActionRejected?.Invoke(message);
+        barrierDamageReduction = Mathf.RoundToInt(item.Value1);
+        minimumBarrierDamage = Mathf.Max(1, Mathf.RoundToInt(item.Value2));
     }
 
     protected override void OnDestroy()
     {
-        if (_waveResolutionCoroutine != null)
+        if (transitionCoroutine != null)
         {
-            StopCoroutine(_waveResolutionCoroutine);
-            _waveResolutionCoroutine = null;
+            StopCoroutine(transitionCoroutine);
+            transitionCoroutine = null;
         }
 
-        if (_unitManager != null)
+        if (unitManager != null)
         {
-            _unitManager.OnBattleRosterChanged -= OnBattleRosterChanged;
+            unitManager.OnBattleRosterChanged -= OnBattleRosterChanged;
         }
 
         if (App.TryGet<ItemManager>(out var itemManager))

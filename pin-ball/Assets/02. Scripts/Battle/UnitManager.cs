@@ -38,6 +38,11 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     private BattleManager _battleManager;
     private UnitSpawner _spawner;
     private TitleData _titleData;
+    [SerializeField] private BattleUnitSpawnData startingAlly = new()
+    {
+        UnitId = "warrior",
+        Level = 1
+    };
     [SerializeField] private BattleAreaBounds battleArea;
     [SerializeField] private EvolutionGlowEffect evolutionGlowEffect;
     private ItemManager _itemManager;
@@ -78,13 +83,17 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             _roster,
             _titleData,
             battleArea);
-        _battleManager.OnStateChanged += OnStateChanged;
 
         _itemManager = App.Get<ItemManager>();
         _itemController = new UnitItemController(_itemManager);
         _itemManager.Subscribe(EItem.BattleClock, this);
         _itemManager.Subscribe(EItem.FieldArmor, this);
         _itemManager.Subscribe(EItem.DiversityEmblem, this);
+
+        if (_roster.OwnedAllyCount == 0 && startingAlly != null)
+        {
+            SpawnAlly(startingAlly);
+        }
     }
 
     private void NotifyUnitDamaged(UnitBase unit)
@@ -105,14 +114,11 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         }
     }
 
-    private void OnStateChanged(EWaveState state)
+    public void BeginStage(string enemyId, int enemyCount, int stage)
     {
-        if (state is EWaveState.Active)
-        {
-            ReturnAllEnemies();
-            CleanupDestroyedUnits();
-            SpawnEnemies(_battleManager.CurrentWave);
-        }
+        ReturnAllEnemies();
+        RestoreAlliesForStage();
+        SpawnEnemies(enemyId, enemyCount, stage);
     }
 
     public AllyUnit SpawnAlly(BattleUnitSpawnData unitData)
@@ -151,39 +157,25 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         return spawnedUnit;
     }
 
-    private void SpawnEnemies(BattleWaveData wave)
+    private void SpawnEnemies(string enemyId, int enemyCount, int stage)
     {
-        if (wave == null || wave.Enemies == null)
-        {
-            return;
-        }
+        if (string.IsNullOrEmpty(enemyId) || enemyCount <= 0) return;
 
         _spawnController.BeginEnemyWave();
-        for (var entryIndex = 0; entryIndex < wave.Enemies.Count; entryIndex++)
+        for (var count = 0; count < enemyCount; count++)
         {
-            var spawnData = wave.Enemies[entryIndex];
-            if (spawnData == null)
-            {
-                continue;
-            }
-
-            for (var count = 0; count < Mathf.Max(1, spawnData.Count); count++)
-            {
-                SpawnEnemy(spawnData.EnemyId, null);
-            }
+            SpawnEnemy(enemyId, stage, null);
         }
     }
 
-    private EnemyUnit SpawnEnemy(string enemyId, Vector3? spawnPosition)
+    private EnemyUnit SpawnEnemy(
+        string enemyId,
+        int stage,
+        Vector3? spawnPosition)
     {
-        int wave = _battleManager != null
-            ? _battleManager.CurrentWaveNumber
-            : _titleData != null && _titleData.EnemyCommon != null
-                ? _titleData.EnemyCommon.BaseWave
-                : 0;
         var enemy = _spawnController?.SpawnEnemy(
             enemyId,
-            wave,
+            stage,
             spawnPosition);
         AddEnemy(enemy);
         return enemy;
@@ -200,7 +192,12 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
                 UnityEngine.Random.Range(-0.5f, 0.5f),
                 UnityEngine.Random.Range(-0.5f, 0.5f),
                 0f);
-            SpawnEnemy(enemyId, center + offset);
+            SpawnEnemy(
+                enemyId,
+                _battleManager != null
+                    ? _battleManager.CurrentStageNumber
+                    : 1,
+                center + offset);
         }
     }
 
@@ -248,9 +245,9 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
 
         if (unit is AllyUnit ally)
         {
-            RemoveOwnedAlly(ally);
+            _roster.NotifyUnitDied(ally);
             RefreshAllyItemModifiers();
-            _spawner.ReturnUnit(ally);
+            OnBattleRosterChanged?.Invoke();
             return;
         }
 
@@ -271,10 +268,10 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         }
     }
 
-    public void ResolveWaveResult()
+    public void ResolveStageResult()
     {
         ReturnAllEnemies();
-        RestoreAlliesForPreparation();
+        RestoreAlliesForStage();
     }
 
     public void ReleaseUnit(UnitBase unit)
@@ -310,7 +307,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         }
     }
 
-    private void RestoreAlliesForPreparation()
+    private void RestoreAlliesForStage()
     {
         _roster.ClearActiveAllies();
 
@@ -328,7 +325,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
                      out preparationPosition)))
             {
                 Debug.LogWarning(
-                    "[UnitManager] Failed to restore ally preparation position.");
+                    "[UnitManager] Failed to restore ally stage position.");
                 continue;
             }
 
@@ -582,11 +579,6 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         if (App.TryGet<BattleManager>(out var registeredBattleManager))
         {
             registeredBattleManager.SetPreparationLock(false);
-        }
-
-        if (_battleManager != null)
-        {
-            _battleManager.OnStateChanged -= OnStateChanged;
         }
 
         if (App.TryGet<ItemManager>(out var itemManager))

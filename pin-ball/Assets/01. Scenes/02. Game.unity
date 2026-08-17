@@ -3213,7 +3213,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerMaxHp: 20
-  waveResolutionDuration: 2
+  recoveryHpRatio: 1
+  stageTransitionDuration: 2
+  recoveryDuration: 3
+  stageEnemyId: goblin
+  baseEnemyCount: 3
+  enemyCountGrowthInterval: 3
+  enemyCountGrowthAmount: 1
+  maximumEnemyCount: 10
 --- !u!4 &492424497
 Transform:
   m_ObjectHideFlags: 0
@@ -13137,6 +13144,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 976324aa06ffc9046a8da7f0e9f6a3ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startingAlly:
+    UnitId: warrior
+    Level: 1
+    Modifier:
+      MergeTier: 0
+      MergeAttackBonusPerTier: 0
+      MergeHpBonusPerTier: 0
+      EquipmentAttackBonus: 0
+      EquipmentHpBonus: 0
   battleArea: {fileID: 8900000000000000101}
   evolutionGlowEffect: {fileID: 8961000000000000104}
 --- !u!1 &1596828393
@@ -15433,7 +15449,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHpText: {fileID: 1329060728}
   goldText: {fileID: 683016304}
-  allyCountText: {fileID: 8991000000000000003}
+  stageText: {fileID: 8991000000000000003}
   allyCountDefaultColor: {r: 0.95686275, g: 0.8, b: 0.54509807, a: 1}
   allyCountOverLimitColor: {r: 1, g: 0, b: 0, a: 1}
   hpFlashColor: {r: 1, g: 0.2, b: 0.2, a: 1}
@@ -19542,8 +19558,8 @@ MonoBehaviour:
   panelRect: {fileID: 8820000000000000002}
   canvasGroup: {fileID: 8820000000000000005}
   resultText: {fileID: 8820000000000000014}
-  clearedCopy: "\uC6E8\uC774\uBE0C \uD074\uB9AC\uC5B4"
-  failedCopy: "\uBC29\uC5B4 \uC2E4\uD328"
+  clearedCopy: "\uB2E4\uC74C \uB2E8\uACC4 \uC900\uBE44 \uC911"
+  failedCopy: "\uAC19\uC740 \uB2E8\uACC4 \uC7AC\uC815\uBE44"
   clearedColor: {r: 1, g: 0.78, b: 0.22, a: 1}
   failedColor: {r: 1, g: 0.28, b: 0.24, a: 1}
 --- !u!1 &8820000000000000011
