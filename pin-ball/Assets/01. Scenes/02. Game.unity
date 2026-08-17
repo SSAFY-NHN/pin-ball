@@ -7819,6 +7819,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  isJackpotBumper: 1
   bumperMinimumExitSpeed: 6
   bumperSpeedBonus: 1
 --- !u!58 &1016939061
@@ -17495,6 +17496,14 @@ MonoBehaviour:
     CostMultiplier: 1.7
     MaxLevel: 9
   minimumRespawnDelay: 0.75
+  goldenChance: 0.05
+  goldenRewardMultiplier: 3
+  comboHitsPerStep: 2
+  comboMultiplierPerStep: 0.5
+  maximumComboMultiplier: 2
+  jackpotRequiredCombo: 5
+  jackpotBaseReward: 100
+  jackpotIncomeMultiplier: 30
 --- !u!1 &6984260698786182316
 GameObject:
   m_ObjectHideFlags: 0
