@@ -23,6 +23,13 @@ public class BattleManager : AppService, IItemEventListener
     [SerializeField, Min(0)] private int enemyCountGrowthAmount = 1;
     [SerializeField, Min(1)] private int maximumEnemyCount = 10;
 
+    [Header("Boss Stage Prototype")]
+    [SerializeField] private string bossEnemyId = "goblin_king";
+    [SerializeField, Min(1)] private int bossStageInterval = 10;
+    // TODO: 플레이 관찰 후 보스 체력과 공격력 배율을 각각 조정한다.
+    [SerializeField, Min(0.01f)] private float bossHealthMultiplier = 1.25f;
+    [SerializeField, Min(0f)] private float bossAttackMultiplier = 1f;
+
     [Header("Battle Upgrades")]
     // TODO: 플레이 테스트 후 프로토타입 비용과 효과 수치를 조정한다.
     [SerializeField] private BattleUnitSpawnData purchasedAlly = new()
@@ -47,6 +54,8 @@ public class BattleManager : AppService, IItemEventListener
     public bool IsPreparationPhase => State != EWaveState.Active;
     public bool CanUsePreparationActions =>
         IsPreparationPhase && !isPreparationLocked;
+    public bool IsCurrentStageBoss =>
+        stageController?.IsCurrentStageBoss ?? false;
 
     public event Action<EWaveState> OnStateChanged;
     public event Action OnInitialized;
@@ -56,6 +65,10 @@ public class BattleManager : AppService, IItemEventListener
     public event Action OnBattleUpgradeChanged;
     public event Action<bool> OnPreparationAvailabilityChanged;
     public event Action<EWaveResolutionResult, int> OnWaveResolutionStarted;
+    public event Action<BattleStageStartedData> OnStageStarted;
+    public event Action<BattleStageResolvedData> OnStageResolved;
+    public event Action<BattleUpgradePurchasedData> OnBattleUpgradePurchased;
+    public event Action<int> OnBossDefeated;
 
     private UnitManager unitManager;
     private BattleRunState runState;
@@ -68,6 +81,8 @@ public class BattleManager : AppService, IItemEventListener
     private Coroutine transitionCoroutine;
     private bool isRunInitialized;
     private bool isPreparationLocked;
+    private float currentStageStartedAt;
+    private bool currentBossDefeated;
 
     private void Start()
     {
@@ -82,10 +97,11 @@ public class BattleManager : AppService, IItemEventListener
         unitManager = App.Get<UnitManager>();
         unitManager.InitializeNewRun();
         unitManager.OnBattleRosterChanged += OnBattleRosterChanged;
+        unitManager.OnEnemyDefeated += OnEnemyDefeated;
 
         var titleData = App.Get<TitleData>();
         runState = new BattleRunState(playerMaxHp);
-        stageController = new BattleStageController();
+        stageController = new BattleStageController(bossStageInterval);
         enemyScalingController = new EnemyStageScalingController(
             baseEnemyCount,
             enemyCountGrowthInterval,
@@ -128,12 +144,44 @@ public class BattleManager : AppService, IItemEventListener
             : State == EWaveState.Active;
         if (!canStart) return;
 
-        int enemyCount = enemyScalingController.CalculateEnemyCount(
-            CurrentStageNumber);
-        unitManager.BeginStage(stageEnemyId, enemyCount, CurrentStageNumber);
+        bool isBossStage = IsCurrentStageBoss;
+        string enemyId = isBossStage ? bossEnemyId : stageEnemyId;
+        int enemyCount = isBossStage
+            ? 1
+            : enemyScalingController.CalculateEnemyCount(CurrentStageNumber);
+        int spawnedCount = unitManager.BeginStage(
+            enemyId,
+            enemyCount,
+            CurrentStageNumber,
+            isBossStage ? bossHealthMultiplier : 1f,
+            isBossStage ? bossAttackMultiplier : 1f);
+        if (spawnedCount <= 0)
+        {
+            Debug.LogError(
+                $"[BattleManager] Stage {CurrentStageNumber} enemy spawn failed: {enemyId}");
+            stageController.TryAbortStart();
+            OnStateChanged?.Invoke(State);
+            return;
+        }
+
+        currentStageStartedAt = Time.time;
+        currentBossDefeated = false;
         OnStateChanged?.Invoke(State);
         OnWaveChanged?.Invoke(CurrentStageNumber);
+        OnStageStarted?.Invoke(new BattleStageStartedData(
+            CurrentStageNumber,
+            isBossStage,
+            spawnedCount));
         SoundManager.PlaySFXIfAvailable(SoundName.WaveStart);
+    }
+
+    private void OnEnemyDefeated(string enemyId)
+    {
+        if (!IsCurrentStageBoss || currentBossDefeated ||
+            !string.Equals(enemyId, bossEnemyId, StringComparison.Ordinal)) return;
+
+        currentBossDefeated = true;
+        OnBossDefeated?.Invoke(CurrentStageNumber);
     }
 
     private void OnBattleRosterChanged()
@@ -159,19 +207,27 @@ public class BattleManager : AppService, IItemEventListener
                 Time.time,
                 duration)) return;
 
+        int defenseLineDamage = 0;
         if (result == EWaveResolutionResult.Failed)
         {
-            int damage = BarrierDamageCalculator.Calculate(
+            defenseLineDamage = BarrierDamageCalculator.Calculate(
                 unitManager.CalculateRemainingBreachDamage(),
                 barrierDamageReduction,
                 minimumBarrierDamage);
-            runState.ApplyPlayerDamage(damage);
+            runState.ApplyPlayerDamage(defenseLineDamage);
             OnHpChanged?.Invoke(PlayerHp);
         }
 
+        float battleDuration = Mathf.Max(0f, Time.time - currentStageStartedAt);
         unitManager.ResolveStageResult();
         OnStateChanged?.Invoke(State);
         OnWaveResolutionStarted?.Invoke(result, CurrentStageNumber);
+        OnStageResolved?.Invoke(new BattleStageResolvedData(
+            CurrentStageNumber,
+            result,
+            battleDuration,
+            defenseLineDamage,
+            IsCurrentStageBoss));
         SoundManager.PlaySFXIfAvailable(
             result == EWaveResolutionResult.Cleared
                 ? SoundName.WaveWin
@@ -285,6 +341,10 @@ public class BattleManager : AppService, IItemEventListener
         battleUpgradeController.ConfirmPurchase(upgrade);
         ApplyBattleUpgrade(upgrade);
         OnBattleUpgradeChanged?.Invoke();
+        OnBattleUpgradePurchased?.Invoke(new BattleUpgradePurchasedData(
+            upgrade,
+            GetBattleUpgradeLevel(upgrade),
+            cost));
         return true;
     }
 
@@ -340,6 +400,7 @@ public class BattleManager : AppService, IItemEventListener
         if (unitManager != null)
         {
             unitManager.OnBattleRosterChanged -= OnBattleRosterChanged;
+            unitManager.OnEnemyDefeated -= OnEnemyDefeated;
         }
 
         if (App.TryGet<ItemManager>(out var itemManager))
@@ -348,5 +409,59 @@ public class BattleManager : AppService, IItemEventListener
         }
 
         base.OnDestroy();
+    }
+}
+
+public readonly struct BattleStageStartedData
+{
+    public int Stage { get; }
+    public bool IsBoss { get; }
+    public int SpawnedEnemyCount { get; }
+
+    public BattleStageStartedData(int stage, bool isBoss, int spawnedEnemyCount)
+    {
+        Stage = stage;
+        IsBoss = isBoss;
+        SpawnedEnemyCount = spawnedEnemyCount;
+    }
+}
+
+public readonly struct BattleStageResolvedData
+{
+    public int Stage { get; }
+    public EWaveResolutionResult Result { get; }
+    public float Duration { get; }
+    public int DefenseLineDamage { get; }
+    public bool IsBoss { get; }
+
+    public BattleStageResolvedData(
+        int stage,
+        EWaveResolutionResult result,
+        float duration,
+        int defenseLineDamage,
+        bool isBoss)
+    {
+        Stage = stage;
+        Result = result;
+        Duration = duration;
+        DefenseLineDamage = defenseLineDamage;
+        IsBoss = isBoss;
+    }
+}
+
+public readonly struct BattleUpgradePurchasedData
+{
+    public EBattleUpgrade Upgrade { get; }
+    public int Level { get; }
+    public int Cost { get; }
+
+    public BattleUpgradePurchasedData(
+        EBattleUpgrade upgrade,
+        int level,
+        int cost)
+    {
+        Upgrade = upgrade;
+        Level = level;
+        Cost = cost;
     }
 }

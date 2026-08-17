@@ -20,6 +20,7 @@ public class StatusPanel : UIBase
     private BattleManager battleManager;
     private bool hasDisplayedHp;
     private bool hasDisplayedGold;
+    private bool hasDisplayedStage;
     private StatusFeedbackController feedbackController;
 
     public override bool IsDefaultPanel => true;
@@ -77,7 +78,12 @@ public class StatusPanel : UIBase
     {
         if (stageText != null)
         {
-            stageText.text = $"단계 {Mathf.Max(1, stage)}";
+            bool isBoss = battleManager.IsCurrentStageBoss;
+            stageText.text = isBoss
+                ? $"BOSS {Mathf.Max(1, stage)}"
+                : $"단계 {Mathf.Max(1, stage)}";
+            if (hasDisplayedStage && isBoss) feedbackController.EmphasizeStage();
+            hasDisplayedStage = true;
         }
     }
 

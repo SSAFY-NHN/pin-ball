@@ -6,7 +6,7 @@ internal sealed class StatusFeedbackController
 {
     private readonly TextMeshProUGUI _hpText;
     private readonly TextMeshProUGUI _goldText;
-    private readonly TextMeshProUGUI _allyCountText;
+    private readonly TextMeshProUGUI _stageText;
     private readonly Color _hpFlashColor;
     private readonly Color _goldFlashColor;
     private readonly float _duration;
@@ -18,14 +18,14 @@ internal sealed class StatusFeedbackController
     public StatusFeedbackController(
         TextMeshProUGUI hpText,
         TextMeshProUGUI goldText,
-        TextMeshProUGUI allyCountText,
+        TextMeshProUGUI stageText,
         Color hpFlashColor,
         Color goldFlashColor,
         float duration)
     {
         _hpText = hpText;
         _goldText = goldText;
-        _allyCountText = allyCountText;
+        _stageText = stageText;
         _hpFlashColor = hpFlashColor;
         _goldFlashColor = goldFlashColor;
         _duration = duration;
@@ -55,11 +55,11 @@ internal sealed class StatusFeedbackController
             false);
     }
 
-    public void EmphasizeAllyCount()
+    public void EmphasizeStage()
     {
-        if (_allyCountText == null) return;
+        if (_stageText == null) return;
 
-        RectTransform rect = _allyCountText.rectTransform;
+        RectTransform rect = _stageText.rectTransform;
         rect.DOKill(true);
         rect.DOShakeAnchorPos(0.3f, 8f, 14, 90f, false, true);
         rect.DOPunchScale(Vector3.one * 0.12f, 0.3f, 6, 0.5f);
@@ -71,7 +71,7 @@ internal sealed class StatusFeedbackController
         _hpText?.DOKill();
         _goldText?.rectTransform.DOKill();
         _goldText?.DOKill();
-        _allyCountText?.rectTransform.DOKill();
+        _stageText?.rectTransform.DOKill();
 
         if (_hpText != null)
         {

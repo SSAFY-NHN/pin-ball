@@ -3221,6 +3221,10 @@ MonoBehaviour:
   enemyCountGrowthInterval: 3
   enemyCountGrowthAmount: 1
   maximumEnemyCount: 10
+  bossEnemyId: goblin_king
+  bossStageInterval: 10
+  bossHealthMultiplier: 1.25
+  bossAttackMultiplier: 1
   purchasedAlly:
     UnitId: warrior
     Level: 1

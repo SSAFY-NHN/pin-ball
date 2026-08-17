@@ -17,6 +17,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     public event Action<int> OnDeployedAllyCountChanged;
     public event Action<int> OnAlliesMerged;
     internal event Action OnBattleRosterChanged;
+    internal event Action<string> OnEnemyDefeated;
 
     private UnitRoster _roster;
     private UnitTargetFinder _targetFinder;
@@ -118,11 +119,21 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         }
     }
 
-    public void BeginStage(string enemyId, int enemyCount, int stage)
+    public int BeginStage(
+        string enemyId,
+        int enemyCount,
+        int stage,
+        float healthMultiplier = 1f,
+        float attackMultiplier = 1f)
     {
         ReturnAllEnemies();
         RestoreAlliesForStage();
-        SpawnEnemies(enemyId, enemyCount, stage);
+        return SpawnEnemies(
+            enemyId,
+            enemyCount,
+            stage,
+            healthMultiplier,
+            attackMultiplier);
     }
 
     public AllyUnit SpawnAlly(BattleUnitSpawnData unitData)
@@ -186,26 +197,46 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         RefreshAllyItemModifiers();
     }
 
-    private void SpawnEnemies(string enemyId, int enemyCount, int stage)
+    private int SpawnEnemies(
+        string enemyId,
+        int enemyCount,
+        int stage,
+        float healthMultiplier,
+        float attackMultiplier)
     {
-        if (string.IsNullOrEmpty(enemyId) || enemyCount <= 0) return;
+        if (string.IsNullOrEmpty(enemyId) || enemyCount <= 0) return 0;
 
         _spawnController.BeginEnemyWave();
+        int spawnedCount = 0;
         for (var count = 0; count < enemyCount; count++)
         {
-            SpawnEnemy(enemyId, stage, null);
+            if (SpawnEnemy(
+                    enemyId,
+                    stage,
+                    null,
+                    healthMultiplier,
+                    attackMultiplier) != null)
+            {
+                spawnedCount++;
+            }
         }
+
+        return spawnedCount;
     }
 
     private EnemyUnit SpawnEnemy(
         string enemyId,
         int stage,
-        Vector3? spawnPosition)
+        Vector3? spawnPosition,
+        float healthMultiplier = 1f,
+        float attackMultiplier = 1f)
     {
         var enemy = _spawnController?.SpawnEnemy(
             enemyId,
             stage,
-            spawnPosition);
+            spawnPosition,
+            healthMultiplier,
+            attackMultiplier);
         AddEnemy(enemy);
         return enemy;
     }
@@ -280,7 +311,12 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             return;
         }
 
+        string defeatedEnemyId = (unit as EnemyUnit)?.UnitId;
         _roster.NotifyUnitDied(unit);
+        if (!string.IsNullOrEmpty(defeatedEnemyId))
+        {
+            OnEnemyDefeated?.Invoke(defeatedEnemyId);
+        }
         _spawner.ReturnUnit(unit);
         OnBattleRosterChanged?.Invoke();
     }
