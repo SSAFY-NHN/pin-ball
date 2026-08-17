@@ -11,17 +11,22 @@ public sealed class UnitItemController
         _itemManager = itemManager;
     }
 
-    public void Apply(Item item, IReadOnlyList<UnitBase> activeAllies)
+    public void Apply(
+        Item item,
+        IReadOnlyList<UnitBase> activeAllies,
+        float sharedAttackMultiplier)
     {
         _unitModifiers.Apply(
             item.Key,
             item.Value1,
             item.Value2,
             item.Value3);
-        Refresh(activeAllies);
+        Refresh(activeAllies, sharedAttackMultiplier);
     }
 
-    public void Refresh(IReadOnlyList<UnitBase> activeAllies)
+    public void Refresh(
+        IReadOnlyList<UnitBase> activeAllies,
+        float sharedAttackMultiplier)
     {
         _unitTypes.Clear();
         foreach (var unit in activeAllies)
@@ -38,6 +43,7 @@ public sealed class UnitItemController
                 snapshot.AttackMultiplier,
                 snapshot.AttackRateMultiplier,
                 snapshot.HpMultiplier);
+            ally.ApplySharedAttackMultiplier(sharedAttackMultiplier);
         }
     }
 

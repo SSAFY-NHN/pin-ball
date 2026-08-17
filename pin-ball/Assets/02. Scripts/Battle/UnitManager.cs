@@ -32,6 +32,9 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     public int DeployedAllyCount => _roster.OwnedAllyCount;
     public int RemainingAllyCount => _roster.ActiveAllyCount;
     public int RemainingEnemyCount => _roster.ActiveEnemyCount;
+    public bool CanPurchaseAlly =>
+        _roster != null &&
+        _roster.OwnedAllyCount < MaxDeployedAllyCount;
     public bool CanStartWaveWithCurrentRoster =>
         CanStartWaveWithAllyCount(DeployedAllyCount);
     
@@ -48,6 +51,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     private ItemManager _itemManager;
     private Coroutine _automaticPotionCoroutine;
     private bool _isRunInitialized;
+    private float _sharedAttackMultiplier = 1f;
 
     protected override void Awake()
     {
@@ -155,6 +159,31 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         AddOwnedAlly(spawnedUnit);
         SoundManager.PlaySFXIfAvailable(SoundName.UnitSpawn);
         return spawnedUnit;
+    }
+
+    public AllyUnit TryPurchaseAlly(
+        BattleUnitSpawnData unitData,
+        bool participateImmediately)
+    {
+        if (!CanPurchaseAlly) return null;
+
+        AllyUnit ally = SpawnAlly(unitData);
+        if (ally == null) return null;
+
+        if (!participateImmediately)
+        {
+            _roster.RemoveActiveAlly(ally);
+            ally.gameObject.SetActive(false);
+            OnBattleRosterChanged?.Invoke();
+        }
+
+        return ally;
+    }
+
+    public void SetSharedAttackMultiplier(float multiplier)
+    {
+        _sharedAttackMultiplier = Mathf.Max(0f, multiplier);
+        RefreshAllyItemModifiers();
     }
 
     private void SpawnEnemies(string enemyId, int enemyCount, int stage)
@@ -560,12 +589,17 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
 
     public void OnItemEvent(Item item)
     {
-        _itemController.Apply(item, _roster.ActiveAllies);
+        _itemController.Apply(
+            item,
+            _roster.ActiveAllies,
+            _sharedAttackMultiplier);
     }
 
     private void RefreshAllyItemModifiers()
     {
-        _itemController?.Refresh(_roster.ActiveAllies);
+        _itemController?.Refresh(
+            _roster.ActiveAllies,
+            _sharedAttackMultiplier);
     }
 
     protected override void OnDestroy()

@@ -30,6 +30,10 @@ public abstract class UnitBase : MonoBehaviour
     private readonly UnitAttack _attack = new();
 
     private UnitCombatContext _context;
+    private float _itemAttackMultiplier = 1f;
+    private float _itemAttackRateMultiplier = 1f;
+    private float _itemHpMultiplier = 1f;
+    private float _sharedAttackMultiplier = 1f;
     private SpriteRenderer _renderer;
     private BattleCombatFeedback _combatFeedback;
     private BattleUnitStats _initialStats;
@@ -295,10 +299,30 @@ public abstract class UnitBase : MonoBehaviour
     {
         if (Team != EBattleTeam.Ally) return;
 
+        _itemAttackMultiplier = Mathf.Max(0f, attackMultiplier);
+        _itemAttackRateMultiplier = Mathf.Max(0.01f, attackRateMultiplier);
+        _itemHpMultiplier = Mathf.Max(0.01f, hpMultiplier);
+        RefreshPersistentModifiers();
+    }
+
+    public void ApplySharedAttackMultiplier(float multiplier)
+    {
+        if (Team != EBattleTeam.Ally) return;
+
+        _sharedAttackMultiplier = Mathf.Max(0f, multiplier);
+        RefreshPersistentModifiers();
+    }
+
+    private void RefreshPersistentModifiers()
+    {
+        if (Team != EBattleTeam.Ally) return;
+
         float previousMaxHp = Mathf.Max(0.01f, _stats.MaxHp);
-        _stats.AttackDamage = _initialStats.AttackDamage * attackMultiplier;
-        _stats.AttackRate = _initialStats.AttackRate * attackRateMultiplier;
-        _stats.MaxHp = _initialStats.MaxHp * hpMultiplier;
+        _stats.AttackDamage = _initialStats.AttackDamage *
+                              _itemAttackMultiplier *
+                              _sharedAttackMultiplier;
+        _stats.AttackRate = _initialStats.AttackRate * _itemAttackRateMultiplier;
+        _stats.MaxHp = _initialStats.MaxHp * _itemHpMultiplier;
         _health.ScaleMaximumHp(_stats.MaxHp / previousMaxHp);
     }
 

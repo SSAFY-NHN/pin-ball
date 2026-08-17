@@ -41,6 +41,11 @@ public sealed class UnitRoster
         return true;
     }
 
+    public bool RemoveActiveAlly(AllyUnit ally)
+    {
+        return ally != null && _activeAllies.Remove(ally);
+    }
+
     public bool AddEnemy(UnitBase enemy)
     {
         if (enemy == null || _activeEnemies.Contains(enemy)) return false;
