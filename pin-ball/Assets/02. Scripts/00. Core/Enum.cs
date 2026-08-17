@@ -15,11 +15,10 @@ public enum ESceneName
 
 public enum EWaveState
 {
-    Pending,
+    Starting,
     Active,
-    Resolving,
-    Victory,
-    Defeat
+    Advancing,
+    Recovering
 }
 
 public enum EWaveResolutionResult

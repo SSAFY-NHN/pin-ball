@@ -20,21 +20,4 @@ public static class BattleResolutionPolicy
         result = default;
         return false;
     }
-
-    public static EWaveState ResolveNextState(
-        EWaveResolutionResult result,
-        bool isFinalWave,
-        int playerHp)
-    {
-        if (result == EWaveResolutionResult.Failed)
-        {
-            return playerHp <= 0
-                ? EWaveState.Defeat
-                : EWaveState.Pending;
-        }
-
-        return isFinalWave
-            ? EWaveState.Victory
-            : EWaveState.Pending;
-    }
 }
