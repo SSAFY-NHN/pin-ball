@@ -7,6 +7,7 @@ public sealed class BattleStageController
     public int CurrentStage { get; private set; } = 1;
     public EWaveState State { get; private set; } = EWaveState.Starting;
     public float TransitionEndsAt { get; private set; }
+    public bool IsNextStageScheduled { get; private set; }
     public bool IsCurrentStageBoss => IsBossStage(CurrentStage);
 
     public BattleStageController(int bossStageInterval = 10)
@@ -33,30 +34,43 @@ public sealed class BattleStageController
         return true;
     }
 
-    public bool TryBeginTransition(
-        EWaveResolutionResult result,
+    public bool TryScheduleNextStage(
         float now,
         float duration)
     {
-        if (State != EWaveState.Active) return false;
+        if (State != EWaveState.Active || IsNextStageScheduled) return false;
 
-        State = result == EWaveResolutionResult.Cleared
-            ? EWaveState.Advancing
-            : EWaveState.Recovering;
+        CurrentStage++;
+        IsNextStageScheduled = true;
         TransitionEndsAt = now + Mathf.Max(0f, duration);
         return true;
     }
 
-    public bool TryCompleteTransition(float now)
+    public bool TryCompleteNextStageSchedule(float now)
     {
-        if ((State != EWaveState.Advancing &&
-             State != EWaveState.Recovering) ||
-            now < TransitionEndsAt)
+        if (!IsNextStageScheduled || now < TransitionEndsAt) return false;
+
+        IsNextStageScheduled = false;
+        TransitionEndsAt = 0f;
+        return true;
+    }
+
+    public bool TryBeginRecovery(float now, float duration)
+    {
+        if (State != EWaveState.Active || IsNextStageScheduled) return false;
+
+        State = EWaveState.Recovering;
+        TransitionEndsAt = now + Mathf.Max(0f, duration);
+        return true;
+    }
+
+    public bool TryCompleteRecovery(float now)
+    {
+        if (State != EWaveState.Recovering || now < TransitionEndsAt)
         {
             return false;
         }
 
-        if (State == EWaveState.Advancing) CurrentStage++;
         State = EWaveState.Active;
         TransitionEndsAt = 0f;
         return true;

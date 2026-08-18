@@ -52,6 +52,8 @@ public sealed class WaveResultPanel : UIBase
         EWaveResolutionResult result,
         int _)
     {
+        if (result == EWaveResolutionResult.Cleared) return;
+
         _sequence?.Kill();
         transform.SetAsLastSibling();
         resultText.text = ResolveCopy(result, clearedCopy, failedCopy);

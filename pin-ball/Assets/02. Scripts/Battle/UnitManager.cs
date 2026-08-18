@@ -127,8 +127,6 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         float healthMultiplier = 1f,
         float attackMultiplier = 1f)
     {
-        ReturnAllEnemies();
-        RestoreAlliesForStage();
         return SpawnEnemies(
             enemyId,
             enemyCount,
