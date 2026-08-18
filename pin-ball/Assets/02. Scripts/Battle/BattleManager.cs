@@ -133,14 +133,13 @@ public class BattleManager : AppService, IItemEventListener
 
     private void StartCurrentStage()
     {
-        if (unitManager == null || unitManager.DeployedAllyCount <= 0)
+        if (unitManager == null)
         {
-            Debug.LogError(
-                "[BattleManager] 지속 전투를 시작할 기본 아군이 없습니다.");
             return;
         }
 
-        bool canStart = State == EWaveState.Starting
+        bool isInitialStage = State == EWaveState.Starting;
+        bool canStart = isInitialStage
             ? stageController.TryStart()
             : State == EWaveState.Active;
         if (!canStart) return;
@@ -169,7 +168,7 @@ public class BattleManager : AppService, IItemEventListener
         currentBossDefeated = false;
         currentStageDefenseLineDamage = 0;
         OnStateChanged?.Invoke(State);
-        OnWaveChanged?.Invoke(CurrentStageNumber);
+        if (isInitialStage) OnWaveChanged?.Invoke(CurrentStageNumber);
         OnStageStarted?.Invoke(new BattleStageStartedData(
             CurrentStageNumber,
             isBossStage,
@@ -223,46 +222,77 @@ public class BattleManager : AppService, IItemEventListener
 
     private void BeginStageTransition(EWaveResolutionResult result)
     {
-        float duration = result == EWaveResolutionResult.Cleared
-            ? stageTransitionDuration
-            : recoveryDuration;
-        if (!stageController.TryBeginTransition(
-                result,
+        if (result == EWaveResolutionResult.Cleared)
+        {
+            ScheduleNextStage();
+            return;
+        }
+
+        BeginRecovery();
+    }
+
+    private void ScheduleNextStage()
+    {
+        int completedStage = CurrentStageNumber;
+        bool completedStageWasBoss = IsCurrentStageBoss;
+        if (!stageController.TryScheduleNextStage(
                 Time.time,
-                duration)) return;
+                stageTransitionDuration)) return;
+
+        float battleDuration = Mathf.Max(0f, Time.time - currentStageStartedAt);
+        OnStageResolved?.Invoke(new BattleStageResolvedData(
+            completedStage,
+            EWaveResolutionResult.Cleared,
+            battleDuration,
+            currentStageDefenseLineDamage,
+            completedStageWasBoss));
+        OnWaveChanged?.Invoke(CurrentStageNumber);
+        SoundManager.PlaySFXIfAvailable(SoundName.WaveWin);
+
+        transitionCoroutine = StartCoroutine(WaitForNextStage());
+    }
+
+    private void BeginRecovery()
+    {
+        if (!stageController.TryBeginRecovery(
+                Time.time,
+                recoveryDuration)) return;
 
         float battleDuration = Mathf.Max(0f, Time.time - currentStageStartedAt);
         unitManager.ResolveStageResult();
         OnStateChanged?.Invoke(State);
-        OnWaveResolutionStarted?.Invoke(result, CurrentStageNumber);
+        OnWaveResolutionStarted?.Invoke(
+            EWaveResolutionResult.Failed,
+            CurrentStageNumber);
         OnStageResolved?.Invoke(new BattleStageResolvedData(
             CurrentStageNumber,
-            result,
+            EWaveResolutionResult.Failed,
             battleDuration,
             currentStageDefenseLineDamage,
             IsCurrentStageBoss));
-        SoundManager.PlaySFXIfAvailable(
-            result == EWaveResolutionResult.Cleared
-                ? SoundName.WaveWin
-                : SoundName.WaveFailed);
+        SoundManager.PlaySFXIfAvailable(SoundName.WaveFailed);
 
-        transitionCoroutine = StartCoroutine(WaitForTransition(duration));
+        transitionCoroutine = StartCoroutine(WaitForRecovery());
     }
 
-    private IEnumerator WaitForTransition(float duration)
+    private IEnumerator WaitForNextStage()
     {
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(stageTransitionDuration);
         transitionCoroutine = null;
 
-        bool wasRecovering = State == EWaveState.Recovering;
-        if (!stageController.TryCompleteTransition(Time.time)) yield break;
+        if (!stageController.TryCompleteNextStageSchedule(Time.time)) yield break;
+        StartCurrentStage();
+    }
 
-        if (wasRecovering)
-        {
-            runState.RestorePlayerHp(recoveryHpRatio);
-            OnHpChanged?.Invoke(PlayerHp);
-        }
+    private IEnumerator WaitForRecovery()
+    {
+        yield return new WaitForSeconds(recoveryDuration);
+        transitionCoroutine = null;
 
+        if (!stageController.TryCompleteRecovery(Time.time)) yield break;
+
+        runState.RestorePlayerHp(recoveryHpRatio);
+        OnHpChanged?.Invoke(PlayerHp);
         StartCurrentStage();
     }
 
