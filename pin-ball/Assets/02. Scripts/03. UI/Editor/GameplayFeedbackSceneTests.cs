@@ -19,6 +19,13 @@ public class GameplayFeedbackSceneTests
         AssertReference(resultPanel, "canvasGroup");
         AssertReference(resultPanel, "resultText");
 
+        var gameOverPanel = Object.FindFirstObjectByType<ResultPanel>(
+            FindObjectsInactive.Include);
+        Assert.That(gameOverPanel, Is.Not.Null);
+        AssertReference(gameOverPanel, "messageText");
+        AssertReference(gameOverPanel, "restartButton");
+        AssertReference(gameOverPanel, "titleButton");
+
         var wavePanel = Object.FindFirstObjectByType<WavePanel>(
             FindObjectsInactive.Include);
         Assert.That(
