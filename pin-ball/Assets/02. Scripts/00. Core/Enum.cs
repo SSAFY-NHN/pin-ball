@@ -18,7 +18,8 @@ public enum EWaveState
     Starting,
     Active,
     Advancing,
-    Recovering
+    Recovering,
+    Ended
 }
 
 public enum EWaveResolutionResult

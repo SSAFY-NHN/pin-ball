@@ -9,11 +9,8 @@ public class BattleManager : AppService, IItemEventListener
 {
     [Header("Defense Line")]
     [SerializeField, Min(1)] public int playerMaxHp = 20;
-    [SerializeField, Range(0f, 1f)] private float recoveryHpRatio = 1f;
-
     [Header("Stage Transition")]
     [SerializeField, Min(0f)] private float stageTransitionDuration = 2f;
-    [SerializeField, Min(0f)] private float recoveryDuration = 3f;
 
     [Header("Enemy Stage Prototype")]
     // TODO: 플레이 테스트 후 프로토타입 적 수와 증가 구간을 조정한다.
@@ -56,6 +53,7 @@ public class BattleManager : AppService, IItemEventListener
         IsPreparationPhase && !isPreparationLocked;
     public bool IsCurrentStageBoss =>
         stageController?.IsCurrentStageBoss ?? false;
+    public bool IsRunEnded => State == EWaveState.Ended;
 
     public event Action<EWaveState> OnStateChanged;
     public event Action OnInitialized;
@@ -69,6 +67,7 @@ public class BattleManager : AppService, IItemEventListener
     public event Action<BattleStageResolvedData> OnStageResolved;
     public event Action<BattleUpgradePurchasedData> OnBattleUpgradePurchased;
     public event Action<int> OnBossDefeated;
+    public event Action<int> OnRunEnded;
 
     private UnitManager unitManager;
     private BattleRunState runState;
@@ -213,7 +212,7 @@ public class BattleManager : AppService, IItemEventListener
         currentStageDefenseLineDamage += defenseLineDamage;
         OnHpChanged?.Invoke(PlayerHp);
 
-        if (PlayerHp <= 0) BeginStageTransition(EWaveResolutionResult.Failed);
+        if (PlayerHp <= 0) EndRun();
     }
 
     private void BeginStageTransition(EWaveResolutionResult result)
@@ -224,7 +223,7 @@ public class BattleManager : AppService, IItemEventListener
             return;
         }
 
-        BeginRecovery();
+        EndRun();
     }
 
     private void ScheduleNextStage()
@@ -248,14 +247,18 @@ public class BattleManager : AppService, IItemEventListener
         transitionCoroutine = StartCoroutine(WaitForNextStage());
     }
 
-    private void BeginRecovery()
+    private void EndRun()
     {
-        if (!stageController.TryBeginRecovery(
-                Time.time,
-                recoveryDuration)) return;
+        if (!stageController.TryEndRun()) return;
+
+        if (transitionCoroutine != null)
+        {
+            StopCoroutine(transitionCoroutine);
+            transitionCoroutine = null;
+        }
 
         float battleDuration = Mathf.Max(0f, Time.time - currentStageStartedAt);
-        unitManager.ResolveStageResult();
+        unitManager.StopBattle();
         OnStateChanged?.Invoke(State);
         OnWaveResolutionStarted?.Invoke(
             EWaveResolutionResult.Failed,
@@ -267,8 +270,7 @@ public class BattleManager : AppService, IItemEventListener
             currentStageDefenseLineDamage,
             IsCurrentStageBoss));
         SoundManager.PlaySFXIfAvailable(SoundName.WaveFailed);
-
-        transitionCoroutine = StartCoroutine(WaitForRecovery());
+        OnRunEnded?.Invoke(CurrentStageNumber);
     }
 
     private IEnumerator WaitForNextStage()
@@ -280,20 +282,10 @@ public class BattleManager : AppService, IItemEventListener
         StartCurrentStage();
     }
 
-    private IEnumerator WaitForRecovery()
-    {
-        yield return new WaitForSeconds(recoveryDuration);
-        transitionCoroutine = null;
-
-        if (!stageController.TryCompleteRecovery(Time.time)) yield break;
-
-        runState.RestorePlayerHp(recoveryHpRatio);
-        OnHpChanged?.Invoke(PlayerHp);
-        StartCurrentStage();
-    }
-
     public bool TrySpendGold(int amount)
     {
+        if (IsRunEnded) return false;
+
         int previousGold = economy.Gold;
         if (!economy.TrySpend(amount)) return false;
         if (economy.Gold != previousGold)
@@ -338,7 +330,8 @@ public class BattleManager : AppService, IItemEventListener
 
     public bool CanPurchaseBattleUpgrade(EBattleUpgrade upgrade)
     {
-        if (!IsInitialized || battleUpgradeController == null || unitManager == null)
+        if (!IsInitialized || IsRunEnded ||
+            battleUpgradeController == null || unitManager == null)
         {
             return false;
         }
@@ -418,6 +411,8 @@ public class BattleManager : AppService, IItemEventListener
 
     public void AddGold(int amount)
     {
+        if (IsRunEnded) return;
+
         if (!economy.Add(amount)) return;
         OnGoldChanged?.Invoke(economy.Gold);
     }

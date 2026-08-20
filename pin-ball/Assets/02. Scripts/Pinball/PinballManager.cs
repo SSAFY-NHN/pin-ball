@@ -319,7 +319,8 @@ public class PinballManager : AppService, IItemEventListener
 
     public bool CanPurchaseProductionUpgrade(EPinballProductionUpgrade upgrade)
     {
-        if (_battleManager == null || _productionUpgradeController == null)
+        if (_battleManager == null || _battleManager.IsRunEnded ||
+            _productionUpgradeController == null)
         {
             return false;
         }

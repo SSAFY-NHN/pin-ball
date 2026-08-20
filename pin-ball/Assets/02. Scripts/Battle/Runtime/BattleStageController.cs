@@ -75,4 +75,14 @@ public sealed class BattleStageController
         TransitionEndsAt = 0f;
         return true;
     }
+
+    public bool TryEndRun()
+    {
+        if (State == EWaveState.Ended) return false;
+
+        State = EWaveState.Ended;
+        IsNextStageScheduled = false;
+        TransitionEndsAt = 0f;
+        return true;
+    }
 }

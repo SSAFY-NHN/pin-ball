@@ -359,6 +359,12 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         return enemy != null && _roster.ActiveEnemies.Contains(enemy);
     }
 
+    public void StopBattle()
+    {
+        foreach (var ally in _roster.ActiveAllies) ally?.StopBattle();
+        foreach (var enemy in _roster.ActiveEnemies) enemy?.StopBattle();
+    }
+
     public bool TryGetDefenseLinePosition(out Vector3 position)
     {
         if (defenseLine == null)

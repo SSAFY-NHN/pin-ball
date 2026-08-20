@@ -42,5 +42,21 @@ public sealed class BattleStageControllerTests
         Assert.That(controller.State, Is.EqualTo(EWaveState.Active));
         Assert.That(controller.CurrentStage, Is.EqualTo(1));
     }
+
+    [Test]
+    public void TryEndRun_EndsOnceAndRejectsFurtherProgression()
+    {
+        var controller = new BattleStageController();
+        controller.TryStart();
+        controller.TryScheduleNextStage(10f, 2f);
+
+        Assert.That(controller.TryEndRun(), Is.True);
+        Assert.That(controller.State, Is.EqualTo(EWaveState.Ended));
+        Assert.That(controller.IsNextStageScheduled, Is.False);
+        Assert.That(controller.TryEndRun(), Is.False);
+        Assert.That(controller.TryScheduleNextStage(12f, 2f), Is.False);
+        Assert.That(controller.TryCompleteNextStageSchedule(12f), Is.False);
+        Assert.That(controller.TryBeginRecovery(12f, 3f), Is.False);
+    }
 }
 #endif

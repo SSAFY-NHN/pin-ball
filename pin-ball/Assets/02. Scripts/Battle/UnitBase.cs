@@ -40,6 +40,7 @@ public abstract class UnitBase : MonoBehaviour
     private UnitBase _forcedTarget;
     private float _forcedTargetUntil;
     private float _hitUntilTime;
+    private bool _isBattleActive = true;
 
     protected virtual Color IdleColor => new(0.8f, 0.8f, 0.8f, 1f);
     protected virtual string BasicAttackSoundName => SoundName.ClassicPunch;
@@ -53,6 +54,7 @@ public abstract class UnitBase : MonoBehaviour
         _stats = stats;
         _initialStats = stats;
         IsInPool = false;
+        _isBattleActive = true;
         ResetCombatState();
         _renderer = GetComponentInChildren<SpriteRenderer>();
         _combatFeedback = GetComponent<BattleCombatFeedback>();
@@ -104,7 +106,7 @@ public abstract class UnitBase : MonoBehaviour
 
     private void Update()
     {
-        if (!IsAlive) return;
+        if (!IsAlive || !_isBattleActive) return;
 
         float now = Time.time;
         _health.Refresh(now);
@@ -130,6 +132,14 @@ public abstract class UnitBase : MonoBehaviour
     }
 
     protected abstract void Tick();
+
+    public void StopBattle()
+    {
+        _isBattleActive = false;
+        _state = EBattleUnitState.Idle;
+        _currentTarget = null;
+        _forcedTarget = null;
+    }
 
     public void TakeDamage(
         float damage,
