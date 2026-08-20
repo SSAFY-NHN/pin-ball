@@ -6,19 +6,17 @@ public class EnemyUnit : UnitBase
     protected override Color IdleColor => Color.white;
     public string UnitId { get; private set; }
     public int Rank { get; private set; }
-    public int BreachDamage { get; private set; }
+    public bool HasReachedDefenseLine { get; private set; }
 
     private readonly EnemySkillController _skills = new();
     private UnitManager _unitManager;
     private UnitAttackEffectPlayer _attackEffectPlayer;
-    private bool _breachConsumed;
 
     public void SetData(EnemyUnitData data, UnitManager unitManager = null, UnitSkillRegistry registry = null)
     {
         UnitId = data?.id ?? string.Empty;
         Rank = data?.rank ?? 0;
-        BreachDamage = Mathf.Max(0, data?.BreachDamage ?? 0);
-        _breachConsumed = false;
+        HasReachedDefenseLine = false;
         _unitManager = unitManager;
         _attackEffectPlayer ??= GetComponent<UnitAttackEffectPlayer>();
         _skills.Initialize(data, registry ?? UnitSkillRegistry.CreateDefault());
@@ -29,7 +27,18 @@ public class EnemyUnit : UnitBase
     protected override void Tick()
     {
         _skills.Tick(CreateContext(_currentTarget), Time.time);
-        if (TryKeepOrAcquireTarget()) { MoveOrAttackTarget(); return; }
+        if (TryKeepOrAcquireTarget())
+        {
+            HasReachedDefenseLine = false;
+            MoveOrAttackTarget();
+            return;
+        }
+        if (HasReachedDefenseLine)
+        {
+            ClearTarget();
+            TryAttackDefenseLine();
+            return;
+        }
         if (_unitManager != null &&
             _unitManager.TryGetDefenseLinePosition(out Vector3 defenseLinePosition))
         {
@@ -41,12 +50,21 @@ public class EnemyUnit : UnitBase
         ClearTarget();
     }
 
-    public bool TryConsumeBreach()
+    public void ReachDefenseLine()
     {
-        if (_breachConsumed || !IsAlive || IsInPool) return false;
+        if (!IsAlive || IsInPool) return;
 
-        _breachConsumed = true;
-        return true;
+        HasReachedDefenseLine = true;
+        ClearTarget();
+    }
+
+    private void TryAttackDefenseLine()
+    {
+        if (!TryScheduleBasicAttack()) return;
+
+        App.Get<BattleManager>().TryApplyDefenseLineAttack(
+            this,
+            GetBasicAttackDamage(null));
     }
 
     protected override float GetBasicAttackDamage(UnitBase target) => _skills.ModifyBasicAttackDamage(CreateContext(target), target, base.GetBasicAttackDamage(target));

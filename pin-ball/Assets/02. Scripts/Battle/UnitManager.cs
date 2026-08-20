@@ -359,15 +359,6 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         return enemy != null && _roster.ActiveEnemies.Contains(enemy);
     }
 
-    public bool ReleaseBreachedEnemy(EnemyUnit enemy)
-    {
-        if (!IsActiveEnemy(enemy) || !_roster.RemoveUnit(enemy)) return false;
-
-        _spawner.ReturnUnit(enemy);
-        OnBattleRosterChanged?.Invoke();
-        return true;
-    }
-
     public bool TryGetDefenseLinePosition(out Vector3 position)
     {
         if (defenseLine == null)

@@ -198,26 +198,22 @@ public class BattleManager : AppService, IItemEventListener
         }
     }
 
-    public void TryResolveEnemyBreach(EnemyUnit enemy)
+    public void TryApplyDefenseLineAttack(
+        EnemyUnit enemy,
+        float attackDamage)
     {
         if (State != EWaveState.Active || enemy == null ||
-            !unitManager.IsActiveEnemy(enemy) || !enemy.TryConsumeBreach()) return;
+            !unitManager.IsActiveEnemy(enemy)) return;
 
         int defenseLineDamage = BarrierDamageCalculator.Calculate(
-            enemy.BreachDamage,
+            Mathf.RoundToInt(attackDamage),
             barrierDamageReduction,
             minimumBarrierDamage);
         runState.ApplyPlayerDamage(defenseLineDamage);
         currentStageDefenseLineDamage += defenseLineDamage;
         OnHpChanged?.Invoke(PlayerHp);
 
-        if (PlayerHp <= 0)
-        {
-            BeginStageTransition(EWaveResolutionResult.Failed);
-            return;
-        }
-
-        unitManager.ReleaseBreachedEnemy(enemy);
+        if (PlayerHp <= 0) BeginStageTransition(EWaveResolutionResult.Failed);
     }
 
     private void BeginStageTransition(EWaveResolutionResult result)

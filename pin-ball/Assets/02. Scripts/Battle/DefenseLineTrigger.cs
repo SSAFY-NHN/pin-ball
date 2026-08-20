@@ -7,6 +7,6 @@ public class DefenseLineTrigger : MonoBehaviour
         EnemyUnit enemy = other.GetComponentInParent<EnemyUnit>();
         if (enemy == null) return;
 
-        App.Get<BattleManager>().TryResolveEnemyBreach(enemy);
+        enemy.ReachDefenseLine();
     }
 }

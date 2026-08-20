@@ -430,14 +430,21 @@ public abstract class UnitBase : MonoBehaviour
             return;
         }
 
-        float attackRate = _stats.AttackRate * _statusEffects.AttackRateMultiplier;
-        _state = EBattleUnitState.Attacking;
-        if (!_attack.TrySchedule(Time.time, attackRate)) return;
+        if (!TryScheduleBasicAttack()) return;
 
         _currentTarget.TakeDamage(GetBasicAttackDamage(_currentTarget), 0f, this);
-        SoundManager.PlaySFXIfAvailable(BasicAttackSoundName);
         _combatFeedback?.PlayBasicAttack(_currentTarget);
         OnBasicAttackHit(_currentTarget);
+    }
+
+    protected bool TryScheduleBasicAttack()
+    {
+        float attackRate = _stats.AttackRate * _statusEffects.AttackRateMultiplier;
+        _state = EBattleUnitState.Attacking;
+        if (!_attack.TrySchedule(Time.time, attackRate)) return false;
+
+        SoundManager.PlaySFXIfAvailable(BasicAttackSoundName);
+        return true;
     }
 
     private void ApplyScheduledDamage(float damage, float armorIgnoreRatio)
