@@ -4050,8 +4050,8 @@ MonoBehaviour:
       MergeHpBonusPerTier: 0
       EquipmentAttackBonus: 0
       EquipmentHpBonus: 0
-  unitPurchaseBaseCost: 50
-  unitPurchaseCostMultiplier: 1.8
+  unitPurchaseBaseCost: 30
+  unitPurchaseCostMultiplier: 1.4
   allyAttackSettings:
     BaseEffect: 1
     EffectPerLevel: 0.25
