@@ -17,7 +17,7 @@
       "health": 90,
       "attack": 12,
       "defense": 2,
-      "moveSpeed": 2.5,
+      "moveSpeed": 1.2,
       "attackSpeed": 0.9,
       "attackRange": 1.1,
       "breachDamage": 1,
