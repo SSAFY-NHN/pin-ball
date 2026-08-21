@@ -13,6 +13,19 @@ public sealed class UnitRoster
     public int ActiveAllyCount => _activeAllies.Count;
     public int ActiveEnemyCount => _activeEnemies.Count;
 
+    public int GetOwnedAllyCount(string unitId)
+    {
+        if (string.IsNullOrEmpty(unitId)) return 0;
+
+        var count = 0;
+        foreach (AllyUnit ally in _ownedAllies)
+        {
+            if (ally != null && ally.UnitId == unitId) count++;
+        }
+
+        return count;
+    }
+
     public bool AddOwnedAlly(AllyUnit ally)
     {
         if (ally == null) return false;

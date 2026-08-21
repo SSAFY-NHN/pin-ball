@@ -38,6 +38,11 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         _roster.OwnedAllyCount < MaxDeployedAllyCount;
     public bool CanStartWaveWithCurrentRoster =>
         CanStartWaveWithAllyCount(DeployedAllyCount);
+
+    public int GetOwnedAllyCount(string unitId)
+    {
+        return _roster?.GetOwnedAllyCount(unitId) ?? 0;
+    }
     
     private BattleManager _battleManager;
     private UnitSpawner _spawner;
@@ -304,8 +309,13 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
 
         if (unit is AllyUnit ally)
         {
+            int previousOwnedCount = _roster.OwnedAllyCount;
             _roster.NotifyUnitDied(ally);
             RefreshAllyItemModifiers();
+            if (_roster.OwnedAllyCount != previousOwnedCount)
+            {
+                OnDeployedAllyCountChanged?.Invoke(DeployedAllyCount);
+            }
             OnBattleRosterChanged?.Invoke();
             return;
         }
