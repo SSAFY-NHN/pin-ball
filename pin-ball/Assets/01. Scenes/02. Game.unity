@@ -4041,17 +4041,18 @@ MonoBehaviour:
   bossStageInterval: 10
   bossHealthMultiplier: 1.25
   bossAttackMultiplier: 1
-  purchasedAlly:
+  warriorPurchaseSettings:
     UnitId: warrior
-    Level: 1
-    Modifier:
-      MergeTier: 0
-      MergeAttackBonusPerTier: 0
-      MergeHpBonusPerTier: 0
-      EquipmentAttackBonus: 0
-      EquipmentHpBonus: 0
-  unitPurchaseBaseCost: 30
-  unitPurchaseCostMultiplier: 1.4
+    BaseCost: 30
+    CostMultiplier: 1.4
+  archerPurchaseSettings:
+    UnitId: archer
+    BaseCost: 35
+    CostMultiplier: 1.4
+  magePurchaseSettings:
+    UnitId: mage
+    BaseCost: 40
+    CostMultiplier: 1.4
   allyAttackSettings:
     BaseEffect: 1
     EffectPerLevel: 0.25
@@ -7765,7 +7766,7 @@ GameObject:
   - component: {fileID: 910000005}
   - component: {fileID: 910000006}
   m_Layer: 5
-  m_Name: UnitPurchaseUpgrade
+  m_Name: AllyPurchaseCards
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7885,15 +7886,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 910000001}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 534d374bd25b44ad8b8929355b37a462, type: 3}
+  m_Script: {fileID: 11500000, guid: 3b786e4cd7ea466e936c229e6861aeaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upgrade: 0
+  unitId: warrior
+  unitName: 전사
+  role: 근접 탱커
   purchaseButton: {fileID: 910000005}
-  nameText: {fileID: 911000004}
-  levelText: {fileID: 912000004}
-  effectText: {fileID: 913000004}
-  costText: {fileID: 914000004}
+  displayText: {fileID: 911000004}
 --- !u!1 &911000001
 GameObject:
   m_ObjectHideFlags: 0
@@ -7906,7 +7906,7 @@ GameObject:
   - component: {fileID: 911000003}
   - component: {fileID: 911000004}
   m_Layer: 5
-  m_Name: 
+  m_Name: WarriorPurchaseText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7928,8 +7928,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 12, y: -8}
-  m_SizeDelta: {x: 180, y: 26}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 112, y: 84}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &911000003
 CanvasRenderer:
@@ -7959,7 +7959,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: UNIT
+  m_text: 전사\n근접 탱커\n0회 · 30G
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a1ddd39cde59b449998e2220b981e3b, type: 2}
   m_sharedMaterial: {fileID: -1272043643258211167, guid: 8a1ddd39cde59b449998e2220b981e3b, type: 2}
@@ -7986,15 +7986,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
   m_fontSizeMax: 0
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -8042,8 +8042,10 @@ GameObject:
   - component: {fileID: 912000002}
   - component: {fileID: 912000003}
   - component: {fileID: 912000004}
+  - component: {fileID: 912000005}
+  - component: {fileID: 912000006}
   m_Layer: 5
-  m_Name: 
+  m_Name: ArcherPurchaseCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8065,8 +8067,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 12, y: -34}
-  m_SizeDelta: {x: 90, y: 22}
+  m_AnchoredPosition: {x: 112, y: 0}
+  m_SizeDelta: {x: 112, y: 84}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &912000003
 CanvasRenderer:
@@ -8096,7 +8098,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Lv. 1
+  m_text: 궁수\n원거리 단일\n0회 · 35G
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a1ddd39cde59b449998e2220b981e3b, type: 2}
   m_sharedMaterial: {fileID: -1272043643258211167, guid: 8a1ddd39cde59b449998e2220b981e3b, type: 2}
@@ -8123,15 +8125,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
   m_fontSizeMax: 0
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -8168,6 +8170,67 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &912000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.96, g: 0.96, b: 0.96, a: 1}
+    m_PressedColor: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+    m_SelectedColor: {r: 0.96, g: 0.96, b: 0.96, a: 1}
+    m_DisabledColor: {r: 0.78, g: 0.78, b: 0.78, a: 0.5}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 912000004}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &912000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b786e4cd7ea466e936c229e6861aeaf, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  unitId: archer
+  unitName: 궁수
+  role: 원거리 단일
+  purchaseButton: {fileID: 912000005}
+  displayText: {fileID: 912000004}
 --- !u!1 &913000001
 GameObject:
   m_ObjectHideFlags: 0
@@ -8179,8 +8242,10 @@ GameObject:
   - component: {fileID: 913000002}
   - component: {fileID: 913000003}
   - component: {fileID: 913000004}
+  - component: {fileID: 913000005}
+  - component: {fileID: 913000006}
   m_Layer: 5
-  m_Name: 
+  m_Name: MagePurchaseCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8202,8 +8267,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -34}
-  m_SizeDelta: {x: 220, y: 22}
+  m_AnchoredPosition: {x: 224, y: 0}
+  m_SizeDelta: {x: 112, y: 84}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &913000003
 CanvasRenderer:
@@ -8233,7 +8298,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1/5 > 2/5
+  m_text: 마법사\n원거리 범위\n0회 · 40G
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a1ddd39cde59b449998e2220b981e3b, type: 2}
   m_sharedMaterial: {fileID: -1272043643258211167, guid: 8a1ddd39cde59b449998e2220b981e3b, type: 2}
@@ -8260,15 +8325,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
   m_fontSizeMax: 0
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -8305,6 +8370,67 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &913000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.96, g: 0.96, b: 0.96, a: 1}
+    m_PressedColor: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+    m_SelectedColor: {r: 0.96, g: 0.96, b: 0.96, a: 1}
+    m_DisabledColor: {r: 0.78, g: 0.78, b: 0.78, a: 0.5}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 913000004}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &913000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b786e4cd7ea466e936c229e6861aeaf, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  unitId: mage
+  unitName: 마법사
+  role: 원거리 범위
+  purchaseButton: {fileID: 913000005}
+  displayText: {fileID: 913000004}
 --- !u!1 &914000001
 GameObject:
   m_ObjectHideFlags: 0
@@ -8317,12 +8443,12 @@ GameObject:
   - component: {fileID: 914000003}
   - component: {fileID: 914000004}
   m_Layer: 5
-  m_Name: 
+  m_Name: LegacyPurchaseCostText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &914000002
 RectTransform:
   m_ObjectHideFlags: 0
