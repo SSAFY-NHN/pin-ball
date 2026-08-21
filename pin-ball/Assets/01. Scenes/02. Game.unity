@@ -7764,7 +7764,6 @@ GameObject:
   - component: {fileID: 910000002}
   - component: {fileID: 910000003}
   - component: {fileID: 910000004}
-  - component: {fileID: 910000005}
   - component: {fileID: 910000006}
   m_Layer: 5
   m_Name: AllyPurchaseCards
@@ -7834,50 +7833,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &910000005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 910000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 910000004}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &910000006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7887,14 +7842,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 910000001}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b786e4cd7ea466e936c229e6861aeaf, type: 3}
+  m_Script: {fileID: 11500000, guid: 029bce429a6545aab88182181c3e4959, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitId: warrior
-  unitName: 전사
-  role: 근접 탱커
-  purchaseButton: {fileID: 910000005}
-  displayText: {fileID: 911000004}
+  warriorPurchaseButton: {fileID: 911000005}
+  warriorDisplayText: {fileID: 911000004}
+  archerPurchaseButton: {fileID: 912000005}
+  archerDisplayText: {fileID: 912000004}
+  magePurchaseButton: {fileID: 913000005}
+  mageDisplayText: {fileID: 913000004}
+  reinforcementNotice: {fileID: 914000004}
 --- !u!1 &911000001
 GameObject:
   m_ObjectHideFlags: 0
@@ -7906,8 +7863,9 @@ GameObject:
   - component: {fileID: 911000002}
   - component: {fileID: 911000003}
   - component: {fileID: 911000004}
+  - component: {fileID: 911000005}
   m_Layer: 5
-  m_Name: WarriorPurchaseText
+  m_Name: WarriorPurchaseCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7929,8 +7887,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 112, y: 84}
+  m_AnchoredPosition: {x: 0, y: -18}
+  m_SizeDelta: {x: 112, y: 66}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &911000003
 CanvasRenderer:
@@ -7960,7 +7918,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 전사\n근접 탱커\n0회 · 30G
+  m_text: 전사\n근접 탱커\n보유 0 · 30G
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a1ddd39cde59b449998e2220b981e3b, type: 2}
   m_sharedMaterial: {fileID: -1272043643258211167, guid: 8a1ddd39cde59b449998e2220b981e3b, type: 2}
@@ -8032,6 +7990,50 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &911000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 911000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.96, g: 0.96, b: 0.96, a: 1}
+    m_PressedColor: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+    m_SelectedColor: {r: 0.96, g: 0.96, b: 0.96, a: 1}
+    m_DisabledColor: {r: 0.78, g: 0.78, b: 0.78, a: 0.5}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 911000004}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &912000001
 GameObject:
   m_ObjectHideFlags: 0
@@ -8044,7 +8046,6 @@ GameObject:
   - component: {fileID: 912000003}
   - component: {fileID: 912000004}
   - component: {fileID: 912000005}
-  - component: {fileID: 912000006}
   m_Layer: 5
   m_Name: ArcherPurchaseCard
   m_TagString: Untagged
@@ -8068,8 +8069,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 112, y: 0}
-  m_SizeDelta: {x: 112, y: 84}
+  m_AnchoredPosition: {x: 112, y: -18}
+  m_SizeDelta: {x: 112, y: 66}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &912000003
 CanvasRenderer:
@@ -8099,7 +8100,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 궁수\n원거리 단일\n0회 · 35G
+  m_text: 궁수\n원거리 지속 공격\n보유 0 · 35G
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a1ddd39cde59b449998e2220b981e3b, type: 2}
   m_sharedMaterial: {fileID: -1272043643258211167, guid: 8a1ddd39cde59b449998e2220b981e3b, type: 2}
@@ -8215,23 +8216,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &912000006
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 912000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b786e4cd7ea466e936c229e6861aeaf, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  unitId: archer
-  unitName: 궁수
-  role: 원거리 단일
-  purchaseButton: {fileID: 912000005}
-  displayText: {fileID: 912000004}
 --- !u!1 &913000001
 GameObject:
   m_ObjectHideFlags: 0
@@ -8244,7 +8228,6 @@ GameObject:
   - component: {fileID: 913000003}
   - component: {fileID: 913000004}
   - component: {fileID: 913000005}
-  - component: {fileID: 913000006}
   m_Layer: 5
   m_Name: MagePurchaseCard
   m_TagString: Untagged
@@ -8268,8 +8251,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 224, y: 0}
-  m_SizeDelta: {x: 112, y: 84}
+  m_AnchoredPosition: {x: 224, y: -18}
+  m_SizeDelta: {x: 112, y: 66}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &913000003
 CanvasRenderer:
@@ -8299,7 +8282,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 마법사\n원거리 범위\n0회 · 40G
+  m_text: 마법사\n원거리 범위 공격\n보유 0 · 40G
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a1ddd39cde59b449998e2220b981e3b, type: 2}
   m_sharedMaterial: {fileID: -1272043643258211167, guid: 8a1ddd39cde59b449998e2220b981e3b, type: 2}
@@ -8415,23 +8398,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &913000006
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 913000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b786e4cd7ea466e936c229e6861aeaf, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  unitId: mage
-  unitName: 마법사
-  role: 원거리 범위
-  purchaseButton: {fileID: 913000005}
-  displayText: {fileID: 913000004}
 --- !u!1 &914000001
 GameObject:
   m_ObjectHideFlags: 0
@@ -8444,7 +8410,7 @@ GameObject:
   - component: {fileID: 914000003}
   - component: {fileID: 914000004}
   m_Layer: 5
-  m_Name: LegacyPurchaseCostText
+  m_Name: TacticalReinforcementNotice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8464,11 +8430,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 910000002}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 230, y: -8}
-  m_SizeDelta: {x: 90, y: 26}
-  m_Pivot: {x: 0, y: 1}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -9}
+  m_SizeDelta: {x: 336, y: 18}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &914000003
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8497,7 +8463,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 100G
+  m_text: 다음 유닛 무료
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a1ddd39cde59b449998e2220b981e3b, type: 2}
   m_sharedMaterial: {fileID: -1272043643258211167, guid: 8a1ddd39cde59b449998e2220b981e3b, type: 2}
