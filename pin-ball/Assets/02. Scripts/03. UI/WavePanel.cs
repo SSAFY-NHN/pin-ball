@@ -10,21 +10,56 @@ public class WavePanel : UIBase
     [SerializeField] private Button launchButton;
     [SerializeField] private TextMeshProUGUI launchCostText;
 
+    private BattleManager battleManager;
+
     public void RefreshTutorialState()
     {
-        HideLegacyControls();
+        Refresh();
     }
 
     public override void Initialize(UIManager manager)
     {
         base.Initialize(manager);
-        HideLegacyControls();
+        battleManager = App.Get<BattleManager>();
+        battleManager.OnStateChanged += OnBattleStateChanged;
+        startButton.onClick.AddListener(OnStartButtonClicked);
+        Refresh();
     }
 
-    private void HideLegacyControls()
+    private void OnStartButtonClicked()
     {
-        if (startButton != null) startButton.gameObject.SetActive(false);
+        battleManager.TryStartWave();
+        Refresh();
+    }
+
+    private void OnBattleStateChanged(EWaveState _)
+    {
+        Refresh();
+    }
+
+    private void Refresh()
+    {
+        bool show = battleManager != null &&
+                    battleManager.State == EWaveState.Pending;
+        if (startButton != null)
+        {
+            startButton.gameObject.SetActive(show);
+            startButton.interactable = show &&
+                                       battleManager.CanStartCurrentWave;
+        }
         if (launchButton != null) launchButton.gameObject.SetActive(false);
         if (launchCostText != null) launchCostText.gameObject.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        if (battleManager != null)
+        {
+            battleManager.OnStateChanged -= OnBattleStateChanged;
+        }
+        if (startButton != null)
+        {
+            startButton.onClick.RemoveListener(OnStartButtonClicked);
+        }
     }
 }

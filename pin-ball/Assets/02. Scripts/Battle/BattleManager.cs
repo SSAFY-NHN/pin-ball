@@ -32,7 +32,6 @@ public class BattleManager : AppService, IItemEventListener
     public BattleWaveData CurrentWave => runState?.CurrentWave;
     public int CurrentWaveNumber => runState?.CurrentWaveNumber ?? 1;
     public int TotalWaveCount => runState?.TotalWaveCount ?? 0;
-    public int CurrentStageNumber => CurrentWaveNumber;
     public int PlayerHp => runState?.PlayerHp ?? playerMaxHp;
     public int MaximumPlayerHp => runState?.MaximumPlayerHp ?? playerMaxHp;
     public int Gold => economy?.Gold ?? 0;
@@ -42,7 +41,6 @@ public class BattleManager : AppService, IItemEventListener
     public bool CanUsePreparationActions =>
         IsPreparationPhase && !isPreparationLocked;
     public bool IsCurrentWaveBoss => CurrentWave?.IsBoss ?? false;
-    public bool IsCurrentStageBoss => IsCurrentWaveBoss;
     public bool IsRunEnded => State is EWaveState.Victory or EWaveState.Defeat;
     public bool CanStartCurrentWave =>
         CanUsePreparationActions && CurrentWave != null &&
@@ -168,7 +166,7 @@ public class BattleManager : AppService, IItemEventListener
             !string.Equals(enemyId, "goblin_king", StringComparison.Ordinal)) return;
 
         currentBossDefeated = true;
-        OnBossDefeated?.Invoke(CurrentStageNumber);
+        OnBossDefeated?.Invoke(CurrentWaveNumber);
     }
 
     public void TryApplyDefenseLineAttack(
