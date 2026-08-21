@@ -35,6 +35,7 @@ public class BattleManager : AppService, IItemEventListener
         new("archer", 35, 1.4f);
     [SerializeField] private UnitPurchaseSettings magePurchaseSettings =
         new("mage", 40, 1.4f);
+    [SerializeField, Min(1)] private int reinforcementComboThreshold = 5;
     [SerializeField] private BattleUpgradeSettings allyAttackSettings =
         new(1f, 0.25f, 75, 1.7f, 20);
     [SerializeField] private BattleUpgradeSettings defenseLineHpSettings =
@@ -53,6 +54,8 @@ public class BattleManager : AppService, IItemEventListener
     public bool IsCurrentStageBoss =>
         stageController?.IsCurrentStageBoss ?? false;
     public bool IsRunEnded => State == EWaveState.Ended;
+    public bool HasTacticalReinforcement =>
+        tacticalReinforcementController?.HasTicket ?? false;
 
     public event Action<EWaveState> OnStateChanged;
     public event Action OnInitialized;
@@ -66,16 +69,19 @@ public class BattleManager : AppService, IItemEventListener
     public event Action<BattleStageResolvedData> OnStageResolved;
     public event Action<BattleUpgradePurchasedData> OnBattleUpgradePurchased;
     public event Action<UnitPurchaseResult> OnAllyPurchased;
+    public event Action<bool> OnTacticalReinforcementChanged;
     public event Action<int> OnBossDefeated;
     public event Action<int> OnRunEnded;
 
     private UnitManager unitManager;
+    private PinballManager pinballManager;
     private BattleRunState runState;
     private BattleStageController stageController;
     private EnemyStageScalingController enemyScalingController;
     private BattleEconomy economy = new(0);
     private BattleUpgradeController battleUpgradeController;
     private UnitPurchaseController unitPurchaseController;
+    private TacticalReinforcementController tacticalReinforcementController;
     private int barrierDamageReduction;
     private int minimumBarrierDamage = 1;
     private Coroutine transitionCoroutine;
@@ -118,6 +124,11 @@ public class BattleManager : AppService, IItemEventListener
             warriorPurchaseSettings,
             archerPurchaseSettings,
             magePurchaseSettings);
+        tacticalReinforcementController = new TacticalReinforcementController(
+            reinforcementComboThreshold);
+        pinballManager = App.Get<PinballManager>();
+        pinballManager.OnComboChanged += OnPinballComboChanged;
+        pinballManager.OnJackpotTriggered += OnJackpotTriggered;
 
         App.Get<ItemManager>().Subscribe(EItem.BarrierReinforcement, this);
 
@@ -367,13 +378,19 @@ public class BattleManager : AppService, IItemEventListener
 
     public bool CanPurchaseAlly(string unitId)
     {
-        return IsInitialized &&
-               !IsRunEnded &&
-               unitManager != null &&
-               unitPurchaseController != null &&
-               unitPurchaseController.CanPurchase(
-                   unitId,
-                   unitManager.CanPurchaseAlly);
+        if (!IsInitialized || IsRunEnded ||
+            unitManager == null || unitPurchaseController == null)
+        {
+            return false;
+        }
+
+        return HasTacticalReinforcement
+            ? unitPurchaseController.CanPurchaseFree(
+                unitId,
+                unitManager.CanPurchaseAlly)
+            : unitPurchaseController.CanPurchase(
+                unitId,
+                unitManager.CanPurchaseAlly);
     }
 
     public bool TryPurchaseAlly(string unitId)
@@ -384,18 +401,56 @@ public class BattleManager : AppService, IItemEventListener
             return false;
         }
 
-        bool purchased = unitPurchaseController.TryPurchase(
-            unitId,
-            unitManager.CanPurchaseAlly,
-            spawnData => unitManager.TryPurchaseAlly(
-                spawnData,
-                State == EWaveState.Active) != null,
-            out UnitPurchaseResult result);
+        bool isFreePurchase = HasTacticalReinforcement;
+        UnitPurchaseResult result = default;
+        bool purchased = isFreePurchase
+            ? tacticalReinforcementController.TryUse(() =>
+                unitPurchaseController.TryPurchaseFree(
+                    unitId,
+                    unitManager.CanPurchaseAlly,
+                    TrySpawnPurchasedAlly,
+                    out result))
+            : unitPurchaseController.TryPurchase(
+                unitId,
+                unitManager.CanPurchaseAlly,
+                TrySpawnPurchasedAlly,
+                out result);
         if (!purchased) return false;
 
-        OnGoldChanged?.Invoke(Gold);
+        if (isFreePurchase)
+        {
+            OnTacticalReinforcementChanged?.Invoke(false);
+        }
+        else
+        {
+            OnGoldChanged?.Invoke(Gold);
+        }
+
         OnAllyPurchased?.Invoke(result);
         return true;
+    }
+
+    private bool TrySpawnPurchasedAlly(BattleUnitSpawnData spawnData)
+    {
+        return unitManager.TryPurchaseAlly(
+            spawnData,
+            State == EWaveState.Active) != null;
+    }
+
+    private void OnPinballComboChanged(int combo)
+    {
+        if (tacticalReinforcementController.ObserveCombo(combo))
+        {
+            OnTacticalReinforcementChanged?.Invoke(true);
+        }
+    }
+
+    private void OnJackpotTriggered(Pinball _, int __)
+    {
+        if (tacticalReinforcementController.GrantFromJackpot())
+        {
+            OnTacticalReinforcementChanged?.Invoke(true);
+        }
     }
 
     private void ApplyBattleUpgrade(EBattleUpgrade upgrade)
@@ -453,6 +508,12 @@ public class BattleManager : AppService, IItemEventListener
         {
             unitManager.OnBattleRosterChanged -= OnBattleRosterChanged;
             unitManager.OnEnemyDefeated -= OnEnemyDefeated;
+        }
+
+        if (pinballManager != null)
+        {
+            pinballManager.OnComboChanged -= OnPinballComboChanged;
+            pinballManager.OnJackpotTriggered -= OnJackpotTriggered;
         }
 
         if (App.TryGet<ItemManager>(out var itemManager))

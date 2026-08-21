@@ -4053,6 +4053,7 @@ MonoBehaviour:
     UnitId: mage
     BaseCost: 40
     CostMultiplier: 1.4
+  reinforcementComboThreshold: 5
   allyAttackSettings:
     BaseEffect: 1
     EffectPerLevel: 0.25
