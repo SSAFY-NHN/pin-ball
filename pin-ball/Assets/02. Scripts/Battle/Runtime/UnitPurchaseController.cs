@@ -96,6 +96,13 @@ public sealed class UnitPurchaseController
                economy.Gold >= GetNextCost(unitId);
     }
 
+    public bool CanPurchaseFree(string unitId, bool canDeploy)
+    {
+        return canDeploy &&
+               unitId != null &&
+               settingsByUnitId.ContainsKey(unitId);
+    }
+
     public bool TryPurchase(
         string unitId,
         bool canDeploy,
@@ -127,6 +134,30 @@ public sealed class UnitPurchaseController
         if (unitId == null || !purchaseCounts.ContainsKey(unitId)) return false;
 
         purchaseCounts[unitId]++;
+        return true;
+    }
+
+    public bool TryPurchaseFree(
+        string unitId,
+        bool canDeploy,
+        Func<BattleUnitSpawnData, bool> trySpawn,
+        out UnitPurchaseResult result)
+    {
+        result = default;
+        if (!CanPurchaseFree(unitId, canDeploy) || trySpawn == null) return false;
+
+        var spawnData = new BattleUnitSpawnData
+        {
+            UnitId = unitId,
+            Level = 1
+        };
+        if (!trySpawn(spawnData)) return false;
+        if (!RecordSuccessfulPurchase(unitId)) return false;
+
+        result = new UnitPurchaseResult(
+            unitId,
+            GetPurchaseCount(unitId),
+            0);
         return true;
     }
 }
