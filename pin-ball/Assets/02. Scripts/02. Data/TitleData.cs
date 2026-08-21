@@ -125,15 +125,6 @@ public class TitleData : AppService, IUnitDataSource
                 continue;
             }
 
-            if (wave.RetryGoldReward < 0 ||
-                wave.WaveClearGoldReward < 0 ||
-                wave.FinalClearGoldReward < 0)
-            {
-                Debug.LogError(
-                    $"[TitleData] Wave {waveNumber} has a negative reward.");
-                isValid = false;
-            }
-
             if (wave.Enemies == null || wave.Enemies.Count == 0)
             {
                 Debug.LogError(
