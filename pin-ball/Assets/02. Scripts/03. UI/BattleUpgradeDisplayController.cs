@@ -57,7 +57,6 @@ public sealed class BattleUpgradeDisplayController : MonoBehaviour
     {
         return upgrade switch
         {
-            EBattleUpgrade.UnitPurchase => "유닛 구매",
             EBattleUpgrade.AllyAttack => "아군 공격력",
             EBattleUpgrade.DefenseLineHp => "방어선 체력",
             _ => string.Empty
@@ -68,7 +67,6 @@ public sealed class BattleUpgradeDisplayController : MonoBehaviour
     {
         return upgrade switch
         {
-            EBattleUpgrade.UnitPurchase => $"{Mathf.RoundToInt(value)}/{UnitManager.MaxDeployedAllyCount}",
             EBattleUpgrade.AllyAttack => $"x{value:0.00}",
             EBattleUpgrade.DefenseLineHp => $"+{Mathf.RoundToInt(value)} HP",
             _ => value.ToString("0.##")

@@ -29,13 +29,12 @@ public class BattleManager : AppService, IItemEventListener
 
     [Header("Battle Upgrades")]
     // TODO: 플레이 테스트 후 프로토타입 비용과 효과 수치를 조정한다.
-    [SerializeField] private BattleUnitSpawnData purchasedAlly = new()
-    {
-        UnitId = "warrior",
-        Level = 1
-    };
-    [SerializeField, Min(0)] private int unitPurchaseBaseCost = 100;
-    [SerializeField, Min(1f)] private float unitPurchaseCostMultiplier = 1.8f;
+    [SerializeField] private UnitPurchaseSettings warriorPurchaseSettings =
+        new("warrior", 30, 1.4f);
+    [SerializeField] private UnitPurchaseSettings archerPurchaseSettings =
+        new("archer", 35, 1.4f);
+    [SerializeField] private UnitPurchaseSettings magePurchaseSettings =
+        new("mage", 40, 1.4f);
     [SerializeField] private BattleUpgradeSettings allyAttackSettings =
         new(1f, 0.25f, 75, 1.7f, 20);
     [SerializeField] private BattleUpgradeSettings defenseLineHpSettings =
@@ -66,6 +65,7 @@ public class BattleManager : AppService, IItemEventListener
     public event Action<BattleStageStartedData> OnStageStarted;
     public event Action<BattleStageResolvedData> OnStageResolved;
     public event Action<BattleUpgradePurchasedData> OnBattleUpgradePurchased;
+    public event Action<UnitPurchaseResult> OnAllyPurchased;
     public event Action<int> OnBossDefeated;
     public event Action<int> OnRunEnded;
 
@@ -75,6 +75,7 @@ public class BattleManager : AppService, IItemEventListener
     private EnemyStageScalingController enemyScalingController;
     private BattleEconomy economy = new(0);
     private BattleUpgradeController battleUpgradeController;
+    private UnitPurchaseController unitPurchaseController;
     private int barrierDamageReduction;
     private int minimumBarrierDamage = 1;
     private Coroutine transitionCoroutine;
@@ -110,14 +111,13 @@ public class BattleManager : AppService, IItemEventListener
         economy = new BattleEconomy(
             titleData.BattleRunCommon?.StartingGold ?? 0);
         battleUpgradeController = new BattleUpgradeController(
-            new BattleUpgradeSettings(
-                0f,
-                1f,
-                unitPurchaseBaseCost,
-                unitPurchaseCostMultiplier,
-                UnitManager.MaxDeployedAllyCount),
             allyAttackSettings,
             defenseLineHpSettings);
+        unitPurchaseController = new UnitPurchaseController(
+            economy,
+            warriorPurchaseSettings,
+            archerPurchaseSettings,
+            magePurchaseSettings);
 
         App.Get<ItemManager>().Subscribe(EItem.BarrierReinforcement, this);
 
@@ -297,9 +297,7 @@ public class BattleManager : AppService, IItemEventListener
 
     public int GetBattleUpgradeLevel(EBattleUpgrade upgrade)
     {
-        return upgrade == EBattleUpgrade.UnitPurchase
-            ? unitManager?.DeployedAllyCount ?? 0
-            : battleUpgradeController?.GetLevel(upgrade) ?? 0;
+        return battleUpgradeController?.GetLevel(upgrade) ?? 0;
     }
 
     public int GetBattleUpgradeMaxLevel(EBattleUpgrade upgrade)
@@ -314,35 +312,22 @@ public class BattleManager : AppService, IItemEventListener
 
     public float GetBattleUpgradeEffect(EBattleUpgrade upgrade)
     {
-        return upgrade == EBattleUpgrade.UnitPurchase
-            ? unitManager?.DeployedAllyCount ?? 0
-            : battleUpgradeController?.GetEffect(upgrade) ?? 0f;
+        return battleUpgradeController?.GetEffect(upgrade) ?? 0f;
     }
 
     public float GetNextBattleUpgradeEffect(EBattleUpgrade upgrade)
     {
-        return upgrade == EBattleUpgrade.UnitPurchase
-            ? Mathf.Min(
-                UnitManager.MaxDeployedAllyCount,
-                (unitManager?.DeployedAllyCount ?? 0) + 1)
-            : battleUpgradeController?.GetNextEffect(upgrade) ?? 0f;
+        return battleUpgradeController?.GetNextEffect(upgrade) ?? 0f;
     }
 
     public bool CanPurchaseBattleUpgrade(EBattleUpgrade upgrade)
     {
-        if (!IsInitialized || IsRunEnded ||
-            battleUpgradeController == null || unitManager == null)
+        if (!IsInitialized || IsRunEnded || battleUpgradeController == null)
         {
             return false;
         }
 
-        int ownedAllyCount = unitManager.DeployedAllyCount;
-        if (battleUpgradeController.IsMaxLevel(upgrade, ownedAllyCount))
-        {
-            return false;
-        }
-
-        if (upgrade == EBattleUpgrade.UnitPurchase && !unitManager.CanPurchaseAlly)
+        if (battleUpgradeController.IsMaxLevel(upgrade))
         {
             return false;
         }
@@ -355,18 +340,8 @@ public class BattleManager : AppService, IItemEventListener
         if (!CanPurchaseBattleUpgrade(upgrade)) return false;
 
         int cost = GetBattleUpgradeCost(upgrade);
-        AllyUnit purchasedUnit = null;
-        if (upgrade == EBattleUpgrade.UnitPurchase)
-        {
-            purchasedUnit = unitManager.TryPurchaseAlly(
-                purchasedAlly,
-                State == EWaveState.Active);
-            if (purchasedUnit == null) return false;
-        }
-
         if (!TrySpendGold(cost))
         {
-            if (purchasedUnit != null) unitManager.ReleaseUnit(purchasedUnit);
             return false;
         }
 
@@ -377,6 +352,49 @@ public class BattleManager : AppService, IItemEventListener
             upgrade,
             GetBattleUpgradeLevel(upgrade),
             cost));
+        return true;
+    }
+
+    public int GetAllyPurchaseCount(string unitId)
+    {
+        return unitPurchaseController?.GetPurchaseCount(unitId) ?? 0;
+    }
+
+    public int GetAllyPurchaseCost(string unitId)
+    {
+        return unitPurchaseController?.GetNextCost(unitId) ?? 0;
+    }
+
+    public bool CanPurchaseAlly(string unitId)
+    {
+        return IsInitialized &&
+               !IsRunEnded &&
+               unitManager != null &&
+               unitPurchaseController != null &&
+               unitPurchaseController.CanPurchase(
+                   unitId,
+                   unitManager.CanPurchaseAlly);
+    }
+
+    public bool TryPurchaseAlly(string unitId)
+    {
+        if (!IsInitialized || IsRunEnded ||
+            unitManager == null || unitPurchaseController == null)
+        {
+            return false;
+        }
+
+        bool purchased = unitPurchaseController.TryPurchase(
+            unitId,
+            unitManager.CanPurchaseAlly,
+            spawnData => unitManager.TryPurchaseAlly(
+                spawnData,
+                State == EWaveState.Active) != null,
+            out UnitPurchaseResult result);
+        if (!purchased) return false;
+
+        OnGoldChanged?.Invoke(Gold);
+        OnAllyPurchased?.Invoke(result);
         return true;
     }
 

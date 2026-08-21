@@ -3,9 +3,8 @@ using UnityEngine;
 
 public enum EBattleUpgrade
 {
-    UnitPurchase,
-    AllyAttack,
-    DefenseLineHp
+    AllyAttack = 1,
+    DefenseLineHp = 2
 }
 
 [Serializable]
@@ -34,39 +33,42 @@ public struct BattleUpgradeSettings
 
 public sealed class BattleUpgradeController
 {
-    private readonly BattleUpgradeSettings unitPurchase;
     private readonly BattleUpgradeSettings allyAttack;
     private readonly BattleUpgradeSettings defenseLineHp;
-    private readonly int[] levels = new int[3];
+    private int allyAttackLevel;
+    private int defenseLineHpLevel;
 
     public BattleUpgradeController(
-        BattleUpgradeSettings unitPurchase,
         BattleUpgradeSettings allyAttack,
         BattleUpgradeSettings defenseLineHp)
     {
-        this.unitPurchase = unitPurchase;
         this.allyAttack = allyAttack;
         this.defenseLineHp = defenseLineHp;
     }
 
-    public int GetLevel(EBattleUpgrade upgrade) => levels[(int)upgrade];
+    public int GetLevel(EBattleUpgrade upgrade)
+    {
+        return upgrade switch
+        {
+            EBattleUpgrade.AllyAttack => allyAttackLevel,
+            EBattleUpgrade.DefenseLineHp => defenseLineHpLevel,
+            _ => 0
+        };
+    }
 
     public int GetMaxLevel(EBattleUpgrade upgrade)
     {
         return upgrade switch
         {
-            EBattleUpgrade.UnitPurchase => UnitManager.MaxDeployedAllyCount,
             EBattleUpgrade.AllyAttack => Mathf.Max(0, allyAttack.MaxLevel),
             EBattleUpgrade.DefenseLineHp => Mathf.Max(0, defenseLineHp.MaxLevel),
             _ => 0
         };
     }
 
-    public bool IsMaxLevel(EBattleUpgrade upgrade, int ownedAllyCount)
+    public bool IsMaxLevel(EBattleUpgrade upgrade)
     {
-        return upgrade == EBattleUpgrade.UnitPurchase
-            ? ownedAllyCount >= UnitManager.MaxDeployedAllyCount
-            : GetLevel(upgrade) >= GetMaxLevel(upgrade);
+        return GetLevel(upgrade) >= GetMaxLevel(upgrade);
     }
 
     public int GetNextCost(EBattleUpgrade upgrade)
@@ -79,14 +81,12 @@ public sealed class BattleUpgradeController
 
     public float GetEffect(EBattleUpgrade upgrade)
     {
-        if (upgrade == EBattleUpgrade.UnitPurchase) return 0f;
         BattleUpgradeSettings settings = GetSettings(upgrade);
         return settings.BaseEffect + settings.EffectPerLevel * GetLevel(upgrade);
     }
 
     public float GetNextEffect(EBattleUpgrade upgrade)
     {
-        if (upgrade == EBattleUpgrade.UnitPurchase) return 0f;
         if (GetLevel(upgrade) >= GetMaxLevel(upgrade)) return GetEffect(upgrade);
         BattleUpgradeSettings settings = GetSettings(upgrade);
         return settings.BaseEffect +
@@ -95,14 +95,20 @@ public sealed class BattleUpgradeController
 
     public void ConfirmPurchase(EBattleUpgrade upgrade)
     {
-        levels[(int)upgrade]++;
+        if (upgrade == EBattleUpgrade.AllyAttack)
+        {
+            allyAttackLevel++;
+        }
+        else if (upgrade == EBattleUpgrade.DefenseLineHp)
+        {
+            defenseLineHpLevel++;
+        }
     }
 
     private BattleUpgradeSettings GetSettings(EBattleUpgrade upgrade)
     {
         return upgrade switch
         {
-            EBattleUpgrade.UnitPurchase => unitPurchase,
             EBattleUpgrade.AllyAttack => allyAttack,
             EBattleUpgrade.DefenseLineHp => defenseLineHp,
             _ => default

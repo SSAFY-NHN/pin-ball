@@ -84,6 +84,7 @@ public sealed class PrototypeMetricsController : MonoBehaviour
             battleManager.OnStageStarted += OnStageStarted;
             battleManager.OnStageResolved += OnStageResolved;
             battleManager.OnBattleUpgradePurchased += OnBattleUpgradePurchased;
+            battleManager.OnAllyPurchased += OnAllyPurchased;
             battleManager.OnBossDefeated += OnBossDefeated;
         }
 
@@ -166,6 +167,13 @@ public sealed class PrototypeMetricsController : MonoBehaviour
                          $"Lv.{data.Level} | {FormatTime(RunElapsed)} | {data.Cost}G";
     }
 
+    private void OnAllyPurchased(UnitPurchaseResult result)
+    {
+        RecentPurchase = $"전투 {GetAllyName(result.UnitId)} " +
+                         $"{result.PurchaseCount}회 | {FormatTime(RunElapsed)} | " +
+                         $"{result.Cost}G";
+    }
+
     private void OnStageStarted(BattleStageStartedData data)
     {
         if (data.Stage != CurrentStage) CurrentStageRetryCount = 0;
@@ -230,10 +238,20 @@ public sealed class PrototypeMetricsController : MonoBehaviour
     {
         return upgrade switch
         {
-            EBattleUpgrade.UnitPurchase => "유닛 구매",
             EBattleUpgrade.AllyAttack => "아군 공격력",
             EBattleUpgrade.DefenseLineHp => "방어선 체력",
             _ => upgrade.ToString()
+        };
+    }
+
+    private static string GetAllyName(string unitId)
+    {
+        return unitId switch
+        {
+            "warrior" => "전사 구매",
+            "archer" => "궁수 구매",
+            "mage" => "마법사 구매",
+            _ => unitId
         };
     }
 
@@ -252,6 +270,7 @@ public sealed class PrototypeMetricsController : MonoBehaviour
             battleManager.OnStageStarted -= OnStageStarted;
             battleManager.OnStageResolved -= OnStageResolved;
             battleManager.OnBattleUpgradePurchased -= OnBattleUpgradePurchased;
+            battleManager.OnAllyPurchased -= OnAllyPurchased;
             battleManager.OnBossDefeated -= OnBossDefeated;
         }
 
