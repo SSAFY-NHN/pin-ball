@@ -1,6 +1,4 @@
 #if UNITY_EDITOR
-using System.Collections.Generic;
-
 using NUnit.Framework;
 using TMPro;
 using UnityEditor;
@@ -11,58 +9,71 @@ using UnityEngine.UI;
 public sealed class AllyPurchaseUiSceneTests
 {
     [Test]
-    public void GameScene_WiresOnePurchaseCardForEachBaseAlly()
+    public void GameScene_WiresPurchasePanelCardsAndReinforcementNotice()
     {
         EditorSceneManager.OpenScene("Assets/01. Scenes/02. Game.unity");
 
-        AllyPurchaseDisplayController[] cards =
-            Object.FindObjectsByType<AllyPurchaseDisplayController>(
+        AllyPurchasePanelController[] panels =
+            Object.FindObjectsByType<AllyPurchasePanelController>(
                 FindObjectsInactive.Include,
                 FindObjectsSortMode.None);
-        var unitIds = new HashSet<string>();
 
-        Assert.That(cards, Has.Length.EqualTo(3));
-        foreach (AllyPurchaseDisplayController card in cards)
-        {
-            Assert.That(card.gameObject.activeInHierarchy, Is.True);
-            unitIds.Add(ReadString(card, "unitId"));
-            Assert.That(ReadReference<Button>(card, "purchaseButton"), Is.Not.Null);
-            Assert.That(ReadReference<TextMeshProUGUI>(card, "displayText"), Is.Not.Null);
-        }
-
-        Assert.That(unitIds, Is.EquivalentTo(new[]
-        {
-            "warrior",
-            "archer",
-            "mage"
-        }));
+        Assert.That(panels, Has.Length.EqualTo(1));
+        AllyPurchasePanelController panel = panels[0];
+        Assert.That(panel.gameObject.activeInHierarchy, Is.True);
+        AssertCardReferences(panel, "warrior");
+        AssertCardReferences(panel, "archer");
+        AssertCardReferences(panel, "mage");
+        Assert.That(
+            ReadReference<TextMeshProUGUI>(panel, "reinforcementNotice"),
+            Is.Not.Null);
     }
 
-    [TestCase("전사", "근접 탱커", 30, 0, "전사\n근접 탱커\n0회 · 30G")]
-    [TestCase("궁수", "원거리 단일", 49, 1, "궁수\n원거리 단일\n1회 · 49G")]
-    [TestCase("마법사", "원거리 범위", 79, 2, "마법사\n원거리 범위\n2회 · 79G")]
-    public void FormatDisplay_CombinesRoleCountAndCost(
+    [TestCase("전사", "근접 탱커", 30, 1, false,
+        "전사\n근접 탱커\n보유 1 · 30G")]
+    [TestCase("궁수", "원거리 지속 공격", 49, 2, true,
+        "궁수\n원거리 지속 공격\n보유 2 · 무료")]
+    [TestCase("마법사", "원거리 범위 공격", 79, 0, false,
+        "마법사\n원거리 범위 공격\n보유 0 · 79G")]
+    public void FormatCard_CombinesRoleOwnedCountAndPurchaseState(
         string unitName,
         string role,
         int cost,
-        int purchaseCount,
+        int ownedCount,
+        bool isFree,
         string expected)
     {
         Assert.That(
-            AllyPurchaseDisplayController.FormatDisplay(
+            AllyPurchasePanelController.FormatCard(
                 unitName,
                 role,
                 cost,
-                purchaseCount),
+                ownedCount,
+                isFree),
             Is.EqualTo(expected));
     }
 
-    private static string ReadString(Object target, string propertyName)
+    [TestCase(false, "")]
+    [TestCase(true, "다음 유닛 무료")]
+    public void FormatReinforcementNotice_ShowsOnlyHeldTicket(
+        bool hasTicket,
+        string expected)
     {
-        SerializedProperty property =
-            new SerializedObject(target).FindProperty(propertyName);
-        Assert.That(property, Is.Not.Null, propertyName);
-        return property.stringValue;
+        Assert.That(
+            AllyPurchasePanelController.FormatReinforcementNotice(hasTicket),
+            Is.EqualTo(expected));
+    }
+
+    private static void AssertCardReferences(
+        AllyPurchasePanelController panel,
+        string prefix)
+    {
+        Assert.That(
+            ReadReference<Button>(panel, $"{prefix}PurchaseButton"),
+            Is.Not.Null);
+        Assert.That(
+            ReadReference<TextMeshProUGUI>(panel, $"{prefix}DisplayText"),
+            Is.Not.Null);
     }
 
     private static T ReadReference<T>(Object target, string propertyName)
