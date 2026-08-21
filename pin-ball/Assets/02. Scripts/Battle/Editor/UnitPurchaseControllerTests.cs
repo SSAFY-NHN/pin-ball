@@ -189,6 +189,68 @@ public sealed class UnitPurchaseControllerTests
         Assert.That(controller.GetNextCost("archer"), Is.EqualTo(35));
     }
 
+    [Test]
+    public void TryPurchaseFree_SpawnSuccessKeepsGoldAndRecordsSelectedUnit()
+    {
+        string spawnedUnitId = null;
+
+        bool purchased = controller.TryPurchaseFree(
+            "mage",
+            true,
+            spawnData =>
+            {
+                spawnedUnitId = spawnData.UnitId;
+                return true;
+            },
+            out UnitPurchaseResult result);
+
+        Assert.That(purchased, Is.True);
+        Assert.That(spawnedUnitId, Is.EqualTo("mage"));
+        Assert.That(economy.Gold, Is.EqualTo(100));
+        Assert.That(result.Cost, Is.Zero);
+        Assert.That(result.PurchaseCount, Is.EqualTo(1));
+        Assert.That(controller.GetNextCost("mage"), Is.EqualTo(56));
+        Assert.That(controller.GetNextCost("warrior"), Is.EqualTo(30));
+    }
+
+    [Test]
+    public void TryPurchaseFree_SpawnFailureKeepsGoldAndPurchaseCount()
+    {
+        bool purchased = controller.TryPurchaseFree(
+            "archer",
+            true,
+            _ => false,
+            out _);
+
+        Assert.That(purchased, Is.False);
+        Assert.That(economy.Gold, Is.EqualTo(100));
+        Assert.That(controller.GetPurchaseCount("archer"), Is.Zero);
+        Assert.That(controller.GetNextCost("archer"), Is.EqualTo(35));
+    }
+
+    [TestCase("missing", true)]
+    [TestCase("warrior", false)]
+    public void TryPurchaseFree_InvalidRequestDoesNotAttemptSpawn(
+        string unitId,
+        bool canDeploy)
+    {
+        bool spawnAttempted = false;
+
+        bool purchased = controller.TryPurchaseFree(
+            unitId,
+            canDeploy,
+            _ =>
+            {
+                spawnAttempted = true;
+                return true;
+            },
+            out _);
+
+        Assert.That(purchased, Is.False);
+        Assert.That(spawnAttempted, Is.False);
+        Assert.That(economy.Gold, Is.EqualTo(100));
+    }
+
     private static UnitPurchaseController CreateController(BattleEconomy targetEconomy)
     {
         return new UnitPurchaseController(
