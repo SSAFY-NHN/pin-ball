@@ -4030,17 +4030,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43054bf529ccf314c8c0f66c4ccbdbcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerMaxHp: 20
-  stageTransitionDuration: 2
-  stageEnemyId: goblin
-  baseEnemyCount: 3
-  enemyCountGrowthInterval: 3
-  enemyCountGrowthAmount: 1
-  maximumEnemyCount: 10
-  bossEnemyId: goblin_king
-  bossStageInterval: 10
-  bossHealthMultiplier: 1.25
-  bossAttackMultiplier: 1
+  playerMaxHp: 3
+  allyDefenseLineMaxHp: 20
+  enemyDefenseLineMaxHp: 20
+  waveResolutionDuration: 2
   warriorPurchaseSettings:
     UnitId: warrior
     BaseCost: 30
@@ -17945,6 +17938,7 @@ Transform:
   - {fileID: 1193324417}
   - {fileID: 8961000000000000102}
   - {fileID: 9000000000000000002}
+  - {fileID: 9000000000000000012}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1596397608
@@ -17987,7 +17981,8 @@ MonoBehaviour:
       EquipmentAttackBonus: 0
       EquipmentHpBonus: 0
   battleArea: {fileID: 8900000000000000101}
-  defenseLine: {fileID: 9000000000000000003}
+  allyDefenseLine: {fileID: 9000000000000000003}
+  enemyDefenseLine: {fileID: 9000000000000000013}
   evolutionGlowEffect: {fileID: 8961000000000000104}
 --- !u!1 &1596828393
 GameObject:
@@ -20701,7 +20696,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHpText: {fileID: 1329060728}
   goldText: {fileID: 683016304}
-  stageText: {fileID: 8991000000000000003}
+  defenseLineText: {fileID: 8991000000000000003}
   waveNodes:
   - {fileID: 1640013875}
   - {fileID: 1149121020}
@@ -20723,6 +20718,15 @@ MonoBehaviour:
   - {fileID: 587143226}
   - {fileID: 1007570057}
   - {fileID: 155864503}
+  idleNodeSprite: {fileID: 7594074091255726801, guid: 76628e24d9e8f2548bc52fca850f6602, type: 3}
+  lockedNodeSprite: {fileID: -1501899286500488243, guid: 4016219a1a8058e4bb8d2934885ffd8c, type: 3}
+  currentNodeSprite: {fileID: -3886339323229559514, guid: 4871958c7f355cf4a92a216203079e9f, type: 3}
+  completeNodeSprite: {fileID: -7004214837195593789, guid: d3d20f8d451cb7444a732dd04e7743ee, type: 3}
+  elite05NodeSprite: {fileID: 649938347787570776, guid: f6c1214224fa8ff4c918e73764718df4, type: 3}
+  elite09NodeSprite: {fileID: 4978120772137004442, guid: 1e301350564a31a4996a7816ed172a6d, type: 3}
+  boss10NodeSprite: {fileID: -8170665057149165769, guid: 0e76073fe3f088a4d91a00af24c0e03d, type: 3}
+  idleConnectorSprite: {fileID: -3085434383023055113, guid: 66cd9cb6129972541a308601e7ee7f20, type: 3}
+  completeConnectorSprite: {fileID: 3455729932652537745, guid: 04915a78d64cd3345b7eb0a418d544cf, type: 3}
   hpFlashColor: {r: 1, g: 0.2, b: 0.2, a: 1}
   goldFlashColor: {r: 1, g: 0.82, b: 0.2, a: 1}
   resourceFeedbackDuration: 0.42
@@ -23105,9 +23109,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8efcb32b2914eeb81c1fa709eb47d53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  victoryTitle: VICTORY
+  victoryMessage: "\uBAA8\uB4E0 \uC6E8\uC774\uBE0C\uB97C \uD074\uB9AC\uC5B4\uD588\uC2B5\uB2C8\uB2E4."
+  defeatTitle: DEFEAT
+  defeatMessage: "\uBC29\uC5B4\uC120\uC774 \uBB34\uB108\uC84C\uC2B5\uB2C8\uB2E4."
+  titleText: {fileID: 8800000000000000013}
   messageText: {fileID: 8800000000000000023}
   restartButton: {fileID: 8930000000000000055}
   titleButton: {fileID: 8800000000000000035}
+  overlayImage: {fileID: 8800000000000000005}
+  titleImage: {fileID: 8930000000000000034}
+  iconImage: {fileID: 8930000000000000044}
+  buttonAccentImage: {fileID: 8930000000000000054}
+  victoryOverlaySprite: {fileID: 21300000, guid: a1000000000000000000000000000003, type: 3}
+  defeatOverlaySprite: {fileID: 21300000, guid: a1000000000000000000000000000004, type: 3}
+  victoryTitleSprite: {fileID: 21300000, guid: a1000000000000000000000000000005, type: 3}
+  defeatTitleSprite: {fileID: 21300000, guid: a1000000000000000000000000000006, type: 3}
+  victoryIconSprite: {fileID: 21300000, guid: a1000000000000000000000000000007, type: 3}
+  defeatIconSprite: {fileID: 21300000, guid: a1000000000000000000000000000008, type: 3}
+  victoryButtonAccentSprite: {fileID: 21300000, guid: a1000000000000000000000000000009, type: 3}
+  defeatButtonAccentSprite: {fileID: 21300000, guid: a1000000000000000000000000000010, type: 3}
 --- !u!222 &8800000000000000004
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -27820,7 +27841,7 @@ GameObject:
   - component: {fileID: 9000000000000000003}
   - component: {fileID: 9000000000000000004}
   m_Layer: 0
-  m_Name: DefenseLine
+  m_Name: AllyDefenseLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27853,6 +27874,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a46a20fea3be14dafce59a21abdeba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defenseTeam: 0
 --- !u!61 &9000000000000000004
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -27860,6 +27882,98 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9000000000000000001}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.6, y: 8}
+  m_EdgeRadius: 0
+--- !u!1 &9000000000000000011
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9000000000000000012}
+  - component: {fileID: 9000000000000000013}
+  - component: {fileID: 9000000000000000014}
+  m_Layer: 0
+  m_Name: EnemyDefenseLine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9000000000000000012
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9000000000000000011}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6, y: -1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1596397607}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9000000000000000013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9000000000000000011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a46a20fea3be14dafce59a21abdeba, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  defenseTeam: 1
+--- !u!61 &9000000000000000014
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9000000000000000011}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
