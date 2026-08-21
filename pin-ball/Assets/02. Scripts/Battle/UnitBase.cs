@@ -19,6 +19,7 @@ public abstract class UnitBase : MonoBehaviour
     public bool IsStunned => _statusEffects.IsStunned(Time.time);
     public float LastDamagedTime => _health.LastDamagedTime;
     public UnitBase CurrentTarget => _currentTarget;
+    public bool HasReachedDefenseLine { get; private set; }
 
     protected BattleUnitStats _stats;
     protected UnitBase _currentTarget;
@@ -69,6 +70,8 @@ public abstract class UnitBase : MonoBehaviour
 
     public void ResetCombatState()
     {
+        _isBattleActive = true;
+        HasReachedDefenseLine = false;
         _stats = _initialStats;
         _state = EBattleUnitState.Idle;
         _health.Reset(_stats.MaxHp);
@@ -139,6 +142,7 @@ public abstract class UnitBase : MonoBehaviour
         _state = EBattleUnitState.Idle;
         _currentTarget = null;
         _forcedTarget = null;
+        HasReachedDefenseLine = false;
     }
 
     public void TakeDamage(
@@ -430,6 +434,50 @@ public abstract class UnitBase : MonoBehaviour
     protected void ClearTarget()
     {
         _currentTarget = null;
+    }
+
+    public void ReachDefenseLine(EBattleTeam defenseTeam)
+    {
+        if (!IsAlive || IsInPool || defenseTeam == Team) return;
+        HasReachedDefenseLine = true;
+        ClearTarget();
+    }
+
+    protected void LeaveDefenseLine()
+    {
+        HasReachedDefenseLine = false;
+    }
+
+    protected bool TryMoveOrAttackDefenseLine(UnitManager unitManager)
+    {
+        EBattleTeam defenseTeam = Team == EBattleTeam.Ally
+            ? EBattleTeam.Enemy
+            : EBattleTeam.Ally;
+
+        if (HasReachedDefenseLine)
+        {
+            ClearTarget();
+            if (unitManager != null && TryScheduleBasicAttack())
+            {
+                unitManager.RequestDefenseLineAttack(
+                    this,
+                    defenseTeam,
+                    GetBasicAttackDamage(null));
+            }
+            return true;
+        }
+
+        if (unitManager != null &&
+            unitManager.TryGetOpposingDefenseLinePosition(
+                Team,
+                out Vector3 position))
+        {
+            MoveTowardsPosition(position);
+            ClearTarget();
+            return true;
+        }
+
+        return false;
     }
 
     private void TryAttack()

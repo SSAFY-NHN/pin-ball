@@ -55,21 +55,30 @@ public class AllyUnit : UnitBase
 
     protected override void Tick()
     {
-        if (!TryKeepOrAcquireTarget()) { _state = EBattleUnitState.Idle; ClearTarget(); return; }
-        if (_skillController != null && _skillController.CanCast(MaxMana))
+        if (TryKeepOrAcquireTarget())
         {
-            _state = EBattleUnitState.Attacking;
-            if (_skillController.TryCast(
-                    CreateSkillContext(),
-                    MaxMana,
-                    Debug.LogWarning))
+            LeaveDefenseLine();
+            if (_skillController != null && _skillController.CanCast(MaxMana))
             {
-                SoundManager.PlaySFXIfAvailable(BasicAttackSoundName);
-                PlaySkillFeedback(_skill?.id, _currentTarget);
+                _state = EBattleUnitState.Attacking;
+                if (_skillController.TryCast(
+                        CreateSkillContext(),
+                        MaxMana,
+                        Debug.LogWarning))
+                {
+                    SoundManager.PlaySFXIfAvailable(BasicAttackSoundName);
+                    PlaySkillFeedback(_skill?.id, _currentTarget);
+                }
+                return;
             }
+
+            MoveOrAttackTarget();
             return;
         }
-        MoveOrAttackTarget();
+
+        if (TryMoveOrAttackDefenseLine(_unitManager)) return;
+        _state = EBattleUnitState.Idle;
+        ClearTarget();
     }
 
     protected override void OnBasicAttackHit(UnitBase target)

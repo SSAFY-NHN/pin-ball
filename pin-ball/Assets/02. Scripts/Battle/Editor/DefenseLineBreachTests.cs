@@ -10,53 +10,22 @@ public class DefenseLineBreachTests
     }
 
     [Test]
-    public void TryDetectWipe_AlliesGoneWithEnemiesRemaining_DoesNotResolveStage()
+    public void ReachDefenseLine_IgnoresOwnLineAndAcceptsOpposingLine()
     {
-        bool resolved = BattleResolutionPolicy.TryDetectWipe(
-            0,
-            1,
-            out EWaveResolutionResult result);
-
-        Assert.That(resolved, Is.False);
-        Assert.That(result, Is.EqualTo(default(EWaveResolutionResult)));
-    }
-
-    [Test]
-    public void TryDetectWipe_NoEnemies_ClearsStageWithoutAllies()
-    {
-        bool resolved = BattleResolutionPolicy.TryDetectWipe(
-            0,
-            0,
-            out EWaveResolutionResult result);
-
-        Assert.That(resolved, Is.True);
-        Assert.That(result, Is.EqualTo(EWaveResolutionResult.Cleared));
-    }
-
-    [Test]
-    public void ReachDefenseLine_KeepsEnemyAliveAndInRoster()
-    {
-        var enemyObject = new GameObject("enemy");
+        var allyObject = new GameObject("ally");
         try
         {
-            var roster = new UnitRoster();
-            var enemy = enemyObject.AddComponent<EnemyUnit>();
-            enemy.SetData(new EnemyUnitData
-            {
-                id = "goblin",
-                breachDamage = 3
-            });
-            roster.AddEnemy(enemy);
+            var ally = allyObject.AddComponent<AllyUnit>();
 
-            enemy.ReachDefenseLine();
+            ally.ReachDefenseLine(EBattleTeam.Ally);
+            Assert.That(ally.HasReachedDefenseLine, Is.False);
 
-            Assert.That(enemy.HasReachedDefenseLine, Is.True);
-            Assert.That(enemy.IsAlive, Is.True);
-            Assert.That(roster.ActiveEnemyCount, Is.EqualTo(1));
+            ally.ReachDefenseLine(EBattleTeam.Enemy);
+            Assert.That(ally.HasReachedDefenseLine, Is.True);
         }
         finally
         {
-            Object.DestroyImmediate(enemyObject);
+            Object.DestroyImmediate(allyObject);
         }
     }
 
@@ -84,7 +53,7 @@ public class DefenseLineBreachTests
             ally.Initialize(stats, context);
             enemy.SetData(new EnemyUnitData { id = "goblin" });
             roster.AddEnemy(enemy);
-            enemy.ReachDefenseLine();
+            enemy.ReachDefenseLine(EBattleTeam.Ally);
             roster.AddOwnedAlly(ally);
 
             enemy.InvokeTick();

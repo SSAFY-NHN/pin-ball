@@ -18,6 +18,8 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     public event Action<int> OnAlliesMerged;
     internal event Action OnBattleRosterChanged;
     internal event Action<string> OnEnemyDefeated;
+    internal event Action<UnitBase, EBattleTeam, float>
+        OnDefenseLineAttackRequested;
 
     private UnitRoster _roster;
     private UnitTargetFinder _targetFinder;
@@ -53,7 +55,8 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         Level = 1
     };
     [SerializeField] private BattleAreaBounds battleArea;
-    [SerializeField] private DefenseLineTrigger defenseLine;
+    [SerializeField] private DefenseLineTrigger allyDefenseLine;
+    [SerializeField] private DefenseLineTrigger enemyDefenseLine;
     [SerializeField] private EvolutionGlowEffect evolutionGlowEffect;
     private ItemManager _itemManager;
     private Coroutine _automaticPotionCoroutine;
@@ -369,22 +372,49 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         return enemy != null && _roster.ActiveEnemies.Contains(enemy);
     }
 
+    public bool IsActiveUnit(UnitBase unit)
+    {
+        if (unit == null || _roster == null) return false;
+        return unit.Team == EBattleTeam.Ally
+            ? _roster.ActiveAllies.Contains(unit)
+            : _roster.ActiveEnemies.Contains(unit);
+    }
+
     public void StopBattle()
     {
         foreach (var ally in _roster.ActiveAllies) ally?.StopBattle();
         foreach (var enemy in _roster.ActiveEnemies) enemy?.StopBattle();
     }
 
-    public bool TryGetDefenseLinePosition(out Vector3 position)
+    public bool TryGetOpposingDefenseLinePosition(
+        EBattleTeam attackerTeam,
+        out Vector3 position)
     {
-        if (defenseLine == null)
+        DefenseLineTrigger target = attackerTeam == EBattleTeam.Ally
+            ? enemyDefenseLine
+            : allyDefenseLine;
+        if (target == null)
         {
             position = default;
             return false;
         }
 
-        position = defenseLine.transform.position;
+        position = target.transform.position;
         return true;
+    }
+
+    public void RequestDefenseLineAttack(
+        UnitBase attacker,
+        EBattleTeam defenseTeam,
+        float attackDamage)
+    {
+        if (attacker == null || attacker.Team == defenseTeam ||
+            !IsActiveUnit(attacker)) return;
+
+        OnDefenseLineAttackRequested?.Invoke(
+            attacker,
+            defenseTeam,
+            attackDamage);
     }
 
     public static bool CanStartWaveWithAllyCount(int count)
