@@ -28,6 +28,23 @@ public class BattleEconomyTests
         economy.Add(-20);
         Assert.That(economy.Gold, Is.EqualTo(100));
     }
+
+    [Test]
+    public void WaveResolutionPolicy_DoesNotMutateEconomy()
+    {
+        var economy = new BattleEconomy(25);
+
+        BattleResolutionPolicy.ResolveNextState(
+            EWaveResolutionResult.Cleared,
+            false,
+            3);
+        BattleResolutionPolicy.ResolveNextState(
+            EWaveResolutionResult.Failed,
+            false,
+            2);
+
+        Assert.That(economy.Gold, Is.EqualTo(25));
+    }
 }
 
 public class BattleManagerPreStartEconomyTests

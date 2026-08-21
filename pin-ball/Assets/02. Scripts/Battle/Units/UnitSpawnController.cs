@@ -62,9 +62,7 @@ public sealed class UnitSpawnController
     public EnemyUnit SpawnEnemy(
         string enemyId,
         int wave,
-        Vector3? spawnPosition,
-        float healthMultiplier = 1f,
-        float attackMultiplier = 1f)
+        Vector3? spawnPosition)
     {
         if (!_creationService.TryCreateEnemy(
                 enemyId,
@@ -75,9 +73,6 @@ public sealed class UnitSpawnController
             Debug.LogWarning($"[UnitManager] Invalid enemy stats: {enemyId}");
             return null;
         }
-
-        stats.MaxHp *= Mathf.Max(0.01f, healthMultiplier);
-        stats.AttackDamage *= Mathf.Max(0f, attackMultiplier);
 
         return _spawner.SpawnEnemy(
             enemyData,

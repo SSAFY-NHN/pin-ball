@@ -2,30 +2,18 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-// 소유: 전투 단계, 방어선 HP, 골드, 지속 전투 상태
-// 책임: 자동 단계 시작/전환/재정비 결정과 UI 이벤트 발행
+// 소유: 유한 웨이브, 양측 방어선 HP, 기회, 골드
+// 책임: 수동 웨이브 시작/판정/재시도/최종 결과와 UI 이벤트 발행
 // 금지: 유닛 탐색/이동/공격, Instantiate 직접 처리
 public class BattleManager : AppService, IItemEventListener
 {
-    [Header("Defense Line")]
-    [SerializeField, Min(1)] public int playerMaxHp = 20;
-    [Header("Stage Transition")]
-    [SerializeField, Min(0f)] private float stageTransitionDuration = 2f;
-
-    [Header("Enemy Stage Prototype")]
-    // TODO: 플레이 테스트 후 프로토타입 적 수와 증가 구간을 조정한다.
-    [SerializeField] private string stageEnemyId = "goblin";
-    [SerializeField, Min(1)] private int baseEnemyCount = 3;
-    [SerializeField, Min(1)] private int enemyCountGrowthInterval = 3;
-    [SerializeField, Min(0)] private int enemyCountGrowthAmount = 1;
-    [SerializeField, Min(1)] private int maximumEnemyCount = 10;
-
-    [Header("Boss Stage Prototype")]
-    [SerializeField] private string bossEnemyId = "goblin_king";
-    [SerializeField, Min(1)] private int bossStageInterval = 10;
-    // TODO: 플레이 관찰 후 보스 체력과 공격력 배율을 각각 조정한다.
-    [SerializeField, Min(0.01f)] private float bossHealthMultiplier = 1.25f;
-    [SerializeField, Min(0f)] private float bossAttackMultiplier = 1f;
+    [Header("Run Chances")]
+    [SerializeField, Min(1)] public int playerMaxHp = 3;
+    [Header("Defense Lines")]
+    [SerializeField, Min(1)] private int allyDefenseLineMaxHp = 20;
+    [SerializeField, Min(1)] private int enemyDefenseLineMaxHp = 20;
+    [Header("Wave Resolution")]
+    [SerializeField, Min(0f)] private float waveResolutionDuration = 2f;
 
     [Header("Battle Upgrades")]
     // TODO: 플레이 테스트 후 프로토타입 비용과 효과 수치를 조정한다.
@@ -41,19 +29,24 @@ public class BattleManager : AppService, IItemEventListener
     [SerializeField] private BattleUpgradeSettings defenseLineHpSettings =
         new(0f, 10f, 80, 1.7f, 20);
 
-    public int CurrentWaveNumber => stageController?.CurrentStage ?? 1;
+    public BattleWaveData CurrentWave => runState?.CurrentWave;
+    public int CurrentWaveNumber => runState?.CurrentWaveNumber ?? 1;
+    public int TotalWaveCount => runState?.TotalWaveCount ?? 0;
     public int CurrentStageNumber => CurrentWaveNumber;
     public int PlayerHp => runState?.PlayerHp ?? playerMaxHp;
     public int MaximumPlayerHp => runState?.MaximumPlayerHp ?? playerMaxHp;
     public int Gold => economy?.Gold ?? 0;
     public bool IsInitialized { get; private set; }
-    public EWaveState State => stageController?.State ?? EWaveState.Starting;
-    public bool IsPreparationPhase => State != EWaveState.Active;
+    public EWaveState State => runState?.State ?? EWaveState.Pending;
+    public bool IsPreparationPhase => State == EWaveState.Pending;
     public bool CanUsePreparationActions =>
         IsPreparationPhase && !isPreparationLocked;
-    public bool IsCurrentStageBoss =>
-        stageController?.IsCurrentStageBoss ?? false;
-    public bool IsRunEnded => State == EWaveState.Ended;
+    public bool IsCurrentWaveBoss => CurrentWave?.IsBoss ?? false;
+    public bool IsCurrentStageBoss => IsCurrentWaveBoss;
+    public bool IsRunEnded => State is EWaveState.Victory or EWaveState.Defeat;
+    public bool CanStartCurrentWave =>
+        CanUsePreparationActions && CurrentWave != null &&
+        unitManager != null && unitManager.CanStartWaveWithCurrentRoster;
     public bool HasTacticalReinforcement =>
         tacticalReinforcementController?.HasTicket ?? false;
 
@@ -65,8 +58,9 @@ public class BattleManager : AppService, IItemEventListener
     public event Action OnBattleUpgradeChanged;
     public event Action<bool> OnPreparationAvailabilityChanged;
     public event Action<EWaveResolutionResult, int> OnWaveResolutionStarted;
-    public event Action<BattleStageStartedData> OnStageStarted;
-    public event Action<BattleStageResolvedData> OnStageResolved;
+    public event Action<BattleWaveStartedData> OnWaveStarted;
+    public event Action<BattleWaveResolvedData> OnWaveResolved;
+    public event Action<EBattleTeam, int, int> OnDefenseLineHpChanged;
     public event Action<BattleUpgradePurchasedData> OnBattleUpgradePurchased;
     public event Action<UnitPurchaseResult> OnAllyPurchased;
     public event Action<bool> OnTacticalReinforcementChanged;
@@ -76,20 +70,20 @@ public class BattleManager : AppService, IItemEventListener
     private UnitManager unitManager;
     private PinballManager pinballManager;
     private BattleRunState runState;
-    private BattleStageController stageController;
-    private EnemyStageScalingController enemyScalingController;
+    private BattleDefenseLineController defenseLineController;
+    private WaveResolutionState waveResolution;
     private BattleEconomy economy = new(0);
     private BattleUpgradeController battleUpgradeController;
     private UnitPurchaseController unitPurchaseController;
     private TacticalReinforcementController tacticalReinforcementController;
     private int barrierDamageReduction;
     private int minimumBarrierDamage = 1;
-    private Coroutine transitionCoroutine;
+    private Coroutine waveResolutionCoroutine;
     private bool isRunInitialized;
     private bool isPreparationLocked;
-    private float currentStageStartedAt;
+    private float currentWaveStartedAt;
     private bool currentBossDefeated;
-    private int currentStageDefenseLineDamage;
+    private int currentWaveAllyDefenseDamage;
 
     private void Start()
     {
@@ -103,17 +97,18 @@ public class BattleManager : AppService, IItemEventListener
 
         unitManager = App.Get<UnitManager>();
         unitManager.InitializeNewRun();
-        unitManager.OnBattleRosterChanged += OnBattleRosterChanged;
         unitManager.OnEnemyDefeated += OnEnemyDefeated;
+        unitManager.OnDefenseLineAttackRequested += TryApplyDefenseLineAttack;
 
         var titleData = App.Get<TitleData>();
-        runState = new BattleRunState(playerMaxHp);
-        stageController = new BattleStageController(bossStageInterval);
-        enemyScalingController = new EnemyStageScalingController(
-            baseEnemyCount,
-            enemyCountGrowthInterval,
-            enemyCountGrowthAmount,
-            maximumEnemyCount);
+        runState = new BattleRunState(
+            titleData.BattleWaves,
+            titleData.HasValidBattleRun,
+            playerMaxHp);
+        defenseLineController = new BattleDefenseLineController(
+            allyDefenseLineMaxHp,
+            enemyDefenseLineMaxHp);
+        waveResolution = new WaveResolutionState();
         economy = new BattleEconomy(
             titleData.BattleRunCommon?.StartingGold ?? 0);
         battleUpgradeController = new BattleUpgradeController(
@@ -137,160 +132,167 @@ public class BattleManager : AppService, IItemEventListener
         OnStateChanged?.Invoke(State);
         OnHpChanged?.Invoke(PlayerHp);
         OnGoldChanged?.Invoke(Gold);
-
-        StartCurrentStage();
+        OnWaveChanged?.Invoke(CurrentWaveNumber);
+        NotifyAllDefenseLineHp();
     }
 
-    private void StartCurrentStage()
+    public bool TryStartWave()
     {
-        if (unitManager == null)
-        {
-            return;
-        }
+        if (!CanStartCurrentWave) return false;
 
-        bool isInitialStage = State == EWaveState.Starting;
-        bool canStart = isInitialStage
-            ? stageController.TryStart()
-            : State == EWaveState.Active;
-        if (!canStart) return;
-
-        bool isBossStage = IsCurrentStageBoss;
-        string enemyId = isBossStage ? bossEnemyId : stageEnemyId;
-        int enemyCount = isBossStage
-            ? 1
-            : enemyScalingController.CalculateEnemyCount(CurrentStageNumber);
-        int spawnedCount = unitManager.BeginStage(
-            enemyId,
-            enemyCount,
-            CurrentStageNumber,
-            isBossStage ? bossHealthMultiplier : 1f,
-            isBossStage ? bossAttackMultiplier : 1f);
+        defenseLineController.ResetForWave();
+        NotifyAllDefenseLineHp();
+        int spawnedCount = unitManager.BeginWave(CurrentWave, CurrentWaveNumber);
         if (spawnedCount <= 0)
         {
             Debug.LogError(
-                $"[BattleManager] Stage {CurrentStageNumber} enemy spawn failed: {enemyId}");
-            stageController.TryAbortStart();
-            OnStateChanged?.Invoke(State);
-            return;
+                $"[BattleManager] Wave {CurrentWaveNumber} enemy spawn failed.");
+            return false;
         }
 
-        currentStageStartedAt = Time.time;
+        currentWaveStartedAt = Time.time;
         currentBossDefeated = false;
-        currentStageDefenseLineDamage = 0;
-        OnStateChanged?.Invoke(State);
-        if (isInitialStage) OnWaveChanged?.Invoke(CurrentStageNumber);
-        OnStageStarted?.Invoke(new BattleStageStartedData(
-            CurrentStageNumber,
-            isBossStage,
+        currentWaveAllyDefenseDamage = 0;
+        ChangeState(EWaveState.Active);
+        OnWaveStarted?.Invoke(new BattleWaveStartedData(
+            CurrentWaveNumber,
+            IsCurrentWaveBoss,
             spawnedCount));
         SoundManager.PlaySFXIfAvailable(SoundName.WaveStart);
+        return true;
     }
 
     private void OnEnemyDefeated(string enemyId)
     {
-        if (!IsCurrentStageBoss || currentBossDefeated ||
-            !string.Equals(enemyId, bossEnemyId, StringComparison.Ordinal)) return;
+        if (!IsCurrentWaveBoss || currentBossDefeated ||
+            !string.Equals(enemyId, "goblin_king", StringComparison.Ordinal)) return;
 
         currentBossDefeated = true;
         OnBossDefeated?.Invoke(CurrentStageNumber);
     }
 
-    private void OnBattleRosterChanged()
-    {
-        if (State != EWaveState.Active) return;
-
-        if (BattleResolutionPolicy.TryDetectWipe(
-                unitManager.RemainingAllyCount,
-                unitManager.RemainingEnemyCount,
-                out EWaveResolutionResult result))
-        {
-            BeginStageTransition(result);
-        }
-    }
-
     public void TryApplyDefenseLineAttack(
-        EnemyUnit enemy,
+        UnitBase attacker,
+        EBattleTeam defenseTeam,
         float attackDamage)
     {
-        if (State != EWaveState.Active || enemy == null ||
-            !unitManager.IsActiveEnemy(enemy)) return;
-
-        int defenseLineDamage = BarrierDamageCalculator.Calculate(
-            Mathf.RoundToInt(attackDamage),
-            barrierDamageReduction,
-            minimumBarrierDamage);
-        runState.ApplyPlayerDamage(defenseLineDamage);
-        currentStageDefenseLineDamage += defenseLineDamage;
-        OnHpChanged?.Invoke(PlayerHp);
-
-        if (PlayerHp <= 0) EndRun();
-    }
-
-    private void BeginStageTransition(EWaveResolutionResult result)
-    {
-        if (result == EWaveResolutionResult.Cleared)
-        {
-            ScheduleNextStage();
+        if (State != EWaveState.Active || attacker == null ||
+            attacker.Team == defenseTeam || !unitManager.IsActiveUnit(attacker))
             return;
-        }
 
-        EndRun();
-    }
-
-    private void ScheduleNextStage()
-    {
-        int completedStage = CurrentStageNumber;
-        bool completedStageWasBoss = IsCurrentStageBoss;
-        if (!stageController.TryScheduleNextStage(
-                Time.time,
-                stageTransitionDuration)) return;
-
-        float battleDuration = Mathf.Max(0f, Time.time - currentStageStartedAt);
-        OnStageResolved?.Invoke(new BattleStageResolvedData(
-            completedStage,
-            EWaveResolutionResult.Cleared,
-            battleDuration,
-            currentStageDefenseLineDamage,
-            completedStageWasBoss));
-        OnWaveChanged?.Invoke(CurrentStageNumber);
-        SoundManager.PlaySFXIfAvailable(SoundName.WaveWin);
-
-        transitionCoroutine = StartCoroutine(WaitForNextStage());
-    }
-
-    private void EndRun()
-    {
-        if (!stageController.TryEndRun()) return;
-
-        if (transitionCoroutine != null)
+        int damage = defenseTeam == EBattleTeam.Ally
+            ? BarrierDamageCalculator.Calculate(
+                Mathf.RoundToInt(attackDamage),
+                barrierDamageReduction,
+                minimumBarrierDamage)
+            : Mathf.Max(1, Mathf.RoundToInt(attackDamage));
+        int previousHp = defenseLineController.GetCurrentHp(defenseTeam);
+        if (!defenseLineController.ApplyDamage(defenseTeam, damage)) return;
+        if (defenseTeam == EBattleTeam.Ally)
         {
-            StopCoroutine(transitionCoroutine);
-            transitionCoroutine = null;
+            currentWaveAllyDefenseDamage +=
+                previousHp - defenseLineController.GetCurrentHp(defenseTeam);
         }
+        NotifyDefenseLineHp(defenseTeam);
 
-        float battleDuration = Mathf.Max(0f, Time.time - currentStageStartedAt);
-        unitManager.StopBattle();
-        OnStateChanged?.Invoke(State);
-        OnWaveResolutionStarted?.Invoke(
-            EWaveResolutionResult.Failed,
-            CurrentStageNumber);
-        OnStageResolved?.Invoke(new BattleStageResolvedData(
-            CurrentStageNumber,
-            EWaveResolutionResult.Failed,
-            battleDuration,
-            currentStageDefenseLineDamage,
-            IsCurrentStageBoss));
-        SoundManager.PlaySFXIfAvailable(SoundName.WaveFailed);
-        OnRunEnded?.Invoke(CurrentStageNumber);
+        if (!defenseLineController.IsDestroyed(defenseTeam)) return;
+        BeginWaveResolution(defenseTeam == EBattleTeam.Enemy
+            ? EWaveResolutionResult.Cleared
+            : EWaveResolutionResult.Failed);
     }
 
-    private IEnumerator WaitForNextStage()
-    {
-        yield return new WaitForSeconds(stageTransitionDuration);
-        transitionCoroutine = null;
+    public int GetDefenseLineHp(EBattleTeam team) =>
+        defenseLineController?.GetCurrentHp(team) ?? 20;
 
-        if (!stageController.TryCompleteNextStageSchedule(Time.time)) yield break;
-        StartCurrentStage();
+    public int GetDefenseLineMaximumHp(EBattleTeam team) =>
+        defenseLineController?.GetMaximumHp(team) ?? 20;
+
+    private void NotifyDefenseLineHp(EBattleTeam team)
+    {
+        OnDefenseLineHpChanged?.Invoke(
+            team,
+            GetDefenseLineHp(team),
+            GetDefenseLineMaximumHp(team));
+    }
+
+    private void NotifyAllDefenseLineHp()
+    {
+        NotifyDefenseLineHp(EBattleTeam.Ally);
+        NotifyDefenseLineHp(EBattleTeam.Enemy);
+    }
+
+    private void BeginWaveResolution(EWaveResolutionResult result)
+    {
+        if (State != EWaveState.Active ||
+            !waveResolution.TryBegin(
+                result,
+                CurrentWaveNumber,
+                Time.time,
+                waveResolutionDuration)) return;
+
+        if (result == EWaveResolutionResult.Failed)
+        {
+            runState.ConsumeChance();
+            OnHpChanged?.Invoke(PlayerHp);
+        }
+
+        float duration = Mathf.Max(0f, Time.time - currentWaveStartedAt);
+        unitManager.StopBattle();
+        ChangeState(EWaveState.Resolving);
+        OnWaveResolutionStarted?.Invoke(result, CurrentWaveNumber);
+        OnWaveResolved?.Invoke(new BattleWaveResolvedData(
+            CurrentWaveNumber,
+            result,
+            duration,
+            currentWaveAllyDefenseDamage,
+            IsCurrentWaveBoss));
+        SoundManager.PlaySFXIfAvailable(
+            result == EWaveResolutionResult.Cleared
+                ? SoundName.WaveWin
+                : SoundName.WaveFailed);
+        waveResolutionCoroutine = StartCoroutine(WaitForWaveResolution());
+    }
+
+    private IEnumerator WaitForWaveResolution()
+    {
+        yield return new WaitForSeconds(waveResolutionDuration);
+        waveResolutionCoroutine = null;
+        FinishWaveResolution();
+    }
+
+    private void FinishWaveResolution()
+    {
+        if (State != EWaveState.Resolving || !waveResolution.IsPending) return;
+
+        EWaveResolutionResult result = waveResolution.Result;
+        bool isFinalWave = runState.CurrentWaveIndex + 1 >=
+                           runState.TotalWaveCount;
+        unitManager.ResolveWaveResult();
+        waveResolution.Clear();
+
+        EWaveState nextState = BattleResolutionPolicy.ResolveNextState(
+            result,
+            isFinalWave,
+            PlayerHp);
+        if (result == EWaveResolutionResult.Cleared &&
+            nextState == EWaveState.Pending)
+        {
+            runState.AdvanceWave();
+            OnWaveChanged?.Invoke(CurrentWaveNumber);
+        }
+
+        ChangeState(nextState);
+        if (nextState is EWaveState.Victory or EWaveState.Defeat)
+        {
+            OnRunEnded?.Invoke(CurrentWaveNumber);
+        }
+    }
+
+    private void ChangeState(EWaveState nextState)
+    {
+        if (!runState.ChangeState(nextState)) return;
+        OnStateChanged?.Invoke(State);
+        OnPreparationAvailabilityChanged?.Invoke(CanUsePreparationActions);
     }
 
     public bool TrySpendGold(int amount)
@@ -463,9 +465,9 @@ public class BattleManager : AppService, IItemEventListener
         else if (upgrade == EBattleUpgrade.DefenseLineHp)
         {
             int increase = Mathf.RoundToInt(defenseLineHpSettings.EffectPerLevel);
-            if (runState.IncreaseMaximumPlayerHp(increase))
+            if (defenseLineController.IncreaseAllyMaximumHp(increase))
             {
-                OnHpChanged?.Invoke(PlayerHp);
+                NotifyDefenseLineHp(EBattleTeam.Ally);
             }
         }
     }
@@ -498,16 +500,16 @@ public class BattleManager : AppService, IItemEventListener
 
     protected override void OnDestroy()
     {
-        if (transitionCoroutine != null)
+        if (waveResolutionCoroutine != null)
         {
-            StopCoroutine(transitionCoroutine);
-            transitionCoroutine = null;
+            StopCoroutine(waveResolutionCoroutine);
+            waveResolutionCoroutine = null;
         }
 
         if (unitManager != null)
         {
-            unitManager.OnBattleRosterChanged -= OnBattleRosterChanged;
             unitManager.OnEnemyDefeated -= OnEnemyDefeated;
+            unitManager.OnDefenseLineAttackRequested -= TryApplyDefenseLineAttack;
         }
 
         if (pinballManager != null)
@@ -525,39 +527,39 @@ public class BattleManager : AppService, IItemEventListener
     }
 }
 
-public readonly struct BattleStageStartedData
+public readonly struct BattleWaveStartedData
 {
-    public int Stage { get; }
+    public int Wave { get; }
     public bool IsBoss { get; }
     public int SpawnedEnemyCount { get; }
 
-    public BattleStageStartedData(int stage, bool isBoss, int spawnedEnemyCount)
+    public BattleWaveStartedData(int wave, bool isBoss, int spawnedEnemyCount)
     {
-        Stage = stage;
+        Wave = wave;
         IsBoss = isBoss;
         SpawnedEnemyCount = spawnedEnemyCount;
     }
 }
 
-public readonly struct BattleStageResolvedData
+public readonly struct BattleWaveResolvedData
 {
-    public int Stage { get; }
+    public int Wave { get; }
     public EWaveResolutionResult Result { get; }
     public float Duration { get; }
-    public int DefenseLineDamage { get; }
+    public int AllyDefenseLineDamage { get; }
     public bool IsBoss { get; }
 
-    public BattleStageResolvedData(
-        int stage,
+    public BattleWaveResolvedData(
+        int wave,
         EWaveResolutionResult result,
         float duration,
-        int defenseLineDamage,
+        int allyDefenseLineDamage,
         bool isBoss)
     {
-        Stage = stage;
+        Wave = wave;
         Result = result;
         Duration = duration;
-        DefenseLineDamage = defenseLineDamage;
+        AllyDefenseLineDamage = allyDefenseLineDamage;
         IsBoss = isBoss;
     }
 }

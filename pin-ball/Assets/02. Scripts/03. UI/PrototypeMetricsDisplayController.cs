@@ -53,10 +53,10 @@ public sealed class PrototypeMetricsDisplayController : MonoBehaviour
             .Append("G | LAST ").Append(PrototypeMetricsController.FormatTime(sinceLastJackpot))
             .Append(" | GAP ").Append(PrototypeMetricsController.FormatTime(metricsController.AverageJackpotInterval))
             .Append('\n');
-        builder.Append("STAGE ").Append(metricsController.CurrentStage);
+        builder.Append("WAVE ").Append(metricsController.CurrentWave);
         if (metricsController.IsBossStage) builder.Append(" BOSS");
-        builder.Append(" | TIME ").Append(metricsController.CurrentStageElapsed.ToString("0.0"))
-            .Append("s | RETRY ").Append(metricsController.CurrentStageRetryCount)
+        builder.Append(" | TIME ").Append(metricsController.CurrentWaveElapsed.ToString("0.0"))
+            .Append("s | RETRY ").Append(metricsController.CurrentWaveRetryCount)
             .Append(" | DMG ").Append(metricsController.LastDefenseLineDamage)
             .Append('\n');
         builder.Append("BOSS REACHED ")

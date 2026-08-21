@@ -128,19 +128,27 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         }
     }
 
-    public int BeginStage(
-        string enemyId,
-        int enemyCount,
-        int stage,
-        float healthMultiplier = 1f,
-        float attackMultiplier = 1f)
+    public int BeginWave(BattleWaveData wave, int waveNumber)
     {
-        return SpawnEnemies(
-            enemyId,
-            enemyCount,
-            stage,
-            healthMultiplier,
-            attackMultiplier);
+        ReturnAllEnemies();
+        CleanupDestroyedUnits();
+        if (wave?.Enemies == null) return 0;
+
+        _spawnController.BeginEnemyWave();
+        int spawnedCount = 0;
+        foreach (BattleEnemySpawnData entry in wave.Enemies)
+        {
+            if (entry == null || string.IsNullOrEmpty(entry.EnemyId)) continue;
+            for (var count = 0; count < Mathf.Max(1, entry.Count); count++)
+            {
+                if (SpawnEnemy(entry.EnemyId, waveNumber, null) != null)
+                {
+                    spawnedCount++;
+                }
+            }
+        }
+
+        return spawnedCount;
     }
 
     public AllyUnit SpawnAlly(BattleUnitSpawnData unitData)
@@ -204,46 +212,15 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         RefreshAllyItemModifiers();
     }
 
-    private int SpawnEnemies(
-        string enemyId,
-        int enemyCount,
-        int stage,
-        float healthMultiplier,
-        float attackMultiplier)
-    {
-        if (string.IsNullOrEmpty(enemyId) || enemyCount <= 0) return 0;
-
-        _spawnController.BeginEnemyWave();
-        int spawnedCount = 0;
-        for (var count = 0; count < enemyCount; count++)
-        {
-            if (SpawnEnemy(
-                    enemyId,
-                    stage,
-                    null,
-                    healthMultiplier,
-                    attackMultiplier) != null)
-            {
-                spawnedCount++;
-            }
-        }
-
-        return spawnedCount;
-    }
-
     private EnemyUnit SpawnEnemy(
         string enemyId,
-        int stage,
-        Vector3? spawnPosition,
-        float healthMultiplier = 1f,
-        float attackMultiplier = 1f)
+        int waveNumber,
+        Vector3? spawnPosition)
     {
         var enemy = _spawnController?.SpawnEnemy(
             enemyId,
-            stage,
-            spawnPosition,
-            healthMultiplier,
-            attackMultiplier);
+            waveNumber,
+            spawnPosition);
         AddEnemy(enemy);
         return enemy;
     }
@@ -262,7 +239,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             SpawnEnemy(
                 enemyId,
                 _battleManager != null
-                    ? _battleManager.CurrentStageNumber
+                    ? _battleManager.CurrentWaveNumber
                     : 1,
                 center + offset);
         }
@@ -345,10 +322,10 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         }
     }
 
-    public void ResolveStageResult()
+    public void ResolveWaveResult()
     {
         ReturnAllEnemies();
-        RestoreAlliesForStage();
+        RestoreAlliesForPreparation();
     }
 
     public void ReleaseUnit(UnitBase unit)
@@ -434,7 +411,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         }
     }
 
-    private void RestoreAlliesForStage()
+    private void RestoreAlliesForPreparation()
     {
         _roster.ClearActiveAllies();
 

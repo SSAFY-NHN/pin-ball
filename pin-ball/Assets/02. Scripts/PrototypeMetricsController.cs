@@ -4,12 +4,12 @@ using UnityEngine;
 
 public sealed class PrototypeMetricsController : MonoBehaviour
 {
-    private const int RecentStageCapacity = 10;
+    private const int RecentWaveCapacity = 10;
 
     public float RunElapsed => Mathf.Max(0f, Time.time - runStartedAt);
-    public float CurrentStageElapsed => currentStageStartedAt < 0f
+    public float CurrentWaveElapsed => currentWaveStartedAt < 0f
         ? 0f
-        : Mathf.Max(0f, Time.time - currentStageStartedAt);
+        : Mathf.Max(0f, Time.time - currentWaveStartedAt);
     public int PermanentBallActivations { get; private set; }
     public int ReleasedPermanentBalls { get; private set; }
     public int GoldenBallActivations { get; private set; }
@@ -23,12 +23,12 @@ public sealed class PrototypeMetricsController : MonoBehaviour
     public float AverageJackpotInterval => jackpotIntervalCount > 0
         ? totalJackpotInterval / jackpotIntervalCount
         : -1f;
-    public int CurrentStage { get; private set; } = 1;
+    public int CurrentWave { get; private set; } = 1;
     public bool IsBossStage { get; private set; }
-    public float LastStageDuration { get; private set; }
-    public int CurrentStageRetryCount { get; private set; }
+    public float LastWaveDuration { get; private set; }
+    public int CurrentWaveRetryCount { get; private set; }
     public int TotalRetryCount { get; private set; }
-    public int CurrentBossRetryCount => IsBossStage ? CurrentStageRetryCount : 0;
+    public int CurrentBossRetryCount => IsBossStage ? CurrentWaveRetryCount : 0;
     public int LastDefenseLineDamage { get; private set; }
     public int TotalDefenseLineDamage { get; private set; }
     public float FirstStageTenReachedAt { get; private set; } = -1f;
@@ -45,13 +45,13 @@ public sealed class PrototypeMetricsController : MonoBehaviour
         ? (float)TotalJackpotReward / JackpotCount
         : 0f;
 
-    private readonly Queue<PrototypeStageResult> recentStages = new();
+    private readonly Queue<PrototypeWaveResult> recentWaves = new();
     private readonly float[] firstProductionPurchaseAt = new float[3];
     private readonly float[] firstBattlePurchaseAt = new float[3];
     private BattleManager battleManager;
     private PinballManager pinballManager;
     private float runStartedAt;
-    private float currentStageStartedAt = -1f;
+    private float currentWaveStartedAt = -1f;
     private float previousJackpotAt = -1f;
     private float totalJackpotInterval;
     private int jackpotIntervalCount;
@@ -67,10 +67,10 @@ public sealed class PrototypeMetricsController : MonoBehaviour
     private void ResetForNewRun()
     {
         runStartedAt = Time.time;
-        currentStageStartedAt = -1f;
+        currentWaveStartedAt = -1f;
         Array.Fill(firstProductionPurchaseAt, -1f);
         Array.Fill(firstBattlePurchaseAt, -1f);
-        recentStages.Clear();
+        recentWaves.Clear();
     }
 
     private void Subscribe()
@@ -81,8 +81,8 @@ public sealed class PrototypeMetricsController : MonoBehaviour
 
         if (battleManager != null)
         {
-            battleManager.OnStageStarted += OnStageStarted;
-            battleManager.OnStageResolved += OnStageResolved;
+            battleManager.OnWaveStarted += OnWaveStarted;
+            battleManager.OnWaveResolved += OnWaveResolved;
             battleManager.OnBattleUpgradePurchased += OnBattleUpgradePurchased;
             battleManager.OnAllyPurchased += OnAllyPurchased;
             battleManager.OnBossDefeated += OnBossDefeated;
@@ -111,11 +111,11 @@ public sealed class PrototypeMetricsController : MonoBehaviour
         }
 
         if (battleManager != null && battleManager.IsInitialized &&
-            battleManager.State == EWaveState.Active && currentStageStartedAt < 0f)
+            battleManager.State == EWaveState.Active && currentWaveStartedAt < 0f)
         {
-            OnStageStarted(new BattleStageStartedData(
-                battleManager.CurrentStageNumber,
-                battleManager.IsCurrentStageBoss,
+            OnWaveStarted(new BattleWaveStartedData(
+                battleManager.CurrentWaveNumber,
+                battleManager.IsCurrentWaveBoss,
                 0));
         }
     }
@@ -174,34 +174,34 @@ public sealed class PrototypeMetricsController : MonoBehaviour
                          $"{result.Cost}G";
     }
 
-    private void OnStageStarted(BattleStageStartedData data)
+    private void OnWaveStarted(BattleWaveStartedData data)
     {
-        if (data.Stage != CurrentStage) CurrentStageRetryCount = 0;
-        CurrentStage = Mathf.Max(1, data.Stage);
+        if (data.Wave != CurrentWave) CurrentWaveRetryCount = 0;
+        CurrentWave = Mathf.Max(1, data.Wave);
         IsBossStage = data.IsBoss;
-        currentStageStartedAt = Time.time;
-        if (CurrentStage >= 10 && FirstStageTenReachedAt < 0f)
+        currentWaveStartedAt = Time.time;
+        if (CurrentWave >= 10 && FirstStageTenReachedAt < 0f)
         {
             FirstStageTenReachedAt = RunElapsed;
         }
     }
 
-    private void OnStageResolved(BattleStageResolvedData data)
+    private void OnWaveResolved(BattleWaveResolvedData data)
     {
-        LastStageDuration = Mathf.Max(0f, data.Duration);
-        LastDefenseLineDamage = Mathf.Max(0, data.DefenseLineDamage);
+        LastWaveDuration = Mathf.Max(0f, data.Duration);
+        LastDefenseLineDamage = Mathf.Max(0, data.AllyDefenseLineDamage);
         TotalDefenseLineDamage += LastDefenseLineDamage;
         if (data.Result == EWaveResolutionResult.Failed)
         {
-            CurrentStageRetryCount++;
+            CurrentWaveRetryCount++;
             TotalRetryCount++;
         }
 
-        recentStages.Enqueue(new PrototypeStageResult(
-            data.Stage,
+        recentWaves.Enqueue(new PrototypeWaveResult(
+            data.Wave,
             data.Result,
             data.Duration));
-        while (recentStages.Count > RecentStageCapacity) recentStages.Dequeue();
+        while (recentWaves.Count > RecentWaveCapacity) recentWaves.Dequeue();
     }
 
     private void OnBossDefeated(int _)
@@ -267,8 +267,8 @@ public sealed class PrototypeMetricsController : MonoBehaviour
         if (!subscribed) return;
         if (battleManager != null)
         {
-            battleManager.OnStageStarted -= OnStageStarted;
-            battleManager.OnStageResolved -= OnStageResolved;
+            battleManager.OnWaveStarted -= OnWaveStarted;
+            battleManager.OnWaveResolved -= OnWaveResolved;
             battleManager.OnBattleUpgradePurchased -= OnBattleUpgradePurchased;
             battleManager.OnAllyPurchased -= OnAllyPurchased;
             battleManager.OnBossDefeated -= OnBossDefeated;
@@ -284,18 +284,18 @@ public sealed class PrototypeMetricsController : MonoBehaviour
         subscribed = false;
     }
 
-    private readonly struct PrototypeStageResult
+    private readonly struct PrototypeWaveResult
     {
-        public int Stage { get; }
+        public int Wave { get; }
         public EWaveResolutionResult Result { get; }
         public float Duration { get; }
 
-        public PrototypeStageResult(
-            int stage,
+        public PrototypeWaveResult(
+            int wave,
             EWaveResolutionResult result,
             float duration)
         {
-            Stage = stage;
+            Wave = wave;
             Result = result;
             Duration = duration;
         }
