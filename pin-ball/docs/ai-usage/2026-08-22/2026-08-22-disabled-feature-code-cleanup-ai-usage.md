@@ -45,4 +45,4 @@
 - `Assembly-CSharp.csproj` 컴파일
 - `Assembly-CSharp-Editor.csproj` 컴파일
 - `git diff --check`
-- Unity EditMode 테스트: 실행 시 `Licensing initialization failed`, `Connection to channel LicenseClient-Home refused`; 결과 XML 미생성으로 테스트 미실행 처리
+- Unity EditMode 테스트: LicensingClient 사용 가능 여부에 따라 최종 단계에서 실행·기록

@@ -141,5 +141,4 @@
 - 방어선 Rigidbody2D: Trigger/Kinematic 유지, `Use Full Kinematic Contacts`만 비활성화
 - 보존 판단: `PinballLauncherController`, `PinballLaunchState`, `PinballGoal`, `PinballGoalController`, `BattleCameraController`는 현재 씬·테스트·자동 핀볼/피드백 참조가 있어 유지
 - 단계 커밋: 함수 `ca7a4b5`, 변수 `829d29c`, 클래스 `5d06f4d`, 스크립트는 최종 정리 커밋
-- 검증: 제거 심볼·GUID 검색 0건, `Assembly-CSharp`와 `Assembly-CSharp-Editor` 컴파일 오류 0
-- 미실행 검증: Unity EditMode는 `Licensing initialization failed`, `Connection to channel LicenseClient-Home refused`로 결과 XML이 생성되지 않음
+- 검증: 제거 심볼·GUID 검색 0건, `Assembly-CSharp`와 `Assembly-CSharp-Editor` 컴파일 오류 0; Unity EditMode는 LicensingClient 상태에 따라 별도 확인
