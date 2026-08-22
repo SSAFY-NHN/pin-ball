@@ -1,3 +1,1 @@
-public sealed class UnitMergeService
-{
-}
+// Empty until script cleanup pass.

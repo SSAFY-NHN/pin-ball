@@ -11194,7 +11194,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1008570899}
   - component: {fileID: 1008570900}
-  - component: {fileID: 1008570901}
   m_Layer: 5
   m_Name: BottomTabController
   m_TagString: Untagged
@@ -11239,33 +11238,6 @@ MonoBehaviour:
   shopIconImage: {fileID: 1385513256}
   itemsContent: {fileID: 1596828393}
   shopContent: {fileID: 496806365}
---- !u!114 &1008570901
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008570898}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83c755440074478d90696f9d88ee6d29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  overlay: {fileID: 162436525}
-  messageText: {fileID: 158040282}
-  continueButton: {fileID: 1431478450}
-  skipButton: {fileID: 1216940443}
-  focusIndicator: {fileID: 1661544704}
-  bottomTabPanel: {fileID: 1008570900}
-  shopButton: {fileID: 1960021617}
-  itemsButton: {fileID: 342894298}
-  waveStartButton: {fileID: 1314551025}
-  shopPanel: {fileID: 496806370}
-  wavePanel: {fileID: 2615215758285947731}
-  goalFocusTarget: {fileID: 1244877836}
-  magnetFocusTarget: {fileID: 565351585}
-  launcherFocusTarget: {fileID: 1424973156}
-  maximumDuration: 120
 --- !u!1 &1013391910
 GameObject:
   m_ObjectHideFlags: 0
@@ -18826,7 +18798,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1661544703}
-  - component: {fileID: 1661544704}
   - component: {fileID: 1661544706}
   - component: {fileID: 1661544705}
   m_Layer: 0
@@ -18856,22 +18827,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1661544704
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1661544702}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f43274788db4d0294c6299e5a02ce56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  frame: {fileID: 1317002302}
-  arrow: {fileID: 968425436}
-  inputBlocker: {fileID: 1661544705}
-  worldTargetSize: {x: 120, y: 120}
 --- !u!114 &1661544705
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23690,7 +23645,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8810000000000000002}
-  - component: {fileID: 8810000000000000003}
   - component: {fileID: 8810000000000000004}
   - component: {fileID: 8810000000000000005}
   m_Layer: 5
@@ -23723,20 +23677,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8810000000000000003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8810000000000000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06ea17ee7790453c87234f25941c408f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  firstChoice: {fileID: 8810000000000000015}
-  secondChoice: {fileID: 8810000000000000105}
 --- !u!222 &8810000000000000004
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -23787,7 +23727,6 @@ GameObject:
   - component: {fileID: 8810000000000000012}
   - component: {fileID: 8810000000000000013}
   - component: {fileID: 8810000000000000014}
-  - component: {fileID: 8810000000000000015}
   m_Layer: 5
   m_Name: EvolutionChoiceA
   m_TagString: Untagged
@@ -23903,23 +23842,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &8810000000000000015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8810000000000000010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75ab0be6234747fbb8f98b3a9a0fb824, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nameText: {fileID: 8810000000000000023}
-  roleText: {fileID: 8810000000000000033}
-  skillText: {fileID: 8810000000000000053}
-  portraitImage: {fileID: 8950000000000000014}
-  selectButton: {fileID: 8810000000000000014}
 --- !u!1 &8810000000000000020
 GameObject:
   m_ObjectHideFlags: 0
@@ -24343,7 +24265,6 @@ GameObject:
   - component: {fileID: 8810000000000000102}
   - component: {fileID: 8810000000000000103}
   - component: {fileID: 8810000000000000104}
-  - component: {fileID: 8810000000000000105}
   m_Layer: 5
   m_Name: EvolutionChoiceB
   m_TagString: Untagged
@@ -24459,23 +24380,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &8810000000000000105
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8810000000000000100}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75ab0be6234747fbb8f98b3a9a0fb824, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nameText: {fileID: 8810000000000000113}
-  roleText: {fileID: 8810000000000000123}
-  skillText: {fileID: 8810000000000000143}
-  portraitImage: {fileID: 8950000000000000114}
-  selectButton: {fileID: 8810000000000000104}
 --- !u!1 &8810000000000000110
 GameObject:
   m_ObjectHideFlags: 0
@@ -27581,7 +27485,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8961000000000000102}
   - component: {fileID: 8961000000000000103}
-  - component: {fileID: 8961000000000000104}
   m_Layer: 0
   m_Name: EvolutionGlowEffect
   m_TagString: Untagged
@@ -27659,21 +27562,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8961000000000000104
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8961000000000000101}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9780dbf2f46aeb14788166d95e1afb14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  duration: 0.75
-  startScale: 0.8
-  endScale: 2
 --- !u!1 &8991000000000000001
 GameObject:
   m_ObjectHideFlags: 0

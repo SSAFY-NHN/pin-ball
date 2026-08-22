@@ -1,5 +1,1 @@
-#if UNITY_EDITOR
-public class UnitMergeServiceTests
-{
-}
-#endif
+// Empty until script cleanup pass.

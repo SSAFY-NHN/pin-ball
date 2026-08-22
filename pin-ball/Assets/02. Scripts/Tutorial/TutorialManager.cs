@@ -1,5 +1,1 @@
-using UnityEngine;
-
-public sealed class TutorialManager : MonoBehaviour
-{
-}
+// Empty until script cleanup pass.

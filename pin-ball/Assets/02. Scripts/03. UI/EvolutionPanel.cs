@@ -1,3 +1,1 @@
-public class EvolutionPanel : UIBase
-{
-}
+// Empty until script cleanup pass.

@@ -1,7 +1,1 @@
-public enum UnitMergeDecisionType
-{
-}
-
-public sealed class UnitMergeDecision
-{
-}
+// Empty until script cleanup pass.
