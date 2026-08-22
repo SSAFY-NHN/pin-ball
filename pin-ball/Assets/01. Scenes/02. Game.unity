@@ -177,9 +177,6 @@ MonoBehaviour:
     UnitId: mage
     Level: 1
     Modifier:
-      MergeTier: 0
-      MergeAttackBonusPerTier: 0
-      MergeHpBonusPerTier: 0
       EquipmentAttackBonus: 0
       EquipmentHpBonus: 0
   effectMaterial: {fileID: 2100000, guid: 3e7a3c2e0ed04c819e30b012741e79f1, type: 2}
@@ -2747,9 +2744,6 @@ MonoBehaviour:
     UnitId: archer
     Level: 1
     Modifier:
-      MergeTier: 0
-      MergeAttackBonusPerTier: 0
-      MergeHpBonusPerTier: 0
       EquipmentAttackBonus: 0
       EquipmentHpBonus: 0
   effectMaterial: {fileID: 2100000, guid: 3e7a3c2e0ed04c819e30b012741e79f1, type: 2}
@@ -13959,9 +13953,6 @@ MonoBehaviour:
     UnitId: warrior
     Level: 1
     Modifier:
-      MergeTier: 0
-      MergeAttackBonusPerTier: 0
-      MergeHpBonusPerTier: 0
       EquipmentAttackBonus: 0
       EquipmentHpBonus: 0
   effectMaterial: {fileID: 2100000, guid: 3e7a3c2e0ed04c819e30b012741e79f1, type: 2}
@@ -17975,15 +17966,11 @@ MonoBehaviour:
     UnitId: warrior
     Level: 1
     Modifier:
-      MergeTier: 0
-      MergeAttackBonusPerTier: 0
-      MergeHpBonusPerTier: 0
       EquipmentAttackBonus: 0
       EquipmentHpBonus: 0
   battleArea: {fileID: 8900000000000000101}
   allyDefenseLine: {fileID: 9000000000000000003}
   enemyDefenseLine: {fileID: 9000000000000000013}
-  evolutionGlowEffect: {fileID: 8961000000000000104}
 --- !u!1 &1596828393
 GameObject:
   m_ObjectHideFlags: 0
@@ -18349,9 +18336,6 @@ MonoBehaviour:
     UnitId: spearman
     Level: 1
     Modifier:
-      MergeTier: 0
-      MergeAttackBonusPerTier: 0
-      MergeHpBonusPerTier: 0
       EquipmentAttackBonus: 0
       EquipmentHpBonus: 0
   effectMaterial: {fileID: 2100000, guid: 3e7a3c2e0ed04c819e30b012741e79f1, type: 2}
@@ -22644,8 +22628,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startButton: {fileID: 1314551025}
-  launchButton: {fileID: 668368687}
-  launchCostText: {fileID: 1548583861}
 --- !u!222 &3044275893454257335
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -28035,7 +28017,7 @@ Rigidbody2D:
   m_GameObject: {fileID: 9000000000000000001}
   m_BodyType: 1
   m_Simulated: 1
-  m_UseFullKinematicContacts: 1
+  m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
@@ -28062,7 +28044,7 @@ Rigidbody2D:
   m_GameObject: {fileID: 9000000000000000011}
   m_BodyType: 1
   m_Simulated: 1
-  m_UseFullKinematicContacts: 1
+  m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0

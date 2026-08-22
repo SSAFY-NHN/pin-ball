@@ -16,11 +16,9 @@ public class AllyUnit : UnitBase
     private AllySkillData _skill;
     private AllySkillController _skillController;
     private UnitAttackEffectPlayer _attackEffectPlayer;
-    private AllyDragLineageHighlight _lineageHighlight;
     private Camera _dragCamera;
     private Vector3 _dragStartPosition;
     private bool _isDragging;
-    private bool _isMergeReserved;
 
     public void SetData(string unitId, int level, AllySkillData skill, AllyCommonData common, UnitManager unitManager = null, UnitSkillRegistry registry = null)
     {
@@ -31,14 +29,8 @@ public class AllyUnit : UnitBase
         _skillController = new AllySkillController(registry ?? UnitSkillRegistry.CreateDefault());
         _skillController.Initialize(common, skill, MaxMana);
         _attackEffectPlayer ??= GetComponent<UnitAttackEffectPlayer>();
-        _lineageHighlight ??= GetComponent<AllyDragLineageHighlight>();
-        if (_lineageHighlight == null)
-        {
-            _lineageHighlight = gameObject.AddComponent<AllyDragLineageHighlight>();
-        }
         _dragCamera = Camera.main;
         _isDragging = false;
-        _isMergeReserved = false;
         GetComponent<BattleUnitVisual>()?.SetUnitId(unitId);
         ResetMana();
     }
@@ -84,7 +76,7 @@ public class AllyUnit : UnitBase
 
     private void OnMouseDown()
     {
-        if (!Input.GetMouseButton(0) || _isMergeReserved || _unitManager == null || !_unitManager.CanDragAlly(this)) return;
+        if (!Input.GetMouseButton(0) || _unitManager == null || !_unitManager.CanDragAlly(this)) return;
         _dragStartPosition = transform.position;
         _isDragging = true;
     }
@@ -123,6 +115,5 @@ public class AllyUnit : UnitBase
     private void OnDisable()
     {
         _isDragging = false;
-        _lineageHighlight?.SetHighlighted(false);
     }
 }

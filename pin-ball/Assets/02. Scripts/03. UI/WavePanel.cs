@@ -1,14 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class WavePanel : UIBase
 {
     public override bool IsDefaultPanel => true;
 
     [SerializeField] private Button startButton;
-    [SerializeField] private Button launchButton;
-    [SerializeField] private TextMeshProUGUI launchCostText;
 
     private BattleManager battleManager;
 

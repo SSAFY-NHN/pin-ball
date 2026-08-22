@@ -42,9 +42,6 @@ public class GameplayFeedbackSceneTests
         var wavePanel = Object.FindFirstObjectByType<WavePanel>(
             FindObjectsInactive.Include);
         AssertReference(wavePanel, "startButton");
-        Assert.That(
-            ReadReference<TextMeshProUGUI>(wavePanel, "launchCostText"),
-            Is.Not.Null);
 
         var statusPanel = Object.FindFirstObjectByType<StatusPanel>(
             FindObjectsInactive.Include);

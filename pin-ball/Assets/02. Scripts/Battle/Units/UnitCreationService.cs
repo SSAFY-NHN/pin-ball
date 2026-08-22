@@ -37,18 +37,11 @@ public sealed class UnitCreationService
         stats = allyData.CreateStats(spawnData.Level, classLevel);
         if (!UnitStatsValidator.IsValid(stats)) return false;
 
-        float attackMultiplier = 1f +
-            spawnData.Modifier.MergeTier *
-            spawnData.Modifier.MergeAttackBonusPerTier;
-        float hpMultiplier = 1f +
-            spawnData.Modifier.MergeTier *
-            spawnData.Modifier.MergeHpBonusPerTier;
-
         stats.AttackDamage =
-            stats.AttackDamage * attackMultiplier +
+            stats.AttackDamage +
             spawnData.Modifier.EquipmentAttackBonus;
         stats.MaxHp =
-            stats.MaxHp * hpMultiplier +
+            stats.MaxHp +
             spawnData.Modifier.EquipmentHpBonus;
         stats.AttackDamage *= 1f + Mathf.Max(0f, temporaryAttackBonus);
 

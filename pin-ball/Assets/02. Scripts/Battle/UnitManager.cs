@@ -12,10 +12,8 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
 {
     public const int MaxDeployedAllyCount = 5;
 
-    public event Action<AllyUnitData, AllyUnitData> OnEvolutionRequested;
     public event Action<AllyUnit> OnAllyDetailRequested;
     public event Action<int> OnDeployedAllyCountChanged;
-    public event Action<int> OnAlliesMerged;
     internal event Action OnBattleRosterChanged;
     internal event Action<string> OnEnemyDefeated;
     internal event Action<UnitBase, EBattleTeam, float>
@@ -57,7 +55,6 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     [SerializeField] private BattleAreaBounds battleArea;
     [SerializeField] private DefenseLineTrigger allyDefenseLine;
     [SerializeField] private DefenseLineTrigger enemyDefenseLine;
-    [SerializeField] private EvolutionGlowEffect evolutionGlowEffect;
     private ItemManager _itemManager;
     private Coroutine _automaticPotionCoroutine;
     private bool _isRunInitialized;
@@ -95,7 +92,6 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             this);
         _preparationController = new UnitPreparationController(
             _roster,
-            _titleData,
             battleArea);
 
         _itemManager = App.Get<ItemManager>();
@@ -501,12 +497,6 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         _preparationController.TrySave(ally, ally.transform.position);
     }
 
-    internal void CancelPendingEvolution()
-    {
-        _preparationController?.CancelPendingEvolution();
-        _battleManager?.SetPreparationLock(false);
-    }
-
     public UnitBase FindClosestAliveEnemy(Vector3 fromPosition, float maxDistance)
     {
         return _targetFinder.FindClosestAliveEnemy(fromPosition, maxDistance);
@@ -594,12 +584,6 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             StopCoroutine(_automaticPotionCoroutine);
             _automaticPotionCoroutine = null;
         }
-        _preparationController?.CancelPendingEvolution();
-        if (App.TryGet<BattleManager>(out var registeredBattleManager))
-        {
-            registeredBattleManager.SetPreparationLock(false);
-        }
-
         if (App.TryGet<ItemManager>(out var itemManager))
         {
             itemManager.Unsubscribe(EItem.BattleClock, this);

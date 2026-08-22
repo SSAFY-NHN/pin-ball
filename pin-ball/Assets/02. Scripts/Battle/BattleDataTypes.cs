@@ -18,9 +18,6 @@ public struct BattleUnitStats
 [Serializable]
 public struct BattleUnitModifier
 {
-    [Min(0)] public int MergeTier;
-    [Min(0f)] public float MergeAttackBonusPerTier;
-    [Min(0f)] public float MergeHpBonusPerTier;
     public float EquipmentAttackBonus;
     public float EquipmentHpBonus;
 }

@@ -20,7 +20,6 @@ public class PinballManager : AppService, IItemEventListener
 
     public event Action<EPinballState> OnStateChanged;
     public event Action<int> OnLaunchCostChanged;
-    public event Action<BattleUnitSpawnData> OnGoalReached;
     public event Action<int> OnComboChanged;
     public event Action<Pinball, int> OnJackpotTriggered;
     public event Action OnProductionChanged;
