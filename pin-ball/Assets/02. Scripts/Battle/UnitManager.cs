@@ -148,6 +148,12 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             }
         }
 
+        if (spawnedCount > 0)
+        {
+            foreach (var ally in _roster.ActiveAllies) ally?.StartBattle();
+            foreach (var enemy in _roster.ActiveEnemies) enemy?.StartBattle();
+        }
+
         return spawnedCount;
     }
 
@@ -201,6 +207,10 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             _roster.RemoveActiveAlly(ally);
             ally.gameObject.SetActive(false);
             OnBattleRosterChanged?.Invoke();
+        }
+        else
+        {
+            ally.StartBattle();
         }
 
         return ally;

@@ -50,6 +50,17 @@ public sealed class BattleRunStateTests
             Is.EqualTo(expected));
     }
 
+    [TestCase(0, true)]
+    [TestCase(1, false)]
+    public void ShouldClearWave_UsesEnemyCountOnly(
+        int remainingEnemyCount,
+        bool expected)
+    {
+        Assert.That(
+            BattleResolutionPolicy.ShouldClearWave(remainingEnemyCount),
+            Is.EqualTo(expected));
+    }
+
     [TestCase("RetryGoldReward")]
     [TestCase("WaveClearGoldReward")]
     [TestCase("FinalClearGoldReward")]

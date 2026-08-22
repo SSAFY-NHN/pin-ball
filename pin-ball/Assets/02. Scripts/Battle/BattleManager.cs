@@ -95,6 +95,7 @@ public class BattleManager : AppService, IItemEventListener
 
         unitManager = App.Get<UnitManager>();
         unitManager.InitializeNewRun();
+        unitManager.OnBattleRosterChanged += OnBattleRosterChanged;
         unitManager.OnEnemyDefeated += OnEnemyDefeated;
         unitManager.OnDefenseLineAttackRequested += TryApplyDefenseLineAttack;
 
@@ -167,6 +168,16 @@ public class BattleManager : AppService, IItemEventListener
 
         currentBossDefeated = true;
         OnBossDefeated?.Invoke(CurrentWaveNumber);
+    }
+
+    private void OnBattleRosterChanged()
+    {
+        if (State == EWaveState.Active &&
+            BattleResolutionPolicy.ShouldClearWave(
+                unitManager.RemainingEnemyCount))
+        {
+            BeginWaveResolution(EWaveResolutionResult.Cleared);
+        }
     }
 
     public void TryApplyDefenseLineAttack(
@@ -506,6 +517,7 @@ public class BattleManager : AppService, IItemEventListener
 
         if (unitManager != null)
         {
+            unitManager.OnBattleRosterChanged -= OnBattleRosterChanged;
             unitManager.OnEnemyDefeated -= OnEnemyDefeated;
             unitManager.OnDefenseLineAttackRequested -= TryApplyDefenseLineAttack;
         }

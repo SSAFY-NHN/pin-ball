@@ -10,6 +10,27 @@ public class DefenseLineBreachTests
     }
 
     [Test]
+    public void Initialize_WaitsForExplicitBattleStart()
+    {
+        var allyObject = new GameObject("ally");
+        try
+        {
+            var ally = allyObject.AddComponent<AllyUnit>();
+            ally.Initialize(new BattleUnitStats { MaxHp = 10f }, null);
+
+            Assert.That(ally.IsBattleActive, Is.False);
+
+            ally.StartBattle();
+
+            Assert.That(ally.IsBattleActive, Is.True);
+        }
+        finally
+        {
+            Object.DestroyImmediate(allyObject);
+        }
+    }
+
+    [Test]
     public void ReachDefenseLine_IgnoresOwnLineAndAcceptsOpposingLine()
     {
         var allyObject = new GameObject("ally");

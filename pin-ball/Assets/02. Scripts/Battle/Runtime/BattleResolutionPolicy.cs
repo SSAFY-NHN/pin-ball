@@ -1,5 +1,10 @@
 public static class BattleResolutionPolicy
 {
+    public static bool ShouldClearWave(int remainingEnemyCount)
+    {
+        return remainingEnemyCount <= 0;
+    }
+
     public static EWaveState ResolveNextState(
         EWaveResolutionResult result,
         bool isFinalWave,
