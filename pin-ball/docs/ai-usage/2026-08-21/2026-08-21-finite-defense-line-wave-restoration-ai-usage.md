@@ -90,3 +90,12 @@
 - TDD RED: 요구 API 부재 오류 5개 확인
 - C# 컴파일 및 씬 정적 검증을 수행하고 Unity 실행 검증은 라이선스 복구 후 진행
 - 코드 리뷰에서 방어선 HP 자식 Transform의 잘못된 씬 부모 연결을 발견해 양측 방어선 아래로 교정
+
+## 후속 회귀 수정: 아군의 적 방어선 트리거 미진입
+
+- 증상: 적 전멸 후 아군이 적 방어선까지 이동하지만 공격하지 않고 계속 이동
+- 원인: 아군과 적 방어선 양쪽 모두 Rigidbody2D가 없어 `OnTriggerEnter2D`가 발생하지 않음
+- 수정: 양측 방어선에 중력 0, Simulated 활성 Kinematic Rigidbody2D 추가
+- 기존 `DefenseLineTrigger`와 공격 흐름은 그대로 유지
+- 회귀 테스트: Game 씬의 각 방어선이 Kinematic Rigidbody2D를 갖는지 검사
+- 정적 RED: 수정 전 양측 방어선 Rigidbody2D 누락 확인

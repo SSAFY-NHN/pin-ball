@@ -24,6 +24,11 @@ public sealed class DefenseLineSceneTests
         {
             AssertReference(line, "bodyRenderer");
             AssertReference(line, "healthFill");
+            Rigidbody2D body = line.GetComponent<Rigidbody2D>();
+            Assert.That(body, Is.Not.Null);
+            Assert.That(body.bodyType, Is.EqualTo(RigidbodyType2D.Kinematic));
+            Assert.That(body.simulated, Is.True);
+            Assert.That(body.gravityScale, Is.Zero);
         }
 
         UnitManager manager = Object.FindFirstObjectByType<UnitManager>();
