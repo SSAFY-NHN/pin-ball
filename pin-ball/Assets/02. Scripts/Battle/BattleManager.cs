@@ -95,7 +95,6 @@ public class BattleManager : AppService, IItemEventListener
 
         unitManager = App.Get<UnitManager>();
         unitManager.InitializeNewRun();
-        unitManager.OnBattleRosterChanged += OnBattleRosterChanged;
         unitManager.OnEnemyDefeated += OnEnemyDefeated;
         unitManager.OnDefenseLineAttackRequested += TryApplyDefenseLineAttack;
 
@@ -170,16 +169,6 @@ public class BattleManager : AppService, IItemEventListener
         OnBossDefeated?.Invoke(CurrentWaveNumber);
     }
 
-    private void OnBattleRosterChanged()
-    {
-        if (State == EWaveState.Active &&
-            BattleResolutionPolicy.ShouldClearWave(
-                unitManager.RemainingEnemyCount))
-        {
-            BeginWaveResolution(EWaveResolutionResult.Cleared);
-        }
-    }
-
     public void TryApplyDefenseLineAttack(
         UnitBase attacker,
         EBattleTeam defenseTeam,
@@ -204,10 +193,13 @@ public class BattleManager : AppService, IItemEventListener
         }
         NotifyDefenseLineHp(defenseTeam);
 
-        if (!defenseLineController.IsDestroyed(defenseTeam)) return;
-        BeginWaveResolution(defenseTeam == EBattleTeam.Enemy
-            ? EWaveResolutionResult.Cleared
-            : EWaveResolutionResult.Failed);
+        if (BattleResolutionPolicy.TryResolveDefenseLines(
+                GetDefenseLineHp(EBattleTeam.Ally),
+                GetDefenseLineHp(EBattleTeam.Enemy),
+                out EWaveResolutionResult result))
+        {
+            BeginWaveResolution(result);
+        }
     }
 
     public int GetDefenseLineHp(EBattleTeam team) =>
@@ -218,6 +210,10 @@ public class BattleManager : AppService, IItemEventListener
 
     private void NotifyDefenseLineHp(EBattleTeam team)
     {
+        unitManager?.SetDefenseLineHealth(
+            team,
+            GetDefenseLineHp(team),
+            GetDefenseLineMaximumHp(team));
         OnDefenseLineHpChanged?.Invoke(
             team,
             GetDefenseLineHp(team),
@@ -517,7 +513,6 @@ public class BattleManager : AppService, IItemEventListener
 
         if (unitManager != null)
         {
-            unitManager.OnBattleRosterChanged -= OnBattleRosterChanged;
             unitManager.OnEnemyDefeated -= OnEnemyDefeated;
             unitManager.OnDefenseLineAttackRequested -= TryApplyDefenseLineAttack;
         }

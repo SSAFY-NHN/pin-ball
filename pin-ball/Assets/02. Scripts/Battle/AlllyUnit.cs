@@ -127,7 +127,11 @@ public class AllyUnit : UnitBase
             var ally = candidate.GetComponentInParent<AllyUnit>();
             if (ally != null && ally != this) { target = ally; break; }
         }
-        if (target != null) { _unitManager.TryMergeAllies(this, target, _dragStartPosition); return; }
+        if (target != null && UnitManager.ShouldAttemptAllyMergeOnDrop())
+        {
+            _unitManager.TryMergeAllies(this, target, _dragStartPosition);
+            return;
+        }
         _unitManager.SaveAllyPreparationPosition(this);
     }
 

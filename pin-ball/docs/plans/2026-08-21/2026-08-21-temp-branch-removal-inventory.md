@@ -134,3 +134,7 @@
 - 무한 연속 스테이지: `BattleStageController`, `EnemyStageScalingController`, 관련 테스트와 직렬화 키 제거 완료
 - 웨이브 클리어/재시도/최종 클리어 골드 보상: 세 필드와 JSON 값 제거 완료
 - 전술 증원: 제거하지 않고 유지
+- 드래그 합성/진화: 사용자 입력 진입점 차단 완료. 드래그 위치 이동은 유지
+- 향후 완전 삭제 대상: `UnitMergeService`, `UnitMergeDecision`, `UnitManager.TryMergeAllies/ChooseEvolution`, `UnitPreparationController` 합성 API, `EvolutionPanel`, 합성 이벤트·지표·테스트, `MergeTier` 능력치 보정
+- 완전 삭제 순서: 합성/진화 테스트 → 진화 UI와 씬 참조 → 지표 구독 → UnitManager 진입 API → 준비 컨트롤러 → 합성 서비스/결정 타입 → 합성 능력치 데이터
+- 검증: `rg -n 'Merge|Evolution|TryMergeAllies|OnAlliesMerged' Assets`

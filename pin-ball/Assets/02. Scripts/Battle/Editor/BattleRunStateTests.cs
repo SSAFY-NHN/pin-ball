@@ -50,15 +50,22 @@ public sealed class BattleRunStateTests
             Is.EqualTo(expected));
     }
 
-    [TestCase(0, true)]
-    [TestCase(1, false)]
-    public void ShouldClearWave_UsesEnemyCountOnly(
-        int remainingEnemyCount,
-        bool expected)
+    [TestCase(20, 20, false, EWaveResolutionResult.Cleared)]
+    [TestCase(20, 0, true, EWaveResolutionResult.Cleared)]
+    [TestCase(0, 20, true, EWaveResolutionResult.Failed)]
+    public void TryResolveDefenseLines_UsesDefenseHpOnly(
+        int allyDefenseHp,
+        int enemyDefenseHp,
+        bool expectedResolved,
+        EWaveResolutionResult expectedResult)
     {
         Assert.That(
-            BattleResolutionPolicy.ShouldClearWave(remainingEnemyCount),
-            Is.EqualTo(expected));
+            BattleResolutionPolicy.TryResolveDefenseLines(
+                allyDefenseHp,
+                enemyDefenseHp,
+                out EWaveResolutionResult result),
+            Is.EqualTo(expectedResolved));
+        Assert.That(result, Is.EqualTo(expectedResult));
     }
 
     [TestCase("RetryGoldReward")]

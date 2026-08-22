@@ -20,6 +20,11 @@ public sealed class DefenseLineSceneTests
             line.DefenseTeam == EBattleTeam.Ally), Is.EqualTo(1));
         Assert.That(lines.Count(line =>
             line.DefenseTeam == EBattleTeam.Enemy), Is.EqualTo(1));
+        foreach (DefenseLineTrigger line in lines)
+        {
+            AssertReference(line, "bodyRenderer");
+            AssertReference(line, "healthFill");
+        }
 
         UnitManager manager = Object.FindFirstObjectByType<UnitManager>();
         AssertReference(manager, "allyDefenseLine");

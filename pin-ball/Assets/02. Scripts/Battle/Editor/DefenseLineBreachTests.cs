@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -7,6 +8,38 @@ public class DefenseLineBreachTests
     private sealed class TestEnemyUnit : EnemyUnit
     {
         public void InvokeTick() => Tick();
+    }
+
+    [Test]
+    public void SetHealth_ScalesVisibleFillToCurrentRatio()
+    {
+        var lineObject = new GameObject("line");
+        var fillObject = new GameObject("fill");
+        try
+        {
+            fillObject.transform.SetParent(lineObject.transform);
+            fillObject.transform.localScale = new Vector3(2f, 1f, 1f);
+            var line = lineObject.AddComponent<DefenseLineTrigger>();
+            SetField(line, "healthFill", fillObject.transform);
+
+            line.SetHealth(5, 20);
+
+            Assert.That(line.DisplayedHealthRatio, Is.EqualTo(0.25f));
+            Assert.That(fillObject.transform.localScale.x, Is.EqualTo(0.5f));
+        }
+        finally
+        {
+            Object.DestroyImmediate(lineObject);
+        }
+    }
+
+    private static void SetField(object target, string name, object value)
+    {
+        target.GetType().GetField(
+            name,
+            BindingFlags.Instance | BindingFlags.NonPublic)?.SetValue(
+            target,
+            value);
     }
 
     [Test]

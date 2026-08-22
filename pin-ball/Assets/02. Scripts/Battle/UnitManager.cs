@@ -202,18 +202,23 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         AllyUnit ally = SpawnAlly(unitData);
         if (ally == null) return null;
 
-        if (!participateImmediately)
-        {
-            _roster.RemoveActiveAlly(ally);
-            ally.gameObject.SetActive(false);
-            OnBattleRosterChanged?.Invoke();
-        }
-        else
-        {
-            ally.StartBattle();
-        }
+        DeployPurchasedAlly(ally, participateImmediately);
 
         return ally;
+    }
+
+    public static void DeployPurchasedAlly(
+        AllyUnit ally,
+        bool battleActive)
+    {
+        if (ally == null) return;
+        ally.gameObject.SetActive(true);
+        if (battleActive) ally.StartBattle();
+    }
+
+    public static bool ShouldAttemptAllyMergeOnDrop()
+    {
+        return false;
     }
 
     public void SetSharedAttackMultiplier(float multiplier)
@@ -398,10 +403,26 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         if (attacker == null || attacker.Team == defenseTeam ||
             !IsActiveUnit(attacker)) return;
 
+        GetDefenseLine(defenseTeam)?.PlayHit();
         OnDefenseLineAttackRequested?.Invoke(
             attacker,
             defenseTeam,
             attackDamage);
+    }
+
+    public void SetDefenseLineHealth(
+        EBattleTeam defenseTeam,
+        int currentHp,
+        int maximumHp)
+    {
+        GetDefenseLine(defenseTeam)?.SetHealth(currentHp, maximumHp);
+    }
+
+    private DefenseLineTrigger GetDefenseLine(EBattleTeam defenseTeam)
+    {
+        return defenseTeam == EBattleTeam.Ally
+            ? allyDefenseLine
+            : enemyDefenseLine;
     }
 
     public static bool CanStartWaveWithAllyCount(int count)
