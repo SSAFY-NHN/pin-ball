@@ -12,11 +12,6 @@ public class WavePanel : UIBase
 
     private BattleManager battleManager;
 
-    public void RefreshTutorialState()
-    {
-        Refresh();
-    }
-
     public override void Initialize(UIManager manager)
     {
         base.Initialize(manager);
@@ -47,8 +42,6 @@ public class WavePanel : UIBase
             startButton.interactable = show &&
                                        battleManager.CanStartCurrentWave;
         }
-        if (launchButton != null) launchButton.gameObject.SetActive(false);
-        if (launchCostText != null) launchCostText.gameObject.SetActive(false);
     }
 
     private void OnDestroy()

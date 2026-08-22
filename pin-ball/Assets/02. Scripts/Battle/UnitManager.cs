@@ -216,11 +216,6 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         if (battleActive) ally.StartBattle();
     }
 
-    public static bool ShouldAttemptAllyMergeOnDrop()
-    {
-        return false;
-    }
-
     public void SetSharedAttackMultiplier(float multiplier)
     {
         _sharedAttackMultiplier = Mathf.Max(0f, multiplier);
@@ -481,16 +476,6 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
                    _battleManager.CanUsePreparationActions);
     }
 
-    public void BeginAllyDragHighlight(AllyUnit source)
-    {
-        _preparationController?.BeginLineageHighlight(source);
-    }
-
-    public void EndAllyDragHighlight()
-    {
-        _preparationController?.EndLineageHighlight();
-    }
-
     public void RequestAllyDetail(AllyUnit ally)
     {
         if (ally == null ||
@@ -516,101 +501,10 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         _preparationController.TrySave(ally, ally.transform.position);
     }
 
-    public bool TryMergeAllies(
-        AllyUnit source,
-        AllyUnit target,
-        Vector3 sourceOriginalPosition)
-    {
-        if (!CanDragAlly(source) || !CanDragAlly(target)) return false;
-        UnitMergeDecision decision = _preparationController.TryBeginMerge(
-            source,
-            target,
-            sourceOriginalPosition);
-        if (decision.Type == UnitMergeDecisionType.Rejected) return false;
-
-        if (decision.Type == UnitMergeDecisionType.Immediate)
-        {
-            ConsumeReservedInputs(decision);
-            SpawnMergedAlly(
-                decision.ResultUnitId,
-                decision.ResultLevel,
-                decision.ResultPosition);
-            _preparationController.Complete(decision);
-            OnAlliesMerged?.Invoke(decision.ResultLevel);
-            return true;
-        }
-
-        _battleManager.SetPreparationLock(true);
-        if (OnEvolutionRequested == null)
-        {
-            CancelPendingEvolution();
-            return false;
-        }
-
-        OnEvolutionRequested.Invoke(decision.FirstChoice, decision.SecondChoice);
-        return true;
-    }
-
-    public bool ChooseEvolution(string unitId)
-    {
-        if (_preparationController == null ||
-            !_preparationController.TryChooseEvolution(
-                unitId,
-                out UnitMergeDecision decision)) return false;
-
-        return CompleteEvolution(decision);
-    }
-
-    private bool CompleteEvolution(UnitMergeDecision decision)
-    {
-        ConsumeReservedInputs(decision);
-        AllyUnit evolvedAlly = SpawnMergedAlly(
-            decision.ResultUnitId,
-            decision.ResultLevel,
-            decision.ResultPosition);
-        _preparationController.Complete(decision);
-        _battleManager.SetPreparationLock(false);
-
-        if (evolvedAlly != null)
-        {
-            evolutionGlowEffect?.Play(evolvedAlly.transform.position);
-            SoundManager.PlaySFXIfAvailable(SoundName.Evolution);
-        }
-
-        OnAlliesMerged?.Invoke(decision.ResultLevel);
-        return true;
-    }
-
     internal void CancelPendingEvolution()
     {
         _preparationController?.CancelPendingEvolution();
         _battleManager?.SetPreparationLock(false);
-    }
-
-    private void ConsumeReservedInputs(UnitMergeDecision decision)
-    {
-        ReleaseUnit(decision.Source);
-        ReleaseUnit(decision.Target);
-    }
-
-    private AllyUnit SpawnMergedAlly(
-        string unitId,
-        int level,
-        Vector3 position)
-    {
-        var data = new BattleUnitSpawnData
-        {
-            UnitId = unitId,
-            Level = level
-        };
-        var result = SpawnAlly(data);
-        if (result != null)
-        {
-            result.transform.position = position;
-            _preparationController.TrySave(result, position);
-        }
-
-        return result;
     }
 
     public UnitBase FindClosestAliveEnemy(Vector3 fromPosition, float maxDistance)

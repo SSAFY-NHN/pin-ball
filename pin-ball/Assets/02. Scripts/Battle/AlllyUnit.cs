@@ -45,14 +45,6 @@ public class AllyUnit : UnitBase
 
     public void ResetMana() => _skillController?.Reset(MaxMana);
 
-    public void SetMergeReserved(bool reserved)
-    {
-        if (reserved) _unitManager?.EndAllyDragHighlight();
-        _isMergeReserved = reserved;
-        _isDragging = false;
-        gameObject.SetActive(!reserved);
-    }
-
     protected override void Tick()
     {
         if (TryKeepOrAcquireTarget())
@@ -95,7 +87,6 @@ public class AllyUnit : UnitBase
         if (!Input.GetMouseButton(0) || _isMergeReserved || _unitManager == null || !_unitManager.CanDragAlly(this)) return;
         _dragStartPosition = transform.position;
         _isDragging = true;
-        _unitManager.BeginAllyDragHighlight(this);
     }
 
     private void OnMouseOver()
@@ -118,20 +109,8 @@ public class AllyUnit : UnitBase
     {
         if (!_isDragging) return;
         _isDragging = false;
-        _unitManager.EndAllyDragHighlight();
         if ((EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) || !_unitManager.IsValidAllyPlacement(this, transform.position))
         { transform.position = _dragStartPosition; return; }
-        AllyUnit target = null;
-        foreach (var candidate in Physics2D.OverlapPointAll(transform.position))
-        {
-            var ally = candidate.GetComponentInParent<AllyUnit>();
-            if (ally != null && ally != this) { target = ally; break; }
-        }
-        if (target != null && UnitManager.ShouldAttemptAllyMergeOnDrop())
-        {
-            _unitManager.TryMergeAllies(this, target, _dragStartPosition);
-            return;
-        }
         _unitManager.SaveAllyPreparationPosition(this);
     }
 
@@ -141,14 +120,8 @@ public class AllyUnit : UnitBase
         return collider == null ? 0f : Mathf.Max(collider.bounds.extents.x, collider.bounds.extents.y);
     }
 
-    public void SetLineageHighlighted(bool highlighted)
-    {
-        _lineageHighlight?.SetHighlighted(highlighted);
-    }
-
     private void OnDisable()
     {
-        if (_isDragging) _unitManager?.EndAllyDragHighlight();
         _isDragging = false;
         _lineageHighlight?.SetHighlighted(false);
     }

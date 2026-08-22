@@ -212,13 +212,7 @@ public static class ArcaneGameUiSetup
         var waveSerialized = new SerializedObject(wavePanel);
         var startButton = (Button)waveSerialized
             .FindProperty("startButton").objectReferenceValue;
-        var launchButton = (Button)waveSerialized
-            .FindProperty("launchButton").objectReferenceValue;
-        var launchCostText = (TextMeshProUGUI)waveSerialized
-            .FindProperty("launchCostText").objectReferenceValue;
         Require(startButton != null, "WavePanel.startButton");
-        Require(launchButton != null, "WavePanel.launchButton");
-        Require(launchCostText != null, "WavePanel.launchCostText");
 
         ConfigureButton(
             startButton,
@@ -230,28 +224,6 @@ public static class ArcaneGameUiSetup
             "ui_button_battle_state_normal.png",
             "ui_button_battle_state_pressed.png",
             "ui_button_battle_state_disabled.png");
-        ConfigureButton(
-            launchButton,
-            root,
-            1425f,
-            0f,
-            210f,
-            78f,
-            "ui_button_launch_normal.png",
-            "ui_button_launch_pressed.png",
-            "ui_button_launch_disabled.png");
-        ReparentAndPlace(
-            launchCostText.rectTransform,
-            (RectTransform)launchButton.transform,
-            0f,
-            0f,
-            180f,
-            50f);
-        ConfigureHudText(
-            launchCostText,
-            24f,
-            TextAlignmentOptions.Center);
-
         Image settings = CreateImage("SettingsDecoration", root);
         Place(
             (RectTransform)settings.transform,
@@ -460,9 +432,6 @@ public static class ArcaneGameUiSetup
         Require(
             waveSerialized.FindProperty("startButton").objectReferenceValue != null,
             "WavePanel.startButton");
-        Require(
-            waveSerialized.FindProperty("launchButton").objectReferenceValue != null,
-            "WavePanel.launchButton");
     }
 
     private static void ValidateBottomPanel(BottomTabPanel bottomTabPanel)
@@ -574,11 +543,6 @@ public static class ArcaneGameUiSetup
             waveSerialized,
             "startButton",
             wavePanel.transform);
-        RestoreReferenceParent(
-            waveSerialized,
-            "launchButton",
-            wavePanel.transform);
-
         var bottomSerialized = new SerializedObject(bottomTabPanel);
         RestoreReferenceParent(
             bottomSerialized,

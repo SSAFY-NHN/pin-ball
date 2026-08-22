@@ -69,29 +69,6 @@ public sealed class UnitAttackEffectPlayerTests
             Is.EqualTo(10));
     }
 
-    [Test]
-    public void GameScene_ConnectsInactiveEvolutionGlowToUnitManager()
-    {
-        EditorSceneManager.OpenScene(GameScenePath, OpenSceneMode.Single);
-        var manager = Object.FindFirstObjectByType<UnitManager>();
-        Assert.That(manager, Is.Not.Null);
-
-        var serializedManager = new SerializedObject(manager);
-        var glowProperty = serializedManager.FindProperty(
-            "evolutionGlowEffect");
-        Assert.That(glowProperty, Is.Not.Null);
-
-        var glow = glowProperty.objectReferenceValue as EvolutionGlowEffect;
-        Assert.That(glow, Is.Not.Null);
-        Assert.That(glow.gameObject.activeSelf, Is.False);
-
-        var renderer = glow.GetComponent<SpriteRenderer>();
-        Assert.That(renderer, Is.Not.Null);
-        Assert.That(renderer.sprite, Is.Not.Null);
-        Assert.That(renderer.sprite.name, Does.StartWith("EvolutionGlowPixelLab"));
-        Assert.That(renderer.sortingOrder, Is.EqualTo(8));
-    }
-
     private static UnitAttackEffectPlayer LoadEffectPlayer(string prefabPath)
     {
         var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);

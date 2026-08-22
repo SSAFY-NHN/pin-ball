@@ -27,11 +27,5 @@ public sealed class AllyInteractionPolicyTests
             Object.DestroyImmediate(allyObject);
         }
     }
-
-    [Test]
-    public void DragDrop_DoesNotMergeAllies()
-    {
-        Assert.That(UnitManager.ShouldAttemptAllyMergeOnDrop(), Is.False);
-    }
 }
 #endif

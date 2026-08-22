@@ -90,34 +90,6 @@ public class UnitCreationServiceTests
     }
 
     [Test]
-    public void TryCreateAlly_AppliesMergeEquipmentThenTemporaryAttackBonus()
-    {
-        var spawnData = new BattleUnitSpawnData
-        {
-            UnitId = "warrior",
-            Level = 1,
-            Modifier = new BattleUnitModifier
-            {
-                MergeTier = 2,
-                MergeAttackBonusPerTier = 0.1f,
-                MergeHpBonusPerTier = 0.2f,
-                EquipmentAttackBonus = 3f,
-                EquipmentHpBonus = 5f
-            }
-        };
-
-        bool created = _service.TryCreateAlly(
-            spawnData,
-            0.1f,
-            out _,
-            out BattleUnitStats stats);
-
-        Assert.That(created, Is.True);
-        Assert.That(stats.AttackDamage, Is.EqualTo(42.9f).Within(0.001f));
-        Assert.That(stats.MaxHp, Is.EqualTo(215f).Within(0.001f));
-    }
-
-    [Test]
     public void TryCreateAlly_ReturnsFalseForMissingUnitId()
     {
         bool created = _service.TryCreateAlly(
