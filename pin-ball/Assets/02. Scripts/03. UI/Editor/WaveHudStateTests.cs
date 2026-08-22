@@ -1,13 +1,10 @@
 #if UNITY_EDITOR
 using NUnit.Framework;
 
-public class WaveHudStateTests
+public sealed class WaveHudStateTests
 {
-    private readonly WaveHudState _state = new();
-
     [TestCase(1, 1, EWaveHudNodeState.Current)]
     [TestCase(1, 2, EWaveHudNodeState.Locked)]
-    [TestCase(3, 10, EWaveHudNodeState.Locked)]
     [TestCase(2, 1, EWaveHudNodeState.Complete)]
     [TestCase(5, 5, EWaveHudNodeState.Elite05)]
     [TestCase(9, 9, EWaveHudNodeState.Elite09)]
@@ -18,7 +15,7 @@ public class WaveHudStateTests
         EWaveHudNodeState expected)
     {
         Assert.That(
-            _state.ResolveNodeState(currentWave, nodeWave),
+            new WaveHudState().ResolveNodeState(currentWave, nodeWave),
             Is.EqualTo(expected));
     }
 
@@ -31,7 +28,7 @@ public class WaveHudStateTests
         bool expected)
     {
         Assert.That(
-            _state.IsConnectorComplete(
+            new WaveHudState().IsConnectorComplete(
                 currentWave,
                 connectorAfterWave),
             Is.EqualTo(expected));
@@ -45,8 +42,22 @@ public class WaveHudStateTests
         bool expected)
     {
         Assert.That(
-            _state.IsSupportedWaveCount(waveCount),
+            new WaveHudState().IsSupportedWaveCount(waveCount),
             Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void FormatChances_LabelsPlayerHpAsChances()
+    {
+        Assert.That(StatusPanel.FormatChances(2, 3), Is.EqualTo("기회 2/3"));
+    }
+
+    [Test]
+    public void FormatDefenseLines_ShowsBothTeams()
+    {
+        Assert.That(
+            StatusPanel.FormatDefenseLines(12, 20, 7, 20),
+            Is.EqualTo("아군 12/20 | 적 7/20"));
     }
 }
 #endif

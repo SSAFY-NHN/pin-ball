@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Legacy tutorial depends on manual launch, Goal unit rewards, and wave start input.
+// Keep it disabled until a tutorial for the continuous auto-cycle loop is designed.
 public sealed class TutorialManager : MonoBehaviour
 {
     public const string CompletionKey = "Tutorial.Completed";

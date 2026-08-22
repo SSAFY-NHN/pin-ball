@@ -1,5 +1,5 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class ResultPanel : UIBase
@@ -11,6 +11,7 @@ public class ResultPanel : UIBase
     [SerializeField] private string defeatMessage = "방어선이 무너졌습니다.";
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI messageText;
+    [SerializeField] private Button restartButton;
     [SerializeField] private Button titleButton;
 
     [Header("Artwork")]
@@ -28,12 +29,10 @@ public class ResultPanel : UIBase
     [SerializeField] private Sprite defeatButtonAccentSprite;
 
     private BattleManager _battleManager;
-    private SceneManager _sceneManager;
 
     public override void Initialize(UIManager manager)
     {
         base.Initialize(manager);
-
         if (!ValidateReferences())
         {
             Debug.LogError("[ResultPanel] UI 참조가 설정되지 않았습니다.");
@@ -42,66 +41,56 @@ public class ResultPanel : UIBase
         }
 
         _battleManager = App.Get<BattleManager>();
-        _sceneManager = App.Get<SceneManager>();
         _battleManager.OnStateChanged += OnBattleStateChanged;
-        titleButton.onClick.AddListener(ReturnToTitle);
-
+        restartButton.onClick.AddListener(RestartGame);
+        titleButton.onClick.AddListener(LoadTitle);
         OnBattleStateChanged(_battleManager.State);
     }
 
     private void OnBattleStateChanged(EWaveState state)
     {
-        if (state != EWaveState.Victory && state != EWaveState.Defeat)
+        if (state is not EWaveState.Victory and not EWaveState.Defeat)
         {
             gameObject.SetActive(false);
             return;
         }
 
-        bool isVictory = state == EWaveState.Victory;
-        titleText.text = isVictory ? victoryTitle : defeatTitle;
-        messageText.text = isVictory ? victoryMessage : defeatMessage;
-        overlayImage.sprite = isVictory
+        bool victory = state == EWaveState.Victory;
+        titleText.text = victory ? victoryTitle : defeatTitle;
+        messageText.text = victory ? victoryMessage : defeatMessage;
+        overlayImage.sprite = victory
             ? victoryOverlaySprite
             : defeatOverlaySprite;
-        titleImage.sprite = isVictory ? victoryTitleSprite : defeatTitleSprite;
-        iconImage.sprite = isVictory ? victoryIconSprite : defeatIconSprite;
-        buttonAccentImage.sprite = isVictory
+        titleImage.sprite = victory ? victoryTitleSprite : defeatTitleSprite;
+        iconImage.sprite = victory ? victoryIconSprite : defeatIconSprite;
+        buttonAccentImage.sprite = victory
             ? victoryButtonAccentSprite
             : defeatButtonAccentSprite;
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
     }
 
-    private void ReturnToTitle()
-    {
-        _sceneManager?.Load(ESceneName.Title);
-    }
-
     private bool ValidateReferences()
     {
-        bool valid =
-            titleText != null &&
-            messageText != null &&
-            titleButton != null &&
-            overlayImage != null &&
-            titleImage != null &&
-            iconImage != null &&
-            buttonAccentImage != null &&
-            victoryOverlaySprite != null &&
-            defeatOverlaySprite != null &&
-            victoryTitleSprite != null &&
-            defeatTitleSprite != null &&
-            victoryIconSprite != null &&
-            defeatIconSprite != null &&
-            victoryButtonAccentSprite != null &&
-            defeatButtonAccentSprite != null;
+        return titleText != null && messageText != null &&
+               restartButton != null && titleButton != null &&
+               overlayImage != null && titleImage != null &&
+               iconImage != null && buttonAccentImage != null &&
+               victoryOverlaySprite != null && defeatOverlaySprite != null &&
+               victoryTitleSprite != null && defeatTitleSprite != null &&
+               victoryIconSprite != null && defeatIconSprite != null &&
+               victoryButtonAccentSprite != null &&
+               defeatButtonAccentSprite != null;
+    }
 
-        if (!valid)
-        {
-            Debug.LogError("[ResultPanel] 결과 UI 이미지 참조가 설정되지 않았습니다.");
-        }
+    private static void RestartGame()
+    {
+        App.Get<SceneManager>().Load(ESceneName.Game);
+    }
 
-        return valid;
+    private static void LoadTitle()
+    {
+        App.Get<SceneManager>().Load(ESceneName.Title);
     }
 
     private void OnDestroy()
@@ -110,10 +99,7 @@ public class ResultPanel : UIBase
         {
             _battleManager.OnStateChanged -= OnBattleStateChanged;
         }
-
-        if (titleButton != null)
-        {
-            titleButton.onClick.RemoveListener(ReturnToTitle);
-        }
+        if (restartButton != null) restartButton.onClick.RemoveListener(RestartGame);
+        if (titleButton != null) titleButton.onClick.RemoveListener(LoadTitle);
     }
 }

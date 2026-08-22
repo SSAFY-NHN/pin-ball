@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using NUnit.Framework;
+using System.Reflection;
 using UnityEngine;
 
 public class UnitRosterTests
@@ -54,6 +55,22 @@ public class UnitRosterTests
     }
 
     [Test]
+    public void AddOwnedAlly_AfterWipe_RegistersReinforcementAsActive()
+    {
+        _allyObject = new GameObject("defeated ally");
+        _enemyObject = new GameObject("reinforcement");
+        var defeatedAlly = _allyObject.AddComponent<AllyUnit>();
+        var reinforcement = _enemyObject.AddComponent<AllyUnit>();
+        var roster = new UnitRoster();
+        roster.AddOwnedAlly(defeatedAlly);
+        roster.NotifyUnitDied(defeatedAlly);
+
+        Assert.That(roster.AddOwnedAlly(reinforcement), Is.True);
+        Assert.That(roster.OwnedAllies, Is.EqualTo(new[] { reinforcement }));
+        Assert.That(roster.ActiveAllies, Is.EqualTo(new UnitBase[] { reinforcement }));
+    }
+
+    [Test]
     public void NotifyUnitDied_EnemyDoesNotTouchOwnedAllies()
     {
         _allyObject = new GameObject("ally");
@@ -67,6 +84,46 @@ public class UnitRosterTests
         Assert.That(roster.NotifyUnitDied(enemy), Is.True);
         Assert.That(roster.OwnedAllyCount, Is.EqualTo(1));
         Assert.That(roster.ActiveEnemyCount, Is.Zero);
+    }
+
+    [Test]
+    public void GetOwnedAllyCount_CountsOnlyExactUnitId()
+    {
+        _allyObject = new GameObject("warrior");
+        _enemyObject = new GameObject("archer");
+        var warrior = _allyObject.AddComponent<AllyUnit>();
+        var archer = _enemyObject.AddComponent<AllyUnit>();
+        SetUnitId(warrior, "warrior");
+        SetUnitId(archer, "archer");
+        var roster = new UnitRoster();
+        roster.AddOwnedAlly(warrior);
+        roster.AddOwnedAlly(archer);
+
+        Assert.That(roster.GetOwnedAllyCount("warrior"), Is.EqualTo(1));
+        Assert.That(roster.GetOwnedAllyCount("archer"), Is.EqualTo(1));
+        Assert.That(roster.GetOwnedAllyCount("mage"), Is.Zero);
+    }
+
+    [Test]
+    public void GetOwnedAllyCount_StopsCountingAllyAfterDeath()
+    {
+        _allyObject = new GameObject("warrior");
+        var warrior = _allyObject.AddComponent<AllyUnit>();
+        SetUnitId(warrior, "warrior");
+        var roster = new UnitRoster();
+        roster.AddOwnedAlly(warrior);
+
+        roster.NotifyUnitDied(warrior);
+
+        Assert.That(roster.GetOwnedAllyCount("warrior"), Is.Zero);
+    }
+
+    private static void SetUnitId(AllyUnit ally, string unitId)
+    {
+        typeof(AllyUnit)
+            .GetField("<UnitId>k__BackingField",
+                BindingFlags.Instance | BindingFlags.NonPublic)
+            ?.SetValue(ally, unitId);
     }
 }
 #endif

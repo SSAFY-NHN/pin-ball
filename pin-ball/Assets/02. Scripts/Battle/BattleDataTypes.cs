@@ -44,9 +44,6 @@ public class BattleEnemySpawnData
 public class BattleWaveData
 {
     public string WaveName = "Wave";
-    [Min(0)] public int RetryGoldReward = 5;
-    [Min(0)] public int WaveClearGoldReward = 10;
-    [Min(0)] public int FinalClearGoldReward = 20;
     public bool IsElite;
     public bool IsBoss;
     public List<BattleEnemySpawnData> Enemies = new();

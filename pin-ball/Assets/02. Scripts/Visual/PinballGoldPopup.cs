@@ -7,6 +7,7 @@ public sealed class PinballGoldPopup : MonoBehaviour
 {
     private const float Lifetime = 0.65f;
     private static readonly Color GoldColor = new(1f, 0.75f, 0.12f, 1f);
+    private static readonly Color JackpotColor = new(1f, 0.95f, 0.55f, 1f);
 
     public bool IsPlaying { get; private set; }
 
@@ -14,6 +15,8 @@ public sealed class PinballGoldPopup : MonoBehaviour
     private TextMeshPro _amountText;
     private Vector3 _startPosition;
     private float _startedAt;
+    private float _lifetime = Lifetime;
+    private Color _playColor = GoldColor;
 
     public void Initialize(Sprite goldIcon, int sortingOrder)
     {
@@ -45,17 +48,29 @@ public sealed class PinballGoldPopup : MonoBehaviour
 
     public void Play(Vector3 worldPosition, int amount)
     {
+        Play(worldPosition, amount, false);
+    }
+
+    public void PlayJackpot(Vector3 worldPosition, int amount)
+    {
+        Play(worldPosition, amount, true);
+    }
+
+    private void Play(Vector3 worldPosition, int amount, bool isJackpot)
+    {
         if (_iconRenderer == null || _amountText == null || amount <= 0) return;
 
         _startPosition = worldPosition;
         _startedAt = Time.unscaledTime;
+        _lifetime = isJackpot ? 1f : Lifetime;
+        _playColor = isJackpot ? JackpotColor : GoldColor;
         gameObject.SetActive(true);
-        _amountText.text = $"+{amount}";
+        _amountText.text = isJackpot ? $"JACKPOT +{amount}" : $"+{amount}";
         _iconRenderer.color = Color.white;
-        _amountText.color = GoldColor;
+        _amountText.color = _playColor;
         _amountText.ForceMeshUpdate(true);
         transform.position = worldPosition;
-        transform.localScale = Vector3.one * 0.8f;
+        transform.localScale = Vector3.one * (isJackpot ? 1.05f : 0.8f);
         IsPlaying = true;
     }
 
@@ -63,13 +78,13 @@ public sealed class PinballGoldPopup : MonoBehaviour
     {
         if (!IsPlaying) return;
 
-        float progress = Mathf.Clamp01((Time.unscaledTime - _startedAt) / Lifetime);
+        float progress = Mathf.Clamp01((Time.unscaledTime - _startedAt) / _lifetime);
         float eased = 1f - Mathf.Pow(1f - progress, 3f);
         transform.position = _startPosition + Vector3.up * (0.8f * eased);
         transform.localScale = Vector3.one * Mathf.Lerp(0.8f, 1f, Mathf.Min(1f, progress * 4f));
         float alpha = 1f - Mathf.Clamp01((progress - 0.45f) / 0.55f);
         _iconRenderer.color = new Color(1f, 1f, 1f, alpha);
-        _amountText.color = new Color(GoldColor.r, GoldColor.g, GoldColor.b, alpha);
+        _amountText.color = new Color(_playColor.r, _playColor.g, _playColor.b, alpha);
 
         if (progress < 1f) return;
 

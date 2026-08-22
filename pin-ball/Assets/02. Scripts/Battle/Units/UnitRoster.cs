@@ -13,6 +13,19 @@ public sealed class UnitRoster
     public int ActiveAllyCount => _activeAllies.Count;
     public int ActiveEnemyCount => _activeEnemies.Count;
 
+    public int GetOwnedAllyCount(string unitId)
+    {
+        if (string.IsNullOrEmpty(unitId)) return 0;
+
+        var count = 0;
+        foreach (AllyUnit ally in _ownedAllies)
+        {
+            if (ally != null && ally.UnitId == unitId) count++;
+        }
+
+        return count;
+    }
+
     public bool AddOwnedAlly(AllyUnit ally)
     {
         if (ally == null) return false;
@@ -41,6 +54,11 @@ public sealed class UnitRoster
         return true;
     }
 
+    public bool RemoveActiveAlly(AllyUnit ally)
+    {
+        return ally != null && _activeAllies.Remove(ally);
+    }
+
     public bool AddEnemy(UnitBase enemy)
     {
         if (enemy == null || _activeEnemies.Contains(enemy)) return false;
@@ -53,9 +71,7 @@ public sealed class UnitRoster
     {
         if (unit == null) return false;
 
-        return unit.Team == EBattleTeam.Ally
-            ? RemoveUnit(unit)
-            : _activeEnemies.Remove(unit);
+        return RemoveUnit(unit);
     }
 
     public bool RemoveUnit(UnitBase unit)

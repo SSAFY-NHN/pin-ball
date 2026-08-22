@@ -15,56 +15,30 @@ public enum EWaveHudNodeState
 
 public sealed class WaveHudState
 {
-    public EWaveHudNodeState ResolveNodeState(
-        int currentWave,
-        int nodeWave)
+    public EWaveHudNodeState ResolveNodeState(int currentWave, int nodeWave)
     {
-        if (nodeWave < currentWave)
-        {
-            return EWaveHudNodeState.Complete;
-        }
-
-        if (nodeWave > currentWave)
-        {
-            return EWaveHudNodeState.Locked;
-        }
-
+        if (nodeWave < currentWave) return EWaveHudNodeState.Complete;
+        if (nodeWave > currentWave) return EWaveHudNodeState.Locked;
         return nodeWave switch
         {
             5 => EWaveHudNodeState.Elite05,
             9 => EWaveHudNodeState.Elite09,
             10 => EWaveHudNodeState.Boss10,
-            _ => EWaveHudNodeState.Current,
+            _ => EWaveHudNodeState.Current
         };
     }
 
-    public bool IsConnectorComplete(
-        int currentWave,
-        int connectorAfterWave)
-    {
-        return connectorAfterWave < currentWave;
-    }
+    public bool IsConnectorComplete(int currentWave, int connectorAfterWave) =>
+        connectorAfterWave < currentWave;
 
-    public bool IsSupportedWaveCount(int waveCount)
-    {
-        return waveCount == 10;
-    }
+    public bool IsSupportedWaveCount(int waveCount) => waveCount == 10;
 }
 
 public class StatusPanel : UIBase
 {
     [SerializeField] private TextMeshProUGUI playerHpText;
     [SerializeField] private TextMeshProUGUI goldText;
-    [SerializeField] private TextMeshProUGUI allyCountText;
-    [SerializeField] private Color allyCountDefaultColor = Color.white;
-    [SerializeField] private Color allyCountOverLimitColor = Color.red;
-
-    [Header("Resource Feedback")]
-    [SerializeField] private Color hpFlashColor =
-        new(1f, 0.2f, 0.2f, 1f);
-    [SerializeField] private Color goldFlashColor =
-        new(1f, 0.82f, 0.2f, 1f);
-    [SerializeField, Min(0f)] private float resourceFeedbackDuration = 0.42f;
+    [SerializeField] private TextMeshProUGUI defenseLineText;
 
     [Header("Wave Progress")]
     [SerializeField] private Image[] waveNodes;
@@ -79,15 +53,24 @@ public class StatusPanel : UIBase
     [SerializeField] private Sprite idleConnectorSprite;
     [SerializeField] private Sprite completeConnectorSprite;
 
-    private BattleManager _battleManager;
-    private UnitManager _unitManager;
-    private int _maxHp;
-    private int _totalWaveCount;
-    private bool _isWaveHudValid;
-    private bool _hasDisplayedHp;
-    private bool _hasDisplayedGold;
-    private StatusFeedbackController _feedbackController;
-    private StatusWaveHudController _waveHudController;
+    [Header("Resource Feedback")]
+    [SerializeField] private Color hpFlashColor =
+        new(1f, 0.2f, 0.2f, 1f);
+    [SerializeField] private Color goldFlashColor =
+        new(1f, 0.82f, 0.2f, 1f);
+    [SerializeField, Min(0f)] private float resourceFeedbackDuration = 0.42f;
+
+    private BattleManager battleManager;
+    private bool hasDisplayedHp;
+    private bool hasDisplayedGold;
+    private int allyDefenseCurrent;
+    private int allyDefenseMaximum;
+    private int enemyDefenseCurrent;
+    private int enemyDefenseMaximum;
+    private bool hasDisplayedDefenseLine;
+    private StatusFeedbackController feedbackController;
+    private StatusWaveHudController waveHudController;
+    private bool isWaveHudValid;
 
     public override bool IsDefaultPanel => true;
 
@@ -95,20 +78,22 @@ public class StatusPanel : UIBase
     {
         base.Initialize(manager);
 
-        _battleManager = App.Get<BattleManager>();
-        _battleManager.OnInitialized += OnBattleInitialized;
-        _battleManager.OnWaveChanged += OnWaveChanged;
-        _battleManager.OnHpChanged += OnHpChanged;
-        _battleManager.OnGoldChanged += OnGoldChanged;
+        battleManager = App.Get<BattleManager>();
+        battleManager.OnInitialized += OnBattleInitialized;
+        battleManager.OnWaveChanged += OnWaveChanged;
+        battleManager.OnHpChanged += OnHpChanged;
+        battleManager.OnGoldChanged += OnGoldChanged;
+        battleManager.OnDefenseLineHpChanged += OnDefenseLineHpChanged;
 
-        _feedbackController = new StatusFeedbackController(
+        feedbackController = new StatusFeedbackController(
             playerHpText,
             goldText,
-            allyCountText,
+            defenseLineText,
             hpFlashColor,
             goldFlashColor,
             resourceFeedbackDuration);
-        _waveHudController = new StatusWaveHudController(
+
+        waveHudController = new StatusWaveHudController(
             waveNodes,
             waveConnectors,
             idleNodeSprite,
@@ -120,103 +105,110 @@ public class StatusPanel : UIBase
             boss10NodeSprite,
             idleConnectorSprite,
             completeConnectorSprite);
+        isWaveHudValid = waveHudController.ValidateReferences();
 
-        _unitManager = App.Get<UnitManager>();
-        _unitManager.OnDeployedAllyCountChanged +=
-            OnDeployedAllyCountChanged;
-        OnDeployedAllyCountChanged(_unitManager.DeployedAllyCount);
-
-        _isWaveHudValid = _waveHudController.ValidateReferences();
-
-        _maxHp = _battleManager.playerMaxHp;
-        if (_battleManager.IsInitialized)
-        {
-            OnBattleInitialized();
-        }
+        if (battleManager.IsInitialized) OnBattleInitialized();
     }
 
     private void OnBattleInitialized()
     {
-        _totalWaveCount = _battleManager.TotalWaveCount;
-        if (!_waveHudController.SupportsWaveCount(_totalWaveCount))
+        if (!waveHudController.SupportsWaveCount(battleManager.TotalWaveCount))
         {
             Debug.LogError(
                 $"[StatusPanel] Wave HUD requires exactly 10 waves. " +
-                $"Loaded: {_totalWaveCount}");
-            _isWaveHudValid = false;
+                $"Loaded: {battleManager.TotalWaveCount}");
+            isWaveHudValid = false;
         }
 
-        OnWaveChanged(_battleManager.CurrentWaveNumber - 1);
-        OnHpChanged(_battleManager.PlayerHp);
-        OnGoldChanged(_battleManager.Gold);
+        OnWaveChanged(battleManager.CurrentWaveNumber);
+        OnHpChanged(battleManager.PlayerHp);
+        OnGoldChanged(battleManager.Gold);
+        OnDefenseLineHpChanged(
+            EBattleTeam.Ally,
+            battleManager.GetDefenseLineHp(EBattleTeam.Ally),
+            battleManager.GetDefenseLineMaximumHp(EBattleTeam.Ally));
+        OnDefenseLineHpChanged(
+            EBattleTeam.Enemy,
+            battleManager.GetDefenseLineHp(EBattleTeam.Enemy),
+            battleManager.GetDefenseLineMaximumHp(EBattleTeam.Enemy));
     }
 
-    private void OnWaveChanged(int waveIndex)
+    private void OnWaveChanged(int wave)
     {
-        if (!_isWaveHudValid) return;
-
-        int currentWave = Mathf.Clamp(
-            waveIndex + 1,
-            1,
-            Mathf.Max(1, _totalWaveCount));
-        _waveHudController.Display(currentWave);
+        if (!isWaveHudValid) return;
+        waveHudController.Display(Mathf.Clamp(wave, 1, 10));
     }
 
     private void OnHpChanged(int hp)
     {
-        string value = $"{Mathf.Max(0, hp)}/{Mathf.Max(1, _maxHp)}";
-        bool changed = _hasDisplayedHp && playerHpText.text != value;
+        if (playerHpText == null) return;
+
+        string value = FormatChances(hp, battleManager.MaximumPlayerHp);
+        bool changed = hasDisplayedHp && playerHpText.text != value;
         playerHpText.text = value;
-        _hasDisplayedHp = true;
-        if (changed) _feedbackController.EmphasizeHp();
+        hasDisplayedHp = true;
+        if (changed) feedbackController.EmphasizeHp();
     }
+
+    private void OnDefenseLineHpChanged(
+        EBattleTeam team,
+        int current,
+        int maximum)
+    {
+        if (team == EBattleTeam.Ally)
+        {
+            allyDefenseCurrent = current;
+            allyDefenseMaximum = maximum;
+        }
+        else
+        {
+            enemyDefenseCurrent = current;
+            enemyDefenseMaximum = maximum;
+        }
+
+        if (defenseLineText == null) return;
+        string value = FormatDefenseLines(
+            allyDefenseCurrent,
+            allyDefenseMaximum,
+            enemyDefenseCurrent,
+            enemyDefenseMaximum);
+        bool changed = hasDisplayedDefenseLine && defenseLineText.text != value;
+        defenseLineText.text = value;
+        hasDisplayedDefenseLine = true;
+        if (changed) feedbackController.EmphasizeDefenseLine();
+    }
+
+    public static string FormatChances(int current, int maximum) =>
+        $"기회 {Mathf.Max(0, current)}/{Mathf.Max(1, maximum)}";
+
+    public static string FormatDefenseLines(
+        int allyCurrent,
+        int allyMaximum,
+        int enemyCurrent,
+        int enemyMaximum) =>
+        $"아군 {Mathf.Max(0, allyCurrent)}/{Mathf.Max(1, allyMaximum)} | " +
+        $"적 {Mathf.Max(0, enemyCurrent)}/{Mathf.Max(1, enemyMaximum)}";
 
     private void OnGoldChanged(int gold)
     {
+        if (goldText == null) return;
+
         string value = Mathf.Max(0, gold).ToString();
-        bool changed = _hasDisplayedGold && goldText.text != value;
+        bool changed = hasDisplayedGold && goldText.text != value;
         goldText.text = value;
-        _hasDisplayedGold = true;
-        if (changed) _feedbackController.EmphasizeGold();
-    }
-
-    private void OnDeployedAllyCountChanged(int count)
-    {
-        if (allyCountText == null) return;
-
-        allyCountText.text =
-            $"{Mathf.Max(0, count)}/{UnitManager.MaxDeployedAllyCount}";
-        allyCountText.color = ShouldWarnAllyCount(count)
-            ? allyCountOverLimitColor
-            : allyCountDefaultColor;
-    }
-
-    public static bool ShouldWarnAllyCount(int count)
-    {
-        return !UnitManager.CanStartWaveWithAllyCount(count);
-    }
-
-    public void EmphasizeAllyCount()
-    {
-        _feedbackController?.EmphasizeAllyCount();
+        hasDisplayedGold = true;
+        if (changed) feedbackController.EmphasizeGold();
     }
 
     private void OnDestroy()
     {
-        _feedbackController?.Clear();
+        feedbackController?.Clear();
+        if (battleManager == null) return;
 
-        if (_battleManager != null)
-        {
-            _battleManager.OnInitialized -= OnBattleInitialized;
-            _battleManager.OnWaveChanged -= OnWaveChanged;
-            _battleManager.OnHpChanged -= OnHpChanged;
-            _battleManager.OnGoldChanged -= OnGoldChanged;
-        }
-
-        if (_unitManager != null)
-        {
-            _unitManager.OnDeployedAllyCountChanged -=
-                OnDeployedAllyCountChanged;
-        }
+        battleManager.OnInitialized -= OnBattleInitialized;
+        battleManager.OnWaveChanged -= OnWaveChanged;
+        battleManager.OnHpChanged -= OnHpChanged;
+        battleManager.OnGoldChanged -= OnGoldChanged;
+        battleManager.OnDefenseLineHpChanged -= OnDefenseLineHpChanged;
     }
 }

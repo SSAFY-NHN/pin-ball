@@ -16,6 +16,8 @@ public class Pinball : MonoBehaviour
         Mathf.Max(transform.lossyScale.x, transform.lossyScale.y);
 
     internal bool IsClone { get; private set; }
+    internal bool IsGolden { get; private set; }
+    internal bool HasTriggeredJackpot { get; set; }
     internal bool HasSplit { get; set; }
     internal int SmallPinHitCount { get; set; }
     internal int BigBumperHitCount { get; set; }
@@ -79,16 +81,18 @@ public class Pinball : MonoBehaviour
             return;
         }
 
-        Manager.OnBallHit(this, obstacle.Type, contactPoint);
+        Manager.OnBallHit(this, obstacle, contactPoint);
     }
 
     internal void Activate(
         Vector2 worldPosition,
         Vector2 launchDirection,
-        bool isClone)
+        bool isClone,
+        bool isGolden = false)
     {
         EnsureInitialized();
         ResetRunState(isClone);
+        SetGolden(isGolden && !isClone);
         transform.position = worldPosition;
         gameObject.SetActive(true);
         _rigidBody2D.simulated = true;
@@ -100,6 +104,7 @@ public class Pinball : MonoBehaviour
     {
         EnsureInitialized();
         ResetRunState(false);
+        SetGolden(false);
         transform.position = worldPosition;
         gameObject.SetActive(true);
         _rigidBody2D.linearVelocity = Vector2.zero;
@@ -132,6 +137,17 @@ public class Pinball : MonoBehaviour
     internal void PlayGoldRewardFeedback(Vector2 worldPosition, int amount)
     {
         _arcaneVfx?.PlayGoldReward(worldPosition, amount);
+    }
+
+    internal void PlayJackpotFeedback(Vector2 worldPosition, int amount)
+    {
+        _arcaneVfx?.PlayJackpot(worldPosition, amount);
+    }
+
+    internal void SetGolden(bool isGolden)
+    {
+        IsGolden = isGolden;
+        _arcaneVfx?.SetGolden(isGolden);
     }
 
     internal void ResetPosition(Vector2 worldPosition, Vector2 launchDirection)
@@ -168,6 +184,8 @@ public class Pinball : MonoBehaviour
 
     public void Deactivate()
     {
+        ResetRunState(false);
+        SetGolden(false);
         if (_rigidBody2D != null)
         {
             _rigidBody2D.linearVelocity = Vector2.zero;
@@ -214,6 +232,8 @@ public class Pinball : MonoBehaviour
     private void ResetRunState(bool isClone)
     {
         IsClone = isClone;
+        IsGolden = false;
+        HasTriggeredJackpot = false;
         HasSplit = isClone;
         SmallPinHitCount = 0;
         BigBumperHitCount = 0;

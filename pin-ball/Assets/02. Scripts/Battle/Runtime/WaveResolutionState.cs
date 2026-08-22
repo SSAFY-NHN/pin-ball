@@ -14,7 +14,6 @@ public sealed class WaveResolutionState
         float duration)
     {
         if (IsPending) return false;
-
         IsPending = true;
         Result = result;
         WaveNumber = Mathf.Max(1, waveNumber);
@@ -22,10 +21,7 @@ public sealed class WaveResolutionState
         return true;
     }
 
-    public bool IsElapsed(float now)
-    {
-        return IsPending && now >= EndsAt;
-    }
+    public bool IsElapsed(float now) => IsPending && now >= EndsAt;
 
     public void Clear()
     {

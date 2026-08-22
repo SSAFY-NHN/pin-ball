@@ -6,18 +6,18 @@ internal sealed class StatusWaveHudController
     private const int WaveNodeCount = 10;
     private const int WaveConnectorCount = WaveNodeCount - 1;
 
-    private readonly Image[] _nodes;
-    private readonly Image[] _connectors;
-    private readonly Sprite _idleNode;
-    private readonly Sprite _lockedNode;
-    private readonly Sprite _currentNode;
-    private readonly Sprite _completeNode;
-    private readonly Sprite _elite05Node;
-    private readonly Sprite _elite09Node;
-    private readonly Sprite _boss10Node;
-    private readonly Sprite _idleConnector;
-    private readonly Sprite _completeConnector;
-    private readonly WaveHudState _state = new();
+    private readonly Image[] nodes;
+    private readonly Image[] connectors;
+    private readonly Sprite idleNode;
+    private readonly Sprite lockedNode;
+    private readonly Sprite currentNode;
+    private readonly Sprite completeNode;
+    private readonly Sprite elite05Node;
+    private readonly Sprite elite09Node;
+    private readonly Sprite boss10Node;
+    private readonly Sprite idleConnector;
+    private readonly Sprite completeConnector;
+    private readonly WaveHudState state = new();
 
     public StatusWaveHudController(
         Image[] nodes,
@@ -32,89 +32,75 @@ internal sealed class StatusWaveHudController
         Sprite idleConnector,
         Sprite completeConnector)
     {
-        _nodes = nodes;
-        _connectors = connectors;
-        _idleNode = idleNode;
-        _lockedNode = lockedNode;
-        _currentNode = currentNode;
-        _completeNode = completeNode;
-        _elite05Node = elite05Node;
-        _elite09Node = elite09Node;
-        _boss10Node = boss10Node;
-        _idleConnector = idleConnector;
-        _completeConnector = completeConnector;
+        this.nodes = nodes;
+        this.connectors = connectors;
+        this.idleNode = idleNode;
+        this.lockedNode = lockedNode;
+        this.currentNode = currentNode;
+        this.completeNode = completeNode;
+        this.elite05Node = elite05Node;
+        this.elite09Node = elite09Node;
+        this.boss10Node = boss10Node;
+        this.idleConnector = idleConnector;
+        this.completeConnector = completeConnector;
     }
 
     public bool ValidateReferences()
     {
-        bool valid =
-            _nodes != null &&
-            _nodes.Length == WaveNodeCount &&
-            _connectors != null &&
-            _connectors.Length == WaveConnectorCount;
-
+        bool valid = nodes != null && nodes.Length == WaveNodeCount &&
+                     connectors != null &&
+                     connectors.Length == WaveConnectorCount;
         if (valid)
         {
-            foreach (var node in _nodes) valid &= node != null;
-            foreach (var connector in _connectors)
-            {
-                valid &= connector != null;
-            }
+            foreach (Image node in nodes) valid &= node != null;
+            foreach (Image connector in connectors) valid &= connector != null;
         }
 
-        valid &= _idleNode != null;
-        valid &= _lockedNode != null;
-        valid &= _currentNode != null;
-        valid &= _completeNode != null;
-        valid &= _elite05Node != null;
-        valid &= _elite09Node != null;
-        valid &= _boss10Node != null;
-        valid &= _idleConnector != null;
-        valid &= _completeConnector != null;
-
+        valid &= idleNode != null && lockedNode != null &&
+                 currentNode != null && completeNode != null &&
+                 elite05Node != null && elite09Node != null &&
+                 boss10Node != null && idleConnector != null &&
+                 completeConnector != null;
         if (!valid)
         {
             Debug.LogError(
-                "[StatusPanel] Wave HUD requires 10 nodes, " +
-                "9 connectors, standard-wave labels, and all state Sprites.");
+                "[StatusPanel] Wave HUD requires 10 nodes, 9 connectors, " +
+                "and all state sprites.");
         }
-
         return valid;
     }
 
     public bool SupportsWaveCount(int waveCount) =>
-        _state.IsSupportedWaveCount(waveCount);
+        state.IsSupportedWaveCount(waveCount);
 
     public void Display(int currentWave)
     {
-        for (int index = 0; index < WaveNodeCount; index++)
+        for (var index = 0; index < WaveNodeCount; index++)
         {
-            int nodeWave = index + 1;
-            _nodes[index].sprite = GetNodeSprite(
-                _state.ResolveNodeState(currentWave, nodeWave));
+            nodes[index].gameObject.SetActive(true);
+            nodes[index].sprite = GetNodeSprite(
+                state.ResolveNodeState(currentWave, index + 1));
         }
 
-        for (int index = 0; index < WaveConnectorCount; index++)
+        for (var index = 0; index < WaveConnectorCount; index++)
         {
-            int connectorAfterWave = index + 1;
-            _connectors[index].sprite =
-                _state.IsConnectorComplete(currentWave, connectorAfterWave)
-                    ? _completeConnector
-                    : _idleConnector;
+            connectors[index].gameObject.SetActive(true);
+            connectors[index].sprite =
+                state.IsConnectorComplete(currentWave, index + 1)
+                    ? completeConnector
+                    : idleConnector;
         }
     }
 
-    private Sprite GetNodeSprite(EWaveHudNodeState state)
-    {
-        return state switch
+    private Sprite GetNodeSprite(EWaveHudNodeState nodeState) =>
+        nodeState switch
         {
-            EWaveHudNodeState.Current => _currentNode,
-            EWaveHudNodeState.Complete => _completeNode,
-            EWaveHudNodeState.Elite05 => _elite05Node,
-            EWaveHudNodeState.Elite09 => _elite09Node,
-            EWaveHudNodeState.Boss10 => _boss10Node,
-            EWaveHudNodeState.Locked => _lockedNode,
-            _ => _idleNode
+            EWaveHudNodeState.Current => currentNode,
+            EWaveHudNodeState.Complete => completeNode,
+            EWaveHudNodeState.Elite05 => elite05Node,
+            EWaveHudNodeState.Elite09 => elite09Node,
+            EWaveHudNodeState.Boss10 => boss10Node,
+            EWaveHudNodeState.Locked => lockedNode,
+            _ => idleNode
         };
-    }
 }

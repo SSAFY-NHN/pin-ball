@@ -6,7 +6,6 @@ public class EnemyUnit : UnitBase
     protected override Color IdleColor => Color.white;
     public string UnitId { get; private set; }
     public int Rank { get; private set; }
-    public int BreachDamage { get; private set; }
 
     private readonly EnemySkillController _skills = new();
     private UnitManager _unitManager;
@@ -16,7 +15,6 @@ public class EnemyUnit : UnitBase
     {
         UnitId = data?.id ?? string.Empty;
         Rank = data?.rank ?? 0;
-        BreachDamage = Mathf.Max(0, data?.BreachDamage ?? 0);
         _unitManager = unitManager;
         _attackEffectPlayer ??= GetComponent<UnitAttackEffectPlayer>();
         _skills.Initialize(data, registry ?? UnitSkillRegistry.CreateDefault());
@@ -27,7 +25,13 @@ public class EnemyUnit : UnitBase
     protected override void Tick()
     {
         _skills.Tick(CreateContext(_currentTarget), Time.time);
-        if (TryKeepOrAcquireTarget()) { MoveOrAttackTarget(); return; }
+        if (TryKeepOrAcquireTarget())
+        {
+            LeaveDefenseLine();
+            MoveOrAttackTarget();
+            return;
+        }
+        if (TryMoveOrAttackDefenseLine(_unitManager)) return;
         _state = EBattleUnitState.Idle;
         ClearTarget();
     }

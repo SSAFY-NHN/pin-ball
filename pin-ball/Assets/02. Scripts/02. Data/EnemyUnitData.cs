@@ -91,21 +91,15 @@ public class EnemyUnitData
     public BattleUnitStats CreateStats(int wave, EnemyCommonData common)
     {
         int waveDifference = Mathf.Max(0, wave - common.BaseWave);
-        int defenseGrowthCount = common.DefenseGrowthInterval > 0
-            ? waveDifference / common.DefenseGrowthInterval
-            : 0;
-
         return new BattleUnitStats
         {
             MaxHp = Mathf.Floor(health *
-                (1f + waveDifference * common.HealthGrowthPerWave)),
+                Mathf.Pow(1f + common.HealthGrowthPerWave, waveDifference)),
             AttackDamage = Mathf.Floor(attack *
-                (1f + waveDifference * common.AttackGrowthPerWave)),
-            Defense = defense + defenseGrowthCount * common.DefenseGrowthValue,
-            MoveSpeed = MoveSpeed *
-                (1f + waveDifference * common.MoveSpeedGrowthPerWave),
-            AttackRate = AttackSpeed *
-                (1f + waveDifference * common.AttackSpeedGrowthPerWave),
+                Mathf.Pow(1f + common.AttackGrowthPerWave, waveDifference)),
+            Defense = defense,
+            MoveSpeed = MoveSpeed,
+            AttackRate = AttackSpeed,
             AttackRange = AttackRange,
             MaxMana = 0f
         };

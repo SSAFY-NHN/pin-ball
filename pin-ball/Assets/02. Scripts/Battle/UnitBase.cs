@@ -15,10 +15,12 @@ public abstract class UnitBase : MonoBehaviour
     public float AttackRange => _stats.AttackRange;
     public float HpRatio => _health.HpRatio;
     public bool IsAlive => _state != EBattleUnitState.Dead;
+    public bool IsBattleActive => _isBattleActive;
     public bool IsInPool { get; private set; }
     public bool IsStunned => _statusEffects.IsStunned(Time.time);
     public float LastDamagedTime => _health.LastDamagedTime;
     public UnitBase CurrentTarget => _currentTarget;
+    public bool HasReachedDefenseLine { get; private set; }
 
     protected BattleUnitStats _stats;
     protected UnitBase _currentTarget;
@@ -30,12 +32,17 @@ public abstract class UnitBase : MonoBehaviour
     private readonly UnitAttack _attack = new();
 
     private UnitCombatContext _context;
+    private float _itemAttackMultiplier = 1f;
+    private float _itemAttackRateMultiplier = 1f;
+    private float _itemHpMultiplier = 1f;
+    private float _sharedAttackMultiplier = 1f;
     private SpriteRenderer _renderer;
     private BattleCombatFeedback _combatFeedback;
     private BattleUnitStats _initialStats;
     private UnitBase _forcedTarget;
     private float _forcedTargetUntil;
     private float _hitUntilTime;
+    private bool _isBattleActive;
 
     protected virtual Color IdleColor => new(0.8f, 0.8f, 0.8f, 1f);
     protected virtual string BasicAttackSoundName => SoundName.ClassicPunch;
@@ -49,6 +56,7 @@ public abstract class UnitBase : MonoBehaviour
         _stats = stats;
         _initialStats = stats;
         IsInPool = false;
+        _isBattleActive = false;
         ResetCombatState();
         _renderer = GetComponentInChildren<SpriteRenderer>();
         _combatFeedback = GetComponent<BattleCombatFeedback>();
@@ -63,6 +71,7 @@ public abstract class UnitBase : MonoBehaviour
 
     public void ResetCombatState()
     {
+        HasReachedDefenseLine = false;
         _stats = _initialStats;
         _state = EBattleUnitState.Idle;
         _health.Reset(_stats.MaxHp);
@@ -100,7 +109,7 @@ public abstract class UnitBase : MonoBehaviour
 
     private void Update()
     {
-        if (!IsAlive) return;
+        if (!IsAlive || !_isBattleActive) return;
 
         float now = Time.time;
         _health.Refresh(now);
@@ -126,6 +135,21 @@ public abstract class UnitBase : MonoBehaviour
     }
 
     protected abstract void Tick();
+
+    public void StopBattle()
+    {
+        _isBattleActive = false;
+        _state = EBattleUnitState.Idle;
+        _currentTarget = null;
+        _forcedTarget = null;
+        HasReachedDefenseLine = false;
+    }
+
+    public void StartBattle()
+    {
+        if (!IsAlive) return;
+        _isBattleActive = true;
+    }
 
     public void TakeDamage(
         float damage,
@@ -295,10 +319,30 @@ public abstract class UnitBase : MonoBehaviour
     {
         if (Team != EBattleTeam.Ally) return;
 
+        _itemAttackMultiplier = Mathf.Max(0f, attackMultiplier);
+        _itemAttackRateMultiplier = Mathf.Max(0.01f, attackRateMultiplier);
+        _itemHpMultiplier = Mathf.Max(0.01f, hpMultiplier);
+        RefreshPersistentModifiers();
+    }
+
+    public void ApplySharedAttackMultiplier(float multiplier)
+    {
+        if (Team != EBattleTeam.Ally) return;
+
+        _sharedAttackMultiplier = Mathf.Max(0f, multiplier);
+        RefreshPersistentModifiers();
+    }
+
+    private void RefreshPersistentModifiers()
+    {
+        if (Team != EBattleTeam.Ally) return;
+
         float previousMaxHp = Mathf.Max(0.01f, _stats.MaxHp);
-        _stats.AttackDamage = _initialStats.AttackDamage * attackMultiplier;
-        _stats.AttackRate = _initialStats.AttackRate * attackRateMultiplier;
-        _stats.MaxHp = _initialStats.MaxHp * hpMultiplier;
+        _stats.AttackDamage = _initialStats.AttackDamage *
+                              _itemAttackMultiplier *
+                              _sharedAttackMultiplier;
+        _stats.AttackRate = _initialStats.AttackRate * _itemAttackRateMultiplier;
+        _stats.MaxHp = _initialStats.MaxHp * _itemHpMultiplier;
         _health.ScaleMaximumHp(_stats.MaxHp / previousMaxHp);
     }
 
@@ -361,36 +405,85 @@ public abstract class UnitBase : MonoBehaviour
             _currentTarget.transform.position);
         if (distance > _stats.AttackRange)
         {
-            float moveSpeed = _stats.MoveSpeed * _statusEffects.MoveSpeedMultiplier;
-            if (moveSpeed <= 0f)
-            {
-                _state = EBattleUnitState.Idle;
-                return;
-            }
-
-            Vector3 nextPosition = UnitMovement.CalculateNextPosition(
-                transform.position,
-                _currentTarget.transform.position,
-                moveSpeed,
-                Time.deltaTime);
-            if (_context?.BattleArea != null)
-            {
-                nextPosition = _context.BattleArea.Clamp(
-                    nextPosition,
-                    GetMovementPadding());
-            }
-
-            transform.position = nextPosition;
-            _state = EBattleUnitState.Moving;
+            MoveTowardsPosition(_currentTarget.transform.position);
             return;
         }
 
         TryAttack();
     }
 
+    protected void MoveTowardsPosition(Vector3 targetPosition)
+    {
+        float moveSpeed = _stats.MoveSpeed * _statusEffects.MoveSpeedMultiplier;
+        if (moveSpeed <= 0f)
+        {
+            _state = EBattleUnitState.Idle;
+            return;
+        }
+
+        Vector3 nextPosition = UnitMovement.CalculateNextPosition(
+            transform.position,
+            targetPosition,
+            moveSpeed,
+            Time.deltaTime);
+        if (_context?.BattleArea != null)
+        {
+            nextPosition = _context.BattleArea.Clamp(
+                nextPosition,
+                GetMovementPadding());
+        }
+
+        transform.position = nextPosition;
+        _state = EBattleUnitState.Moving;
+    }
+
     protected void ClearTarget()
     {
         _currentTarget = null;
+    }
+
+    public void ReachDefenseLine(EBattleTeam defenseTeam)
+    {
+        if (!IsAlive || IsInPool || defenseTeam == Team) return;
+        HasReachedDefenseLine = true;
+        ClearTarget();
+    }
+
+    protected void LeaveDefenseLine()
+    {
+        HasReachedDefenseLine = false;
+    }
+
+    protected bool TryMoveOrAttackDefenseLine(UnitManager unitManager)
+    {
+        EBattleTeam defenseTeam = Team == EBattleTeam.Ally
+            ? EBattleTeam.Enemy
+            : EBattleTeam.Ally;
+
+        if (HasReachedDefenseLine)
+        {
+            ClearTarget();
+            if (unitManager != null && TryScheduleBasicAttack())
+            {
+                unitManager.RequestDefenseLineAttack(
+                    this,
+                    defenseTeam,
+                    GetBasicAttackDamage(null));
+            }
+            return true;
+        }
+
+        if (unitManager != null &&
+            unitManager.TryGetOpposingDefenseLinePosition(
+                Team,
+                out Vector3 position))
+        {
+            MoveTowardsPosition(position);
+            ClearTarget();
+            return true;
+        }
+
+        return false;
     }
 
     private void TryAttack()
@@ -401,14 +494,21 @@ public abstract class UnitBase : MonoBehaviour
             return;
         }
 
-        float attackRate = _stats.AttackRate * _statusEffects.AttackRateMultiplier;
-        _state = EBattleUnitState.Attacking;
-        if (!_attack.TrySchedule(Time.time, attackRate)) return;
+        if (!TryScheduleBasicAttack()) return;
 
         _currentTarget.TakeDamage(GetBasicAttackDamage(_currentTarget), 0f, this);
-        SoundManager.PlaySFXIfAvailable(BasicAttackSoundName);
         _combatFeedback?.PlayBasicAttack(_currentTarget);
         OnBasicAttackHit(_currentTarget);
+    }
+
+    protected bool TryScheduleBasicAttack()
+    {
+        float attackRate = _stats.AttackRate * _statusEffects.AttackRateMultiplier;
+        _state = EBattleUnitState.Attacking;
+        if (!_attack.TrySchedule(Time.time, attackRate)) return false;
+
+        SoundManager.PlaySFXIfAvailable(BasicAttackSoundName);
+        return true;
     }
 
     private void ApplyScheduledDamage(float damage, float armorIgnoreRatio)
@@ -441,9 +541,8 @@ public abstract class UnitBase : MonoBehaviour
         _health.MarkDead();
         _state = EBattleUnitState.Dead;
         _effectScheduler.Reset();
-        _context?.NotifyUnitDied(this);
-
         if (Team == EBattleTeam.Ally) gameObject.SetActive(false);
+        _context?.NotifyUnitDied(this);
     }
 
     private void UpdateVisual()

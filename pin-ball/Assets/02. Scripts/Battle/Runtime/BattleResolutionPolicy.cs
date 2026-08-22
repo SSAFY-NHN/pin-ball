@@ -1,34 +1,28 @@
 public static class BattleResolutionPolicy
 {
-    public static bool TryDetectWipe(
-        int allyCount,
-        int enemyCount,
+    public static bool TryResolveDefenseLines(
+        int allyDefenseHp,
+        int enemyDefenseHp,
         out EWaveResolutionResult result)
     {
-        if (enemyCount <= 0)
-        {
-            result = EWaveResolutionResult.Cleared;
-            return true;
-        }
-
-        if (allyCount <= 0)
+        if (allyDefenseHp <= 0)
         {
             result = EWaveResolutionResult.Failed;
             return true;
         }
 
-        result = default;
-        return false;
+        result = EWaveResolutionResult.Cleared;
+        return enemyDefenseHp <= 0;
     }
 
     public static EWaveState ResolveNextState(
         EWaveResolutionResult result,
         bool isFinalWave,
-        int playerHp)
+        int remainingChances)
     {
         if (result == EWaveResolutionResult.Failed)
         {
-            return playerHp <= 0
+            return remainingChances <= 0
                 ? EWaveState.Defeat
                 : EWaveState.Pending;
         }

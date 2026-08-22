@@ -24,10 +24,7 @@ public class GameLayoutController : UIBase
         if (!ValidateReferences()) return;
 
         _battleManager = App.Get<BattleManager>();
-        _battleManager.OnStateChanged += OnBattleStateChanged;
-        SetPinballVisible(
-            _battleManager.State == EWaveState.Pending,
-            true);
+        SetPinballVisible(true, true);
     }
 
     public void SetPinballVisible(bool visible, bool immediate)
@@ -101,11 +98,6 @@ public class GameLayoutController : UIBase
         _animation = null;
     }
 
-    private void OnBattleStateChanged(EWaveState state)
-    {
-        SetPinballVisible(state == EWaveState.Pending, false);
-    }
-
     private bool ValidateReferences()
     {
         bool isValid = true;
@@ -137,9 +129,5 @@ public class GameLayoutController : UIBase
 
     private void OnDestroy()
     {
-        if (_battleManager != null)
-        {
-            _battleManager.OnStateChanged -= OnBattleStateChanged;
-        }
     }
 }
