@@ -1,34 +1,31 @@
 fileFormatVersion: 2
-guid: 057877f9a0c246408c1c9732a86e0ea4
+guid: 2a9bdff501368254e8c1c8218d77694f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5245886882850490739
-    second: Dog3_Lancer_Dog1Base_48x32_Walk_00
+      213: -5171846106050430373
+    second: Dog3_Lancer_Attack_0
   - first:
-      213: 5675312122657651260
-    second: Dog3_Lancer_Dog1Base_48x32_Walk_01
+      213: -8529067253013801212
+    second: Dog3_Lancer_Attack_1
   - first:
-      213: 5748657799324970320
-    second: Dog3_Lancer_Dog1Base_48x32_Walk_02
+      213: 1461559063971371444
+    second: Dog3_Lancer_Attack_2
   - first:
-      213: 5416232504184495227
-    second: Dog3_Lancer_Dog1Base_48x32_Walk_03
+      213: -6750874493747529047
+    second: Dog3_Lancer_Attack_3
   - first:
-      213: 5514425682265726230
-    second: Dog3_Lancer_Dog1Base_48x32_Walk_04
+      213: 6245711203972215131
+    second: Dog3_Lancer_Attack_4
   - first:
-      213: 5395398836310726751
-    second: Dog3_Lancer_Dog1Base_48x32_Walk_05
+      213: 5633755526755340399
+    second: Dog3_Lancer_Attack_5
   - first:
-      213: 5323943409707069395
-    second: Dog3_Lancer_Dog1Base_48x32_Walk_06
+      213: 1953631503525109625
+    second: Dog3_Lancer_Attack_6
   - first:
-      213: 5070138445746573381
-    second: Dog3_Lancer_Dog1Base_48x32_Walk_07
-  - first:
-      213: 5530517213867796801
-    second: Dog3_Lancer_Dog1Base_48x32_Walk_08
+      213: 6957154889010307961
+    second: Dog3_Lancer_Attack_7
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -61,7 +58,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -73,8 +70,8 @@ TextureImporter:
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 9
-  spritePivot: {x: 0.6666667, y: 0.5}
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -99,7 +96,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -112,7 +109,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -125,7 +122,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -137,199 +134,177 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Dog3_Lancer_Dog1Base_48x32_Walk_00
+      name: Dog3_Lancer_Attack_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 48
-        height: 32
-      alignment: 9
-      pivot: {x: 0.6666667, y: 0.5}
+        x: 15
+        y: 15
+        width: 45
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9d46dba8e0944e9bb2001c3bb407e4d2
-      internalID: 5245886882850490739
+      spriteID: b5a70ef3e59e938b0800000000000000
+      internalID: -5171846106050430373
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog3_Lancer_Dog1Base_48x32_Walk_01
+      name: Dog3_Lancer_Attack_1
       rect:
         serializedVersion: 2
-        x: 48
-        y: 0
-        width: 48
+        x: 76
+        y: 15
+        width: 46
         height: 32
-      alignment: 9
-      pivot: {x: 0.6666667, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e4bceaa9f3a54c5b850b58d67520daa7
-      internalID: 5675312122657651260
+      spriteID: 40712b6b58aa2a980800000000000000
+      internalID: -8529067253013801212
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog3_Lancer_Dog1Base_48x32_Walk_02
+      name: Dog3_Lancer_Attack_2
       rect:
         serializedVersion: 2
-        x: 96
-        y: 0
-        width: 48
+        x: 133
+        y: 15
+        width: 53
         height: 32
-      alignment: 9
-      pivot: {x: 0.6666667, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 073726266d444f77ba8146d0277289a8
-      internalID: 5748657799324970320
+      spriteID: 4b9144a9930884410800000000000000
+      internalID: 1461559063971371444
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog3_Lancer_Dog1Base_48x32_Walk_03
+      name: Dog3_Lancer_Attack_3
       rect:
         serializedVersion: 2
-        x: 144
-        y: 0
-        width: 48
+        x: 196
+        y: 15
+        width: 54
         height: 32
-      alignment: 9
-      pivot: {x: 0.6666667, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d013a92bae4e427e8bc3ada8adb1e087
-      internalID: 5416232504184495227
+      spriteID: 9aafee46a631052a0800000000000000
+      internalID: -6750874493747529047
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog3_Lancer_Dog1Base_48x32_Walk_04
+      name: Dog3_Lancer_Attack_4
       rect:
         serializedVersion: 2
-        x: 192
-        y: 0
-        width: 48
+        x: 264
+        y: 15
+        width: 50
         height: 32
-      alignment: 9
-      pivot: {x: 0.6666667, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f350d4fa26fa4f48b3c9f6022515e909
-      internalID: 5514425682265726230
+      spriteID: b51f072bf393da650800000000000000
+      internalID: 6245711203972215131
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog3_Lancer_Dog1Base_48x32_Walk_05
+      name: Dog3_Lancer_Attack_5
       rect:
         serializedVersion: 2
-        x: 240
-        y: 0
-        width: 48
-        height: 32
-      alignment: 9
-      pivot: {x: 0.6666667, y: 0.5}
+        x: 335
+        y: 15
+        width: 44
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 703d0d8f108f47ddad1e1cb499ea7f9b
-      internalID: 5395398836310726751
+      spriteID: f6055ab7dce1f2e40800000000000000
+      internalID: 5633755526755340399
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog3_Lancer_Dog1Base_48x32_Walk_06
+      name: Dog3_Lancer_Attack_6
       rect:
         serializedVersion: 2
-        x: 288
-        y: 0
-        width: 48
-        height: 32
-      alignment: 9
-      pivot: {x: 0.6666667, y: 0.5}
+        x: 401
+        y: 15
+        width: 43
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 674278f5c44b44e2ad122d3d86ca4eb6
-      internalID: 5323943409707069395
+      spriteID: 97f50ad6081bc1b10800000000000000
+      internalID: 1953631503525109625
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dog3_Lancer_Dog1Base_48x32_Walk_07
+      name: Dog3_Lancer_Attack_7
       rect:
         serializedVersion: 2
-        x: 336
-        y: 0
-        width: 48
-        height: 32
-      alignment: 9
-      pivot: {x: 0.6666667, y: 0.5}
+        x: 465
+        y: 15
+        width: 43
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1caa89df31db4ce2875354d253f966e4
-      internalID: 5070138445746573381
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Dog3_Lancer_Dog1Base_48x32_Walk_08
-      rect:
-        serializedVersion: 2
-        x: 384
-        y: 0
-        width: 48
-        height: 32
-      alignment: 9
-      pivot: {x: 0.6666667, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0cc41c9bd838454b8858fb65f1cf4ebc
-      internalID: 5530517213867796801
+      spriteID: 973e4dec287cc8060800000000000000
+      internalID: 6957154889010307961
       vertices: []
       indices: 
       edges: []
@@ -348,15 +323,14 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Dog3_Lancer_Dog1Base_48x32_Walk_00: 5245886882850490739
-      Dog3_Lancer_Dog1Base_48x32_Walk_01: 5675312122657651260
-      Dog3_Lancer_Dog1Base_48x32_Walk_02: 5748657799324970320
-      Dog3_Lancer_Dog1Base_48x32_Walk_03: 5416232504184495227
-      Dog3_Lancer_Dog1Base_48x32_Walk_04: 5514425682265726230
-      Dog3_Lancer_Dog1Base_48x32_Walk_05: 5395398836310726751
-      Dog3_Lancer_Dog1Base_48x32_Walk_06: 5323943409707069395
-      Dog3_Lancer_Dog1Base_48x32_Walk_07: 5070138445746573381
-      Dog3_Lancer_Dog1Base_48x32_Walk_08: 5530517213867796801
+      Dog3_Lancer_Attack_0: -5171846106050430373
+      Dog3_Lancer_Attack_1: -8529067253013801212
+      Dog3_Lancer_Attack_2: 1461559063971371444
+      Dog3_Lancer_Attack_3: -6750874493747529047
+      Dog3_Lancer_Attack_4: 6245711203972215131
+      Dog3_Lancer_Attack_5: 5633755526755340399
+      Dog3_Lancer_Attack_6: 1953631503525109625
+      Dog3_Lancer_Attack_7: 6957154889010307961
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

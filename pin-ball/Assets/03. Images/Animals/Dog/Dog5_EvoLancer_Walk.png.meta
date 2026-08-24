@@ -1,28 +1,34 @@
 fileFormatVersion: 2
-guid: 47d61d30d577b58429a9c5e7e4262321
+guid: 6b556395e5b95b246bc0e420c14a244f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8873623250719127084
-    second: H_LowWarrior_Walk_0
+      213: 5039444590062307965
+    second: Dog5_EvoLancer_Walk_0
   - first:
-      213: 2088380103824506639
-    second: H_LowWarrior_Walk_1
+      213: 5721549167935901694
+    second: Dog5_EvoLancer_Walk_1
   - first:
-      213: -2836777394236139914
-    second: H_LowWarrior_Walk_2
+      213: -1003602090705265522
+    second: Dog5_EvoLancer_Walk_2
   - first:
-      213: -6109407933703684560
-    second: H_LowWarrior_Walk_3
+      213: -5950821734312975433
+    second: Dog5_EvoLancer_Walk_3
   - first:
-      213: -4370841701638680730
-    second: H_LowWarrior_Walk_4
+      213: -2388127003429690600
+    second: Dog5_EvoLancer_Walk_4
   - first:
-      213: -7200499167858657521
-    second: H_LowWarrior_Walk_5
+      213: 3570021657048894991
+    second: Dog5_EvoLancer_Walk_5
   - first:
-      213: -1057926494306260922
-    second: H_LowWarrior_Walk_6
+      213: -6569523008080047716
+    second: Dog5_EvoLancer_Walk_6
+  - first:
+      213: 4652377220106646912
+    second: Dog5_EvoLancer_Walk_7
+  - first:
+      213: 8866261516804093382
+    second: Dog5_EvoLancer_Walk_8
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -131,13 +137,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: H_LowWarrior_Walk_0
+      name: Dog5_EvoLancer_Walk_0
       rect:
         serializedVersion: 2
-        x: 17
-        y: 5
-        width: 32
-        height: 46
+        x: 9
+        y: 3
+        width: 53
+        height: 40
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -146,20 +152,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c26b2c10551752b70800000000000000
-      internalID: 8873623250719127084
+      spriteID: d7a8def8724bfe540800000000000000
+      internalID: 5039444590062307965
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_LowWarrior_Walk_1
+      name: Dog5_EvoLancer_Walk_1
       rect:
         serializedVersion: 2
-        x: 82
-        y: 6
-        width: 36
-        height: 44
+        x: 74
+        y: 3
+        width: 52
+        height: 40
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -168,19 +174,41 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f0ff374c3aa6bfc10800000000000000
-      internalID: 2088380103824506639
+      spriteID: eff40c777a6076f40800000000000000
+      internalID: 5721549167935901694
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_LowWarrior_Walk_2
+      name: Dog5_EvoLancer_Walk_2
       rect:
         serializedVersion: 2
-        x: 148
-        y: 6
-        width: 33
+        x: 139
+        y: 2
+        width: 51
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8c5caf373d7212f0800000000000000
+      internalID: -1003602090705265522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_Walk_3
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 2
+        width: 51
         height: 43
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -190,20 +218,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 67652b56dfdb1a8d0800000000000000
-      internalID: -2836777394236139914
+      spriteID: 7b3e994592f6a6da0800000000000000
+      internalID: -5950821734312975433
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_LowWarrior_Walk_3
+      name: Dog5_EvoLancer_Walk_4
       rect:
         serializedVersion: 2
-        x: 208
-        y: 6
-        width: 31
-        height: 46
+        x: 267
+        y: 3
+        width: 50
+        height: 42
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -212,20 +240,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 03e73a37ad5073ba0800000000000000
-      internalID: -6109407933703684560
+      spriteID: 8132e0aa42babded0800000000000000
+      internalID: -2388127003429690600
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_LowWarrior_Walk_4
+      name: Dog5_EvoLancer_Walk_5
       rect:
         serializedVersion: 2
-        x: 270
-        y: 6
-        width: 33
-        height: 47
+        x: 330
+        y: 3
+        width: 52
+        height: 41
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -234,20 +262,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 66fcc5c41a6a753c0800000000000000
-      internalID: -4370841701638680730
+      spriteID: f0ec9d448c34b8130800000000000000
+      internalID: 3570021657048894991
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_LowWarrior_Walk_5
+      name: Dog5_EvoLancer_Walk_6
       rect:
         serializedVersion: 2
-        x: 333
-        y: 5
-        width: 37
-        height: 46
+        x: 393
+        y: 3
+        width: 53
+        height: 40
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -256,20 +284,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f07f94e1820b21c90800000000000000
-      internalID: -7200499167858657521
+      spriteID: c9112a781ad54d4a0800000000000000
+      internalID: -6569523008080047716
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: H_LowWarrior_Walk_6
+      name: Dog5_EvoLancer_Walk_7
       rect:
         serializedVersion: 2
-        x: 397
-        y: 5
-        width: 32
-        height: 46
+        x: 458
+        y: 3
+        width: 52
+        height: 39
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -278,8 +306,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 648a664657d7151f0800000000000000
-      internalID: -1057926494306260922
+      spriteID: 085739dae60909040800000000000000
+      internalID: 4652377220106646912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_Walk_8
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 3
+        width: 50
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c5f2d2cfd94b0b70800000000000000
+      internalID: 8866261516804093382
       vertices: []
       indices: 
       edges: []
@@ -298,13 +348,15 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      H_LowWarrior_Walk_0: 8873623250719127084
-      H_LowWarrior_Walk_1: 2088380103824506639
-      H_LowWarrior_Walk_2: -2836777394236139914
-      H_LowWarrior_Walk_3: -6109407933703684560
-      H_LowWarrior_Walk_4: -4370841701638680730
-      H_LowWarrior_Walk_5: -7200499167858657521
-      H_LowWarrior_Walk_6: -1057926494306260922
+      Dog5_EvoLancer_Walk_0: 5039444590062307965
+      Dog5_EvoLancer_Walk_1: 5721549167935901694
+      Dog5_EvoLancer_Walk_2: -1003602090705265522
+      Dog5_EvoLancer_Walk_3: -5950821734312975433
+      Dog5_EvoLancer_Walk_4: -2388127003429690600
+      Dog5_EvoLancer_Walk_5: 3570021657048894991
+      Dog5_EvoLancer_Walk_6: -6569523008080047716
+      Dog5_EvoLancer_Walk_7: 4652377220106646912
+      Dog5_EvoLancer_Walk_8: 8866261516804093382
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

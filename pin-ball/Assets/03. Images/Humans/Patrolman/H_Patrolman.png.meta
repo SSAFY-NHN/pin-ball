@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3f1ae904bccde1e44a0ec01ea977675d
+guid: 8b992a58ebaba67478fb7fdefdaaf1da
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1288553308641622509
-    second: H_LowWarrior_0
+      213: 6720063480981989828
+    second: H_Patrolman_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: H_LowWarrior_0
+      name: H_Patrolman_0
       rect:
         serializedVersion: 2
-        x: 15
-        y: 5
-        width: 32
-        height: 44
+        x: 26
+        y: 8
+        width: 47
+        height: 57
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: de9fcbb386cd1e110800000000000000
-      internalID: 1288553308641622509
+      spriteID: 4c9a10ca126724d50800000000000000
+      internalID: 6720063480981989828
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      H_LowWarrior_0: 1288553308641622509
+      H_Patrolman_0: 6720063480981989828
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

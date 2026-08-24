@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e6c1b92f7a4d4f0e8c3a219bd5617f42
+guid: c445c8192effc3d43bed0022b24ffb2d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6724519382041765301
-    second: Dog3_Lancer_Dog1Base_48x32_0
+      213: -5739620865435358720
+    second: Rabbit3_EvoMage_Tiny32_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -49,8 +49,8 @@ TextureImporter:
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 9
-  spritePivot: {x: 0.6666667, y: 0.5}
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -88,7 +88,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -101,7 +101,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Dog3_Lancer_Dog1Base_48x32_0
+      name: Rabbit3_EvoMage_Tiny32_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 5
         y: 0
-        width: 48
-        height: 32
-      alignment: 9
-      pivot: {x: 0.6666667, y: 0.5}
+        width: 22
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4f83d170ab256ce40800000000000000
-      internalID: -6724519382041765301
+      spriteID: 00a2e429b35c850b0800000000000000
+      internalID: -5739620865435358720
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Dog3_Lancer_Dog1Base_48x32_0: -6724519382041765301
+      Rabbit3_EvoMage_Tiny32_0: -5739620865435358720
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
