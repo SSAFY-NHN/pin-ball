@@ -35,6 +35,18 @@ public sealed class AllyPurchaseUiSceneTests
         AssertPurchaseSettings(battleManager, "archerPurchaseSettings", 5f);
         AssertPurchaseSettings(battleManager, "magePurchaseSettings", 7f);
         AssertPurchaseSettings(battleManager, "spearmanPurchaseSettings", 5f);
+
+        var unitManager = Object.FindFirstObjectByType<UnitManager>(
+            FindObjectsInactive.Include);
+        Assert.That(unitManager, Is.Not.Null);
+        Assert.That(
+            new SerializedObject(unitManager).FindProperty("startingAlly"),
+            Is.Null);
+        Assert.That(
+            Object.FindObjectsByType<AllyUnit>(
+                FindObjectsInactive.Exclude,
+                FindObjectsSortMode.None),
+            Is.Empty);
     }
 
     [TestCase("전사", "돌진 저지 · 전열 방어", 30, 1, false,

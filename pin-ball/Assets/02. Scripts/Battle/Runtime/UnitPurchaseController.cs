@@ -125,6 +125,15 @@ public sealed class UnitPurchaseController
         }
     }
 
+    public void ResetForWave()
+    {
+        foreach (string unitId in settingsByUnitId.Keys)
+        {
+            purchaseCounts[unitId] = 0;
+            remainingCooldowns[unitId] = 0f;
+        }
+    }
+
     public bool CanPurchase(string unitId, bool canDeploy)
     {
         return canDeploy &&

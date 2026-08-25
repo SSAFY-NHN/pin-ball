@@ -45,8 +45,8 @@ public class BattleManager : AppService, IItemEventListener
     public bool IsCurrentWaveBoss => CurrentWave?.IsBoss ?? false;
     public bool IsRunEnded => State is EWaveState.Victory or EWaveState.Defeat;
     public bool CanStartCurrentWave =>
-        CanUsePreparationActions && CurrentWave != null &&
-        unitManager != null && unitManager.CanStartWaveWithCurrentRoster;
+        IsInitialized && CanUsePreparationActions &&
+        CurrentWave != null && unitManager != null;
     public bool HasTacticalReinforcement =>
         tacticalReinforcementController?.HasTicket ?? false;
     public float AssaultElapsedTime => assaultController?.ElapsedTime ?? 0f;
@@ -309,6 +309,7 @@ public class BattleManager : AppService, IItemEventListener
         bool isFinalWave = runState.CurrentWaveIndex + 1 >=
                            runState.TotalWaveCount;
         unitManager.ResolveWaveResult();
+        unitPurchaseController.ResetForWave();
         waveResolution.Clear();
 
         EWaveState nextState = BattleResolutionPolicy.ResolveNextState(
@@ -431,7 +432,7 @@ public class BattleManager : AppService, IItemEventListener
 
     public bool CanPurchaseAlly(string unitId)
     {
-        if (!IsInitialized || IsRunEnded ||
+        if (!IsInitialized || State != EWaveState.Active ||
             unitManager == null || unitPurchaseController == null)
         {
             return false;
@@ -448,7 +449,7 @@ public class BattleManager : AppService, IItemEventListener
 
     public bool TryPurchaseAlly(string unitId)
     {
-        if (!IsInitialized || IsRunEnded ||
+        if (!IsInitialized || State != EWaveState.Active ||
             unitManager == null || unitPurchaseController == null)
         {
             return false;

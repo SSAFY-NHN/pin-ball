@@ -303,6 +303,33 @@ public sealed class UnitPurchaseControllerTests
         Assert.That(economy.Gold, Is.EqualTo(100));
     }
 
+    [Test]
+    public void ResetForWave_ClearsEveryPurchaseCountAndCooldownWithoutChangingGold()
+    {
+        Assert.That(
+            controller.TryPurchase("warrior", true, _ => true, out _),
+            Is.True);
+        Assert.That(
+            controller.TryPurchaseFree("mage", true, _ => true, out _),
+            Is.True);
+        int goldBeforeReset = economy.Gold;
+
+        controller.ResetForWave();
+
+        Assert.That(economy.Gold, Is.EqualTo(goldBeforeReset));
+        AssertPurchaseState("warrior", 30);
+        AssertPurchaseState("archer", 35);
+        AssertPurchaseState("mage", 40);
+        AssertPurchaseState("spearman", 35);
+    }
+
+    private void AssertPurchaseState(string unitId, int expectedBaseCost)
+    {
+        Assert.That(controller.GetPurchaseCount(unitId), Is.Zero);
+        Assert.That(controller.GetNextCost(unitId), Is.EqualTo(expectedBaseCost));
+        Assert.That(controller.GetRemainingCooldown(unitId), Is.Zero);
+    }
+
     private static UnitPurchaseController CreateController(BattleEconomy targetEconomy)
     {
         return new UnitPurchaseController(
