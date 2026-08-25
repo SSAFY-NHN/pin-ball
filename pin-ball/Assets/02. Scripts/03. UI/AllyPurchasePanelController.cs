@@ -106,7 +106,7 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
         RefreshCard(
             WarriorId,
             "전사",
-            "근접 탱커",
+            "돌진 저지 · 전열 방어",
             warriorPurchaseButton,
             warriorDisplayText,
             warriorCooldownMask,
@@ -115,7 +115,7 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
         RefreshCard(
             ArcherId,
             "궁수",
-            "원거리 지속 공격",
+            "장거리 · 단일 지속 피해",
             archerPurchaseButton,
             archerDisplayText,
             archerCooldownMask,
@@ -124,7 +124,7 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
         RefreshCard(
             MageId,
             "마법사",
-            "원거리 범위 공격",
+            "원거리 · 범위 피해",
             magePurchaseButton,
             mageDisplayText,
             mageCooldownMask,
@@ -133,7 +133,7 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
         RefreshCard(
             SpearmanId,
             "창병",
-            "중거리 근접 공격",
+            "중거리 · 방어 관통",
             spearmanPurchaseButton,
             spearmanDisplayText,
             spearmanCooldownMask,

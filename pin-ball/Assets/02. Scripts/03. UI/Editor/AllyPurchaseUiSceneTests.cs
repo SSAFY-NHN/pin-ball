@@ -37,12 +37,14 @@ public sealed class AllyPurchaseUiSceneTests
         AssertPurchaseSettings(battleManager, "spearmanPurchaseSettings", 5f);
     }
 
-    [TestCase("전사", "근접 탱커", 30, 1, false,
-        "전사\n근접 탱커\n보유 1 · 30G")]
-    [TestCase("궁수", "원거리 지속 공격", 49, 2, true,
-        "궁수\n원거리 지속 공격\n보유 2 · 무료")]
-    [TestCase("마법사", "원거리 범위 공격", 79, 0, false,
-        "마법사\n원거리 범위 공격\n보유 0 · 79G")]
+    [TestCase("전사", "돌진 저지 · 전열 방어", 30, 1, false,
+        "전사\n돌진 저지 · 전열 방어\n보유 1 · 30G")]
+    [TestCase("궁수", "장거리 · 단일 지속 피해", 49, 2, true,
+        "궁수\n장거리 · 단일 지속 피해\n보유 2 · 무료")]
+    [TestCase("마법사", "원거리 · 범위 피해", 79, 0, false,
+        "마법사\n원거리 · 범위 피해\n보유 0 · 79G")]
+    [TestCase("창병", "중거리 · 방어 관통", 35, 0, false,
+        "창병\n중거리 · 방어 관통\n보유 0 · 35G")]
     public void FormatCard_CombinesRoleOwnedCountAndPurchaseState(
         string unitName,
         string role,
