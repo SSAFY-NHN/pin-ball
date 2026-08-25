@@ -101,6 +101,14 @@ public sealed class UnitRoster
         return snapshot;
     }
 
+    public AllyUnit[] DrainAllies()
+    {
+        var snapshot = _ownedAllies.ToArray();
+        _ownedAllies.Clear();
+        _activeAllies.Clear();
+        return snapshot;
+    }
+
     public void ClearActiveAllies()
     {
         _activeAllies.Clear();

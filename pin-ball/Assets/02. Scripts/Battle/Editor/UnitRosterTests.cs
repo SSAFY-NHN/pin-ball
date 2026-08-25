@@ -71,6 +71,24 @@ public class UnitRosterTests
     }
 
     [Test]
+    public void DrainAllies_ReturnsOwnedSnapshotAndClearsOwnedAndActiveLists()
+    {
+        _allyObject = new GameObject("warrior");
+        _enemyObject = new GameObject("mage");
+        var warrior = _allyObject.AddComponent<AllyUnit>();
+        var mage = _enemyObject.AddComponent<AllyUnit>();
+        var roster = new UnitRoster();
+        roster.AddOwnedAlly(warrior);
+        roster.AddOwnedAlly(mage);
+
+        AllyUnit[] drained = roster.DrainAllies();
+
+        Assert.That(drained, Is.EqualTo(new[] { warrior, mage }));
+        Assert.That(roster.OwnedAllyCount, Is.Zero);
+        Assert.That(roster.ActiveAllyCount, Is.Zero);
+    }
+
+    [Test]
     public void NotifyUnitDied_EnemyDoesNotTouchOwnedAllies()
     {
         _allyObject = new GameObject("ally");

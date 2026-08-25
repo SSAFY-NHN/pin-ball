@@ -47,11 +47,6 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     private BattleManager _battleManager;
     private UnitSpawner _spawner;
     private TitleData _titleData;
-    [SerializeField] private BattleUnitSpawnData startingAlly = new()
-    {
-        UnitId = "warrior",
-        Level = 1
-    };
     [SerializeField] private BattleAreaBounds battleArea;
     [SerializeField] private DefenseLineTrigger allyDefenseLine;
     [SerializeField] private DefenseLineTrigger enemyDefenseLine;
@@ -100,10 +95,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         _itemManager.Subscribe(EItem.FieldArmor, this);
         _itemManager.Subscribe(EItem.DiversityEmblem, this);
 
-        if (_roster.OwnedAllyCount == 0 && startingAlly != null)
-        {
-            SpawnAlly(startingAlly);
-        }
+        ReturnAllAllies();
     }
 
     private void NotifyUnitDamaged(UnitBase unit)
@@ -349,7 +341,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     public void ResolveWaveResult()
     {
         ReturnAllEnemies();
-        RestoreAlliesForPreparation();
+        ReturnAllAllies();
     }
 
     public void ReleaseUnit(UnitBase unit)
@@ -436,7 +428,7 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
 
     public static bool CanStartWaveWithAllyCount(int count)
     {
-        return count >= 1 && count <= MaxDeployedAllyCount;
+        return count >= 0 && count <= MaxDeployedAllyCount;
     }
 
     private void ReturnAllEnemies()
@@ -451,34 +443,21 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         }
     }
 
-    private void RestoreAlliesForPreparation()
+    private void ReturnAllAllies()
     {
-        _roster.ClearActiveAllies();
-
-        for (var i = 0; i < _roster.OwnedAllyCount; i++)
+        AllyUnit[] snapshot = _roster.DrainAllies();
+        foreach (AllyUnit ally in snapshot)
         {
-            var ally = _roster.OwnedAllies[i];
             if (ally == null) continue;
-
-            if (!_preparationController.TryGetSavedPosition(
-                    ally,
-                    out Vector3 preparationPosition) &&
-                (!_preparationController.TryPlaceInFreeGridSlot(ally) ||
-                 !_preparationController.TryGetSavedPosition(
-                     ally,
-                     out preparationPosition)))
-            {
-                Debug.LogWarning(
-                    "[UnitManager] Failed to restore ally stage position.");
-                continue;
-            }
-
-            ally.RestoreForPreparation(preparationPosition);
-            ally.ResetMana();
-            _roster.AddActiveAlly(ally);
+            _preparationController.Remove(ally);
+            _spawner.ReturnUnit(ally);
         }
 
         RefreshAllyItemModifiers();
+        if (snapshot.Length <= 0) return;
+
+        OnDeployedAllyCountChanged?.Invoke(0);
+        OnBattleRosterChanged?.Invoke();
     }
 
     public bool CanDragAlly(AllyUnit ally)
