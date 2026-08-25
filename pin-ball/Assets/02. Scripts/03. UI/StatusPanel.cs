@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public enum EWaveHudNodeState
 {
@@ -39,6 +40,7 @@ public class StatusPanel : UIBase
     [SerializeField] private TextMeshProUGUI playerHpText;
     [SerializeField] private TextMeshProUGUI goldText;
     [SerializeField] private TextMeshProUGUI defenseLineText;
+    [SerializeField] private TextMeshProUGUI assaultCountdownText;
 
     [Header("Wave Progress")]
     [SerializeField] private Image[] waveNodes;
@@ -84,6 +86,8 @@ public class StatusPanel : UIBase
         battleManager.OnHpChanged += OnHpChanged;
         battleManager.OnGoldChanged += OnGoldChanged;
         battleManager.OnDefenseLineHpChanged += OnDefenseLineHpChanged;
+        battleManager.OnStateChanged += OnStateChanged;
+        battleManager.OnAssaultPhaseChanged += OnAssaultPhaseChanged;
 
         feedbackController = new StatusFeedbackController(
             playerHpText,
@@ -108,6 +112,45 @@ public class StatusPanel : UIBase
         isWaveHudValid = waveHudController.ValidateReferences();
 
         if (battleManager.IsInitialized) OnBattleInitialized();
+        OnStateChanged(battleManager.State);
+    }
+
+    private void Update()
+    {
+        if (battleManager == null || assaultCountdownText == null ||
+            battleManager.State != EWaveState.Active) return;
+
+        assaultCountdownText.text = AssaultCountdownFormatter.Format(
+            battleManager.AssaultElapsedTime);
+    }
+
+    private void OnStateChanged(EWaveState state)
+    {
+        if (assaultCountdownText == null) return;
+        bool isActive = state == EWaveState.Active;
+        assaultCountdownText.gameObject.SetActive(isActive);
+        if (isActive)
+        {
+            assaultCountdownText.text = AssaultCountdownFormatter.Format(
+                battleManager.AssaultElapsedTime);
+        }
+    }
+
+    private void OnAssaultPhaseChanged(EBattleAssaultPhase phase)
+    {
+        if (phase is not (EBattleAssaultPhase.Empowered or
+            EBattleAssaultPhase.Final) || assaultCountdownText == null) return;
+
+        assaultCountdownText.rectTransform.DOKill();
+        assaultCountdownText.rectTransform.DOPunchScale(
+            Vector3.one * 0.18f,
+            0.35f,
+            7,
+            0.5f);
+        if (phase == EBattleAssaultPhase.Final)
+        {
+            SoundManager.PlaySFXIfAvailable(SoundName.BossWind);
+        }
     }
 
     private void OnBattleInitialized()
@@ -210,5 +253,8 @@ public class StatusPanel : UIBase
         battleManager.OnHpChanged -= OnHpChanged;
         battleManager.OnGoldChanged -= OnGoldChanged;
         battleManager.OnDefenseLineHpChanged -= OnDefenseLineHpChanged;
+        battleManager.OnStateChanged -= OnStateChanged;
+        battleManager.OnAssaultPhaseChanged -= OnAssaultPhaseChanged;
+        assaultCountdownText?.rectTransform.DOKill();
     }
 }

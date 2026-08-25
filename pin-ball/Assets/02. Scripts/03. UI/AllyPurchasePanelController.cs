@@ -7,13 +7,28 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
     private const string WarriorId = "warrior";
     private const string ArcherId = "archer";
     private const string MageId = "mage";
+    private const string SpearmanId = "spearman";
 
     [SerializeField] private Button warriorPurchaseButton;
     [SerializeField] private TextMeshProUGUI warriorDisplayText;
+    [SerializeField] private Image warriorPortraitImage;
+    [SerializeField] private Image warriorCooldownMask;
+    [SerializeField] private TextMeshProUGUI warriorCooldownText;
     [SerializeField] private Button archerPurchaseButton;
     [SerializeField] private TextMeshProUGUI archerDisplayText;
+    [SerializeField] private Image archerPortraitImage;
+    [SerializeField] private Image archerCooldownMask;
+    [SerializeField] private TextMeshProUGUI archerCooldownText;
     [SerializeField] private Button magePurchaseButton;
     [SerializeField] private TextMeshProUGUI mageDisplayText;
+    [SerializeField] private Image magePortraitImage;
+    [SerializeField] private Image mageCooldownMask;
+    [SerializeField] private TextMeshProUGUI mageCooldownText;
+    [SerializeField] private Button spearmanPurchaseButton;
+    [SerializeField] private TextMeshProUGUI spearmanDisplayText;
+    [SerializeField] private Image spearmanPortraitImage;
+    [SerializeField] private Image spearmanCooldownMask;
+    [SerializeField] private TextMeshProUGUI spearmanCooldownText;
     [SerializeField] private TextMeshProUGUI reinforcementNotice;
 
     private BattleManager battleManager;
@@ -27,6 +42,7 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
         warriorPurchaseButton.onClick.AddListener(PurchaseWarrior);
         archerPurchaseButton.onClick.AddListener(PurchaseArcher);
         magePurchaseButton.onClick.AddListener(PurchaseMage);
+        spearmanPurchaseButton.onClick.AddListener(PurchaseSpearman);
 
         battleManager.OnInitialized += Refresh;
         battleManager.OnGoldChanged += OnGoldChanged;
@@ -34,6 +50,11 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
             OnTacticalReinforcementChanged;
         battleManager.OnStateChanged += OnStateChanged;
         unitManager.OnDeployedAllyCountChanged += OnDeployedAllyCountChanged;
+        Refresh();
+    }
+
+    private void Update()
+    {
         Refresh();
     }
 
@@ -50,6 +71,11 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
     private void PurchaseMage()
     {
         battleManager.TryPurchaseAlly(MageId);
+    }
+
+    private void PurchaseSpearman()
+    {
+        battleManager.TryPurchaseAlly(SpearmanId);
     }
 
     private void OnGoldChanged(int _)
@@ -83,6 +109,8 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
             "근접 탱커",
             warriorPurchaseButton,
             warriorDisplayText,
+            warriorCooldownMask,
+            warriorCooldownText,
             isFree);
         RefreshCard(
             ArcherId,
@@ -90,6 +118,8 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
             "원거리 지속 공격",
             archerPurchaseButton,
             archerDisplayText,
+            archerCooldownMask,
+            archerCooldownText,
             isFree);
         RefreshCard(
             MageId,
@@ -97,6 +127,17 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
             "원거리 범위 공격",
             magePurchaseButton,
             mageDisplayText,
+            mageCooldownMask,
+            mageCooldownText,
+            isFree);
+        RefreshCard(
+            SpearmanId,
+            "창병",
+            "중거리 근접 공격",
+            spearmanPurchaseButton,
+            spearmanDisplayText,
+            spearmanCooldownMask,
+            spearmanCooldownText,
             isFree);
 
         reinforcementNotice.text = FormatReinforcementNotice(isFree);
@@ -109,6 +150,8 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
         string role,
         Button purchaseButton,
         TextMeshProUGUI displayText,
+        Image cooldownMask,
+        TextMeshProUGUI cooldownText,
         bool isFree)
     {
         displayText.text = FormatCard(
@@ -118,6 +161,17 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
             unitManager.GetOwnedAllyCount(unitId),
             isFree);
         purchaseButton.interactable = battleManager.CanPurchaseAlly(unitId);
+        float remaining = battleManager.GetAllyRemainingCooldown(unitId);
+        bool isCoolingDown = remaining > 0f;
+        cooldownMask.gameObject.SetActive(isCoolingDown);
+        cooldownText.text = FormatCooldown(remaining);
+    }
+
+    public static string FormatCooldown(float remainingSeconds)
+    {
+        return remainingSeconds > 0f
+            ? Mathf.CeilToInt(remainingSeconds).ToString()
+            : string.Empty;
     }
 
     public static string FormatCard(
@@ -151,6 +205,11 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
         if (magePurchaseButton != null)
         {
             magePurchaseButton.onClick.RemoveListener(PurchaseMage);
+        }
+
+        if (spearmanPurchaseButton != null)
+        {
+            spearmanPurchaseButton.onClick.RemoveListener(PurchaseSpearman);
         }
 
         if (battleManager != null)

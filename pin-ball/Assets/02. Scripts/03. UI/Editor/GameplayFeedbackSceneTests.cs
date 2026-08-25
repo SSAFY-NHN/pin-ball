@@ -56,6 +56,7 @@ public class GameplayFeedbackSceneTests
         AssertReference(statusPanel, "boss10NodeSprite");
         AssertReference(statusPanel, "idleConnectorSprite");
         AssertReference(statusPanel, "completeConnectorSprite");
+        AssertReference(statusPanel, "assaultCountdownText");
 
         GameObject boardGlow = GameObject.Find("BoardGlow");
         Assert.That(boardGlow, Is.Not.Null);

@@ -24,9 +24,17 @@ public sealed class AllyPurchaseUiSceneTests
         AssertCardReferences(panel, "warrior");
         AssertCardReferences(panel, "archer");
         AssertCardReferences(panel, "mage");
+        AssertCardReferences(panel, "spearman");
         Assert.That(
             ReadReference<TextMeshProUGUI>(panel, "reinforcementNotice"),
             Is.Not.Null);
+
+        var battleManager = Object.FindFirstObjectByType<BattleManager>(
+            FindObjectsInactive.Include);
+        AssertPurchaseSettings(battleManager, "warriorPurchaseSettings", 4f);
+        AssertPurchaseSettings(battleManager, "archerPurchaseSettings", 5f);
+        AssertPurchaseSettings(battleManager, "magePurchaseSettings", 7f);
+        AssertPurchaseSettings(battleManager, "spearmanPurchaseSettings", 5f);
     }
 
     [TestCase("전사", "근접 탱커", 30, 1, false,
@@ -64,6 +72,19 @@ public sealed class AllyPurchaseUiSceneTests
             Is.EqualTo(expected));
     }
 
+    [TestCase(0f, "")]
+    [TestCase(0.01f, "1")]
+    [TestCase(3f, "3")]
+    [TestCase(3.01f, "4")]
+    public void FormatCooldown_CeilsPositiveRemainingSeconds(
+        float remaining,
+        string expected)
+    {
+        Assert.That(
+            AllyPurchasePanelController.FormatCooldown(remaining),
+            Is.EqualTo(expected));
+    }
+
     private static void AssertCardReferences(
         AllyPurchasePanelController panel,
         string prefix)
@@ -74,6 +95,28 @@ public sealed class AllyPurchaseUiSceneTests
         Assert.That(
             ReadReference<TextMeshProUGUI>(panel, $"{prefix}DisplayText"),
             Is.Not.Null);
+        Image portrait = ReadReference<Image>(panel, $"{prefix}PortraitImage");
+        Assert.That(portrait, Is.Not.Null);
+        Assert.That(portrait.sprite, Is.Not.Null);
+        Assert.That(
+            ReadReference<Image>(panel, $"{prefix}CooldownMask"),
+            Is.Not.Null);
+        Assert.That(
+            ReadReference<TextMeshProUGUI>(panel, $"{prefix}CooldownText"),
+            Is.Not.Null);
+    }
+
+    private static void AssertPurchaseSettings(
+        BattleManager manager,
+        string propertyName,
+        float expectedCooldown)
+    {
+        SerializedProperty property =
+            new SerializedObject(manager).FindProperty(propertyName);
+        Assert.That(property, Is.Not.Null, propertyName);
+        Assert.That(
+            property.FindPropertyRelative("CooldownSeconds").floatValue,
+            Is.EqualTo(expectedCooldown));
     }
 
     private static T ReadReference<T>(Object target, string propertyName)
