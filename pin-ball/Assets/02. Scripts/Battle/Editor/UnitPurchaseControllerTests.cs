@@ -12,9 +12,10 @@ public sealed class UnitPurchaseControllerTests
         economy = new BattleEconomy(100);
         controller = new UnitPurchaseController(
             economy,
-            new UnitPurchaseSettings("warrior", 30, 1.4f),
-            new UnitPurchaseSettings("archer", 35, 1.4f),
-            new UnitPurchaseSettings("mage", 40, 1.4f));
+            new UnitPurchaseSettings("warrior", 30, 1.4f, 4f),
+            new UnitPurchaseSettings("archer", 35, 1.4f, 5f),
+            new UnitPurchaseSettings("mage", 40, 1.4f, 7f),
+            new UnitPurchaseSettings("spearman", 35, 1.4f, 5f));
     }
 
     [TestCase("warrior", 30, 70, 42)]
@@ -46,7 +47,8 @@ public sealed class UnitPurchaseControllerTests
         Assert.That(result.Cost, Is.EqualTo(expectedCost));
         Assert.That(controller.GetNextCost(unitId), Is.EqualTo(expectedNextCost));
 
-        foreach (string otherUnitId in new[] { "warrior", "archer", "mage" })
+        foreach (string otherUnitId in new[]
+                 { "warrior", "archer", "mage", "spearman" })
         {
             if (otherUnitId == unitId) continue;
             Assert.That(controller.GetPurchaseCount(otherUnitId), Is.Zero);
@@ -118,7 +120,7 @@ public sealed class UnitPurchaseControllerTests
         bool spawnAttempted = false;
 
         bool purchased = controller.TryPurchase(
-            "spearman",
+            "missing",
             true,
             _ =>
             {
@@ -130,7 +132,7 @@ public sealed class UnitPurchaseControllerTests
         Assert.That(purchased, Is.False);
         Assert.That(spawnAttempted, Is.False);
         Assert.That(economy.Gold, Is.EqualTo(100));
-        Assert.That(controller.GetPurchaseCount("spearman"), Is.Zero);
+        Assert.That(controller.GetPurchaseCount("missing"), Is.Zero);
     }
 
     [Test]
@@ -226,6 +228,56 @@ public sealed class UnitPurchaseControllerTests
         Assert.That(economy.Gold, Is.EqualTo(100));
         Assert.That(controller.GetPurchaseCount("archer"), Is.Zero);
         Assert.That(controller.GetNextCost("archer"), Is.EqualTo(35));
+        Assert.That(controller.GetRemainingCooldown("archer"), Is.Zero);
+    }
+
+    [TestCase("warrior", 4f)]
+    [TestCase("archer", 5f)]
+    [TestCase("mage", 7f)]
+    [TestCase("spearman", 5f)]
+    public void TryPurchase_SuccessStartsOnlySelectedUnitCooldown(
+        string unitId,
+        float expectedCooldown)
+    {
+        Assert.That(
+            controller.TryPurchase(unitId, true, _ => true, out _),
+            Is.True);
+
+        Assert.That(
+            controller.GetRemainingCooldown(unitId),
+            Is.EqualTo(expectedCooldown));
+        foreach (string otherUnitId in new[]
+                 { "warrior", "archer", "mage", "spearman" })
+        {
+            if (otherUnitId == unitId) continue;
+            Assert.That(controller.GetRemainingCooldown(otherUnitId), Is.Zero);
+        }
+    }
+
+    [Test]
+    public void Advance_DecreasesCooldownAndBlocksPaidAndFreePurchase()
+    {
+        controller.TryPurchase("warrior", true, _ => true, out _);
+
+        Assert.That(controller.CanPurchase("warrior", true), Is.False);
+        Assert.That(controller.CanPurchaseFree("warrior", true), Is.False);
+        controller.Advance(1.5f);
+        Assert.That(controller.GetRemainingCooldown("warrior"), Is.EqualTo(2.5f));
+        controller.Advance(2.5f);
+        Assert.That(controller.CanPurchaseFree("warrior", true), Is.True);
+    }
+
+    [Test]
+    public void TryPurchaseFree_SpearmanSuccessStartsCooldownWithoutSpendingGold()
+    {
+        Assert.That(
+            controller.TryPurchaseFree("spearman", true, _ => true, out var result),
+            Is.True);
+
+        Assert.That(economy.Gold, Is.EqualTo(100));
+        Assert.That(result.UnitId, Is.EqualTo("spearman"));
+        Assert.That(controller.GetPurchaseCount("spearman"), Is.EqualTo(1));
+        Assert.That(controller.GetRemainingCooldown("spearman"), Is.EqualTo(5f));
     }
 
     [TestCase("missing", true)]
@@ -255,9 +307,10 @@ public sealed class UnitPurchaseControllerTests
     {
         return new UnitPurchaseController(
             targetEconomy,
-            new UnitPurchaseSettings("warrior", 30, 1.4f),
-            new UnitPurchaseSettings("archer", 35, 1.4f),
-            new UnitPurchaseSettings("mage", 40, 1.4f));
+            new UnitPurchaseSettings("warrior", 30, 1.4f, 4f),
+            new UnitPurchaseSettings("archer", 35, 1.4f, 5f),
+            new UnitPurchaseSettings("mage", 40, 1.4f, 7f),
+            new UnitPurchaseSettings("spearman", 35, 1.4f, 5f));
     }
 }
 #endif

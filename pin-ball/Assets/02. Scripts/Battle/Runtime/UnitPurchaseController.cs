@@ -9,15 +9,26 @@ public struct UnitPurchaseSettings
     public string UnitId;
     [Min(0)] public int BaseCost;
     [Min(1f)] public float CostMultiplier;
+    [Min(0f)] public float CooldownSeconds;
+
+    public UnitPurchaseSettings(
+        string unitId,
+        int baseCost,
+        float costMultiplier,
+        float cooldownSeconds)
+    {
+        UnitId = unitId;
+        BaseCost = baseCost;
+        CostMultiplier = costMultiplier;
+        CooldownSeconds = cooldownSeconds;
+    }
 
     public UnitPurchaseSettings(
         string unitId,
         int baseCost,
         float costMultiplier)
+        : this(unitId, baseCost, costMultiplier, 0f)
     {
-        UnitId = unitId;
-        BaseCost = baseCost;
-        CostMultiplier = costMultiplier;
     }
 }
 
@@ -42,6 +53,8 @@ public sealed class UnitPurchaseController
         new(StringComparer.Ordinal);
     private readonly Dictionary<string, int> purchaseCounts =
         new(StringComparer.Ordinal);
+    private readonly Dictionary<string, float> remainingCooldowns =
+        new(StringComparer.Ordinal);
 
     public UnitPurchaseController(
         BattleEconomy economy,
@@ -54,13 +67,15 @@ public sealed class UnitPurchaseController
         {
             if (string.IsNullOrWhiteSpace(entry.UnitId) ||
                 entry.BaseCost < 0 ||
-                entry.CostMultiplier < 1f)
+                entry.CostMultiplier < 1f ||
+                entry.CooldownSeconds < 0f)
             {
                 continue;
             }
 
             settingsByUnitId[entry.UnitId] = entry;
             purchaseCounts[entry.UnitId] = 0;
+            remainingCooldowns[entry.UnitId] = 0f;
         }
     }
 
@@ -87,9 +102,33 @@ public sealed class UnitPurchaseController
             : Mathf.CeilToInt((float)cost);
     }
 
+    public float GetRemainingCooldown(string unitId)
+    {
+        return unitId != null &&
+               remainingCooldowns.TryGetValue(unitId, out float remaining)
+            ? remaining
+            : 0f;
+    }
+
+    public bool IsCoolingDown(string unitId) =>
+        GetRemainingCooldown(unitId) > 0f;
+
+    public void Advance(float deltaTime)
+    {
+        if (deltaTime <= 0f) return;
+
+        foreach (string unitId in settingsByUnitId.Keys)
+        {
+            remainingCooldowns[unitId] = Mathf.Max(
+                0f,
+                remainingCooldowns[unitId] - deltaTime);
+        }
+    }
+
     public bool CanPurchase(string unitId, bool canDeploy)
     {
         return canDeploy &&
+               !IsCoolingDown(unitId) &&
                economy != null &&
                unitId != null &&
                settingsByUnitId.ContainsKey(unitId) &&
@@ -99,6 +138,7 @@ public sealed class UnitPurchaseController
     public bool CanPurchaseFree(string unitId, bool canDeploy)
     {
         return canDeploy &&
+               !IsCoolingDown(unitId) &&
                unitId != null &&
                settingsByUnitId.ContainsKey(unitId);
     }
@@ -121,6 +161,7 @@ public sealed class UnitPurchaseController
         if (!trySpawn(spawnData)) return false;
         if (!economy.TrySpend(cost)) return false;
         if (!RecordSuccessfulPurchase(unitId)) return false;
+        StartCooldown(unitId);
 
         result = new UnitPurchaseResult(
             unitId,
@@ -153,11 +194,21 @@ public sealed class UnitPurchaseController
         };
         if (!trySpawn(spawnData)) return false;
         if (!RecordSuccessfulPurchase(unitId)) return false;
+        StartCooldown(unitId);
 
         result = new UnitPurchaseResult(
             unitId,
             GetPurchaseCount(unitId),
             0);
         return true;
+    }
+
+    private void StartCooldown(string unitId)
+    {
+        if (!settingsByUnitId.TryGetValue(
+                unitId,
+                out UnitPurchaseSettings settings)) return;
+
+        remainingCooldowns[unitId] = settings.CooldownSeconds;
     }
 }
