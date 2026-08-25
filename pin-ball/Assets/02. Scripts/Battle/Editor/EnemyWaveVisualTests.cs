@@ -25,16 +25,16 @@ public class EnemyWaveVisualTests
 
         var expectedWaves = new[]
         {
-            Wave(("goblin", 3)),
             Wave(("goblin", 4)),
+            Wave(("wolf", 3)),
             Wave(("goblin", 3), ("goblin_archer", 1)),
-            Wave(("goblin", 3), ("goblin_archer", 2)),
-            Wave(("goblin", 2), ("goblin_archer", 2), ("shield_guard", 1)),
-            Wave(("goblin", 2), ("goblin_archer", 1), ("shield_guard", 2)),
-            Wave(("goblin", 2), ("goblin_archer", 1), ("shield_guard", 1), ("orc_warrior", 1)),
-            Wave(("goblin", 1), ("goblin_archer", 2), ("shield_guard", 1), ("orc_warrior", 1)),
-            Wave(("goblin", 1), ("goblin_archer", 1), ("shield_guard", 1), ("orc_warrior", 2)),
-            Wave(("goblin", 1), ("goblin_archer", 1), ("shield_guard", 1), ("goblin_king", 1))
+            Wave(("goblin", 4), ("goblin_archer", 1)),
+            Wave(("shield_guard", 3)),
+            Wave(("shield_guard", 2), ("goblin", 3)),
+            Wave(("orc_warrior", 2), ("troll", 1)),
+            Wave(("shaman", 2), ("assassin", 2)),
+            Wave(("ogre_elite", 1), ("dark_mage_elite", 1), ("shield_guard", 1), ("assassin", 1)),
+            Wave(("goblin_king", 1), ("goblin", 3))
         };
 
         for (var waveIndex = 0; waveIndex < expectedWaves.Length; waveIndex++)

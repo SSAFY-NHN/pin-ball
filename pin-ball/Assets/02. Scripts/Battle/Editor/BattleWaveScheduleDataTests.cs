@@ -19,6 +19,10 @@ public sealed class BattleWaveScheduleDataTests
             Assert.That(wave.BasicReinforcement.Enemies, Is.Not.Empty, wave.WaveName);
             Assert.That(wave.EmpoweredReinforcement.Enemies, Is.Not.Empty, wave.WaveName);
             Assert.That(wave.FinalAssault.Enemies, Is.Not.Empty, wave.WaveName);
+            Assert.That(wave.InitialAssault.Sum(entry => entry.Count), Is.LessThanOrEqualTo(8), wave.WaveName);
+            Assert.That(wave.BasicReinforcement.Enemies.Sum(entry => entry.Count), Is.LessThanOrEqualTo(8), wave.WaveName);
+            Assert.That(wave.EmpoweredReinforcement.Enemies.Sum(entry => entry.Count), Is.LessThanOrEqualTo(8), wave.WaveName);
+            Assert.That(wave.FinalAssault.Enemies.Sum(entry => entry.Count), Is.LessThanOrEqualTo(8), wave.WaveName);
             Assert.That(
                 wave.InitialAssault.Max(entry =>
                     entry.FirstSpawnTime +

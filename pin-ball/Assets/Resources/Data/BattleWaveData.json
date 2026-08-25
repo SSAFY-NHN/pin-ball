@@ -2,74 +2,74 @@
   "common": { "StartingGold": 0, "BaseLaunchCost": 50, "LaunchCostIncrease": 30 },
   "waves": [
     {
-      "WaveName": "로그 정찰대", "IsElite": false, "IsBoss": false,
-      "InitialAssault": [{ "EnemyId": "goblin", "Count": 3, "FirstSpawnTime": 0, "SpawnInterval": 1.5 }],
-      "BasicReinforcement": { "RepeatInterval": 12, "Enemies": [{ "EnemyId": "goblin", "Count": 2 }] },
-      "EmpoweredReinforcement": { "RepeatInterval": 10, "Enemies": [{ "EnemyId": "goblin", "Count": 2 }, { "EnemyId": "wolf", "Count": 1 }] },
-      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "goblin", "Count": 2 }, { "EnemyId": "wolf", "Count": 2 }] }
-    },
-    {
-      "WaveName": "로그 습격대", "IsElite": false, "IsBoss": false,
-      "InitialAssault": [{ "EnemyId": "goblin", "Count": 4, "FirstSpawnTime": 0, "SpawnInterval": 1.5 }],
+      "WaveName": "고블린 물량", "IsElite": false, "IsBoss": false,
+      "InitialAssault": [{ "EnemyId": "goblin", "Count": 4, "FirstSpawnTime": 0, "SpawnInterval": 1.2 }],
       "BasicReinforcement": { "RepeatInterval": 12, "Enemies": [{ "EnemyId": "goblin", "Count": 3 }] },
-      "EmpoweredReinforcement": { "RepeatInterval": 10, "Enemies": [{ "EnemyId": "goblin", "Count": 2 }, { "EnemyId": "wolf", "Count": 2 }] },
-      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "goblin", "Count": 2 }, { "EnemyId": "goblin_archer", "Count": 1 }, { "EnemyId": "wolf", "Count": 2 }] }
+      "EmpoweredReinforcement": { "RepeatInterval": 10, "Enemies": [{ "EnemyId": "goblin", "Count": 4 }] },
+      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "goblin", "Count": 5 }] }
     },
     {
-      "WaveName": "궁수 합류", "IsElite": false, "IsBoss": false,
+      "WaveName": "늑대 돌진", "IsElite": false, "IsBoss": false,
+      "InitialAssault": [{ "EnemyId": "wolf", "Count": 3, "FirstSpawnTime": 0, "SpawnInterval": 1.5 }],
+      "BasicReinforcement": { "RepeatInterval": 12, "Enemies": [{ "EnemyId": "wolf", "Count": 2 }] },
+      "EmpoweredReinforcement": { "RepeatInterval": 10, "Enemies": [{ "EnemyId": "wolf", "Count": 3 }] },
+      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "wolf", "Count": 4 }] }
+    },
+    {
+      "WaveName": "근접과 궁수", "IsElite": false, "IsBoss": false,
       "InitialAssault": [{ "EnemyId": "goblin", "Count": 3, "FirstSpawnTime": 0, "SpawnInterval": 1.5 }, { "EnemyId": "goblin_archer", "Count": 1, "FirstSpawnTime": 3, "SpawnInterval": 0 }],
       "BasicReinforcement": { "RepeatInterval": 12, "Enemies": [{ "EnemyId": "goblin", "Count": 2 }, { "EnemyId": "goblin_archer", "Count": 1 }] },
-      "EmpoweredReinforcement": { "RepeatInterval": 10, "Enemies": [{ "EnemyId": "goblin", "Count": 2 }, { "EnemyId": "goblin_archer", "Count": 1 }, { "EnemyId": "wolf", "Count": 1 }] },
-      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "goblin", "Count": 2 }, { "EnemyId": "goblin_archer", "Count": 2 }, { "EnemyId": "wolf", "Count": 1 }] }
+      "EmpoweredReinforcement": { "RepeatInterval": 10, "Enemies": [{ "EnemyId": "goblin", "Count": 2 }, { "EnemyId": "goblin_archer", "Count": 2 }] },
+      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "goblin", "Count": 3 }, { "EnemyId": "goblin_archer", "Count": 2 }] }
     },
     {
-      "WaveName": "원거리 지원", "IsElite": false, "IsBoss": false,
-      "InitialAssault": [{ "EnemyId": "goblin", "Count": 3, "FirstSpawnTime": 0, "SpawnInterval": 1.5 }, { "EnemyId": "goblin_archer", "Count": 2, "FirstSpawnTime": 2, "SpawnInterval": 2 }],
-      "BasicReinforcement": { "RepeatInterval": 12, "Enemies": [{ "EnemyId": "goblin", "Count": 2 }, { "EnemyId": "goblin_archer", "Count": 2 }] },
-      "EmpoweredReinforcement": { "RepeatInterval": 10, "Enemies": [{ "EnemyId": "shield_guard", "Count": 1 }, { "EnemyId": "goblin", "Count": 2 }, { "EnemyId": "goblin_archer", "Count": 1 }] },
-      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "shield_guard", "Count": 1 }, { "EnemyId": "goblin", "Count": 2 }, { "EnemyId": "goblin_archer", "Count": 2 }, { "EnemyId": "wolf", "Count": 1 }] }
+      "WaveName": "물량과 원거리", "IsElite": false, "IsBoss": false,
+      "InitialAssault": [{ "EnemyId": "goblin", "Count": 4, "FirstSpawnTime": 0, "SpawnInterval": 1.2 }, { "EnemyId": "goblin_archer", "Count": 1, "FirstSpawnTime": 2, "SpawnInterval": 0 }],
+      "BasicReinforcement": { "RepeatInterval": 12, "Enemies": [{ "EnemyId": "goblin", "Count": 3 }, { "EnemyId": "goblin_archer", "Count": 1 }] },
+      "EmpoweredReinforcement": { "RepeatInterval": 10, "Enemies": [{ "EnemyId": "goblin", "Count": 4 }, { "EnemyId": "goblin_archer", "Count": 1 }] },
+      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "goblin", "Count": 4 }, { "EnemyId": "goblin_archer", "Count": 2 }] }
     },
     {
-      "WaveName": "메이스 전사", "IsElite": true, "IsBoss": false,
-      "InitialAssault": [{ "EnemyId": "goblin", "Count": 2, "FirstSpawnTime": 0, "SpawnInterval": 1.5 }, { "EnemyId": "goblin_archer", "Count": 2, "FirstSpawnTime": 2, "SpawnInterval": 2 }, { "EnemyId": "shield_guard", "Count": 1, "FirstSpawnTime": 4, "SpawnInterval": 0 }],
-      "BasicReinforcement": { "RepeatInterval": 11, "Enemies": [{ "EnemyId": "goblin", "Count": 1 }, { "EnemyId": "goblin_archer", "Count": 1 }, { "EnemyId": "shield_guard", "Count": 1 }] },
-      "EmpoweredReinforcement": { "RepeatInterval": 9, "Enemies": [{ "EnemyId": "orc_warrior", "Count": 1 }, { "EnemyId": "shield_guard", "Count": 1 }, { "EnemyId": "goblin_archer", "Count": 1 }, { "EnemyId": "goblin", "Count": 1 }] },
-      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "orc_warrior", "Count": 1 }, { "EnemyId": "shield_guard", "Count": 2 }, { "EnemyId": "goblin_archer", "Count": 1 }, { "EnemyId": "wolf", "Count": 1 }] }
+      "WaveName": "방패병", "IsElite": true, "IsBoss": false,
+      "InitialAssault": [{ "EnemyId": "shield_guard", "Count": 3, "FirstSpawnTime": 0, "SpawnInterval": 1.8 }],
+      "BasicReinforcement": { "RepeatInterval": 11, "Enemies": [{ "EnemyId": "shield_guard", "Count": 2 }] },
+      "EmpoweredReinforcement": { "RepeatInterval": 9, "Enemies": [{ "EnemyId": "shield_guard", "Count": 3 }] },
+      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "shield_guard", "Count": 4 }] }
     },
     {
       "WaveName": "방패 진형", "IsElite": false, "IsBoss": false,
-      "InitialAssault": [{ "EnemyId": "goblin", "Count": 2, "FirstSpawnTime": 0, "SpawnInterval": 1.5 }, { "EnemyId": "goblin_archer", "Count": 1, "FirstSpawnTime": 2, "SpawnInterval": 0 }, { "EnemyId": "shield_guard", "Count": 2, "FirstSpawnTime": 3, "SpawnInterval": 2 }],
-      "BasicReinforcement": { "RepeatInterval": 11, "Enemies": [{ "EnemyId": "goblin", "Count": 1 }, { "EnemyId": "goblin_archer", "Count": 1 }, { "EnemyId": "shield_guard", "Count": 2 }] },
-      "EmpoweredReinforcement": { "RepeatInterval": 9, "Enemies": [{ "EnemyId": "orc_warrior", "Count": 1 }, { "EnemyId": "shield_guard", "Count": 2 }, { "EnemyId": "goblin_archer", "Count": 1 }] },
-      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "troll", "Count": 1 }, { "EnemyId": "shield_guard", "Count": 1 }, { "EnemyId": "orc_warrior", "Count": 1 }, { "EnemyId": "goblin_archer", "Count": 1 }] }
+      "InitialAssault": [{ "EnemyId": "shield_guard", "Count": 2, "FirstSpawnTime": 0, "SpawnInterval": 2 }, { "EnemyId": "goblin", "Count": 3, "FirstSpawnTime": 1, "SpawnInterval": 1.2 }],
+      "BasicReinforcement": { "RepeatInterval": 11, "Enemies": [{ "EnemyId": "shield_guard", "Count": 2 }, { "EnemyId": "goblin", "Count": 2 }] },
+      "EmpoweredReinforcement": { "RepeatInterval": 9, "Enemies": [{ "EnemyId": "shield_guard", "Count": 2 }, { "EnemyId": "goblin", "Count": 3 }] },
+      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "shield_guard", "Count": 3 }, { "EnemyId": "goblin", "Count": 3 }] }
     },
     {
-      "WaveName": "검방 전사 등장", "IsElite": false, "IsBoss": false,
-      "InitialAssault": [{ "EnemyId": "goblin", "Count": 2, "FirstSpawnTime": 0, "SpawnInterval": 1.5 }, { "EnemyId": "goblin_archer", "Count": 1, "FirstSpawnTime": 2, "SpawnInterval": 0 }, { "EnemyId": "shield_guard", "Count": 1, "FirstSpawnTime": 3, "SpawnInterval": 0 }, { "EnemyId": "orc_warrior", "Count": 1, "FirstSpawnTime": 5, "SpawnInterval": 0 }],
-      "BasicReinforcement": { "RepeatInterval": 10, "Enemies": [{ "EnemyId": "orc_warrior", "Count": 1 }, { "EnemyId": "shield_guard", "Count": 1 }, { "EnemyId": "goblin_archer", "Count": 1 }] },
-      "EmpoweredReinforcement": { "RepeatInterval": 9, "Enemies": [{ "EnemyId": "orc_warrior", "Count": 1 }, { "EnemyId": "shield_guard", "Count": 1 }, { "EnemyId": "shaman", "Count": 1 }, { "EnemyId": "wolf", "Count": 1 }] },
-      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "troll", "Count": 1 }, { "EnemyId": "orc_warrior", "Count": 1 }, { "EnemyId": "shaman", "Count": 1 }, { "EnemyId": "assassin", "Count": 1 }] }
+      "WaveName": "오크와 트롤", "IsElite": false, "IsBoss": false,
+      "InitialAssault": [{ "EnemyId": "orc_warrior", "Count": 2, "FirstSpawnTime": 0, "SpawnInterval": 2 }, { "EnemyId": "troll", "Count": 1, "FirstSpawnTime": 4, "SpawnInterval": 0 }],
+      "BasicReinforcement": { "RepeatInterval": 10, "Enemies": [{ "EnemyId": "orc_warrior", "Count": 2 }, { "EnemyId": "troll", "Count": 1 }] },
+      "EmpoweredReinforcement": { "RepeatInterval": 9, "Enemies": [{ "EnemyId": "orc_warrior", "Count": 2 }, { "EnemyId": "troll", "Count": 2 }] },
+      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "orc_warrior", "Count": 3 }, { "EnemyId": "troll", "Count": 2 }] }
     },
     {
-      "WaveName": "혼성 부대", "IsElite": false, "IsBoss": false,
-      "InitialAssault": [{ "EnemyId": "goblin", "Count": 1, "FirstSpawnTime": 0, "SpawnInterval": 0 }, { "EnemyId": "goblin_archer", "Count": 2, "FirstSpawnTime": 1, "SpawnInterval": 2 }, { "EnemyId": "shield_guard", "Count": 1, "FirstSpawnTime": 3, "SpawnInterval": 0 }, { "EnemyId": "orc_warrior", "Count": 1, "FirstSpawnTime": 5, "SpawnInterval": 0 }],
-      "BasicReinforcement": { "RepeatInterval": 10, "Enemies": [{ "EnemyId": "orc_warrior", "Count": 1 }, { "EnemyId": "shield_guard", "Count": 1 }, { "EnemyId": "goblin_archer", "Count": 2 }] },
-      "EmpoweredReinforcement": { "RepeatInterval": 9, "Enemies": [{ "EnemyId": "troll", "Count": 1 }, { "EnemyId": "orc_warrior", "Count": 1 }, { "EnemyId": "shaman", "Count": 1 }, { "EnemyId": "assassin", "Count": 1 }] },
-      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "troll", "Count": 1 }, { "EnemyId": "orc_warrior", "Count": 1 }, { "EnemyId": "shaman", "Count": 1 }, { "EnemyId": "assassin", "Count": 2 }] }
+      "WaveName": "주술사와 암살자", "IsElite": false, "IsBoss": false,
+      "InitialAssault": [{ "EnemyId": "shaman", "Count": 2, "FirstSpawnTime": 0, "SpawnInterval": 2 }, { "EnemyId": "assassin", "Count": 2, "FirstSpawnTime": 1, "SpawnInterval": 2 }],
+      "BasicReinforcement": { "RepeatInterval": 10, "Enemies": [{ "EnemyId": "shaman", "Count": 1 }, { "EnemyId": "assassin", "Count": 2 }] },
+      "EmpoweredReinforcement": { "RepeatInterval": 9, "Enemies": [{ "EnemyId": "shaman", "Count": 2 }, { "EnemyId": "assassin", "Count": 2 }] },
+      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "shaman", "Count": 2 }, { "EnemyId": "assassin", "Count": 3 }] }
     },
     {
-      "WaveName": "전사 연합", "IsElite": true, "IsBoss": false,
-      "InitialAssault": [{ "EnemyId": "goblin", "Count": 1, "FirstSpawnTime": 0, "SpawnInterval": 0 }, { "EnemyId": "goblin_archer", "Count": 1, "FirstSpawnTime": 1, "SpawnInterval": 0 }, { "EnemyId": "shield_guard", "Count": 1, "FirstSpawnTime": 2, "SpawnInterval": 0 }, { "EnemyId": "orc_warrior", "Count": 2, "FirstSpawnTime": 4, "SpawnInterval": 2 }],
-      "BasicReinforcement": { "RepeatInterval": 10, "Enemies": [{ "EnemyId": "orc_warrior", "Count": 2 }, { "EnemyId": "shield_guard", "Count": 1 }, { "EnemyId": "shaman", "Count": 1 }] },
-      "EmpoweredReinforcement": { "RepeatInterval": 9, "Enemies": [{ "EnemyId": "ogre_elite", "Count": 1 }, { "EnemyId": "orc_warrior", "Count": 1 }, { "EnemyId": "shaman", "Count": 1 }, { "EnemyId": "assassin", "Count": 1 }] },
-      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "ogre_elite", "Count": 1 }, { "EnemyId": "dark_mage_elite", "Count": 1 }, { "EnemyId": "orc_warrior", "Count": 1 }, { "EnemyId": "assassin", "Count": 1 }] }
+      "WaveName": "정예 혼성", "IsElite": true, "IsBoss": false,
+      "InitialAssault": [{ "EnemyId": "ogre_elite", "Count": 1, "FirstSpawnTime": 0, "SpawnInterval": 0 }, { "EnemyId": "dark_mage_elite", "Count": 1, "FirstSpawnTime": 2, "SpawnInterval": 0 }, { "EnemyId": "shield_guard", "Count": 1, "FirstSpawnTime": 3, "SpawnInterval": 0 }, { "EnemyId": "assassin", "Count": 1, "FirstSpawnTime": 4, "SpawnInterval": 0 }],
+      "BasicReinforcement": { "RepeatInterval": 10, "Enemies": [{ "EnemyId": "orc_warrior", "Count": 1 }, { "EnemyId": "shield_guard", "Count": 1 }, { "EnemyId": "shaman", "Count": 1 }, { "EnemyId": "assassin", "Count": 1 }] },
+      "EmpoweredReinforcement": { "RepeatInterval": 9, "Enemies": [{ "EnemyId": "ogre_elite", "Count": 1 }, { "EnemyId": "shield_guard", "Count": 1 }, { "EnemyId": "shaman", "Count": 1 }, { "EnemyId": "assassin", "Count": 1 }] },
+      "FinalAssault": { "RepeatInterval": 8, "Enemies": [{ "EnemyId": "ogre_elite", "Count": 1 }, { "EnemyId": "dark_mage_elite", "Count": 1 }, { "EnemyId": "troll", "Count": 1 }, { "EnemyId": "assassin", "Count": 1 }] }
     },
     {
-      "WaveName": "기마 마도사", "IsElite": false, "IsBoss": true,
-      "InitialAssault": [{ "EnemyId": "goblin", "Count": 1, "FirstSpawnTime": 0, "SpawnInterval": 0 }, { "EnemyId": "goblin_archer", "Count": 1, "FirstSpawnTime": 1, "SpawnInterval": 0 }, { "EnemyId": "shield_guard", "Count": 1, "FirstSpawnTime": 2, "SpawnInterval": 0 }, { "EnemyId": "goblin_king", "Count": 1, "FirstSpawnTime": 5, "SpawnInterval": 0 }],
-      "BasicReinforcement": { "RepeatInterval": 10, "Enemies": [{ "EnemyId": "shield_guard", "Count": 1 }, { "EnemyId": "orc_warrior", "Count": 1 }, { "EnemyId": "goblin_archer", "Count": 1 }] },
-      "EmpoweredReinforcement": { "RepeatInterval": 9, "Enemies": [{ "EnemyId": "troll", "Count": 1 }, { "EnemyId": "shield_guard", "Count": 1 }, { "EnemyId": "shaman", "Count": 1 }, { "EnemyId": "assassin", "Count": 1 }] },
-      "FinalAssault": { "RepeatInterval": 7, "Enemies": [{ "EnemyId": "ogre_elite", "Count": 1 }, { "EnemyId": "dark_mage_elite", "Count": 1 }, { "EnemyId": "orc_warrior", "Count": 1 }, { "EnemyId": "assassin", "Count": 1 }] }
+      "WaveName": "보스와 증원", "IsElite": false, "IsBoss": true,
+      "InitialAssault": [{ "EnemyId": "goblin_king", "Count": 1, "FirstSpawnTime": 0, "SpawnInterval": 0 }, { "EnemyId": "goblin", "Count": 3, "FirstSpawnTime": 2, "SpawnInterval": 1.2 }],
+      "BasicReinforcement": { "RepeatInterval": 10, "Enemies": [{ "EnemyId": "goblin", "Count": 3 }, { "EnemyId": "wolf", "Count": 1 }] },
+      "EmpoweredReinforcement": { "RepeatInterval": 9, "Enemies": [{ "EnemyId": "goblin", "Count": 4 }, { "EnemyId": "shield_guard", "Count": 1 }] },
+      "FinalAssault": { "RepeatInterval": 7, "Enemies": [{ "EnemyId": "goblin", "Count": 4 }, { "EnemyId": "troll", "Count": 1 }] }
     }
   ]
 }
