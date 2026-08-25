@@ -795,6 +795,7 @@ MonoBehaviour:
   fireUnitIds:
   - mage
   - pyromancer
+  - frost
   muzzleFlashEffectPrefab: {fileID: 6142195383646234422, guid: 2adaaa15b0f607c4c84227ad0c0b5582, type: 3}
   muzzleFlashUnitIds:
   - ranger

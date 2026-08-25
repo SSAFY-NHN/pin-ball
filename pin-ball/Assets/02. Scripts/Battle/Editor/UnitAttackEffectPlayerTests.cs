@@ -30,7 +30,7 @@ public sealed class UnitAttackEffectPlayerTests
             serializedPlayer,
             "fireEffectPrefab",
             "AllyMageFireballEffect");
-        AssertIds(serializedPlayer, "fireUnitIds", "mage", "pyromancer");
+        AssertIds(serializedPlayer, "fireUnitIds", "mage", "pyromancer", "frost");
         AssertPrefabName(
             serializedPlayer,
             "muzzleFlashEffectPrefab",

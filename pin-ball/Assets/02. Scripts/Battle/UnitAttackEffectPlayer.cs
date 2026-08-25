@@ -22,7 +22,9 @@ public sealed class UnitAttackEffectPlayer : MonoBehaviour
     [SerializeField] private float muzzleHeight = 0.08f;
     [SerializeField, Min(0.01f)] private float targetEffectDuration = 0.75f;
 
-    private readonly Dictionary<GameObject, GameObject> _instances = new();
+    private const int MaxInstancesPerPrefab = 3;
+
+    private readonly Dictionary<GameObject, List<GameObject>> _instances = new();
     private readonly Dictionary<GameObject, Coroutine> _animations = new();
 
     public void Play(string unitId, UnitBase target)
@@ -59,11 +61,14 @@ public sealed class UnitAttackEffectPlayer : MonoBehaviour
         StopAllCoroutines();
         _animations.Clear();
 
-        foreach (var instance in _instances.Values)
+        foreach (var pool in _instances.Values)
         {
-            if (instance != null)
+            foreach (var instance in pool)
             {
-                instance.SetActive(false);
+                if (instance != null)
+                {
+                    instance.SetActive(false);
+                }
             }
         }
     }
@@ -178,15 +183,29 @@ public sealed class UnitAttackEffectPlayer : MonoBehaviour
             return null;
         }
 
-        if (_instances.TryGetValue(prefab, out var instance) && instance != null)
+        if (!_instances.TryGetValue(prefab, out var pool))
         {
-            return instance;
+            pool = new List<GameObject>(MaxInstancesPerPrefab);
+            _instances[prefab] = pool;
         }
 
-        instance = Instantiate(prefab, transform);
+        foreach (var candidate in pool)
+        {
+            if (candidate != null && !candidate.activeSelf)
+            {
+                return candidate;
+            }
+        }
+
+        if (pool.Count >= MaxInstancesPerPrefab)
+        {
+            return null;
+        }
+
+        var instance = Instantiate(prefab, transform);
         instance.name = prefab.name;
         instance.SetActive(false);
-        _instances[prefab] = instance;
+        pool.Add(instance);
         return instance;
     }
 
