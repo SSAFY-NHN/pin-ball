@@ -16,6 +16,7 @@ public class AllyUnit : UnitBase
     private AllySkillData _skill;
     private AllySkillController _skillController;
     private UnitAttackEffectPlayer _attackEffectPlayer;
+    private readonly AllyBasicAttackController _basicAttackController = new();
     private Camera _dragCamera;
     private Vector3 _dragStartPosition;
     private bool _isDragging;
@@ -68,7 +69,19 @@ public class AllyUnit : UnitBase
     protected override void OnBasicAttackHit(UnitBase target)
     {
         _attackEffectPlayer?.Play(UnitId, target);
+        _basicAttackController.ApplySecondaryHits(
+            UnitId,
+            this,
+            target,
+            GetBasicAttackDamage(target),
+            _unitManager?.TargetFinder,
+            secondaryTarget => _attackEffectPlayer?.Play(UnitId, secondaryTarget));
         _skillController?.GainFromBasicAttack(MaxMana);
+    }
+
+    protected override float GetBasicAttackArmorIgnoreRatio(UnitBase target)
+    {
+        return _basicAttackController.GetArmorIgnoreRatio(UnitId, target);
     }
     protected override void OnDamaged() => _skillController?.GainFromDamage(Time.time, MaxMana);
 

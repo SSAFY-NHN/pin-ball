@@ -355,6 +355,11 @@ public abstract class UnitBase : MonoBehaviour
         return _stats.AttackDamage * _statusEffects.AttackDamageMultiplier;
     }
 
+    protected virtual float GetBasicAttackArmorIgnoreRatio(UnitBase target)
+    {
+        return 0f;
+    }
+
     protected virtual float ModifyIncomingDamage(float damage, UnitBase source)
     {
         return damage;
@@ -496,7 +501,10 @@ public abstract class UnitBase : MonoBehaviour
 
         if (!TryScheduleBasicAttack()) return;
 
-        _currentTarget.TakeDamage(GetBasicAttackDamage(_currentTarget), 0f, this);
+        _currentTarget.TakeDamage(
+            GetBasicAttackDamage(_currentTarget),
+            GetBasicAttackArmorIgnoreRatio(_currentTarget),
+            this);
         _combatFeedback?.PlayBasicAttack(_currentTarget);
         OnBasicAttackHit(_currentTarget);
     }
