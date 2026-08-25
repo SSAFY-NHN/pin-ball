@@ -18,11 +18,13 @@ public class BattleManager : AppService, IItemEventListener
     [Header("Battle Upgrades")]
     // TODO: 플레이 테스트 후 프로토타입 비용과 효과 수치를 조정한다.
     [SerializeField] private UnitPurchaseSettings warriorPurchaseSettings =
-        new("warrior", 30, 1.4f);
+        new("warrior", 30, 1.4f, 4f);
     [SerializeField] private UnitPurchaseSettings archerPurchaseSettings =
-        new("archer", 35, 1.4f);
+        new("archer", 35, 1.4f, 5f);
     [SerializeField] private UnitPurchaseSettings magePurchaseSettings =
-        new("mage", 40, 1.4f);
+        new("mage", 40, 1.4f, 7f);
+    [SerializeField] private UnitPurchaseSettings spearmanPurchaseSettings =
+        new("spearman", 35, 1.4f, 5f);
     [SerializeField, Min(1)] private int reinforcementComboThreshold = 5;
     [SerializeField] private BattleUpgradeSettings allyAttackSettings =
         new(1f, 0.25f, 75, 1.7f, 20);
@@ -47,6 +49,9 @@ public class BattleManager : AppService, IItemEventListener
         unitManager != null && unitManager.CanStartWaveWithCurrentRoster;
     public bool HasTacticalReinforcement =>
         tacticalReinforcementController?.HasTicket ?? false;
+    public float AssaultElapsedTime => assaultController?.ElapsedTime ?? 0f;
+    public EBattleAssaultPhase AssaultPhase =>
+        assaultController?.Phase ?? EBattleAssaultPhase.Initial;
 
     public event Action<EWaveState> OnStateChanged;
     public event Action OnInitialized;
@@ -62,6 +67,7 @@ public class BattleManager : AppService, IItemEventListener
     public event Action<BattleUpgradePurchasedData> OnBattleUpgradePurchased;
     public event Action<UnitPurchaseResult> OnAllyPurchased;
     public event Action<bool> OnTacticalReinforcementChanged;
+    public event Action<EBattleAssaultPhase> OnAssaultPhaseChanged;
     public event Action<int> OnBossDefeated;
     public event Action<int> OnRunEnded;
 
@@ -74,6 +80,7 @@ public class BattleManager : AppService, IItemEventListener
     private BattleUpgradeController battleUpgradeController;
     private UnitPurchaseController unitPurchaseController;
     private TacticalReinforcementController tacticalReinforcementController;
+    private BattleAssaultController assaultController;
     private int barrierDamageReduction;
     private int minimumBarrierDamage = 1;
     private Coroutine waveResolutionCoroutine;
@@ -86,6 +93,21 @@ public class BattleManager : AppService, IItemEventListener
     private void Start()
     {
         InitializeNewRun();
+    }
+
+    private void Update()
+    {
+        if (!IsInitialized) return;
+
+        unitPurchaseController?.Advance(Time.deltaTime);
+        if (State != EWaveState.Active || assaultController == null) return;
+
+        assaultController.Advance(
+            Time.deltaTime,
+            unitManager.RemainingEnemyCount,
+            enemyId => unitManager.TrySpawnScheduledEnemy(
+                enemyId,
+                CurrentWaveNumber));
     }
 
     internal void InitializeNewRun()
@@ -116,7 +138,10 @@ public class BattleManager : AppService, IItemEventListener
             economy,
             warriorPurchaseSettings,
             archerPurchaseSettings,
-            magePurchaseSettings);
+            magePurchaseSettings,
+            spearmanPurchaseSettings);
+        assaultController = new BattleAssaultController();
+        assaultController.PhaseChanged += OnAssaultPhaseChangedInternal;
         tacticalReinforcementController = new TacticalReinforcementController(
             reinforcementComboThreshold);
         pinballManager = App.Get<PinballManager>();
@@ -140,14 +165,24 @@ public class BattleManager : AppService, IItemEventListener
 
         defenseLineController.ResetForWave();
         NotifyAllDefenseLineHp();
-        int spawnedCount = unitManager.BeginWave(CurrentWave, CurrentWaveNumber);
+        unitManager.PrepareWave();
+        assaultController.Start(CurrentWave);
+        assaultController.Advance(
+            0f,
+            unitManager.RemainingEnemyCount,
+            enemyId => unitManager.TrySpawnScheduledEnemy(
+                enemyId,
+                CurrentWaveNumber));
+        int spawnedCount = unitManager.RemainingEnemyCount;
         if (spawnedCount <= 0)
         {
+            assaultController.Stop();
             Debug.LogError(
                 $"[BattleManager] Wave {CurrentWaveNumber} enemy spawn failed.");
             return false;
         }
 
+        unitManager.StartPreparedWave();
         currentWaveStartedAt = Time.time;
         currentBossDefeated = false;
         currentWaveAllyDefenseDamage = 0;
@@ -235,6 +270,7 @@ public class BattleManager : AppService, IItemEventListener
                 Time.time,
                 waveResolutionDuration)) return;
 
+        assaultController?.Stop();
         if (result == EWaveResolutionResult.Failed)
         {
             runState.ConsumeChance();
@@ -383,6 +419,16 @@ public class BattleManager : AppService, IItemEventListener
         return unitPurchaseController?.GetNextCost(unitId) ?? 0;
     }
 
+    public float GetAllyRemainingCooldown(string unitId)
+    {
+        return unitPurchaseController?.GetRemainingCooldown(unitId) ?? 0f;
+    }
+
+    public bool IsAllyCoolingDown(string unitId)
+    {
+        return unitPurchaseController?.IsCoolingDown(unitId) ?? false;
+    }
+
     public bool CanPurchaseAlly(string unitId)
     {
         if (!IsInitialized || IsRunEnded ||
@@ -460,6 +506,11 @@ public class BattleManager : AppService, IItemEventListener
         }
     }
 
+    private void OnAssaultPhaseChangedInternal(EBattleAssaultPhase phase)
+    {
+        OnAssaultPhaseChanged?.Invoke(phase);
+    }
+
     private void ApplyBattleUpgrade(EBattleUpgrade upgrade)
     {
         if (upgrade == EBattleUpgrade.AllyAttack)
@@ -521,6 +572,11 @@ public class BattleManager : AppService, IItemEventListener
         {
             pinballManager.OnComboChanged -= OnPinballComboChanged;
             pinballManager.OnJackpotTriggered -= OnJackpotTriggered;
+        }
+
+        if (assaultController != null)
+        {
+            assaultController.PhaseChanged -= OnAssaultPhaseChangedInternal;
         }
 
         if (App.TryGet<ItemManager>(out var itemManager))

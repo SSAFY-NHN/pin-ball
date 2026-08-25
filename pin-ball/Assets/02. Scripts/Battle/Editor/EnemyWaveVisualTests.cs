@@ -39,7 +39,7 @@ public class EnemyWaveVisualTests
 
         for (var waveIndex = 0; waveIndex < expectedWaves.Length; waveIndex++)
         {
-            var actual = collection.waves[waveIndex].Enemies.ToDictionary(
+            var actual = collection.waves[waveIndex].InitialAssault.ToDictionary(
                 enemy => enemy.EnemyId,
                 enemy => enemy.Count);
             Assert.That(

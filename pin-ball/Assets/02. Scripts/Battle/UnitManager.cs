@@ -126,31 +126,49 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
 
     public int BeginWave(BattleWaveData wave, int waveNumber)
     {
-        ReturnAllEnemies();
-        CleanupDestroyedUnits();
+        PrepareWave();
         if (wave?.Enemies == null) return 0;
 
-        _spawnController.BeginEnemyWave();
         int spawnedCount = 0;
         foreach (BattleEnemySpawnData entry in wave.Enemies)
         {
             if (entry == null || string.IsNullOrEmpty(entry.EnemyId)) continue;
             for (var count = 0; count < Mathf.Max(1, entry.Count); count++)
             {
-                if (SpawnEnemy(entry.EnemyId, waveNumber, null) != null)
+                if (TrySpawnScheduledEnemy(entry.EnemyId, waveNumber))
                 {
                     spawnedCount++;
                 }
             }
         }
 
-        if (spawnedCount > 0)
-        {
-            foreach (var ally in _roster.ActiveAllies) ally?.StartBattle();
-            foreach (var enemy in _roster.ActiveEnemies) enemy?.StartBattle();
-        }
-
+        if (spawnedCount > 0) StartPreparedWave();
         return spawnedCount;
+    }
+
+    public void PrepareWave()
+    {
+        ReturnAllEnemies();
+        CleanupDestroyedUnits();
+        _spawnController.BeginEnemyWave();
+    }
+
+    public bool TrySpawnScheduledEnemy(string enemyId, int waveNumber)
+    {
+        EnemyUnit enemy = SpawnEnemy(enemyId, waveNumber, null);
+        if (enemy == null) return false;
+
+        if (_battleManager != null && _battleManager.State == EWaveState.Active)
+        {
+            enemy.StartBattle();
+        }
+        return true;
+    }
+
+    public void StartPreparedWave()
+    {
+        foreach (var ally in _roster.ActiveAllies) ally?.StartBattle();
+        foreach (var enemy in _roster.ActiveEnemies) enemy?.StartBattle();
     }
 
     public AllyUnit SpawnAlly(BattleUnitSpawnData unitData)

@@ -125,42 +125,52 @@ public class TitleData : AppService, IUnitDataSource
                 continue;
             }
 
-            if (wave.Enemies == null || wave.Enemies.Count == 0)
+            if (wave.InitialAssault == null || wave.InitialAssault.Count == 0)
             {
                 Debug.LogError(
-                    $"[TitleData] Wave {waveNumber} has no enemies.");
+                    $"[TitleData] Wave {waveNumber} has no initial assault.");
                 isValid = false;
                 continue;
             }
 
-            foreach (var enemy in wave.Enemies)
+            foreach (var enemy in wave.InitialAssault)
             {
-                if (enemy == null ||
-                    string.IsNullOrEmpty(enemy.EnemyId) ||
-                    !EnemyUnit.ContainsKey(enemy.EnemyId))
+                if (!ValidateWaveEnemy(enemy, waveNumber))
                 {
-                    Debug.LogError(
-                        $"[TitleData] Wave {waveNumber} has an invalid enemy: " +
-                        $"{enemy?.EnemyId ?? "null"}");
                     isValid = false;
                     continue;
                 }
 
-                if (enemy.Count < 1)
+                if (enemy.FirstSpawnTime < 0f || enemy.SpawnInterval < 0f ||
+                    enemy.FirstSpawnTime +
+                    enemy.SpawnInterval * (enemy.Count - 1) >= 60f)
                 {
                     Debug.LogError(
-                        $"[TitleData] Wave {waveNumber} enemy count is invalid: " +
-                        $"{enemy.EnemyId}={enemy.Count}");
+                        $"[TitleData] Wave {waveNumber} initial schedule is invalid: " +
+                        $"{enemy.EnemyId}");
                     isValid = false;
                 }
             }
+
+            isValid &= ValidateReinforcementGroup(
+                wave.BasicReinforcement,
+                waveNumber,
+                "basic");
+            isValid &= ValidateReinforcementGroup(
+                wave.EmpoweredReinforcement,
+                waveNumber,
+                "empowered");
+            isValid &= ValidateReinforcementGroup(
+                wave.FinalAssault,
+                waveNumber,
+                "final");
         }
 
         var finalWave = waves[9];
         bool hasFinalBoss = false;
-        if (finalWave?.Enemies != null)
+        if (finalWave?.InitialAssault != null)
         {
-            foreach (var enemy in finalWave.Enemies)
+            foreach (var enemy in finalWave.InitialAssault)
             {
                 if (enemy?.EnemyId == "goblin_king")
                 {
@@ -177,6 +187,47 @@ public class TitleData : AppService, IUnitDataSource
         }
 
         return isValid;
+    }
+
+    private bool ValidateReinforcementGroup(
+        BattleReinforcementGroupData group,
+        int waveNumber,
+        string groupName)
+    {
+        if (group == null || group.RepeatInterval <= 0f ||
+            group.Enemies == null || group.Enemies.Count == 0)
+        {
+            Debug.LogError(
+                $"[TitleData] Wave {waveNumber} {groupName} reinforcement " +
+                "is invalid.");
+            return false;
+        }
+
+        bool isValid = true;
+        foreach (var enemy in group.Enemies)
+        {
+            isValid &= ValidateWaveEnemy(enemy, waveNumber);
+        }
+        return isValid;
+    }
+
+    private bool ValidateWaveEnemy(BattleEnemySpawnData enemy, int waveNumber)
+    {
+        if (enemy == null || string.IsNullOrEmpty(enemy.EnemyId) ||
+            !EnemyUnit.ContainsKey(enemy.EnemyId))
+        {
+            Debug.LogError(
+                $"[TitleData] Wave {waveNumber} has an invalid enemy: " +
+                $"{enemy?.EnemyId ?? "null"}");
+            return false;
+        }
+
+        if (enemy.Count >= 1) return true;
+
+        Debug.LogError(
+            $"[TitleData] Wave {waveNumber} enemy count is invalid: " +
+            $"{enemy.EnemyId}={enemy.Count}");
+        return false;
     }
 
     public bool TryGetAllyUnit(string id, out AllyUnitData result)

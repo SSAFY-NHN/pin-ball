@@ -38,12 +38,30 @@ public class BattleEnemySpawnData
 }
 
 [Serializable]
+public class BattleTimedSpawnData : BattleEnemySpawnData
+{
+    [Min(0f)] public float FirstSpawnTime;
+    [Min(0f)] public float SpawnInterval;
+}
+
+[Serializable]
+public class BattleReinforcementGroupData
+{
+    [Min(0.01f)] public float RepeatInterval = 10f;
+    public List<BattleEnemySpawnData> Enemies = new();
+}
+
+[Serializable]
 public class BattleWaveData
 {
     public string WaveName = "Wave";
     public bool IsElite;
     public bool IsBoss;
     public List<BattleEnemySpawnData> Enemies = new();
+    public List<BattleTimedSpawnData> InitialAssault = new();
+    public BattleReinforcementGroupData BasicReinforcement = new();
+    public BattleReinforcementGroupData EmpoweredReinforcement = new();
+    public BattleReinforcementGroupData FinalAssault = new();
 }
 
 [Serializable]
