@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class PinballLauncherController : MonoBehaviour
 {
+    public const bool ManualInputEnabled = false;
     [SerializeField] private PinballManager pinballManager;
     [SerializeField] private Transform loadPoint;
     [SerializeField] private Transform piston;
@@ -77,6 +78,7 @@ public class PinballLauncherController : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (!ManualInputEnabled) return;
         if (!_hasLoadedBall) return;
         StopSnap();
         _isDragging = true;
@@ -88,16 +90,19 @@ public class PinballLauncherController : MonoBehaviour
 
     private void OnMouseEnter()
     {
+        if (!ManualInputEnabled) return;
         glowController?.SetHovered(_hasLoadedBall);
     }
 
     private void OnMouseExit()
     {
+        if (!ManualInputEnabled) return;
         if (!_isDragging) glowController?.SetHovered(false);
     }
 
     private void OnMouseDrag()
     {
+        if (!ManualInputEnabled) return;
         if (!_isDragging) return;
 
         _pullDistance = Mathf.Clamp(
@@ -127,6 +132,7 @@ public class PinballLauncherController : MonoBehaviour
 
     private void OnMouseUp()
     {
+        if (!ManualInputEnabled) return;
         if (!_isDragging) return;
         _isDragging = false;
 
