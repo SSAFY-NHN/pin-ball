@@ -8,8 +8,8 @@ public sealed class SummonMinionsSkill : EnemySkillBase, IUnitDamagedSkill
         while (_phase < 3 && c.Caster.HpRatio <= (_phase == 0 ? 0.75f : _phase == 1 ? 0.5f : 0.25f))
         {
             c.Caster.PlayEnemySkillFeedback(Id, null, true);
-            c.EnemyActions.SpawnEnemyReinforcement("goblin", UnityEngine.Mathf.RoundToInt(V(d, 0, 1)), c.Caster.transform.position);
-            c.EnemyActions.SpawnEnemyReinforcement("wolf", UnityEngine.Mathf.RoundToInt(V(d, 1, 1)), c.Caster.transform.position);
+            c.EnemyActions.SpawnEnemyReinforcement("PatrolMan", UnityEngine.Mathf.RoundToInt(V(d, 0, 1)), c.Caster.transform.position);
+            c.EnemyActions.SpawnEnemyReinforcement("Rogue", UnityEngine.Mathf.RoundToInt(V(d, 1, 1)), c.Caster.transform.position);
             _phase++;
         }
     }

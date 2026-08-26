@@ -124,8 +124,8 @@ public class PinballGoal : MonoBehaviour
                 effectMaterial,
                 25);
         }
-        absorptionRing?.Initialize(catalog.ballRing, effectMaterial, 24);
-        goalBurst?.Initialize(catalog.ballRing, effectMaterial, 25);
+        absorptionRing?.Initialize(catalog.goalRing, effectMaterial, 24);
+        goalBurst?.Initialize(catalog.goalRing, effectMaterial, 25);
         arcTopLeft?.Initialize(catalog.goalArcTopLeft, effectMaterial, 23);
         arcTopRight?.Initialize(catalog.goalArcTopRight, effectMaterial, 23);
         arcBottomLeft?.Initialize(catalog.goalArcBottomLeft, effectMaterial, 23);

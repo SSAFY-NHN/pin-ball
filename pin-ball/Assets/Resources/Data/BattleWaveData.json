@@ -6,79 +6,84 @@
   },
   "waves": [
     {
-      "WaveName": "로그 정찰대",
+      "WaveName": "순찰대",
       "IsElite": false,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "goblin", "Count": 3 }
+        { "EnemyId": "PatrolMan", "Count": 3 }
       ]
     },
     {
-      "WaveName": "로그 습격대",
+      "WaveName": "도적 합류",
       "IsElite": false,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "goblin", "Count": 4 }
+        { "EnemyId": "PatrolMan", "Count": 3 },
+        { "EnemyId": "Rogue", "Count": 1 }
       ]
     },
     {
-      "WaveName": "궁수 합류",
+      "WaveName": "사격 지원",
       "IsElite": false,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "goblin", "Count": 3 },
-        { "EnemyId": "goblin_archer", "Count": 1 }
+        { "EnemyId": "PatrolMan", "Count": 2 },
+        { "EnemyId": "Rogue", "Count": 1 },
+        { "EnemyId": "Archer", "Count": 1 }
       ]
     },
     {
-      "WaveName": "원거리 지원",
+      "WaveName": "혼성 전열",
       "IsElite": false,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "goblin", "Count": 3 },
-        { "EnemyId": "goblin_archer", "Count": 2 }
+        { "EnemyId": "PatrolMan", "Count": 2 },
+        { "EnemyId": "Rogue", "Count": 1 },
+        { "EnemyId": "Archer", "Count": 2 }
       ]
     },
     {
-      "WaveName": "메이스 전사",
+      "WaveName": "메이스 방벽",
       "IsElite": true,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "goblin", "Count": 2 },
-        { "EnemyId": "goblin_archer", "Count": 2 },
-        { "EnemyId": "shield_guard", "Count": 1 }
+        { "EnemyId": "PatrolMan", "Count": 1 },
+        { "EnemyId": "Rogue", "Count": 2 },
+        { "EnemyId": "Archer", "Count": 1 },
+        { "EnemyId": "MaceWarrior", "Count": 1 }
       ]
     },
     {
-      "WaveName": "방패 진형",
+      "WaveName": "중갑 진형",
       "IsElite": false,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "goblin", "Count": 2 },
-        { "EnemyId": "goblin_archer", "Count": 1 },
-        { "EnemyId": "shield_guard", "Count": 2 }
+        { "EnemyId": "PatrolMan", "Count": 1 },
+        { "EnemyId": "Rogue", "Count": 1 },
+        { "EnemyId": "Archer", "Count": 1 },
+        { "EnemyId": "MaceWarrior", "Count": 2 }
       ]
     },
     {
-      "WaveName": "검방 전사 등장",
+      "WaveName": "기사 등장",
       "IsElite": false,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "goblin", "Count": 2 },
-        { "EnemyId": "goblin_archer", "Count": 1 },
-        { "EnemyId": "shield_guard", "Count": 1 },
-        { "EnemyId": "orc_warrior", "Count": 1 }
+        { "EnemyId": "Rogue", "Count": 1 },
+        { "EnemyId": "Archer", "Count": 1 },
+        { "EnemyId": "MaceWarrior", "Count": 1 },
+        { "EnemyId": "Knights", "Count": 1 }
       ]
     },
     {
-      "WaveName": "혼성 부대",
+      "WaveName": "기사 호위대",
       "IsElite": false,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "goblin", "Count": 1 },
-        { "EnemyId": "goblin_archer", "Count": 2 },
-        { "EnemyId": "shield_guard", "Count": 1 },
-        { "EnemyId": "orc_warrior", "Count": 1 }
+        { "EnemyId": "Rogue", "Count": 1 },
+        { "EnemyId": "Archer", "Count": 2 },
+        { "EnemyId": "MaceWarrior", "Count": 1 },
+        { "EnemyId": "Knights", "Count": 1 }
       ]
     },
     {
@@ -86,21 +91,21 @@
       "IsElite": true,
       "IsBoss": false,
       "Enemies": [
-        { "EnemyId": "goblin", "Count": 1 },
-        { "EnemyId": "goblin_archer", "Count": 1 },
-        { "EnemyId": "shield_guard", "Count": 1 },
-        { "EnemyId": "orc_warrior", "Count": 2 }
+        { "EnemyId": "Rogue", "Count": 1 },
+        { "EnemyId": "Archer", "Count": 1 },
+        { "EnemyId": "MaceWarrior", "Count": 1 },
+        { "EnemyId": "Knights", "Count": 2 }
       ]
     },
     {
-      "WaveName": "기마 마도사",
+      "WaveName": "어둠의 군주",
       "IsElite": false,
       "IsBoss": true,
       "Enemies": [
-        { "EnemyId": "goblin", "Count": 1 },
-        { "EnemyId": "goblin_archer", "Count": 1 },
-        { "EnemyId": "shield_guard", "Count": 1 },
-        { "EnemyId": "goblin_king", "Count": 1 }
+        { "EnemyId": "Archer", "Count": 1 },
+        { "EnemyId": "MaceWarrior", "Count": 1 },
+        { "EnemyId": "Knights", "Count": 1 },
+        { "EnemyId": "DarkMageBoss", "Count": 1 }
       ]
     }
   ]

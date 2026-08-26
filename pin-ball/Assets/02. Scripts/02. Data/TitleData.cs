@@ -162,7 +162,7 @@ public class TitleData : AppService, IUnitDataSource
         {
             foreach (var enemy in finalWave.Enemies)
             {
-                if (enemy?.EnemyId == "goblin_king")
+                if (enemy?.EnemyId == "DarkMageBoss")
                 {
                     hasFinalBoss = true;
                     break;
@@ -172,7 +172,7 @@ public class TitleData : AppService, IUnitDataSource
 
         if (!hasFinalBoss)
         {
-            Debug.LogError("[TitleData] Wave 10 must contain goblin_king.");
+            Debug.LogError("[TitleData] Wave 10 must contain DarkMageBoss.");
             isValid = false;
         }
 

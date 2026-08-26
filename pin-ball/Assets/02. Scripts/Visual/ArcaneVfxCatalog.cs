@@ -26,6 +26,7 @@ public sealed class ArcaneVfxCatalog : ScriptableObject
     public Sprite[] magnetSpark;
 
     [Header("Goal")]
+    public Sprite[] goalRing;
     public Sprite[] goalArcTopLeft;
     public Sprite[] goalArcTopRight;
     public Sprite[] goalArcBottomLeft;

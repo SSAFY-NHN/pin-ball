@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: ArcaneVfxCatalog
   m_EditorClassIdentifier: 
   ballMask: {fileID: 21300000, guid: a35c1ff83fe71c54783197d1f648a53d, type: 3}
-  standardBumperMask: {fileID: 21300000, guid: 5aa0264be9482eb4090a000837a91dd9, type: 3}
-  specialBumperMask: {fileID: 21300000, guid: 0824cc86f16da1645a9bce6a1c9fa92d, type: 3}
-  magnetMask: {fileID: 21300000, guid: 6a3b612269308a146aa2767e2f71158e, type: 3}
-  reflectorMask: {fileID: 21300000, guid: 191ef223fd7b8a24090123d41abbfeba, type: 3}
-  guardianRuneMask: {fileID: 21300000, guid: e6cde8f9bd3030f4ebae4b3c306101ff, type: 3}
-  rangerRuneMask: {fileID: 21300000, guid: 95be83e67ac1cc94bb13873fd4421bcd, type: 3}
-  mageRuneMask: {fileID: 21300000, guid: ef7ca1930b30c44429ba1fe3550d61dc, type: 3}
-  lancerRuneMask: {fileID: 21300000, guid: f86a7cc687c96344d81a64603ee69e58, type: 3}
+  standardBumperMask: {fileID: 7775897017129738452, guid: a2716ee266ec23a4a8b6af4eee7c00df, type: 3}
+  specialBumperMask: {fileID: 1556418450189306197, guid: fb664360f87dad5489eec746bf35b226, type: 3}
+  magnetMask: {fileID: -5977382217384097259, guid: fce34383a479c494f96c7949d44866b9, type: 3}
+  reflectorMask: {fileID: 5852306675183797769, guid: aee998533a767d64a80126947bd64972, type: 3}
+  guardianRuneMask: {fileID: -1954237985228282222, guid: 4d2c98ec9af952242b60d4af6b189087, type: 3}
+  rangerRuneMask: {fileID: -5977382217384097259, guid: fce34383a479c494f96c7949d44866b9, type: 3}
+  mageRuneMask: {fileID: -98807576486611264, guid: 580ace5d20d1dcc41989b13cc9e0f337, type: 3}
+  lancerRuneMask: {fileID: 5646473026755399283, guid: 01e018343a68c7147b8c3a8138c79632, type: 3}
   ballTrail:
   - {fileID: 21300000, guid: 8dbb66acd00a80f4f982c8a407eab549, type: 3}
   ballImpact:
@@ -28,17 +28,19 @@ MonoBehaviour:
   ballRing:
   - {fileID: 21300000, guid: f80c38f2ceb346e4c9157ac2a137a06c, type: 3}
   magnetArc:
-  - {fileID: 21300000, guid: 642ef3af8f168d948abcc51c4f76b2b0, type: 3}
+  - {fileID: -5977382217384097259, guid: fce34383a479c494f96c7949d44866b9, type: 3}
   magnetSpark:
-  - {fileID: 21300000, guid: 3cebd186cab7f2f4d9ab12978fe48686, type: 3}
+  - {fileID: 4035414368551229917, guid: 35c5f1d3c63c3d34580d143336e6f48b, type: 3}
+  goalRing:
+  - {fileID: 1556418450189306197, guid: fb664360f87dad5489eec746bf35b226, type: 3}
   goalArcTopLeft:
-  - {fileID: 21300000, guid: 4dd0c6b1a08924a4094fe40521d77ca9, type: 3}
+  - {fileID: 7340838662909452659, guid: 773286e5f1cb8cf48a803fe510bed90d, type: 3}
   goalArcTopRight:
-  - {fileID: 21300000, guid: 21502c8b95d3d9d49b9c9261bddd55a0, type: 3}
+  - {fileID: 7340838662909452659, guid: 773286e5f1cb8cf48a803fe510bed90d, type: 3}
   goalArcBottomLeft:
-  - {fileID: 21300000, guid: 9cb2a413677004243b4340b71aff48f1, type: 3}
+  - {fileID: 7340838662909452659, guid: 773286e5f1cb8cf48a803fe510bed90d, type: 3}
   goalArcBottomRight:
-  - {fileID: 21300000, guid: e46f340dff7b6104c94cb5e8975d942d, type: 3}
+  - {fileID: 7340838662909452659, guid: 773286e5f1cb8cf48a803fe510bed90d, type: 3}
   goalSpark:
-  - {fileID: 21300000, guid: 83c002777b7d09b46abcd45d078a8824, type: 3}
+  - {fileID: 4035414368551229917, guid: 35c5f1d3c63c3d34580d143336e6f48b, type: 3}
   goldIcon: {fileID: 3421197206251385701, guid: a5c6aaddbf7ed934da1f0309132a4e6f, type: 3}

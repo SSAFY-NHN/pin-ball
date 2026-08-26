@@ -105,7 +105,7 @@ public class DefenseLineBreachTests
             };
             enemy.Initialize(stats, context);
             ally.Initialize(stats, context);
-            enemy.SetData(new EnemyUnitData { id = "goblin" });
+            enemy.SetData(new EnemyUnitData { id = "PatrolMan" });
             roster.AddEnemy(enemy);
             enemy.ReachDefenseLine(EBattleTeam.Ally);
             roster.AddOwnedAlly(ally);

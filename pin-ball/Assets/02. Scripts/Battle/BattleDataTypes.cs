@@ -36,7 +36,7 @@ public class BattleUnitSpawnData
 [Serializable]
 public class BattleEnemySpawnData
 {
-    public string EnemyId = "goblin";
+    public string EnemyId = "PatrolMan";
     [Min(1)] public int Count = 1;
 }
 

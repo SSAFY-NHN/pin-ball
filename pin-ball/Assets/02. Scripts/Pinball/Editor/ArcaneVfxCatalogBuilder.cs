@@ -6,7 +6,9 @@ using UnityEngine;
 [InitializeOnLoad]
 public static class ArcaneVfxCatalogBuilder
 {
-    private const string ArtRoot = "Assets/03. Images/Pinball/Arcane/";
+    private const string ArcaneArtRoot = "Assets/03. Images/Pinball/Arcane/";
+    private const string MoonlitArtRoot =
+        "Assets/03. Images/Pinball/MoonlitWorkshop/";
     private const string CatalogPath = "Assets/Resources/ArcaneVFX/ArcaneVfxCatalog.asset";
 
     static ArcaneVfxCatalogBuilder()
@@ -25,38 +27,112 @@ public static class ArcaneVfxCatalogBuilder
         }
 
         var serialized = new SerializedObject(catalog);
-        SetSprite(serialized, "ballMask", "ball_arcane_mask.png");
-        SetSprite(serialized, "standardBumperMask", "bumper_standard_mask.png");
-        SetSprite(serialized, "specialBumperMask", "bumper_special_mask.png");
-        SetSprite(serialized, "magnetMask", "magnet_device_mask.png");
-        SetSprite(serialized, "reflectorMask", "reflector_auto_mask.png");
-        SetSprite(serialized, "guardianRuneMask", "rune_guardian_mask.png");
-        SetSprite(serialized, "rangerRuneMask", "rune_ranger_mask.png");
-        SetSprite(serialized, "mageRuneMask", "rune_mage_mask.png");
-        SetSprite(serialized, "lancerRuneMask", "rune_lancer_mask.png");
-        SetSprites(serialized, "ballTrail", "vfx_ball_trail.png");
-        SetSprites(serialized, "ballImpact", "vfx_ball_impact.png");
-        SetSprites(serialized, "ballRing", "vfx_ball_ring.png");
-        SetSprites(serialized, "magnetArc", "vfx_magnet_arc.png");
-        SetSprites(serialized, "magnetSpark", "vfx_magnet_spark.png");
-        SetSprites(serialized, "goalArcTopLeft", "vfx_goal_arc_top_left.png");
-        SetSprites(serialized, "goalArcTopRight", "vfx_goal_arc_top_right.png");
-        SetSprites(serialized, "goalArcBottomLeft", "vfx_goal_arc_bottom_left.png");
-        SetSprites(serialized, "goalArcBottomRight", "vfx_goal_arc_bottom_right.png");
-        SetSprites(serialized, "goalSpark", "vfx_goal_spark.png");
+        SetSprite(serialized, "ballMask", ArcaneArtRoot, "ball_arcane_mask.png");
+        SetSprite(
+            serialized,
+            "standardBumperMask",
+            MoonlitArtRoot,
+            "bumper_standard_mask.png");
+        SetSprite(
+            serialized,
+            "specialBumperMask",
+            MoonlitArtRoot,
+            "bumper_jackpot_mask.png");
+        SetSprite(
+            serialized,
+            "magnetMask",
+            MoonlitArtRoot,
+            "Obstacles/obstacle_clockwork_spinner_mask.png");
+        SetSprite(
+            serialized,
+            "reflectorMask",
+            MoonlitArtRoot,
+            "deflector_bar_mask.png");
+        SetSprite(
+            serialized,
+            "guardianRuneMask",
+            MoonlitArtRoot,
+            "Obstacles/bumper_clockwork_gear_mask.png");
+        SetSprite(
+            serialized,
+            "rangerRuneMask",
+            MoonlitArtRoot,
+            "Obstacles/obstacle_clockwork_spinner_mask.png");
+        SetSprite(
+            serialized,
+            "mageRuneMask",
+            MoonlitArtRoot,
+            "Obstacles/obstacle_forge_cross_mask.png");
+        SetSprite(
+            serialized,
+            "lancerRuneMask",
+            MoonlitArtRoot,
+            "Obstacles/obstacle_spring_gate_mask.png");
+        SetSprites(serialized, "ballTrail", ArcaneArtRoot, "vfx_ball_trail.png");
+        SetSprites(serialized, "ballImpact", ArcaneArtRoot, "vfx_ball_impact.png");
+        SetSprites(serialized, "ballRing", ArcaneArtRoot, "vfx_ball_ring.png");
+        SetSprites(
+            serialized,
+            "magnetArc",
+            MoonlitArtRoot,
+            "Obstacles/obstacle_clockwork_spinner_mask.png");
+        SetSprites(
+            serialized,
+            "magnetSpark",
+            MoonlitArtRoot,
+            "pin_small_mask.png");
+        SetSprites(
+            serialized,
+            "goalRing",
+            MoonlitArtRoot,
+            "bumper_jackpot_mask.png");
+        SetSprites(
+            serialized,
+            "goalArcTopLeft",
+            MoonlitArtRoot,
+            "guide_rail_mask.png");
+        SetSprites(
+            serialized,
+            "goalArcTopRight",
+            MoonlitArtRoot,
+            "guide_rail_mask.png");
+        SetSprites(
+            serialized,
+            "goalArcBottomLeft",
+            MoonlitArtRoot,
+            "guide_rail_mask.png");
+        SetSprites(
+            serialized,
+            "goalArcBottomRight",
+            MoonlitArtRoot,
+            "guide_rail_mask.png");
+        SetSprites(
+            serialized,
+            "goalSpark",
+            MoonlitArtRoot,
+            "pin_small_mask.png");
         serialized.ApplyModifiedPropertiesWithoutUndo();
         EditorUtility.SetDirty(catalog);
         AssetDatabase.SaveAssets();
     }
 
-    private static void SetSprite(SerializedObject serialized, string field, string file)
+    private static void SetSprite(
+        SerializedObject serialized,
+        string field,
+        string root,
+        string file)
     {
-        serialized.FindProperty(field).objectReferenceValue = LoadSprites(file).FirstOrDefault();
+        serialized.FindProperty(field).objectReferenceValue =
+            LoadSprites(root, file).FirstOrDefault();
     }
 
-    private static void SetSprites(SerializedObject serialized, string field, string file)
+    private static void SetSprites(
+        SerializedObject serialized,
+        string field,
+        string root,
+        string file)
     {
-        var sprites = LoadSprites(file);
+        var sprites = LoadSprites(root, file);
         var property = serialized.FindProperty(field);
         property.arraySize = sprites.Length;
         for (var index = 0; index < sprites.Length; index++)
@@ -65,9 +141,9 @@ public static class ArcaneVfxCatalogBuilder
         }
     }
 
-    private static Sprite[] LoadSprites(string file)
+    private static Sprite[] LoadSprites(string root, string file)
     {
-        return AssetDatabase.LoadAllAssetsAtPath(ArtRoot + file)
+        return AssetDatabase.LoadAllAssetsAtPath(root + file)
             .OfType<Sprite>()
             .OrderBy(sprite => sprite.name)
             .ToArray();

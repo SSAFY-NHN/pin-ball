@@ -1,4 +1,7 @@
 #if UNITY_EDITOR
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
 using TMPro;
 using UnityEditor;
@@ -7,6 +10,11 @@ using UnityEngine;
 
 public class GameplayFeedbackSceneTests
 {
+    private const string ArcanePinballRoot =
+        "Assets/03. Images/Pinball/Arcane/";
+    private const string MoonlitWorkshopRoot =
+        "Assets/03. Images/Pinball/MoonlitWorkshop/";
+
     [Test]
     public void GameScene_WiresResultCostAndInteractionGlow()
     {
@@ -65,9 +73,7 @@ public class GameplayFeedbackSceneTests
         var boardRenderer = boardGlow.GetComponent<SpriteRenderer>();
         Assert.That(
             AssetDatabase.GetAssetPath(boardRenderer.sprite),
-            Is.EqualTo(
-                "Assets/03. Images/Pinball/Arcane/" +
-                "pinball_board_arcane_mask.png"));
+            Is.EqualTo(MoonlitWorkshopRoot + "board_base_mask.png"));
         Assert.That(
             AssetDatabase.GetAssetPath(boardRenderer.sharedMaterial),
             Is.EqualTo(
@@ -83,6 +89,102 @@ public class GameplayFeedbackSceneTests
             "glowController");
         Assert.That(GameObject.Find("PlungerLeverGlow"), Is.Not.Null);
         Assert.That(lever.GetComponentInChildren<TMP_Text>(true), Is.Null);
+    }
+
+    [Test]
+    public void GameScene_UsesMoonlitWorkshopBoardAndKeepsArcaneBall()
+    {
+        EditorSceneManager.OpenScene("Assets/01. Scenes/02. Game.unity");
+
+        GameObject board = GameObject.Find("ArcaneBoard");
+        Assert.That(board, Is.Not.Null);
+
+        var boardRenderers = board
+            .GetComponentsInChildren<SpriteRenderer>(true)
+            .Where(renderer => renderer.sprite != null)
+            .ToArray();
+        Assert.That(boardRenderers, Is.Not.Empty);
+        AssertSpritePathsStartWith(
+            boardRenderers.Select(renderer => renderer.sprite),
+            MoonlitWorkshopRoot);
+
+        GameObject ball = GameObject.Find("Ball");
+        Assert.That(ball, Is.Not.Null);
+        Assert.That(
+            AssetDatabase.GetAssetPath(ball.GetComponent<SpriteRenderer>().sprite),
+            Is.EqualTo(ArcanePinballRoot + "ball_arcane.png"));
+    }
+
+    [Test]
+    public void VfxCatalog_UsesMoonlitBoardSpritesAndArcaneBallSprites()
+    {
+        var catalog = AssetDatabase.LoadAssetAtPath<ArcaneVfxCatalog>(
+            "Assets/Resources/ArcaneVFX/ArcaneVfxCatalog.asset");
+        Assert.That(catalog, Is.Not.Null);
+
+        AssertSpritePathsStartWith(
+            new[] { catalog.ballMask }
+                .Concat(catalog.ballTrail)
+                .Concat(catalog.ballImpact)
+                .Concat(catalog.ballRing),
+            ArcanePinballRoot);
+
+        AssertSpritePathsStartWith(
+            new[]
+            {
+                catalog.standardBumperMask,
+                catalog.specialBumperMask,
+                catalog.magnetMask,
+                catalog.reflectorMask,
+                catalog.guardianRuneMask,
+                catalog.rangerRuneMask,
+                catalog.mageRuneMask,
+                catalog.lancerRuneMask
+            }
+            .Concat(catalog.magnetArc)
+            .Concat(catalog.magnetSpark)
+            .Concat(catalog.goalRing)
+            .Concat(catalog.goalArcTopLeft)
+            .Concat(catalog.goalArcTopRight)
+            .Concat(catalog.goalArcBottomLeft)
+            .Concat(catalog.goalArcBottomRight)
+            .Concat(catalog.goalSpark),
+            MoonlitWorkshopRoot);
+    }
+
+    [Test]
+    public void PinballGoal_InitializesItsRingEffectsWithMoonlitSprites()
+    {
+        var goalObject = new GameObject("Goal VFX Test");
+        goalObject.SetActive(false);
+        var absorptionObject = new GameObject("Absorption Ring");
+        var burstObject = new GameObject("Goal Burst");
+        absorptionObject.transform.SetParent(goalObject.transform);
+        burstObject.transform.SetParent(goalObject.transform);
+
+        try
+        {
+            var goal = goalObject.AddComponent<PinballGoal>();
+            var absorption = absorptionObject.AddComponent<ArcaneSpriteEffect>();
+            var burst = burstObject.AddComponent<ArcaneSpriteEffect>();
+            var serializedGoal = new SerializedObject(goal);
+            serializedGoal.FindProperty("absorptionRing").objectReferenceValue = absorption;
+            serializedGoal.FindProperty("goalBurst").objectReferenceValue = burst;
+            serializedGoal.ApplyModifiedPropertiesWithoutUndo();
+
+            MethodInfo initializeVfx = typeof(PinballGoal).GetMethod(
+                "InitializeVfx",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(initializeVfx, Is.Not.Null);
+            initializeVfx.Invoke(goal, null);
+
+            AssertEffectSpritePathsStartWith(absorption, MoonlitWorkshopRoot);
+            AssertEffectSpritePathsStartWith(burst, MoonlitWorkshopRoot);
+        }
+        finally
+        {
+            Object.DestroyImmediate(goalObject);
+        }
     }
 
     private static void AssertReference(Object target, string propertyName)
@@ -114,6 +216,34 @@ public class GameplayFeedbackSceneTests
         var property = new SerializedObject(target).FindProperty(propertyName);
         Assert.That(property, Is.Not.Null, propertyName);
         return property.objectReferenceValue as T;
+    }
+
+    private static void AssertSpritePathsStartWith(
+        IEnumerable<Sprite> sprites,
+        string expectedRoot)
+    {
+        string[] invalidPaths = sprites
+            .Select(AssetDatabase.GetAssetPath)
+            .Where(path => !path.StartsWith(expectedRoot))
+            .ToArray();
+        Assert.That(
+            invalidPaths,
+            Is.Empty,
+            $"Expected sprite paths below {expectedRoot}: " +
+            string.Join(", ", invalidPaths));
+    }
+
+    private static void AssertEffectSpritePathsStartWith(
+        ArcaneSpriteEffect effect,
+        string expectedRoot)
+    {
+        FieldInfo framesField = typeof(ArcaneSpriteEffect).GetField(
+            "frames",
+            BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.That(framesField, Is.Not.Null);
+        var frames = framesField.GetValue(effect) as Sprite[];
+        Assert.That(frames, Is.Not.Null.And.Not.Empty);
+        AssertSpritePathsStartWith(frames, expectedRoot);
     }
 }
 #endif

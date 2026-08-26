@@ -31,9 +31,9 @@ public class UnitCreationServiceTests
         };
         _dataSource.Allies.Add("warrior", CreateAlly("warrior", null));
         _dataSource.Allies.Add("knight", CreateAlly("knight", "warrior"));
-        _dataSource.Enemies.Add("goblin", new EnemyUnitData
+        _dataSource.Enemies.Add("PatrolMan", new EnemyUnitData
         {
-            id = "goblin",
+            id = "PatrolMan",
             health = 100,
             attack = 20,
             defense = 5,
@@ -135,13 +135,13 @@ public class UnitCreationServiceTests
     public void TryCreateEnemy_CreatesWaveScaledStats()
     {
         bool created = _service.TryCreateEnemy(
-            "goblin",
+            "PatrolMan",
             3,
             out EnemyUnitData enemyData,
             out BattleUnitStats stats);
 
         Assert.That(created, Is.True);
-        Assert.That(enemyData.id, Is.EqualTo("goblin"));
+        Assert.That(enemyData.id, Is.EqualTo("PatrolMan"));
         Assert.That(stats.MaxHp, Is.EqualTo(120f));
         Assert.That(stats.AttackDamage, Is.EqualTo(28f));
         Assert.That(stats.Defense, Is.EqualTo(8f));

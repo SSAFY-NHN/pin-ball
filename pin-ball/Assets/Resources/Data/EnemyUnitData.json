@@ -10,9 +10,9 @@
   },
   "units": [
     {
-      "name": "로그",
+      "name": "PatrolMan",
       "role": "기본 근접형",
-      "id": "goblin",
+      "id": "PatrolMan",
       "rank": 0,
       "health": 90,
       "attack": 12,
@@ -53,9 +53,9 @@
       ]
     },
     {
-      "name": "궁수",
+      "name": "Archer",
       "role": "원거리 공격형",
-      "id": "goblin_archer",
+      "id": "Archer",
       "rank": 0,
       "health": 75,
       "attack": 14,
@@ -82,15 +82,15 @@
       ]
     },
     {
-      "name": "메이스 전사",
+      "name": "MaceWarrior",
       "role": "방패를 사용하는 근접 방어형",
-      "id": "shield_guard",
+      "id": "MaceWarrior",
       "rank": 0,
       "health": 180,
-      "attack": 10,
+      "attack": 18,
       "defense": 14,
       "moveSpeed": 1.8,
-      "attackSpeed": 0.65,
+      "attackSpeed": 0.7,
       "attackRange": 1.1,
       "breachDamage": 2,
       "skills": [
@@ -118,9 +118,9 @@
       ]
     },
     {
-      "name": "검방 전사",
+      "name": "Knights",
       "role": "강한 근접형",
-      "id": "orc_warrior",
+      "id": "Knights",
       "rank": 0,
       "health": 210,
       "attack": 22,
@@ -190,40 +190,18 @@
       ]
     },
     {
-      "name": "암살자",
-      "role": "후열 공격형",
-      "id": "assassin",
+      "name": "Rogue",
+      "role": "상급 근접형",
+      "id": "Rogue",
       "rank": 0,
-      "health": 85,
-      "attack": 24,
-      "defense": 3,
-      "moveSpeed": 3.2,
-      "attackSpeed": 1.25,
-      "attackRange": 1,
+      "health": 120,
+      "attack": 16,
+      "defense": 4,
+      "moveSpeed": 1.6,
+      "attackSpeed": 0.9,
+      "attackRange": 1.1,
       "breachDamage": 2,
-      "skills": [
-        {
-          "id": "shadow_leap",
-          "name": "그림자 도약",
-          "description": "가장 먼 적 주변으로 이동 후 강한 피해",
-          "effects": [
-            {
-              "effect": 9,
-              "target": 3,
-              "value1": 0,
-              "value2": 0,
-              "value3": 0
-            },
-            {
-              "effect": 0,
-              "target": 3,
-              "value1": 180,
-              "value2": 0,
-              "value3": 0
-            }
-          ]
-        }
-      ]
+      "skills": []
     },
     {
       "name": "트롤",
@@ -341,9 +319,9 @@
       ]
     },
     {
-      "name": "기마 마도사",
+      "name": "DarkMageBoss",
       "role": "보스",
-      "id": "goblin_king",
+      "id": "DarkMageBoss",
       "rank": 2,
       "health": 1800,
       "attack": 48,
@@ -356,19 +334,19 @@
         {
           "id": "summon_minions",
           "name": "부하 소환",
-          "description": "체력 75/50/25%에서 고블린과 늑대 소환",
+          "description": "체력 75/50/25%에서 PatrolMan과 Rogue 소환",
           "effects": [
             {
               "effect": 8,
               "target": 4,
-              "value1": 3,
+              "value1": 2,
               "value2": 0,
               "value3": 0
             },
             {
               "effect": 8,
               "target": 4,
-              "value1": 2,
+              "value1": 1,
               "value2": 0,
               "value3": 0
             }

@@ -39,7 +39,7 @@ public sealed class UnitAttackEffectPlayerTests
     }
 
     [Test]
-    public void EnemyPrefab_MapsGoblinArcherToEnemyArrow()
+    public void EnemyPrefab_MapsRenamedEnemiesToAttackEffects()
     {
         var player = LoadEffectPlayer(EnemyPrefabPath);
         var serializedPlayer = new SerializedObject(player);
@@ -48,7 +48,15 @@ public sealed class UnitAttackEffectPlayerTests
             serializedPlayer,
             "arrowEffectPrefab",
             "EnemyArcherArrowEffect");
-        AssertIds(serializedPlayer, "arrowUnitIds", "goblin_archer");
+        AssertIds(serializedPlayer, "arrowUnitIds", "Archer");
+        AssertPrefabName(
+            serializedPlayer,
+            "targetEffectPrefab",
+            "EnemyBossPurpleTornadoEffect");
+        AssertIds(
+            serializedPlayer,
+            "targetEffectUnitIds",
+            "DarkMageBoss");
     }
 
     [TestCase(AllyPrefabPath)]

@@ -601,7 +601,33 @@ MonoBehaviour:
   framesPerSecond: 10
   sourceFacesRight: 1
   unitAnimations:
-  - unitId: goblin
+  - unitId: PatrolMan
+    idleFrames:
+    - {fileID: 6720063480981989828, guid: 8b992a58ebaba67478fb7fdefdaaf1da, type: 3}
+    moveFrames:
+    - {fileID: -8782889728487348895, guid: 76cc4970522515f4a829ba2839b907d7, type: 3}
+    - {fileID: 694638778882007818, guid: 76cc4970522515f4a829ba2839b907d7, type: 3}
+    - {fileID: 7466417869984483759, guid: 76cc4970522515f4a829ba2839b907d7, type: 3}
+    - {fileID: -7441559243854202631, guid: 76cc4970522515f4a829ba2839b907d7, type: 3}
+    - {fileID: 8085938838076199048, guid: 76cc4970522515f4a829ba2839b907d7, type: 3}
+    - {fileID: 7397494175170231804, guid: 76cc4970522515f4a829ba2839b907d7, type: 3}
+    - {fileID: -3846600157981646986, guid: 76cc4970522515f4a829ba2839b907d7, type: 3}
+    - {fileID: 8038601376931886756, guid: 76cc4970522515f4a829ba2839b907d7, type: 3}
+    - {fileID: 7975804853637615948, guid: 76cc4970522515f4a829ba2839b907d7, type: 3}
+    attackFrames:
+    - {fileID: -5335439961757483909, guid: a211988264aa7164a92a14d15dd0d4e0, type: 3}
+    - {fileID: 3436822642054719116, guid: a211988264aa7164a92a14d15dd0d4e0, type: 3}
+    - {fileID: -112344963213763932, guid: a211988264aa7164a92a14d15dd0d4e0, type: 3}
+    - {fileID: 5323144553493113857, guid: a211988264aa7164a92a14d15dd0d4e0, type: 3}
+    - {fileID: -8095157568409587440, guid: a211988264aa7164a92a14d15dd0d4e0, type: 3}
+    - {fileID: 5167067602370031020, guid: a211988264aa7164a92a14d15dd0d4e0, type: 3}
+    - {fileID: -7829467271283887235, guid: a211988264aa7164a92a14d15dd0d4e0, type: 3}
+    - {fileID: 826761846289894271, guid: a211988264aa7164a92a14d15dd0d4e0, type: 3}
+    - {fileID: -6962062315380634769, guid: a211988264aa7164a92a14d15dd0d4e0, type: 3}
+    moveFramesPerSecond: 12
+    attackFramesPerSecond: 12
+    sourceFacesRight: 1
+  - unitId: Rogue
     idleFrames:
     - {fileID: -6225973641839199835, guid: 873eb7cc1a13c884cba7d6471a4ed218, type: 3}
     moveFrames:
@@ -653,7 +679,7 @@ MonoBehaviour:
     moveFramesPerSecond: 12
     attackFramesPerSecond: 12
     sourceFacesRight: 1
-  - unitId: goblin_archer
+  - unitId: Archer
     idleFrames:
     - {fileID: 8230880841540663377, guid: 8e5c07f10cc64541856c3d2b4e1ccb70, type: 3}
     moveFrames:
@@ -679,7 +705,7 @@ MonoBehaviour:
     moveFramesPerSecond: 12
     attackFramesPerSecond: 12
     sourceFacesRight: 1
-  - unitId: shield_guard
+  - unitId: MaceWarrior
     idleFrames:
     - {fileID: -6938902867049860963, guid: 878d6e7a722743d2a53f484633b026a9, type: 3}
     moveFrames:
@@ -705,7 +731,7 @@ MonoBehaviour:
     moveFramesPerSecond: 12
     attackFramesPerSecond: 12
     sourceFacesRight: 1
-  - unitId: orc_warrior
+  - unitId: Knights
     idleFrames:
     - {fileID: 5714828096958854374, guid: e15866cea6a98be4697e38b4177b7a6e, type: 3}
     moveFrames:
@@ -713,7 +739,7 @@ MonoBehaviour:
     - {fileID: 3068561355803063772, guid: 52fe7e7972f30ce46a15cbcb8cc4f4ee, type: 3}
     - {fileID: 6869776851254828498, guid: 52fe7e7972f30ce46a15cbcb8cc4f4ee, type: 3}
     - {fileID: -2883815053032425714, guid: 52fe7e7972f30ce46a15cbcb8cc4f4ee, type: 3}
-    - {fileID: 7431113236265328, guid: 52fe7e7972f30ce46a15cbcb8cc4f4ee, type: 3}
+    - {fileID: 7431113236263985328, guid: 52fe7e7972f30ce46a15cbcb8cc4f4ee, type: 3}
     attackFrames:
     - {fileID: 5931813679968811086, guid: 0aa6c27affaaed24eb125097dda2f5f6, type: 3}
     - {fileID: -6968639999931378181, guid: 0aa6c27affaaed24eb125097dda2f5f6, type: 3}
@@ -723,7 +749,7 @@ MonoBehaviour:
     moveFramesPerSecond: 10
     attackFramesPerSecond: 10
     sourceFacesRight: 1
-  - unitId: goblin_king
+  - unitId: DarkMageBoss
     idleFrames:
     - {fileID: 4269253821087149464, guid: 8c2107f3cc8ed6a45bd6a360b22ef544, type: 3}
     moveFrames:
@@ -763,14 +789,14 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   arrowEffectPrefab: {fileID: 1204114526272962045, guid: ec23633db48e5074383432a0a6a4b380, type: 3}
   arrowUnitIds:
-  - goblin_archer
+  - Archer
   fireEffectPrefab: {fileID: 0}
   fireUnitIds: []
   muzzleFlashEffectPrefab: {fileID: 0}
   muzzleFlashUnitIds: []
   targetEffectPrefab: {fileID: 4292479652795839271, guid: c61037788dc2fbd4c8b09084be0714f2, type: 3}
   targetEffectUnitIds:
-  - goblin_king
+  - DarkMageBoss
   projectileDuration: 0.18
   projectileOriginDistance: 0.12
   muzzleFlashDuration: 0.21

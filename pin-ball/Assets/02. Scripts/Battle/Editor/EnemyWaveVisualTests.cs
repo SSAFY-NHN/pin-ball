@@ -25,28 +25,90 @@ public class EnemyWaveVisualTests
 
         var expectedWaves = new[]
         {
-            Wave(("goblin", 3)),
-            Wave(("goblin", 4)),
-            Wave(("goblin", 3), ("goblin_archer", 1)),
-            Wave(("goblin", 3), ("goblin_archer", 2)),
-            Wave(("goblin", 2), ("goblin_archer", 2), ("shield_guard", 1)),
-            Wave(("goblin", 2), ("goblin_archer", 1), ("shield_guard", 2)),
-            Wave(("goblin", 2), ("goblin_archer", 1), ("shield_guard", 1), ("orc_warrior", 1)),
-            Wave(("goblin", 1), ("goblin_archer", 2), ("shield_guard", 1), ("orc_warrior", 1)),
-            Wave(("goblin", 1), ("goblin_archer", 1), ("shield_guard", 1), ("orc_warrior", 2)),
-            Wave(("goblin", 1), ("goblin_archer", 1), ("shield_guard", 1), ("goblin_king", 1))
+            Wave(("PatrolMan", 3)),
+            Wave(("PatrolMan", 3), ("Rogue", 1)),
+            Wave(("PatrolMan", 2), ("Rogue", 1), ("Archer", 1)),
+            Wave(("PatrolMan", 2), ("Rogue", 1), ("Archer", 2)),
+            Wave(("PatrolMan", 1), ("Rogue", 2), ("Archer", 1), ("MaceWarrior", 1)),
+            Wave(("PatrolMan", 1), ("Rogue", 1), ("Archer", 1), ("MaceWarrior", 2)),
+            Wave(("Rogue", 1), ("Archer", 1), ("MaceWarrior", 1), ("Knights", 1)),
+            Wave(("Rogue", 1), ("Archer", 2), ("MaceWarrior", 1), ("Knights", 1)),
+            Wave(("Rogue", 1), ("Archer", 1), ("MaceWarrior", 1), ("Knights", 2)),
+            Wave(("Archer", 1), ("MaceWarrior", 1), ("Knights", 1), ("DarkMageBoss", 1))
         };
 
         for (var waveIndex = 0; waveIndex < expectedWaves.Length; waveIndex++)
         {
-            var actual = collection.waves[waveIndex].Enemies.ToDictionary(
-                enemy => enemy.EnemyId,
-                enemy => enemy.Count);
+            var actual = collection.waves[waveIndex].Enemies
+                .Select(enemy => $"{enemy.EnemyId}:{enemy.Count}")
+                .ToArray();
             Assert.That(
                 actual,
-                Is.EquivalentTo(expectedWaves[waveIndex]),
+                Is.EqualTo(expectedWaves[waveIndex]),
                 $"Wave {waveIndex + 1}");
         }
+
+        Assert.That(
+            collection.waves.Select(wave => wave.IsElite),
+            Is.EqualTo(new[]
+            {
+                false, false, false, false, true,
+                false, false, false, true, false
+            }));
+        Assert.That(
+            collection.waves.Select(wave => wave.IsBoss),
+            Is.EqualTo(new[]
+            {
+                false, false, false, false, false,
+                false, false, false, false, true
+            }));
+    }
+
+    [Test]
+    public void EnemyData_UsesApprovedMeleeProgression()
+    {
+        var textAsset = Resources.Load<TextAsset>("Data/EnemyUnitData");
+        Assert.That(textAsset, Is.Not.Null);
+
+        var collection =
+            JsonUtility.FromJson<EnemyUnitDataCollection>(textAsset.text);
+        var enemies = collection.units.ToDictionary(enemy => enemy.id);
+
+        Assert.That(enemies.Keys, Does.Contain("PatrolMan"));
+        Assert.That(enemies.Keys, Does.Contain("Rogue"));
+        Assert.That(enemies.Keys, Does.Contain("Archer"));
+        Assert.That(enemies.Keys, Does.Contain("MaceWarrior"));
+        Assert.That(enemies.Keys, Does.Contain("Knights"));
+        Assert.That(enemies.Keys, Does.Contain("DarkMageBoss"));
+        Assert.That(enemies.Keys, Does.Not.Contain("goblin"));
+        Assert.That(enemies.Keys, Does.Not.Contain("assassin"));
+        Assert.That(enemies.Keys, Does.Not.Contain("goblin_archer"));
+        Assert.That(enemies.Keys, Does.Not.Contain("shield_guard"));
+        Assert.That(enemies.Keys, Does.Not.Contain("orc_warrior"));
+        Assert.That(enemies.Keys, Does.Not.Contain("goblin_king"));
+
+        var patrolMan = enemies["PatrolMan"];
+        var rogue = enemies["Rogue"];
+        var maceWarrior = enemies["MaceWarrior"];
+        var knights = enemies["Knights"];
+        Assert.That(rogue.health, Is.EqualTo(120));
+        Assert.That(rogue.attack, Is.EqualTo(16));
+        Assert.That(rogue.defense, Is.EqualTo(4));
+        Assert.That(rogue.moveSpeed, Is.EqualTo(1.6f));
+        Assert.That(rogue.attackSpeed, Is.EqualTo(0.9f));
+        Assert.That(rogue.attackRange, Is.EqualTo(1.1f));
+        Assert.That(rogue.breachDamage, Is.EqualTo(2));
+        Assert.That(rogue.Skills, Is.Empty);
+        Assert.That(maceWarrior.attackSpeed, Is.EqualTo(0.7f));
+        Assert.That(
+            new[]
+            {
+                patrolMan.attack,
+                rogue.attack,
+                maceWarrior.attack,
+                knights.attack
+            },
+            Is.EqualTo(new[] { 12, 16, 18, 22 }));
     }
 
     [Test]
@@ -60,12 +122,13 @@ public class EnemyWaveVisualTests
 
         var expectedIdlePaths = new Dictionary<string, string>
         {
-            ["goblin"] = "Assets/03. Images/Humans/Rogue/H_Rogue.png",
+            ["PatrolMan"] = "Assets/03. Images/Humans/Patrolman/H_Patrolman.png",
+            ["Rogue"] = "Assets/03. Images/Humans/Rogue/H_Rogue.png",
             ["wolf"] = "Assets/03. Images/Humans/Rogue/H_Rogue.png",
-            ["goblin_archer"] = "Assets/03. Images/Humans/Archer/H_Archer.png",
-            ["shield_guard"] = "Assets/03. Images/Humans/MaceWarrior/H_MaceWarrior.png",
-            ["orc_warrior"] = "Assets/03. Images/Humans/Knights/H_Warrior.png",
-            ["goblin_king"] = "Assets/03. Images/Humans/Boss/H_MountedMageBoss.png"
+            ["Archer"] = "Assets/03. Images/Humans/Archer/H_Archer.png",
+            ["MaceWarrior"] = "Assets/03. Images/Humans/MaceWarrior/H_MaceWarrior.png",
+            ["Knights"] = "Assets/03. Images/Humans/Knights/H_Warrior.png",
+            ["DarkMageBoss"] = "Assets/03. Images/Humans/Boss/H_MountedMageBoss.png"
         };
 
         var serializedVisual = new SerializedObject(visual);
@@ -83,6 +146,9 @@ public class EnemyWaveVisualTests
             Assert.That(idleFrames.arraySize, Is.GreaterThanOrEqualTo(1));
             Assert.That(moveFrames.arraySize, Is.GreaterThanOrEqualTo(2));
             Assert.That(attackFrames.arraySize, Is.GreaterThanOrEqualTo(2));
+            AssertFramesAreAssigned(idleFrames, expected.Key, "idle");
+            AssertFramesAreAssigned(moveFrames, expected.Key, "move");
+            AssertFramesAreAssigned(attackFrames, expected.Key, "attack");
             Assert.That(
                 AssetDatabase.GetAssetPath(
                     idleFrames.GetArrayElementAtIndex(0).objectReferenceValue),
@@ -127,10 +193,26 @@ public class EnemyWaveVisualTests
             Is.EqualTo(0.996f).Within(0.001f));
     }
 
-    private static Dictionary<string, int> Wave(
+    private static string[] Wave(
         params (string id, int count)[] enemies)
     {
-        return enemies.ToDictionary(enemy => enemy.id, enemy => enemy.count);
+        return enemies
+            .Select(enemy => $"{enemy.id}:{enemy.count}")
+            .ToArray();
+    }
+
+    private static void AssertFramesAreAssigned(
+        SerializedProperty frames,
+        string unitId,
+        string animationName)
+    {
+        for (var index = 0; index < frames.arraySize; index++)
+        {
+            Assert.That(
+                frames.GetArrayElementAtIndex(index).objectReferenceValue,
+                Is.Not.Null,
+                $"{unitId} {animationName} frame {index}");
+        }
     }
 
     private static SerializedProperty FindProfile(

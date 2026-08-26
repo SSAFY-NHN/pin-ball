@@ -91,7 +91,7 @@ public class SoundManagerTests
     [TestCase("pyromancer", SoundName.MagicSpell)]
     [TestCase("warrior", SoundName.ClassicPunch)]
     [TestCase("knight", SoundName.ClassicPunch)]
-    [TestCase("goblin", SoundName.ClassicPunch)]
+    [TestCase("PatrolMan", SoundName.ClassicPunch)]
     public void GetAttack_ReturnsSoundForUnitRole(
         string unitId,
         string expectedSound)

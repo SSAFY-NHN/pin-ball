@@ -209,7 +209,7 @@ public class BattleManager : AppService, IItemEventListener
     private void OnEnemyDefeated(string enemyId)
     {
         if (!IsCurrentWaveBoss || currentBossDefeated ||
-            !string.Equals(enemyId, "goblin_king", StringComparison.Ordinal)) return;
+            !string.Equals(enemyId, "DarkMageBoss", StringComparison.Ordinal)) return;
 
         currentBossDefeated = true;
         OnBossDefeated?.Invoke(CurrentWaveNumber);
