@@ -26,7 +26,6 @@ public sealed class UnitUpgradeCard : MonoBehaviour
         if (manager == null || unitManager == null) return;
 
         int level = manager.GetAllyJobLevel(rootUnitId);
-        bool owned = unitManager.GetOwnedAllyCount(rootUnitId) > 0;
         string unitName = rootUnitId;
         string stats = string.Empty;
         if (titleData != null &&
@@ -48,9 +47,7 @@ public sealed class UnitUpgradeCard : MonoBehaviour
                     $"AS {current.AttackRate:0.##}→{next.AttackRate:0.##}";
         }
 
-        string state = !owned
-            ? "유닛 보유 필요"
-            : level >= AllyProgressionController.MaximumLevel
+        string state = level >= AllyProgressionController.MaximumLevel
                 ? "최대 레벨 · 두 번째 직업 해금"
                 : $"{manager.GetAllyJobLevelUpCost(rootUnitId)}G";
         string unlock = level < 5

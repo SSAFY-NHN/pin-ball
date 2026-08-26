@@ -499,7 +499,7 @@ public class BattleManager : AppService, IItemEventListener
                unitManager != null && allyProgressionController != null &&
                allyProgressionController.CanLevelUp(
                    rootUnitId,
-                   unitManager.GetOwnedAllyCount(rootUnitId) > 0,
+                   true,
                    Gold);
     }
 

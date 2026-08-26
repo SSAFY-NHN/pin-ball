@@ -46,13 +46,19 @@ public sealed class AllyProgressionBattleManagerTests
     }
 
     [Test]
-    public void TryLevelUpAllyJob_RequiresOwnedRootJobAndEnoughGold()
+    public void TryLevelUpAllyJob_BaseJobsDoNotRequirePurchasedUnit()
     {
         BattleManager noOwner = CreateManager(EWaveState.Pending, 1000, false);
-        Assert.That(noOwner.TryLevelUpAllyJob("warrior"), Is.False);
-        Assert.That(noOwner.Gold, Is.EqualTo(1000));
+        Assert.That(noOwner.TryLevelUpAllyJob("warrior"), Is.True);
+        Assert.That(noOwner.Gold, Is.EqualTo(850));
+        Assert.That(noOwner.GetAllyJobLevel("warrior"), Is.EqualTo(2));
+    }
 
-        BattleManager poor = CreateManager(EWaveState.Pending, 149, true);
+    [Test]
+    public void TryLevelUpAllyJob_StillRequiresEnoughGold()
+    {
+        BattleManager poor = CreateManager(EWaveState.Pending, 149, false);
+
         Assert.That(poor.TryLevelUpAllyJob("warrior"), Is.False);
         Assert.That(poor.Gold, Is.EqualTo(149));
     }
