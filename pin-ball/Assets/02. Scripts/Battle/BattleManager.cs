@@ -8,6 +8,7 @@ using UnityEngine;
 public class BattleManager : AppService, IItemEventListener
 {
     public const float BaseKnockbackDistance = 3f;
+    public const float PreparationDuration = 60f;
 
     [Header("Run Chances")]
     [SerializeField, Min(1)] public int playerMaxHp = 3;
@@ -60,6 +61,8 @@ public class BattleManager : AppService, IItemEventListener
     public float BaseKnockbackRemainingTime =>
         baseKnockbackSkillController?.RemainingTime ??
         BaseKnockbackSkillController.UnlockSeconds;
+    public float PreparationRemainingTime =>
+        preparationCountdown?.RemainingTime ?? PreparationDuration;
     public bool CanUseBaseKnockbackSkill =>
         IsInitialized && State == EWaveState.Active &&
         baseKnockbackSkillController?.CanUse == true &&
@@ -103,6 +106,8 @@ public class BattleManager : AppService, IItemEventListener
     private Coroutine waveResolutionCoroutine;
     private bool isRunInitialized;
     private bool isPreparationLocked;
+    private PreparationCountdown preparationCountdown;
+    private GameObject tutorialOverlay;
     private float currentWaveStartedAt;
     private bool currentBossDefeated;
     private int currentWaveAllyDefenseDamage;
@@ -117,6 +122,10 @@ public class BattleManager : AppService, IItemEventListener
         if (!IsInitialized) return;
 
         unitPurchaseController?.Advance(Time.deltaTime);
+        float preparationDeltaTime = Time.timeScale > 0f
+            ? Time.unscaledDeltaTime
+            : 0f;
+        AdvancePreparationCountdown(preparationDeltaTime, TryStartWave);
         if (State != EWaveState.Active) return;
 
         AdvanceBaseKnockbackSkill(Time.deltaTime);
@@ -136,6 +145,7 @@ public class BattleManager : AppService, IItemEventListener
         isRunInitialized = true;
 
         unitManager = App.Get<UnitManager>();
+        tutorialOverlay = FindTutorialOverlay();
         unitManager.InitializeNewRun();
         unitManager.OnEnemyDefeated += OnEnemyDefeated;
         unitManager.OnDefenseLineAttackRequested += TryApplyDefenseLineAttack;
@@ -150,6 +160,7 @@ public class BattleManager : AppService, IItemEventListener
             allyDefenseLineMaxHp,
             enemyDefenseLineMaxHp);
         waveResolution = new WaveResolutionState();
+        preparationCountdown = new PreparationCountdown(PreparationDuration);
         economy = new BattleEconomy(
             titleData.BattleRunCommon?.StartingGold ?? 0);
         battleUpgradeController = new BattleUpgradeController(
@@ -227,6 +238,37 @@ public class BattleManager : AppService, IItemEventListener
             spawnedCount));
         SoundManager.PlaySFXIfAvailable(SoundName.WaveStart);
         return true;
+    }
+
+    internal void AdvancePreparationCountdown(
+        float deltaTime,
+        Func<bool> tryStartWave)
+    {
+        if (!IsInitialized || State != EWaveState.Pending ||
+            preparationCountdown == null || IsTutorialActive)
+        {
+            return;
+        }
+
+        if (preparationCountdown.Advance(deltaTime))
+        {
+            tryStartWave?.Invoke();
+        }
+    }
+
+    internal bool IsTutorialActive =>
+        tutorialOverlay != null && tutorialOverlay.activeInHierarchy;
+
+    private static GameObject FindTutorialOverlay()
+    {
+        foreach (Transform candidate in FindObjectsByType<Transform>(
+                     FindObjectsInactive.Include,
+                     FindObjectsSortMode.None))
+        {
+            if (candidate.name == "TutorialOverlay") return candidate.gameObject;
+        }
+
+        return null;
     }
 
     internal void AdvanceBaseKnockbackSkill(float deltaTime)
@@ -396,6 +438,10 @@ public class BattleManager : AppService, IItemEventListener
     private void ChangeState(EWaveState nextState)
     {
         if (!runState.ChangeState(nextState)) return;
+        if (nextState == EWaveState.Pending)
+        {
+            preparationCountdown?.Reset();
+        }
         OnStateChanged?.Invoke(State);
         OnPreparationAvailabilityChanged?.Invoke(CanUsePreparationActions);
     }
