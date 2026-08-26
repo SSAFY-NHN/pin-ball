@@ -9,26 +9,26 @@ public static class AllyPortraitProvider
 
     private static readonly Dictionary<string, string> FileNames = new()
     {
-        ["bear1"] = "ui_character_portrait_01_bear_swordsman",
-        ["bear2"] = "ui_character_portrait_05_bear_knight",
-        ["bear3"] = "ui_character_portrait_06_bear_berserker",
-        ["bear4"] = "ui_character_portrait_05_bear_knight",
-        ["bear5"] = "ui_character_portrait_06_bear_berserker",
-        ["cat1"] = "ui_character_portrait_02_cat_archer",
-        ["cat2"] = "ui_character_portrait_07_cat_ranger",
-        ["cat3"] = "ui_character_portrait_08_cat_crossbow",
-        ["cat4"] = "ui_character_portrait_07_cat_ranger",
-        ["cat5"] = "ui_character_portrait_08_cat_crossbow",
-        ["rabbit1"] = "ui_character_portrait_03_rabbit_mage",
-        ["rabbit2"] = "ui_character_portrait_10_rabbit_ice_mage",
-        ["rabbit3"] = "ui_character_portrait_09_rabbit_fire_mage",
-        ["rabbit4"] = "ui_character_portrait_10_rabbit_ice_mage",
-        ["rabbit5"] = "ui_character_portrait_09_rabbit_fire_mage",
-        ["dog1"] = "ui_character_portrait_04_dog_lancer",
-        ["dog2"] = "ui_character_portrait_12_dog_guardian",
-        ["dog3"] = "ui_character_portrait_11_dog_lancer",
-        ["dog4"] = "ui_character_portrait_12_dog_guardian",
-        ["dog5"] = "ui_character_portrait_11_dog_lancer"
+        ["bear1"] = "ui_character_portrait_bear1_fighter",
+        ["bear2"] = "ui_character_portrait_bear2_fighter",
+        ["bear3"] = "ui_character_portrait_bear3_ninja_assassin",
+        ["bear4"] = "ui_character_portrait_bear4_evo_fighter",
+        ["bear5"] = "ui_character_portrait_bear5_evo_ninja_assassin",
+        ["dog1"] = "ui_character_portrait_dog1_farmer_sword",
+        ["dog2"] = "ui_character_portrait_dog2_warrior",
+        ["dog3"] = "ui_character_portrait_dog3_lancer",
+        ["dog4"] = "ui_character_portrait_dog4_evo_warrior",
+        ["dog5"] = "ui_character_portrait_dog5_evo_lancer",
+        ["cat1"] = "ui_character_portrait_cat1_archer",
+        ["cat2"] = "ui_character_portrait_cat2_gunslinger",
+        ["cat3"] = "ui_character_portrait_cat3_crossbow",
+        ["cat4"] = "ui_character_portrait_cat4_evo_gunslinger",
+        ["cat5"] = "ui_character_portrait_cat5_evo_bow",
+        ["rabbit1"] = "ui_character_portrait_rabbit1_mage",
+        ["rabbit2"] = "ui_character_portrait_rabbit2_healer",
+        ["rabbit3"] = "ui_character_portrait_rabbit3_evo_mage",
+        ["rabbit4"] = "ui_character_portrait_rabbit4_evo_healer",
+        ["rabbit5"] = "ui_character_portrait_rabbit5_evo_mage2"
     };
 
     private static readonly Dictionary<string, Sprite> Cache = new();
