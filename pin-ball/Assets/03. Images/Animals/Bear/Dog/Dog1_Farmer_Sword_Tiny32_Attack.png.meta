@@ -1,10 +1,22 @@
 fileFormatVersion: 2
-guid: 2e624e973599db449a6e788303097c23
+guid: 72a278d3a8f596946821499878d04f67
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3840916011361215700
-    second: pinball_board_arcane_0
+      213: -1461075690237600667
+    second: Dog1_Farmer_Sword_Tiny32_Attack_0
+  - first:
+      213: -7297082908204775942
+    second: Dog1_Farmer_Sword_Tiny32_Attack_1
+  - first:
+      213: -5962643324222380274
+    second: Dog1_Farmer_Sword_Tiny32_Attack_2
+  - first:
+      213: -1800751153738817547
+    second: Dog1_Farmer_Sword_Tiny32_Attack_3
+  - first:
+      213: -3394132255893515074
+    second: Dog1_Farmer_Sword_Tiny32_Attack_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +58,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -88,7 +100,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -101,7 +113,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -113,13 +125,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: pinball_board_arcane_0
+      name: Dog1_Farmer_Sword_Tiny32_Attack_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 2
         y: 0
-        width: 1125
-        height: 1537
+        width: 27
+        height: 28
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +140,96 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4d4ab4523ccad4530800000000000000
-      internalID: 3840916011361215700
+      spriteID: 56cdd6d966739bbe0800000000000000
+      internalID: -1461075690237600667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog1_Farmer_Sword_Tiny32_Attack_1
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 0
+        width: 24
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af541efa1cd8bba90800000000000000
+      internalID: -7297082908204775942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog1_Farmer_Sword_Tiny32_Attack_2
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 0
+        width: 24
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e07ee51fc7f604da0800000000000000
+      internalID: -5962643324222380274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog1_Farmer_Sword_Tiny32_Attack_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ffd580dd527207e0800000000000000
+      internalID: -1800751153738817547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog1_Farmer_Sword_Tiny32_Attack_4
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 0
+        width: 27
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb495c632be95e0d0800000000000000
+      internalID: -3394132255893515074
       vertices: []
       indices: 
       edges: []
@@ -138,7 +238,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +248,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      pinball_board_arcane_0: 3840916011361215700
+      Dog1_Farmer_Sword_Tiny32_Attack_0: -1461075690237600667
+      Dog1_Farmer_Sword_Tiny32_Attack_1: -7297082908204775942
+      Dog1_Farmer_Sword_Tiny32_Attack_2: -5962643324222380274
+      Dog1_Farmer_Sword_Tiny32_Attack_3: -1800751153738817547
+      Dog1_Farmer_Sword_Tiny32_Attack_4: -3394132255893515074
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

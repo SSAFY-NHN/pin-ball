@@ -1,0 +1,520 @@
+fileFormatVersion: 2
+guid: 779ae7af02a544c47a16da403b4be56a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4705556295380559553
+    second: Rabbit5_EvoMage2_Attack_0
+  - first:
+      213: 2559087119858393956
+    second: Rabbit5_EvoMage2_Attack_1
+  - first:
+      213: -312051503782691831
+    second: Rabbit5_EvoMage2_Attack_2
+  - first:
+      213: -531536726174675439
+    second: Rabbit5_EvoMage2_Attack_3
+  - first:
+      213: 1760710423320086719
+    second: Rabbit5_EvoMage2_Attack_4
+  - first:
+      213: 3279505546799494283
+    second: Rabbit5_EvoMage2_Attack_5
+  - first:
+      213: 4824401395728219557
+    second: Rabbit5_EvoMage2_Attack_6
+  - first:
+      213: -8629839108804674105
+    second: Rabbit5_EvoMage2_Attack_7
+  - first:
+      213: 6147087723838331719
+    second: Rabbit5_EvoMage2_Attack_8
+  - first:
+      213: 5125374437731903485
+    second: Rabbit5_EvoMage2_Attack_9
+  - first:
+      213: -6446673918991245333
+    second: Rabbit5_EvoMage2_Attack_10
+  - first:
+      213: 4216256538354686084
+    second: Rabbit5_EvoMage2_Attack_11
+  - first:
+      213: -4686212824155009669
+    second: Rabbit5_EvoMage2_Attack_12
+  - first:
+      213: -5577967794206030854
+    second: Rabbit5_EvoMage2_Attack_13
+  - first:
+      213: 3615730390069154424
+    second: Rabbit5_EvoMage2_Attack_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_Attack_0
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 9
+        width: 29
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f391d3ffa7182beb0800000000000000
+      internalID: -4705556295380559553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_Attack_1
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 9
+        width: 27
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 463ef684d24b38320800000000000000
+      internalID: 2559087119858393956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_Attack_2
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 9
+        width: 34
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90cf7658fce5babf0800000000000000
+      internalID: -312051503782691831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_Attack_3
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 9
+        width: 40
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11ec84be92a9f98f0800000000000000
+      internalID: -531536726174675439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_Attack_4
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 9
+        width: 40
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb842562dcc4f6810800000000000000
+      internalID: 1760710423320086719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_Attack_5
+      rect:
+        serializedVersion: 2
+        x: 244
+        y: 9
+        width: 40
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8438e35be4238d20800000000000000
+      internalID: 3279505546799494283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_Attack_6
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 9
+        width: 41
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ad77463287b3f240800000000000000
+      internalID: 4824401395728219557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_Attack_7
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 9
+        width: 41
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7cd7ceaad07ac3880800000000000000
+      internalID: -8629839108804674105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_Attack_8
+      rect:
+        serializedVersion: 2
+        x: 387
+        y: 9
+        width: 41
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74b5c8657b7de4550800000000000000
+      internalID: 6147087723838331719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_Attack_9
+      rect:
+        serializedVersion: 2
+        x: 436
+        y: 9
+        width: 40
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df7a0ed45ecf02740800000000000000
+      internalID: 5125374437731903485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_Attack_10
+      rect:
+        serializedVersion: 2
+        x: 484
+        y: 9
+        width: 40
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bef50c30a30d886a0800000000000000
+      internalID: -6446673918991245333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_Attack_11
+      rect:
+        serializedVersion: 2
+        x: 532
+        y: 9
+        width: 40
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4889c82abf6238a30800000000000000
+      internalID: 4216256538354686084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_Attack_12
+      rect:
+        serializedVersion: 2
+        x: 581
+        y: 9
+        width: 40
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7d4c5ad34a37feb0800000000000000
+      internalID: -4686212824155009669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_Attack_13
+      rect:
+        serializedVersion: 2
+        x: 632
+        y: 9
+        width: 37
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af3c7c138d31792b0800000000000000
+      internalID: -5577967794206030854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_Attack_14
+      rect:
+        serializedVersion: 2
+        x: 687
+        y: 9
+        width: 30
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87218aff1a7ad2230800000000000000
+      internalID: 3615730390069154424
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Rabbit5_EvoMage2_Attack_0: -4705556295380559553
+      Rabbit5_EvoMage2_Attack_1: 2559087119858393956
+      Rabbit5_EvoMage2_Attack_10: -6446673918991245333
+      Rabbit5_EvoMage2_Attack_11: 4216256538354686084
+      Rabbit5_EvoMage2_Attack_12: -4686212824155009669
+      Rabbit5_EvoMage2_Attack_13: -5577967794206030854
+      Rabbit5_EvoMage2_Attack_14: 3615730390069154424
+      Rabbit5_EvoMage2_Attack_2: -312051503782691831
+      Rabbit5_EvoMage2_Attack_3: -531536726174675439
+      Rabbit5_EvoMage2_Attack_4: 1760710423320086719
+      Rabbit5_EvoMage2_Attack_5: 3279505546799494283
+      Rabbit5_EvoMage2_Attack_6: 4824401395728219557
+      Rabbit5_EvoMage2_Attack_7: -8629839108804674105
+      Rabbit5_EvoMage2_Attack_8: 6147087723838331719
+      Rabbit5_EvoMage2_Attack_9: 5125374437731903485
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
