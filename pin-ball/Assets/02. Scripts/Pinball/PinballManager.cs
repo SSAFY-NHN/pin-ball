@@ -46,6 +46,7 @@ public class PinballManager : AppService, IItemEventListener
     public float RespawnDelay =>
         _productionUpgradeController?.RespawnDelay ?? 3f;
     public int ActiveCloneCount => _ballPool?.ActiveCloneCount ?? 0;
+    public bool IsResultPaused { get; private set; }
 
     [Header("Launcher")]
     [SerializeField] private Vector2 launchPosition = new(6.4f, 10f);
@@ -105,6 +106,8 @@ public class PinballManager : AppService, IItemEventListener
 
     private void Update()
     {
+        if (IsResultPaused) return;
+
         if (_comboController.TryExpire(Time.unscaledTime))
         {
             OnComboChanged?.Invoke(0);
@@ -420,6 +423,28 @@ public class PinballManager : AppService, IItemEventListener
         ActivateAtSpawnPoint(ball);
     }
 
+    public void PauseForResult()
+    {
+        if (IsResultPaused) return;
+        IsResultPaused = true;
+        _autoCycleController.Reset();
+
+        var paused = new HashSet<Pinball>();
+        foreach (Pinball ball in permanentBalls)
+        {
+            if (ball != null && paused.Add(ball)) ball.PauseSimulation();
+        }
+        foreach (Pinball ball in cloneBalls)
+        {
+            if (ball != null && paused.Add(ball)) ball.PauseSimulation();
+        }
+        if (_ballPool == null) return;
+        foreach (Pinball ball in _ballPool.ActiveBalls)
+        {
+            if (ball != null && paused.Add(ball)) ball.PauseSimulation();
+        }
+    }
+
     private void ReactivateBall(Pinball ball)
     {
         if (_ballPool == null || !_ballPool.TryReactivatePermanent(ball)) return;
@@ -449,6 +474,7 @@ public class PinballManager : AppService, IItemEventListener
 
     internal void ResetForNewRun()
     {
+        IsResultPaused = false;
         _ballPool?.ResetForNewRun();
         _autoCycleController.Reset();
         _productionUpgradeController?.ResetForNewRun();

@@ -1,9 +1,24 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public sealed class AllyPurchasePanelController : MonoBehaviour
 {
+    [Serializable]
+    private sealed class AdvancedPurchaseCard
+    {
+        public string unitId;
+        public string unitName;
+        public string role;
+        public int unlockLevel;
+        public Button purchaseButton;
+        public TextMeshProUGUI displayText;
+        public Image cooldownMask;
+        public TextMeshProUGUI cooldownText;
+        [NonSerialized] public int displayedCooldownSecond = int.MinValue;
+    }
+
     private const string WarriorId = "warrior";
     private const string ArcherId = "archer";
     private const string MageId = "mage";
@@ -30,6 +45,7 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
     [SerializeField] private Image spearmanCooldownMask;
     [SerializeField] private TextMeshProUGUI spearmanCooldownText;
     [SerializeField] private TextMeshProUGUI reinforcementNotice;
+    [SerializeField] private AdvancedPurchaseCard[] advancedCards;
 
     private BattleManager battleManager;
     private UnitManager unitManager;
@@ -47,6 +63,15 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
         archerPurchaseButton.onClick.AddListener(PurchaseArcher);
         magePurchaseButton.onClick.AddListener(PurchaseMage);
         spearmanPurchaseButton.onClick.AddListener(PurchaseSpearman);
+        if (advancedCards != null)
+        {
+            foreach (AdvancedPurchaseCard card in advancedCards)
+            {
+                AdvancedPurchaseCard captured = card;
+                card?.purchaseButton?.onClick.AddListener(
+                    () => PurchaseAdvanced(captured));
+            }
+        }
 
         battleManager.OnInitialized += Refresh;
         battleManager.OnGoldChanged += OnGoldChanged;
@@ -105,6 +130,11 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
     private void PurchaseSpearman()
     {
         battleManager.TryPurchaseAlly(SpearmanId);
+    }
+
+    private void PurchaseAdvanced(AdvancedPurchaseCard card)
+    {
+        if (card != null) battleManager.TryPurchaseAlly(card.unitId);
     }
 
     private void OnGoldChanged(int _)
@@ -172,6 +202,13 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
             spearmanCooldownText,
             isFree,
             ref spearmanCooldownSecond);
+        if (advancedCards != null)
+        {
+            foreach (AdvancedPurchaseCard card in advancedCards)
+            {
+                RefreshAdvancedCard(card, isFree);
+            }
+        }
 
         UiRefreshUtility.SetTextIfChanged(
             reinforcementNotice,
@@ -179,6 +216,28 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
         UiRefreshUtility.SetActiveIfChanged(
             reinforcementNotice.gameObject,
             isFree);
+    }
+
+    private void RefreshAdvancedCard(AdvancedPurchaseCard card, bool isFree)
+    {
+        if (card == null || card.purchaseButton == null) return;
+        bool unlocked = battleManager.IsAllyJobUnlocked(card.unitId);
+        string text = unlocked
+            ? FormatCard(
+                card.unitName,
+                card.role,
+                battleManager.GetAllyPurchaseCost(card.unitId),
+                unitManager.GetOwnedAllyCount(card.unitId),
+                isFree)
+            : $"{card.unitName}\n{card.role}\nLv.{card.unlockLevel} 해금";
+        UiRefreshUtility.SetTextIfChanged(card.displayText, text);
+        RefreshCooldown(
+            card.unitId,
+            card.purchaseButton,
+            card.cooldownMask,
+            card.cooldownText,
+            ref card.displayedCooldownSecond);
+        if (!unlocked) card.purchaseButton.interactable = false;
     }
 
     private void RefreshCard(
@@ -279,6 +338,14 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
         if (spearmanPurchaseButton != null)
         {
             spearmanPurchaseButton.onClick.RemoveListener(PurchaseSpearman);
+        }
+
+        if (advancedCards != null)
+        {
+            foreach (AdvancedPurchaseCard card in advancedCards)
+            {
+                card?.purchaseButton?.onClick.RemoveAllListeners();
+            }
         }
 
         if (battleManager != null)

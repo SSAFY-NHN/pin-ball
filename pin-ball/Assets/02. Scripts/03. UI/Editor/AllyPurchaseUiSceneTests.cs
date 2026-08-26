@@ -28,6 +28,19 @@ public sealed class AllyPurchaseUiSceneTests
         Assert.That(
             ReadReference<TextMeshProUGUI>(panel, "reinforcementNotice"),
             Is.Not.Null);
+        SerializedProperty advanced =
+            new SerializedObject(panel).FindProperty("advancedCards");
+        Assert.That(advanced.arraySize, Is.EqualTo(8));
+        for (int index = 0; index < advanced.arraySize; index++)
+        {
+            SerializedProperty card = advanced.GetArrayElementAtIndex(index);
+            Assert.That(
+                card.FindPropertyRelative("purchaseButton").objectReferenceValue,
+                Is.Not.Null);
+            Assert.That(
+                card.FindPropertyRelative("displayText").objectReferenceValue,
+                Is.Not.Null);
+        }
 
         var battleManager = Object.FindFirstObjectByType<BattleManager>(
             FindObjectsInactive.Include);

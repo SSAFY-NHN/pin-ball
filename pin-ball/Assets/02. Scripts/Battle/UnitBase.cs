@@ -359,6 +359,16 @@ public abstract class UnitBase : MonoBehaviour
         RefreshPersistentModifiers();
     }
 
+    public void ReapplyBaseStats(BattleUnitStats stats)
+    {
+        float previousMaximumHp = Mathf.Max(0.01f, _stats.MaxHp);
+        _initialStats = stats;
+        _stats = stats;
+        _health.ScaleMaximumHp(
+            Mathf.Max(0.01f, stats.MaxHp) / previousMaximumHp);
+        RefreshPersistentModifiers();
+    }
+
     private void RefreshPersistentModifiers()
     {
         if (Team != EBattleTeam.Ally) return;

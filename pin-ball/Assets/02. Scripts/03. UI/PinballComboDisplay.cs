@@ -1,17 +1,16 @@
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public sealed class PinballComboDisplay : MonoBehaviour
 {
     [SerializeField] private RectTransform textGroup;
-    [SerializeField] private TextMeshProUGUI backgroundText;
-    [SerializeField] private TextMeshProUGUI foregroundText;
-    [SerializeField] private RectTransform fillMask;
+    [SerializeField] private TextMeshProUGUI comboText;
+    [SerializeField] private Image timeFillImage;
 
     private PinballManager _pinballManager;
     private Vector3 _baseScale;
-    private float _fullMaskWidth;
     private bool _hasValidReferences;
 
     private void Start()
@@ -20,7 +19,6 @@ public sealed class PinballComboDisplay : MonoBehaviour
         if (!_hasValidReferences) return;
 
         _baseScale = textGroup.localScale;
-        _fullMaskWidth = fillMask.rect.width;
         _pinballManager = App.Get<PinballManager>();
         _pinballManager.OnComboChanged += OnComboChanged;
         OnComboChanged(_pinballManager.CurrentCombo);
@@ -46,19 +44,16 @@ public sealed class PinballComboDisplay : MonoBehaviour
         textGroup.gameObject.SetActive(visible);
         if (!visible) return;
 
-        string comboText =
+        string display =
             $"{combo} COMBO x{_pinballManager.CurrentComboMultiplier:0.#}";
-        backgroundText.text = comboText;
-        foregroundText.text = comboText;
+        comboText.text = display;
         SetFill(1f);
         PlayComboPunch();
     }
 
     private void SetFill(float progress)
     {
-        fillMask.SetSizeWithCurrentAnchors(
-            RectTransform.Axis.Horizontal,
-            _fullMaskWidth * Mathf.Clamp01(progress));
+        timeFillImage.fillAmount = Mathf.Clamp01(progress);
     }
 
     private void PlayComboPunch()
@@ -77,14 +72,13 @@ public sealed class PinballComboDisplay : MonoBehaviour
     {
         bool valid =
             textGroup != null &&
-            backgroundText != null &&
-            foregroundText != null &&
-            fillMask != null;
+            comboText != null &&
+            timeFillImage != null;
         if (!valid)
         {
             Debug.LogError(
-                "[PinballComboDisplay] textGroup, backgroundText, " +
-                "foregroundText, and fillMask must be assigned.");
+                "[PinballComboDisplay] textGroup, comboText, and " +
+                "timeFillImage must be assigned.");
         }
 
         return valid;

@@ -3,6 +3,57 @@ using NUnit.Framework;
 
 public sealed class UnitPurchaseControllerTests
 {
+    [Test]
+    public void TryPurchase_LockedUnitDoesNotSpawnOrSpend()
+    {
+        var lockedEconomy = new BattleEconomy(1000);
+        var lockedController = new UnitPurchaseController(
+            lockedEconomy,
+            unitId => unitId != "knight",
+            _ => 5,
+            new UnitPurchaseSettings("knight", 60, 1.4f, 4f));
+        bool spawnAttempted = false;
+
+        bool purchased = lockedController.TryPurchase(
+            "knight",
+            true,
+            _ =>
+            {
+                spawnAttempted = true;
+                return true;
+            },
+            out _);
+
+        Assert.That(purchased, Is.False);
+        Assert.That(spawnAttempted, Is.False);
+        Assert.That(lockedEconomy.Gold, Is.EqualTo(1000));
+    }
+
+    [Test]
+    public void TryPurchase_UsesResolvedSharedJobLevelForSpawn()
+    {
+        var leveledEconomy = new BattleEconomy(1000);
+        var leveledController = new UnitPurchaseController(
+            leveledEconomy,
+            _ => true,
+            _ => 7,
+            new UnitPurchaseSettings("warrior", 30, 1.4f, 4f));
+        int spawnedLevel = 0;
+
+        bool purchased = leveledController.TryPurchase(
+            "warrior",
+            true,
+            data =>
+            {
+                spawnedLevel = data.Level;
+                return true;
+            },
+            out _);
+
+        Assert.That(purchased, Is.True);
+        Assert.That(spawnedLevel, Is.EqualTo(7));
+    }
+
     private BattleEconomy economy;
     private UnitPurchaseController controller;
 

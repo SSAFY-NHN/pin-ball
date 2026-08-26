@@ -38,6 +38,12 @@ public class AllyUnit : UnitBase
 
     public void ResetMana() => _skillController?.Reset(MaxMana);
 
+    public void ReapplyLevel(int level, BattleUnitStats stats)
+    {
+        Level = level;
+        ReapplyBaseStats(stats);
+    }
+
     protected override void Tick()
     {
         if (TryKeepOrAcquireTarget())

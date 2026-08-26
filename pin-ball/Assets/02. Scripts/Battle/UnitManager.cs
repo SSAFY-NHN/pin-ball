@@ -404,6 +404,38 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
         return true;
     }
 
+    public void RefreshOwnedAlliesForRootJob(
+        string rootUnitId,
+        int level,
+        IUnitDataSource dataSource = null)
+    {
+        if (_roster == null || string.IsNullOrEmpty(rootUnitId)) return;
+
+        IUnitDataSource source = dataSource ?? _titleData;
+        if (source == null) return;
+        var creationService = new UnitCreationService(source);
+        foreach (AllyUnit ally in _roster.OwnedAllies)
+        {
+            if (ally == null || ally.UnitId != rootUnitId) continue;
+
+            var spawnData = new BattleUnitSpawnData
+            {
+                UnitId = rootUnitId,
+                Level = level
+            };
+            if (creationService.TryCreateAlly(
+                    spawnData,
+                    0f,
+                    out _,
+                    out BattleUnitStats stats))
+            {
+                ally.ReapplyLevel(spawnData.Level, stats);
+            }
+        }
+
+        RefreshAllyItemModifiers();
+    }
+
     public int TryApplyBaseKnockback(float distance)
     {
         if (_roster == null || allyDefenseLine == null ||

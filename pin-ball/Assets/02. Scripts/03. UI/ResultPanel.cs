@@ -66,6 +66,7 @@ public class ResultPanel : UIBase
         buttonAccentImage.sprite = victory
             ? victoryButtonAccentSprite
             : defeatButtonAccentSprite;
+        App.Get<PinballManager>().PauseForResult();
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
     }

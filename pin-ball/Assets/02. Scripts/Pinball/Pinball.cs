@@ -198,6 +198,15 @@ public class Pinball : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    public void PauseSimulation()
+    {
+        EnsureInitialized();
+        _rigidBody2D.linearVelocity = Vector2.zero;
+        _rigidBody2D.angularVelocity = 0f;
+        _rigidBody2D.simulated = false;
+        _arcaneVfx?.OnVelocityChanged(Vector2.zero);
+    }
+
     private void EnsureInitialized()
     {
         if (_rigidBody2D == null)

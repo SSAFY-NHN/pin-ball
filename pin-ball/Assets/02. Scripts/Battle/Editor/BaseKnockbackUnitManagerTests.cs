@@ -31,7 +31,7 @@ public sealed class BaseKnockbackUnitManagerTests
 
             Assert.That(applied, Is.EqualTo(2));
             Assert.That(first.transform.position, Is.EqualTo(Vector3.left * 3f));
-            Assert.That(second.transform.position, Is.EqualTo(new Vector3(-11f, 2f)));
+            Assert.That(second.transform.position, Is.EqualTo(new Vector3(-11f, 0f)));
             Assert.That(manager.HasAliveActiveEnemy, Is.True);
         }
         finally

@@ -55,12 +55,25 @@ public sealed class UnitPurchaseController
         new(StringComparer.Ordinal);
     private readonly Dictionary<string, float> remainingCooldowns =
         new(StringComparer.Ordinal);
+    private readonly Func<string, bool> isUnlocked;
+    private readonly Func<string, int> resolveLevel;
 
     public UnitPurchaseController(
         BattleEconomy economy,
         params UnitPurchaseSettings[] settings)
+        : this(economy, _ => true, _ => 1, settings)
+    {
+    }
+
+    public UnitPurchaseController(
+        BattleEconomy economy,
+        Func<string, bool> isUnlocked,
+        Func<string, int> resolveLevel,
+        params UnitPurchaseSettings[] settings)
     {
         this.economy = economy;
+        this.isUnlocked = isUnlocked ?? (_ => true);
+        this.resolveLevel = resolveLevel ?? (_ => 1);
         if (settings == null) return;
 
         foreach (UnitPurchaseSettings entry in settings)
@@ -137,6 +150,7 @@ public sealed class UnitPurchaseController
     public bool CanPurchase(string unitId, bool canDeploy)
     {
         return canDeploy &&
+               isUnlocked(unitId) &&
                !IsCoolingDown(unitId) &&
                economy != null &&
                unitId != null &&
@@ -147,6 +161,7 @@ public sealed class UnitPurchaseController
     public bool CanPurchaseFree(string unitId, bool canDeploy)
     {
         return canDeploy &&
+               isUnlocked(unitId) &&
                !IsCoolingDown(unitId) &&
                unitId != null &&
                settingsByUnitId.ContainsKey(unitId);
@@ -165,7 +180,7 @@ public sealed class UnitPurchaseController
         var spawnData = new BattleUnitSpawnData
         {
             UnitId = unitId,
-            Level = 1
+            Level = Math.Max(1, resolveLevel(unitId))
         };
         if (!trySpawn(spawnData)) return false;
         if (!economy.TrySpend(cost)) return false;
@@ -199,7 +214,7 @@ public sealed class UnitPurchaseController
         var spawnData = new BattleUnitSpawnData
         {
             UnitId = unitId,
-            Level = 1
+            Level = Math.Max(1, resolveLevel(unitId))
         };
         if (!trySpawn(spawnData)) return false;
         if (!RecordSuccessfulPurchase(unitId)) return false;

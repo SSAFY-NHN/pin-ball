@@ -78,6 +78,7 @@ public class BattleManager : AppService, IItemEventListener
     public event Action<EBattleTeam, int, int> OnDefenseLineHpChanged;
     public event Action<BattleUpgradePurchasedData> OnBattleUpgradePurchased;
     public event Action<UnitPurchaseResult> OnAllyPurchased;
+    public event Action<string> OnAllyProgressionChanged;
     public event Action<bool> OnTacticalReinforcementChanged;
     public event Action<EBattleAssaultPhase> OnAssaultPhaseChanged;
     public event Action OnBaseKnockbackSkillDisplayChanged;
@@ -92,6 +93,8 @@ public class BattleManager : AppService, IItemEventListener
     private BattleEconomy economy = new(0);
     private BattleUpgradeController battleUpgradeController;
     private UnitPurchaseController unitPurchaseController;
+    private AllyProgressionController allyProgressionController = new();
+    private TitleData titleData;
     private TacticalReinforcementController tacticalReinforcementController;
     private BattleAssaultController assaultController;
     private BaseKnockbackSkillController baseKnockbackSkillController = new();
@@ -138,7 +141,7 @@ public class BattleManager : AppService, IItemEventListener
         unitManager.OnDefenseLineAttackRequested += TryApplyDefenseLineAttack;
         unitManager.OnBattleRosterChanged += OnBattleRosterChanged;
 
-        var titleData = App.Get<TitleData>();
+        titleData = App.Get<TitleData>();
         runState = new BattleRunState(
             titleData.BattleWaves,
             titleData.HasValidBattleRun,
@@ -152,12 +155,23 @@ public class BattleManager : AppService, IItemEventListener
         battleUpgradeController = new BattleUpgradeController(
             allyAttackSettings,
             defenseLineHpSettings);
+        allyProgressionController.Reset();
         unitPurchaseController = new UnitPurchaseController(
             economy,
+            IsAllyJobUnlocked,
+            ResolveAllyPurchaseLevel,
             warriorPurchaseSettings,
             archerPurchaseSettings,
             magePurchaseSettings,
-            spearmanPurchaseSettings);
+            spearmanPurchaseSettings,
+            CreateAdvancedPurchaseSettings("knight", warriorPurchaseSettings),
+            CreateAdvancedPurchaseSettings("berserker", warriorPurchaseSettings),
+            CreateAdvancedPurchaseSettings("ranger", archerPurchaseSettings),
+            CreateAdvancedPurchaseSettings("marksman", archerPurchaseSettings),
+            CreateAdvancedPurchaseSettings("pyromancer", magePurchaseSettings),
+            CreateAdvancedPurchaseSettings("frost", magePurchaseSettings),
+            CreateAdvancedPurchaseSettings("lancer", spearmanPurchaseSettings),
+            CreateAdvancedPurchaseSettings("guard", spearmanPurchaseSettings));
         assaultController = new BattleAssaultController();
         assaultController.PhaseChanged += OnAssaultPhaseChangedInternal;
         tacticalReinforcementController = new TacticalReinforcementController(
@@ -462,6 +476,80 @@ public class BattleManager : AppService, IItemEventListener
     public int GetAllyPurchaseCount(string unitId)
     {
         return unitPurchaseController?.GetPurchaseCount(unitId) ?? 0;
+    }
+
+    public int GetAllyJobLevel(string rootUnitId)
+    {
+        return allyProgressionController?.GetLevel(rootUnitId) ?? 0;
+    }
+
+    public int GetAllyJobLevelUpCost(string rootUnitId)
+    {
+        return allyProgressionController?.GetNextCost(rootUnitId) ?? 0;
+    }
+
+    public bool IsAllyJobUnlocked(string unitId)
+    {
+        return allyProgressionController?.IsUnlocked(unitId) == true;
+    }
+
+    public bool CanLevelUpAllyJob(string rootUnitId)
+    {
+        return IsInitialized && CanUsePreparationActions &&
+               unitManager != null && allyProgressionController != null &&
+               allyProgressionController.CanLevelUp(
+                   rootUnitId,
+                   unitManager.GetOwnedAllyCount(rootUnitId) > 0,
+                   Gold);
+    }
+
+    public bool TryLevelUpAllyJob(string rootUnitId)
+    {
+        if (!CanLevelUpAllyJob(rootUnitId)) return false;
+
+        int cost = GetAllyJobLevelUpCost(rootUnitId);
+        if (!allyProgressionController.TryLevelUp(
+                rootUnitId,
+                true,
+                Gold,
+                out AllyProgressionResult result))
+        {
+            return false;
+        }
+
+        if (!TrySpendGold(cost)) return false;
+
+        unitManager.RefreshOwnedAlliesForRootJob(
+            rootUnitId,
+            result.Level,
+            titleData);
+        OnAllyProgressionChanged?.Invoke(rootUnitId);
+        return true;
+    }
+
+    private int ResolveAllyPurchaseLevel(string unitId)
+    {
+        if (titleData != null &&
+            titleData.TryGetRootAllyJob(unitId, out AllyUnitData rootJob))
+        {
+            return Mathf.Max(1, GetAllyJobLevel(rootJob.id));
+        }
+
+        return 1;
+    }
+
+    private static UnitPurchaseSettings CreateAdvancedPurchaseSettings(
+        string unitId,
+        UnitPurchaseSettings root)
+    {
+        int baseCost = root.BaseCost > int.MaxValue / 2
+            ? int.MaxValue
+            : root.BaseCost * 2;
+        return new UnitPurchaseSettings(
+            unitId,
+            baseCost,
+            root.CostMultiplier,
+            root.CooldownSeconds);
     }
 
     public int GetAllyPurchaseCost(string unitId)
