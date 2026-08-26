@@ -367,7 +367,10 @@ public abstract class UnitBase : MonoBehaviour
                 _currentTarget.transform.position,
                 moveSpeed,
                 Time.deltaTime);
-            if (_context?.BattleArea != null)
+            if (_context?.BattleArea != null &&
+                _context.BattleArea.Contains(
+                    transform.position,
+                    GetMovementPadding()))
             {
                 nextPosition = _context.BattleArea.Clamp(
                     nextPosition,
