@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -34,25 +35,42 @@ public static class AllyPortraitProvider
 
     public static string GetResourcePath(string unitId)
     {
-        return !string.IsNullOrEmpty(unitId) &&
-               FileNames.TryGetValue(unitId, out var fileName)
+        string normalizedId = unitId?.Trim().ToLowerInvariant();
+        return !string.IsNullOrEmpty(normalizedId) &&
+               FileNames.TryGetValue(normalizedId, out var fileName)
             ? ResourceRoot + fileName
             : null;
     }
 
     public static Sprite Load(string unitId)
     {
-        if (string.IsNullOrEmpty(unitId)) return null;
-        if (Cache.TryGetValue(unitId, out var cached)) return cached;
+        string normalizedId = unitId?.Trim().ToLowerInvariant();
+        if (string.IsNullOrEmpty(normalizedId)) return null;
+        if (Cache.TryGetValue(normalizedId, out var cached)) return cached;
 
-        string path = GetResourcePath(unitId);
+        string path = GetResourcePath(normalizedId);
         if (path == null) return null;
 
         var sprites = Resources.LoadAll<Sprite>(path);
         Sprite portrait = sprites.Length > 0
             ? sprites[0]
             : Resources.Load<Sprite>(path);
-        Cache[unitId] = portrait;
+
+        if (portrait == null)
+        {
+            string fileName = FileNames[normalizedId];
+            var allPortraits = Resources.LoadAll<Sprite>(ResourceRoot.TrimEnd('/'));
+            portrait = Array.Find(allPortraits, sprite =>
+                sprite.name.StartsWith(fileName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (portrait == null)
+        {
+            Debug.LogWarning($"[AllyPortraitProvider] 프로필 이미지를 찾지 못했습니다: {normalizedId} ({path})");
+            return null;
+        }
+
+        Cache[normalizedId] = portrait;
         return portrait;
     }
 }
