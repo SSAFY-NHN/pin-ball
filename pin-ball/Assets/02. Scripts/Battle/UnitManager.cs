@@ -33,6 +33,22 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
     public int DeployedAllyCount => _roster.OwnedAllyCount;
     public int RemainingAllyCount => _roster.ActiveAllyCount;
     public int RemainingEnemyCount => _roster.ActiveEnemyCount;
+    public bool HasAliveActiveEnemy
+    {
+        get
+        {
+            if (_roster == null) return false;
+            foreach (UnitBase enemy in _roster.ActiveEnemies)
+            {
+                if (enemy != null && enemy.IsAlive && !enemy.IsInPool)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
     public bool CanPurchaseAlly =>
         _roster != null &&
         _roster.OwnedAllyCount < MaxDeployedAllyCount;
@@ -394,6 +410,26 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
 
         position = target.transform.position;
         return true;
+    }
+
+    public int TryApplyBaseKnockback(float distance)
+    {
+        if (_roster == null || allyDefenseLine == null ||
+            enemyDefenseLine == null || distance <= 0f) return 0;
+
+        Vector3 direction = enemyDefenseLine.transform.position -
+                            allyDefenseLine.transform.position;
+        if (direction.sqrMagnitude <= 0.001f) return 0;
+
+        UnitBase[] enemies = _roster.ActiveEnemies.ToArray();
+        var appliedCount = 0;
+        foreach (UnitBase enemy in enemies)
+        {
+            if (enemy == null || !enemy.IsAlive || enemy.IsInPool) continue;
+            if (enemy.TryApplyBaseKnockback(direction, distance)) appliedCount++;
+        }
+
+        return appliedCount;
     }
 
     public void RequestDefenseLineAttack(

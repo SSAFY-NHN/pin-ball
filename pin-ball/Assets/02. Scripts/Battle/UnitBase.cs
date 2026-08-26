@@ -292,6 +292,25 @@ public abstract class UnitBase : MonoBehaviour
             _statusEffects.IsKnockbackImmune(Time.time));
     }
 
+    public bool TryApplyBaseKnockback(Vector3 direction, float distance)
+    {
+        if (!IsAlive || IsInPool || distance <= 0f ||
+            direction.sqrMagnitude <= 0.001f ||
+            _statusEffects.IsKnockbackImmune(Time.time)) return false;
+
+        transform.position = UnitMovement.ApplyKnockback(
+            transform.position,
+            direction,
+            distance,
+            false);
+        HasReachedDefenseLine = false;
+        _currentTarget = null;
+        _forcedTarget = null;
+        _forcedTargetUntil = 0f;
+        _state = EBattleUnitState.Idle;
+        return true;
+    }
+
     public void ApplyDamageOverTime(
         float totalDamage,
         float duration,
