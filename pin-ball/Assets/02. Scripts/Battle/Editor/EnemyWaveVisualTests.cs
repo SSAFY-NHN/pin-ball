@@ -62,10 +62,14 @@ public class EnemyWaveVisualTests
         {
             ["goblin"] = "Assets/03. Images/Humans/Patrolman/H_Patrolman.png",
             ["wolf"] = "Assets/03. Images/Humans/Rogue/H_Rogue.png",
-            ["goblin_archer"] = "Assets/03. Images/Humans/Archer/H_Archer_EvoSkeleton.png",
-            ["shield_guard"] = "Assets/03. Images/Humans/MaceWarrior/H_MaceWarrior_Undead.png",
-            ["orc_warrior"] = "Assets/03. Images/Humans/Knights/H_Warrior_Undead.png",
-            ["assassin"] = "Assets/03. Images/Humans/Rogue/H_Rogue_EvoSkeleton.png",
+            ["goblin_archer"] = "Assets/03. Images/Humans/Archer/H_Archer.png",
+            ["goblin_archer_undead"] = "Assets/03. Images/Humans/Archer/H_Archer_EvoSkeleton.png",
+            ["shield_guard"] = "Assets/03. Images/Humans/MaceWarrior/H_MaceWarrior.png",
+            ["shield_guard_undead"] = "Assets/03. Images/Humans/MaceWarrior/H_MaceWarrior_Undead.png",
+            ["orc_warrior"] = "Assets/03. Images/Humans/Knights/H_Warrior.png",
+            ["orc_warrior_undead"] = "Assets/03. Images/Humans/Knights/H_Warrior_Undead.png",
+            ["assassin"] = "Assets/03. Images/Humans/Rogue/H_Rogue.png",
+            ["assassin_undead"] = "Assets/03. Images/Humans/Rogue/H_Rogue_EvoSkeleton.png",
             ["goblin_king"] = "Assets/03. Images/Humans/Boss/H_BoneStalkerBoss.png"
         };
 
@@ -100,6 +104,25 @@ public class EnemyWaveVisualTests
             AssetDatabase.GetAssetPath(
                 skillFrames.GetArrayElementAtIndex(0).objectReferenceValue),
             Is.EqualTo("Assets/03. Images/Humans/Boss/H_BoneStalkerBoss_skill.png"));
+    }
+
+    [TestCase("goblin_archer", 5, "goblin_archer")]
+    [TestCase("goblin_archer", 6, "goblin_archer_undead")]
+    [TestCase("shield_guard", 6, "shield_guard_undead")]
+    [TestCase("orc_warrior", 6, "orc_warrior_undead")]
+    [TestCase("assassin", 6, "assassin_undead")]
+    [TestCase("goblin_king", 6, "goblin_king")]
+    public void EnemyVisualProfile_ChangesAfterWaveFive(
+        string unitId,
+        int waveNumber,
+        string expectedProfileId)
+    {
+        var resolver = typeof(EnemyUnit).GetMethod(
+            "ResolveVisualProfileId");
+        Assert.That(resolver, Is.Not.Null);
+        Assert.That(
+            resolver.Invoke(null, new object[] { unitId, waveNumber }),
+            Is.EqualTo(expectedProfileId));
     }
 
     [Test]

@@ -210,7 +210,8 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             _combatContext,
             spawnPosition,
             this,
-            UnitSkillRegistry.CreateDefault());
+            UnitSkillRegistry.CreateDefault(),
+            wave);
         AddEnemy(enemy);
         return enemy;
     }

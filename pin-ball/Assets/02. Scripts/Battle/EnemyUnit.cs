@@ -12,7 +12,11 @@ public class EnemyUnit : UnitBase
     private UnitManager _unitManager;
     private UnitAttackEffectPlayer _attackEffectPlayer;
 
-    public void SetData(EnemyUnitData data, UnitManager unitManager = null, UnitSkillRegistry registry = null)
+    public void SetData(
+        EnemyUnitData data,
+        UnitManager unitManager = null,
+        UnitSkillRegistry registry = null,
+        int waveNumber = 1)
     {
         UnitId = data?.id ?? string.Empty;
         Rank = data?.rank ?? 0;
@@ -20,8 +24,26 @@ public class EnemyUnit : UnitBase
         _unitManager = unitManager;
         _attackEffectPlayer ??= GetComponent<UnitAttackEffectPlayer>();
         _skills.Initialize(data, registry ?? UnitSkillRegistry.CreateDefault());
-        GetComponent<BattleUnitVisual>()?.SetUnitId(UnitId);
+        GetComponent<BattleUnitVisual>()?.SetUnitId(
+            ResolveVisualProfileId(UnitId, waveNumber));
         if (_unitManager != null) _skills.OnBattleStart(CreateContext(null));
+    }
+
+    public static string ResolveVisualProfileId(
+        string unitId,
+        int waveNumber)
+    {
+        if (waveNumber <= 5)
+        {
+            return unitId;
+        }
+
+        return unitId is "goblin_archer" or
+            "shield_guard" or
+            "orc_warrior" or
+            "assassin"
+            ? $"{unitId}_undead"
+            : unitId;
     }
 
     protected override void Tick()
