@@ -15,6 +15,7 @@ public class BattleAreaBounds : MonoBehaviour
     private Vector2 _worldMax;
     private int _screenWidth;
     private int _screenHeight;
+    private Vector3 _cameraPosition;
 
     private void Awake()
     {
@@ -24,8 +25,14 @@ public class BattleAreaBounds : MonoBehaviour
 
     private void Update()
     {
+        if (worldCamera == null) return;
+
         if (_screenWidth == Screen.width &&
-            _screenHeight == Screen.height) return;
+            _screenHeight == Screen.height &&
+            !HasCameraMoved(_cameraPosition, worldCamera.transform.position))
+        {
+            return;
+        }
 
         RefreshBounds();
     }
@@ -113,8 +120,7 @@ public class BattleAreaBounds : MonoBehaviour
         float padding)
     {
         float safePadding = Mathf.Max(0f, padding);
-        float midpoint = (worldMin.x + worldMax.x) * 0.5f;
-        return worldPosition.x >= midpoint + safePadding &&
+        return worldPosition.x >= worldMin.x + safePadding &&
                worldPosition.x <= worldMax.x - safePadding &&
                worldPosition.y >= worldMin.y + safePadding &&
                worldPosition.y <= worldMax.y - safePadding;
@@ -127,10 +133,9 @@ public class BattleAreaBounds : MonoBehaviour
         float padding)
     {
         float safePadding = Mathf.Max(0f, padding);
-        float midpoint = (worldMin.x + worldMax.x) * 0.5f;
         worldPosition.x = Mathf.Clamp(
             worldPosition.x,
-            midpoint + safePadding,
+            worldMin.x + safePadding,
             worldMax.x - safePadding);
         worldPosition.y = Mathf.Clamp(
             worldPosition.y,
@@ -150,8 +155,7 @@ public class BattleAreaBounds : MonoBehaviour
         if (gridIndex < 0) return false;
 
         float safePadding = Mathf.Max(0f, padding);
-        float midpoint = (worldMin.x + worldMax.x) * 0.5f;
-        float minX = midpoint + safePadding;
+        float minX = worldMin.x + safePadding;
         float maxX = worldMax.x - safePadding;
         float minY = worldMin.y + safePadding;
         float maxY = worldMax.y - safePadding;
@@ -193,6 +197,14 @@ public class BattleAreaBounds : MonoBehaviour
         }
     }
 
+    private static bool HasCameraMoved(
+        Vector3 previousPosition,
+        Vector3 currentPosition)
+    {
+        return (currentPosition - previousPosition).sqrMagnitude >
+               Mathf.Epsilon;
+    }
+
     private void RefreshBounds()
     {
         _screenWidth = Screen.width;
@@ -222,6 +234,7 @@ public class BattleAreaBounds : MonoBehaviour
 
         _worldMin = Vector2.Min(min, max);
         _worldMax = Vector2.Max(min, max);
+        _cameraPosition = worldCamera.transform.position;
         IsValid = true;
     }
 }
