@@ -14,9 +14,7 @@ public static class BattleFeedbackMath
         if (attackRange <= 2.5f) return EBattleAttackStyle.Melee;
 
         string id = unitId ?? string.Empty;
-        return id.Contains("archer") ||
-               id.Contains("ranger") ||
-               id.Contains("marksman")
+        return id.StartsWith("cat")
             ? EBattleAttackStyle.Arrow
             : EBattleAttackStyle.Magic;
     }

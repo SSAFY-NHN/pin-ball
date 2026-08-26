@@ -177,6 +177,7 @@ public abstract class UnitBase : MonoBehaviour
 
     public void PlayEnemySkillFeedback(string skillId, UnitBase target, bool strong)
     {
+        GetComponent<BattleUnitVisual>()?.PlaySkillAnimation();
         _combatFeedback?.PlayEnemySkill(skillId, target, strong);
     }
 
@@ -366,7 +367,10 @@ public abstract class UnitBase : MonoBehaviour
                 _currentTarget.transform.position,
                 moveSpeed,
                 Time.deltaTime);
-            if (_context?.BattleArea != null)
+            if (_context?.BattleArea != null &&
+                _context.BattleArea.Contains(
+                    transform.position,
+                    GetMovementPadding()))
             {
                 nextPosition = _context.BattleArea.Clamp(
                     nextPosition,

@@ -46,6 +46,7 @@ public class EvolutionChoiceView : MonoBehaviour
             ? "스킬 없음"
             : $"{data.skill.name}\n{data.skill.description}";
         portraitImage.sprite = AllyPortraitProvider.Load(data.id);
+        portraitImage.preserveAspect = true;
         portraitImage.enabled = portraitImage.sprite != null;
         selectButton.interactable = true;
         return true;

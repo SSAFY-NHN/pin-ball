@@ -1,0 +1,676 @@
+fileFormatVersion: 2
+guid: 13a8198c11719bb41bd0e7b9c9d31923
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1022768589467720010
+    second: Dog4_EvoWarrior_skill_0
+  - first:
+      213: 5011676333139587796
+    second: Dog4_EvoWarrior_skill_1
+  - first:
+      213: 8398187395601373606
+    second: Dog4_EvoWarrior_skill_2
+  - first:
+      213: 6065147127740050170
+    second: Dog4_EvoWarrior_skill_3
+  - first:
+      213: -7382151536063215147
+    second: Dog4_EvoWarrior_skill_4
+  - first:
+      213: -5044100535767063801
+    second: Dog4_EvoWarrior_skill_5
+  - first:
+      213: 6128940350628996506
+    second: Dog4_EvoWarrior_skill_6
+  - first:
+      213: -1856542223826193669
+    second: Dog4_EvoWarrior_skill_7
+  - first:
+      213: -5694734440625132734
+    second: Dog4_EvoWarrior_skill_8
+  - first:
+      213: -1493591981920142775
+    second: Dog4_EvoWarrior_skill_9
+  - first:
+      213: 1536246014322570037
+    second: Dog4_EvoWarrior_skill_10
+  - first:
+      213: -2408951299353214404
+    second: Dog4_EvoWarrior_skill_11
+  - first:
+      213: 8127954103350271891
+    second: Dog4_EvoWarrior_skill_12
+  - first:
+      213: 7522362709462109917
+    second: Dog4_EvoWarrior_skill_13
+  - first:
+      213: 5362633986766077890
+    second: Dog4_EvoWarrior_skill_14
+  - first:
+      213: 2381793507365049157
+    second: Dog4_EvoWarrior_skill_15
+  - first:
+      213: -6569045167363594859
+    second: Dog4_EvoWarrior_skill_16
+  - first:
+      213: -7387932760128491815
+    second: Dog4_EvoWarrior_skill_17
+  - first:
+      213: -7518042318202474756
+    second: Dog4_EvoWarrior_skill_18
+  - first:
+      213: -2293859312887239982
+    second: Dog4_EvoWarrior_skill_19
+  - first:
+      213: 2335477354885817486
+    second: Dog4_EvoWarrior_skill_20
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_0
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 7
+        width: 54
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4996aefc9a913e00800000000000000
+      internalID: 1022768589467720010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_1
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 7
+        width: 54
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d2740e621d0d8540800000000000000
+      internalID: 5011676333139587796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_2
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 7
+        width: 53
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a99bf7d0fa5c8470800000000000000
+      internalID: 8398187395601373606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_3
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 7
+        width: 49
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afa2d6b9d2bbb2450800000000000000
+      internalID: 6065147127740050170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_4
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 7
+        width: 49
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d909de4a445d8990800000000000000
+      internalID: -7382151536063215147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_5
+      rect:
+        serializedVersion: 2
+        x: 328
+        y: 7
+        width: 50
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7032f3a9941cff9b0800000000000000
+      internalID: -5044100535767063801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_6
+      rect:
+        serializedVersion: 2
+        x: 389
+        y: 7
+        width: 46
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a95acc0c6ce5e0550800000000000000
+      internalID: 6128940350628996506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_7
+      rect:
+        serializedVersion: 2
+        x: 453
+        y: 33
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf2735e0fac3c36e0800000000000000
+      internalID: -1856542223826193669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_8
+      rect:
+        serializedVersion: 2
+        x: 471
+        y: 7
+        width: 28
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24b2b50c23d38f0b0800000000000000
+      internalID: -5694734440625132734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_9
+      rect:
+        serializedVersion: 2
+        x: 535
+        y: 7
+        width: 28
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94a374e7102b54be0800000000000000
+      internalID: -1493591981920142775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_10
+      rect:
+        serializedVersion: 2
+        x: 599
+        y: 7
+        width: 28
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5337e435c97d15510800000000000000
+      internalID: 1536246014322570037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_11
+      rect:
+        serializedVersion: 2
+        x: 663
+        y: 7
+        width: 28
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3206d07e8fa19ed0800000000000000
+      internalID: -2408951299353214404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_12
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 7
+        width: 35
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39f1fd8713b4cc070800000000000000
+      internalID: 8127954103350271891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_13
+      rect:
+        serializedVersion: 2
+        x: 777
+        y: 7
+        width: 42
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dde4221770dc46860800000000000000
+      internalID: 7522362709462109917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_14
+      rect:
+        serializedVersion: 2
+        x: 837
+        y: 7
+        width: 46
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2cff0a1d237eb6a40800000000000000
+      internalID: 5362633986766077890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_15
+      rect:
+        serializedVersion: 2
+        x: 918
+        y: 7
+        width: 29
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54353de5394dd0120800000000000000
+      internalID: 2381793507365049157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_16
+      rect:
+        serializedVersion: 2
+        x: 969
+        y: 7
+        width: 51
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 595ebcd793016d4a0800000000000000
+      internalID: -6569045167363594859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_17
+      rect:
+        serializedVersion: 2
+        x: 1032
+        y: 7
+        width: 53
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9dee1103c4ac87990800000000000000
+      internalID: -7387932760128491815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_18
+      rect:
+        serializedVersion: 2
+        x: 1095
+        y: 7
+        width: 55
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfeef29085c8aa790800000000000000
+      internalID: -7518042318202474756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_19
+      rect:
+        serializedVersion: 2
+        x: 781
+        y: 11
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2da62aabb139a20e0800000000000000
+      internalID: -2293859312887239982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog4_EvoWarrior_skill_20
+      rect:
+        serializedVersion: 2
+        x: 787
+        y: 8
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8420f6c748496020800000000000000
+      internalID: 2335477354885817486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Dog4_EvoWarrior_skill_0: 1022768589467720010
+      Dog4_EvoWarrior_skill_1: 5011676333139587796
+      Dog4_EvoWarrior_skill_10: 1536246014322570037
+      Dog4_EvoWarrior_skill_11: -2408951299353214404
+      Dog4_EvoWarrior_skill_12: 8127954103350271891
+      Dog4_EvoWarrior_skill_13: 7522362709462109917
+      Dog4_EvoWarrior_skill_14: 5362633986766077890
+      Dog4_EvoWarrior_skill_15: 2381793507365049157
+      Dog4_EvoWarrior_skill_16: -6569045167363594859
+      Dog4_EvoWarrior_skill_17: -7387932760128491815
+      Dog4_EvoWarrior_skill_18: -7518042318202474756
+      Dog4_EvoWarrior_skill_19: -2293859312887239982
+      Dog4_EvoWarrior_skill_2: 8398187395601373606
+      Dog4_EvoWarrior_skill_20: 2335477354885817486
+      Dog4_EvoWarrior_skill_3: 6065147127740050170
+      Dog4_EvoWarrior_skill_4: -7382151536063215147
+      Dog4_EvoWarrior_skill_5: -5044100535767063801
+      Dog4_EvoWarrior_skill_6: 6128940350628996506
+      Dog4_EvoWarrior_skill_7: -1856542223826193669
+      Dog4_EvoWarrior_skill_8: -5694734440625132734
+      Dog4_EvoWarrior_skill_9: -1493591981920142775
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

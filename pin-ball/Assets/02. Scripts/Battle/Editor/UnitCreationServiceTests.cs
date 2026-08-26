@@ -15,8 +15,9 @@ public class UnitCreationServiceTests
         {
             AllyCommonValue = new AllyCommonData
             {
-                maxLevel = 10,
-                classLevel = 5
+                maxLevel = 30,
+                firstClassLevel = 5,
+                secondClassLevel = 20
             },
             EnemyCommonValue = new EnemyCommonData
             {
@@ -29,8 +30,8 @@ public class UnitCreationServiceTests
                 attackSpeedGrowthPerWave = 0.1f
             }
         };
-        _dataSource.Allies.Add("warrior", CreateAlly("warrior", null));
-        _dataSource.Allies.Add("knight", CreateAlly("knight", "warrior"));
+        _dataSource.Allies.Add("warrior", CreateAlly("warrior", null, 1));
+        _dataSource.Allies.Add("knight", CreateAlly("knight", "warrior", 5));
         _dataSource.Enemies.Add("goblin", new EnemyUnitData
         {
             id = "goblin",
@@ -149,12 +150,16 @@ public class UnitCreationServiceTests
         Assert.That(stats.AttackRate, Is.EqualTo(1.2f).Within(0.001f));
     }
 
-    private static AllyUnitData CreateAlly(string id, string previousJob)
+    private static AllyUnitData CreateAlly(
+        string id,
+        string previousJob,
+        int requiredLevel)
     {
         return new AllyUnitData
         {
             id = id,
             previousJob = previousJob,
+            requiredLevel = requiredLevel,
             health = 100,
             attack = 20,
             defense = 5,

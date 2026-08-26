@@ -12,11 +12,11 @@ public class AllyPreparationPlacementTests
             BindingFlags.NonPublic | BindingFlags.Static);
     }
 
-    [TestCase(5.49f, false)]
-    [TestCase(5.5f, true)]
+    [TestCase(0.49f, false)]
+    [TestCase(0.5f, true)]
     [TestCase(9.5f, true)]
     [TestCase(9.51f, false)]
-    public void ContainsAllyPlacement_UsesPaddedRightHalf(
+    public void ContainsAllyPlacement_UsesEntireConfiguredArea(
         float x,
         bool expected)
     {
@@ -63,11 +63,33 @@ public class AllyPreparationPlacementTests
 
         Vector3 first = InvokeGridPosition(method, 0);
         Vector3 second = InvokeGridPosition(method, 1);
-        Vector3 nextRow = InvokeGridPosition(method, 4);
+        Vector3 nextRow = InvokeGridPosition(method, 8);
 
-        Assert.That(first, Is.EqualTo(new Vector3(5.5f, 7.5f, 0f)));
-        Assert.That(second, Is.EqualTo(new Vector3(6.65f, 7.5f, 0f)));
-        Assert.That(nextRow, Is.EqualTo(new Vector3(5.5f, 6.35f, 0f)));
+        Assert.That(first, Is.EqualTo(new Vector3(0.5f, 7.5f, 0f)));
+        Assert.That(second, Is.EqualTo(new Vector3(1.65f, 7.5f, 0f)));
+        Assert.That(nextRow, Is.EqualTo(new Vector3(0.5f, 6.35f, 0f)));
+    }
+
+    [TestCase(0f, false)]
+    [TestCase(0.0001f, true)]
+    [TestCase(0.08f, true)]
+    [TestCase(5.3f, true)]
+    public void HasCameraMoved_RefreshesAnyScreenToWorldChange(
+        float horizontalMovement,
+        bool expected)
+    {
+        MethodInfo method = GetMethod("HasCameraMoved");
+        Assert.That(method, Is.Not.Null);
+
+        var result = (bool)method.Invoke(
+            null,
+            new object[]
+            {
+                Vector3.zero,
+                new Vector3(horizontalMovement, 0f, 0f)
+            });
+
+        Assert.That(result, Is.EqualTo(expected));
     }
 
     [Test]

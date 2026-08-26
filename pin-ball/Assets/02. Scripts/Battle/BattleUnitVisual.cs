@@ -14,6 +14,7 @@ public sealed class BattleUnitVisual : MonoBehaviour
         [SerializeField] private Sprite[] idleFrames;
         [SerializeField] private Sprite[] moveFrames;
         [SerializeField] private Sprite[] attackFrames;
+        [SerializeField] private Sprite[] skillFrames;
         [SerializeField, Min(1f)] private float moveFramesPerSecond = 10f;
         [SerializeField, Min(1f)] private float attackFramesPerSecond = 10f;
         [SerializeField] private bool sourceFacesRight;
@@ -22,6 +23,7 @@ public sealed class BattleUnitVisual : MonoBehaviour
         public Sprite[] IdleFrames => idleFrames ?? Array.Empty<Sprite>();
         public Sprite[] MoveFrames => moveFrames ?? Array.Empty<Sprite>();
         public Sprite[] AttackFrames => attackFrames ?? Array.Empty<Sprite>();
+        public Sprite[] SkillFrames => skillFrames ?? Array.Empty<Sprite>();
         public bool SourceFacesRight => sourceFacesRight;
 
         public float GetFramesPerSecond(EBattleUnitState state)
@@ -37,6 +39,7 @@ public sealed class BattleUnitVisual : MonoBehaviour
             Sprite[] idle,
             Sprite[] moving,
             Sprite[] attacking,
+            Sprite[] skill,
             float movingFramesPerSecond,
             float attackingFramesPerSecond,
             bool spritesFaceRight)
@@ -45,6 +48,7 @@ public sealed class BattleUnitVisual : MonoBehaviour
             idleFrames = idle;
             moveFrames = moving;
             attackFrames = attacking;
+            skillFrames = skill;
             moveFramesPerSecond = Mathf.Max(1f, movingFramesPerSecond);
             attackFramesPerSecond = Mathf.Max(1f, attackingFramesPerSecond);
             sourceFacesRight = spritesFaceRight;
@@ -66,6 +70,8 @@ public sealed class BattleUnitVisual : MonoBehaviour
     private EBattleUnitState _previousState;
     private Vector3 _previousPosition;
     private float _stateStartedAt;
+    private float _skillStartedAt;
+    private float _skillAnimationUntil;
 
     private void Awake()
     {
@@ -74,6 +80,7 @@ public sealed class BattleUnitVisual : MonoBehaviour
         _previousPosition = transform.position;
         _previousState = _unit != null ? _unit.State : EBattleUnitState.Idle;
         _stateStartedAt = Time.time;
+        _skillAnimationUntil = 0f;
 
         if (_spriteRenderer != null)
         {
@@ -123,6 +130,23 @@ public sealed class BattleUnitVisual : MonoBehaviour
         UpdateFacing();
     }
 
+    public void PlaySkillAnimation()
+    {
+        _spriteRenderer ??= GetComponent<SpriteRenderer>();
+        if (_activeProfile == null || _activeProfile.SkillFrames.Length == 0)
+        {
+            return;
+        }
+
+        _skillStartedAt = Time.time;
+        _skillAnimationUntil = Time.time +
+            (_activeProfile.SkillFrames.Length / 10f);
+        if (_spriteRenderer != null)
+        {
+            _spriteRenderer.sprite = _activeProfile.SkillFrames[0];
+        }
+    }
+
     private void LateUpdate()
     {
         if (_unit == null || _spriteRenderer == null)
@@ -137,11 +161,17 @@ public sealed class BattleUnitVisual : MonoBehaviour
             _stateStartedAt = Time.time;
         }
 
-        var frames = GetFrames(state);
+        var isPlayingSkill = Time.time < _skillAnimationUntil;
+        var frames = isPlayingSkill
+            ? _activeProfile.SkillFrames
+            : GetFrames(state);
         if (frames.Length > 0)
         {
-            var elapsed = Mathf.Max(0f, Time.time - _stateStartedAt);
-            var animationSpeed = _activeProfile != null
+            var elapsed = Mathf.Max(0f, Time.time -
+                (isPlayingSkill ? _skillStartedAt : _stateStartedAt));
+            var animationSpeed = isPlayingSkill
+                ? 10f
+                : _activeProfile != null
                 ? _activeProfile.GetFramesPerSecond(state)
                 : framesPerSecond;
             var frameIndex = Mathf.FloorToInt(elapsed * animationSpeed) % frames.Length;
@@ -217,6 +247,27 @@ public sealed class BattleUnitVisual : MonoBehaviour
         float attackingFramesPerSecond,
         bool spritesFaceRight)
     {
+        ConfigureUnitAnimation(
+            unitId,
+            idle,
+            moving,
+            attacking,
+            attacking,
+            movingFramesPerSecond,
+            attackingFramesPerSecond,
+            spritesFaceRight);
+    }
+
+    public void ConfigureUnitAnimation(
+        string unitId,
+        Sprite[] idle,
+        Sprite[] moving,
+        Sprite[] attacking,
+        Sprite[] skill,
+        float movingFramesPerSecond,
+        float attackingFramesPerSecond,
+        bool spritesFaceRight)
+    {
         var profiles = unitAnimations != null
             ? new List<UnitAnimationProfile>(unitAnimations)
             : new List<UnitAnimationProfile>();
@@ -234,6 +285,7 @@ public sealed class BattleUnitVisual : MonoBehaviour
             idle,
             moving,
             attacking,
+            skill,
             movingFramesPerSecond,
             attackingFramesPerSecond,
             spritesFaceRight);

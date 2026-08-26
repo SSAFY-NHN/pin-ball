@@ -6,7 +6,7 @@ public class PinballGoal : MonoBehaviour
 {
     [SerializeField] private BattleUnitSpawnData unitData = new()
     {
-        UnitId = "warrior",
+        UnitId = "bear1",
         Level = 1
     };
 
@@ -32,7 +32,7 @@ public class PinballGoal : MonoBehaviour
         }
         else if (unitData.UnitId == "DefaultAlly")
         {
-            unitData.UnitId = "warrior";
+            unitData.UnitId = "bear1";
         }
 
         _collider = GetComponent<BoxCollider2D>();

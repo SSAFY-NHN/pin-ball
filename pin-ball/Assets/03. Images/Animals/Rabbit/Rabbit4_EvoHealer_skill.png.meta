@@ -1,0 +1,520 @@
+fileFormatVersion: 2
+guid: b6d5b54d65ca901409dac5e8811c2f7e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -782966955494423892
+    second: Rabbit4_EvoHealer_skill_0
+  - first:
+      213: 8467970081164063608
+    second: Rabbit4_EvoHealer_skill_1
+  - first:
+      213: 5294227782565736910
+    second: Rabbit4_EvoHealer_skill_2
+  - first:
+      213: -5075919432200423179
+    second: Rabbit4_EvoHealer_skill_3
+  - first:
+      213: 3490599095713877109
+    second: Rabbit4_EvoHealer_skill_4
+  - first:
+      213: 8587254994730556742
+    second: Rabbit4_EvoHealer_skill_5
+  - first:
+      213: 6491563473341722131
+    second: Rabbit4_EvoHealer_skill_6
+  - first:
+      213: 2544203673045208345
+    second: Rabbit4_EvoHealer_skill_7
+  - first:
+      213: -7530140324255368797
+    second: Rabbit4_EvoHealer_skill_8
+  - first:
+      213: -6494872467318340754
+    second: Rabbit4_EvoHealer_skill_9
+  - first:
+      213: -5726739260472965133
+    second: Rabbit4_EvoHealer_skill_10
+  - first:
+      213: -5404524482267601194
+    second: Rabbit4_EvoHealer_skill_11
+  - first:
+      213: -919050447252316504
+    second: Rabbit4_EvoHealer_skill_12
+  - first:
+      213: 528171686948462197
+    second: Rabbit4_EvoHealer_skill_13
+  - first:
+      213: -1704236171167263148
+    second: Rabbit4_EvoHealer_skill_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_skill_0
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 8
+        width: 25
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca2c2eac3b75225f0800000000000000
+      internalID: -782966955494423892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_skill_1
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 8
+        width: 26
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8737b607ce5448570800000000000000
+      internalID: 8467970081164063608
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_skill_2
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 8
+        width: 24
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec1b5d34e10e87940800000000000000
+      internalID: 5294227782565736910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_skill_3
+      rect:
+        serializedVersion: 2
+        x: 164
+        y: 8
+        width: 23
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f8f0377b26be89b0800000000000000
+      internalID: -5075919432200423179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_skill_4
+      rect:
+        serializedVersion: 2
+        x: 213
+        y: 8
+        width: 22
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57c43513269117030800000000000000
+      internalID: 3490599095713877109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_skill_5
+      rect:
+        serializedVersion: 2
+        x: 261
+        y: 8
+        width: 22
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64d1d94abee0c2770800000000000000
+      internalID: 8587254994730556742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_skill_6
+      rect:
+        serializedVersion: 2
+        x: 296
+        y: 8
+        width: 35
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31e2f61d59aa61a50800000000000000
+      internalID: 6491563473341722131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_skill_7
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 8
+        width: 40
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91d8a18c2c3de4320800000000000000
+      internalID: 2544203673045208345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_skill_8
+      rect:
+        serializedVersion: 2
+        x: 389
+        y: 8
+        width: 39
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a9f9ef75419f7790800000000000000
+      internalID: -7530140324255368797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_skill_9
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 8
+        width: 41
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e63860cf6e39dd5a0800000000000000
+      internalID: -6494872467318340754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_skill_10
+      rect:
+        serializedVersion: 2
+        x: 483
+        y: 8
+        width: 40
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f7c932fbf88680b0800000000000000
+      internalID: -5726739260472965133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_skill_11
+      rect:
+        serializedVersion: 2
+        x: 532
+        y: 8
+        width: 39
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d6a9862e954ff4b0800000000000000
+      internalID: -5404524482267601194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_skill_12
+      rect:
+        serializedVersion: 2
+        x: 580
+        y: 8
+        width: 39
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ae9cd0dc70ee33f0800000000000000
+      internalID: -919050447252316504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_skill_13
+      rect:
+        serializedVersion: 2
+        x: 632
+        y: 8
+        width: 35
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57e5bf4d951745700800000000000000
+      internalID: 528171686948462197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_skill_14
+      rect:
+        serializedVersion: 2
+        x: 688
+        y: 8
+        width: 27
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45614345b365958e0800000000000000
+      internalID: -1704236171167263148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Rabbit4_EvoHealer_skill_0: -782966955494423892
+      Rabbit4_EvoHealer_skill_1: 8467970081164063608
+      Rabbit4_EvoHealer_skill_10: -5726739260472965133
+      Rabbit4_EvoHealer_skill_11: -5404524482267601194
+      Rabbit4_EvoHealer_skill_12: -919050447252316504
+      Rabbit4_EvoHealer_skill_13: 528171686948462197
+      Rabbit4_EvoHealer_skill_14: -1704236171167263148
+      Rabbit4_EvoHealer_skill_2: 5294227782565736910
+      Rabbit4_EvoHealer_skill_3: -5075919432200423179
+      Rabbit4_EvoHealer_skill_4: 3490599095713877109
+      Rabbit4_EvoHealer_skill_5: 8587254994730556742
+      Rabbit4_EvoHealer_skill_6: 6491563473341722131
+      Rabbit4_EvoHealer_skill_7: 2544203673045208345
+      Rabbit4_EvoHealer_skill_8: -7530140324255368797
+      Rabbit4_EvoHealer_skill_9: -6494872467318340754
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -28,7 +28,7 @@ public struct BattleUnitModifier
 [Serializable]
 public class BattleUnitSpawnData
 {
-    public string UnitId = "warrior";
+    public string UnitId = "bear1";
     [Range(1, 10)] public int Level = 1;
     public BattleUnitModifier Modifier;
 }

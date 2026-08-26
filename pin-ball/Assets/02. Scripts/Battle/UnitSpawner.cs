@@ -56,7 +56,8 @@ public class UnitSpawner : MonoBehaviour
         UnitCombatContext context,
         Vector3? spawnPosition = null,
         UnitManager unitManager = null,
-        UnitSkillRegistry skillRegistry = null)
+        UnitSkillRegistry skillRegistry = null,
+        int waveNumber = 1)
     {
         if (data == null)
         {
@@ -75,7 +76,7 @@ public class UnitSpawner : MonoBehaviour
             context,
             spawnPosition);
 
-        unit?.SetData(data, unitManager, skillRegistry);
+        unit?.SetData(data, unitManager, skillRegistry, waveNumber);
         return unit;
     }
 

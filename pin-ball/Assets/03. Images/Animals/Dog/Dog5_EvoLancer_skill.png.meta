@@ -1,0 +1,598 @@
+fileFormatVersion: 2
+guid: 0e31023291dc7ce42a8404f74531b6f7
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5730326671297476327
+    second: Dog5_EvoLancer_skill_0
+  - first:
+      213: -4026348877296823243
+    second: Dog5_EvoLancer_skill_1
+  - first:
+      213: 8812214090497721120
+    second: Dog5_EvoLancer_skill_2
+  - first:
+      213: -9209816421527785281
+    second: Dog5_EvoLancer_skill_3
+  - first:
+      213: 4932057524306192545
+    second: Dog5_EvoLancer_skill_4
+  - first:
+      213: -7564003948768906310
+    second: Dog5_EvoLancer_skill_5
+  - first:
+      213: -2085378305058303623
+    second: Dog5_EvoLancer_skill_6
+  - first:
+      213: 9102291310808766001
+    second: Dog5_EvoLancer_skill_7
+  - first:
+      213: -7012778864489227937
+    second: Dog5_EvoLancer_skill_8
+  - first:
+      213: -3520166400315412569
+    second: Dog5_EvoLancer_skill_9
+  - first:
+      213: -264302986159858712
+    second: Dog5_EvoLancer_skill_10
+  - first:
+      213: -2468679043384969395
+    second: Dog5_EvoLancer_skill_11
+  - first:
+      213: 3482777961240941628
+    second: Dog5_EvoLancer_skill_12
+  - first:
+      213: 1808776078206485429
+    second: Dog5_EvoLancer_skill_13
+  - first:
+      213: 5062938895123983440
+    second: Dog5_EvoLancer_skill_14
+  - first:
+      213: 6819835650164234138
+    second: Dog5_EvoLancer_skill_15
+  - first:
+      213: 2704962914160720502
+    second: Dog5_EvoLancer_skill_16
+  - first:
+      213: -3559300252182570886
+    second: Dog5_EvoLancer_skill_17
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_0
+      rect:
+        serializedVersion: 2
+        x: 274
+        y: 1
+        width: 44
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9190e56c04ac970b0800000000000000
+      internalID: -5730326671297476327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_1
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 2
+        width: 46
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5341ee257098f18c0800000000000000
+      internalID: -4026348877296823243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_2
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 3
+        width: 46
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0230fc4b6064b4a70800000000000000
+      internalID: 8812214090497721120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_3
+      rect:
+        serializedVersion: 2
+        x: 465
+        y: 2
+        width: 45
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb0f644a2c8203080800000000000000
+      internalID: -9209816421527785281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_4
+      rect:
+        serializedVersion: 2
+        x: 529
+        y: 2
+        width: 45
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a8201cef20327440800000000000000
+      internalID: 4932057524306192545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_5
+      rect:
+        serializedVersion: 2
+        x: 593
+        y: 40
+        width: 19
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab33af10c72470790800000000000000
+      internalID: -7564003948768906310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_6
+      rect:
+        serializedVersion: 2
+        x: 596
+        y: 2
+        width: 40
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97191b8fa7f3f03e0800000000000000
+      internalID: -2085378305058303623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_7
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 48
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13691ee98b5d15e70800000000000000
+      internalID: 9102291310808766001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_8
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 2
+        width: 35
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5990cd27ca9dae90800000000000000
+      internalID: -7012778864489227937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_9
+      rect:
+        serializedVersion: 2
+        x: 729
+        y: 3
+        width: 35
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7af2fee3f4bd52fc0800000000000000
+      internalID: -3520166400315412569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_10
+      rect:
+        serializedVersion: 2
+        x: 793
+        y: 3
+        width: 36
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ebdddc95d1055cf0800000000000000
+      internalID: -264302986159858712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_11
+      rect:
+        serializedVersion: 2
+        x: 857
+        y: 3
+        width: 37
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d47769a5d7d7dbdd0800000000000000
+      internalID: -2468679043384969395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_12
+      rect:
+        serializedVersion: 2
+        x: 921
+        y: 3
+        width: 37
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c34535b6a10555030800000000000000
+      internalID: 3482777961240941628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_13
+      rect:
+        serializedVersion: 2
+        x: 972
+        y: 2
+        width: 50
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b3c8b382401a1910800000000000000
+      internalID: 1808776078206485429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_14
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 2
+        width: 50
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05caf5bb91c234640800000000000000
+      internalID: 5062938895123983440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_15
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 2
+        width: 50
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a97959a046ce4ae50800000000000000
+      internalID: 6819835650164234138
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_16
+      rect:
+        serializedVersion: 2
+        x: 139
+        y: 1
+        width: 50
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67ab72d5075f98520800000000000000
+      internalID: 2704962914160720502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog5_EvoLancer_skill_17
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 0
+        width: 49
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7813b35743da9ec0800000000000000
+      internalID: -3559300252182570886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Dog5_EvoLancer_skill_0: -5730326671297476327
+      Dog5_EvoLancer_skill_1: -4026348877296823243
+      Dog5_EvoLancer_skill_10: -264302986159858712
+      Dog5_EvoLancer_skill_11: -2468679043384969395
+      Dog5_EvoLancer_skill_12: 3482777961240941628
+      Dog5_EvoLancer_skill_13: 1808776078206485429
+      Dog5_EvoLancer_skill_14: 5062938895123983440
+      Dog5_EvoLancer_skill_15: 6819835650164234138
+      Dog5_EvoLancer_skill_16: 2704962914160720502
+      Dog5_EvoLancer_skill_17: -3559300252182570886
+      Dog5_EvoLancer_skill_2: 8812214090497721120
+      Dog5_EvoLancer_skill_3: -9209816421527785281
+      Dog5_EvoLancer_skill_4: 4932057524306192545
+      Dog5_EvoLancer_skill_5: -7564003948768906310
+      Dog5_EvoLancer_skill_6: -2085378305058303623
+      Dog5_EvoLancer_skill_7: 9102291310808766001
+      Dog5_EvoLancer_skill_8: -7012778864489227937
+      Dog5_EvoLancer_skill_9: -3520166400315412569
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

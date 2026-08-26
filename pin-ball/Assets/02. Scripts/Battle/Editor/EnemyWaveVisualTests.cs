@@ -32,7 +32,7 @@ public class EnemyWaveVisualTests
             Wave(("goblin", 2), ("goblin_archer", 2), ("shield_guard", 1)),
             Wave(("goblin", 2), ("goblin_archer", 1), ("shield_guard", 2)),
             Wave(("goblin", 2), ("goblin_archer", 1), ("shield_guard", 1), ("orc_warrior", 1)),
-            Wave(("goblin", 1), ("goblin_archer", 2), ("shield_guard", 1), ("orc_warrior", 1)),
+            Wave(("goblin", 1), ("goblin_archer", 2), ("shield_guard", 1), ("orc_warrior", 1), ("assassin", 1)),
             Wave(("goblin", 1), ("goblin_archer", 1), ("shield_guard", 1), ("orc_warrior", 2)),
             Wave(("goblin", 1), ("goblin_archer", 1), ("shield_guard", 1), ("goblin_king", 1))
         };
@@ -60,12 +60,17 @@ public class EnemyWaveVisualTests
 
         var expectedIdlePaths = new Dictionary<string, string>
         {
-            ["goblin"] = "Assets/03. Images/Humans/Rogue/H_Rogue.png",
+            ["goblin"] = "Assets/03. Images/Humans/Patrolman/H_Patrolman.png",
             ["wolf"] = "Assets/03. Images/Humans/Rogue/H_Rogue.png",
             ["goblin_archer"] = "Assets/03. Images/Humans/Archer/H_Archer.png",
+            ["goblin_archer_undead"] = "Assets/03. Images/Humans/Archer/H_Archer_EvoSkeleton.png",
             ["shield_guard"] = "Assets/03. Images/Humans/MaceWarrior/H_MaceWarrior.png",
+            ["shield_guard_undead"] = "Assets/03. Images/Humans/MaceWarrior/H_MaceWarrior_Undead.png",
             ["orc_warrior"] = "Assets/03. Images/Humans/Knights/H_Warrior.png",
-            ["goblin_king"] = "Assets/03. Images/Humans/Boss/H_MountedMageBoss.png"
+            ["orc_warrior_undead"] = "Assets/03. Images/Humans/Knights/H_Warrior_Undead.png",
+            ["assassin"] = "Assets/03. Images/Humans/Rogue/H_Rogue.png",
+            ["assassin_undead"] = "Assets/03. Images/Humans/Rogue/H_Rogue_EvoSkeleton.png",
+            ["goblin_king"] = "Assets/03. Images/Humans/Boss/H_BoneStalkerBoss.png"
         };
 
         var serializedVisual = new SerializedObject(visual);
@@ -90,6 +95,60 @@ public class EnemyWaveVisualTests
             Assert.That(
                 profile.FindPropertyRelative("sourceFacesRight").boolValue,
                 Is.True);
+        }
+
+        var bossProfile = FindProfile(profiles, "goblin_king");
+        var skillFrames = bossProfile.FindPropertyRelative("skillFrames");
+        Assert.That(skillFrames.arraySize, Is.GreaterThanOrEqualTo(2));
+        Assert.That(
+            AssetDatabase.GetAssetPath(
+                skillFrames.GetArrayElementAtIndex(0).objectReferenceValue),
+            Is.EqualTo("Assets/03. Images/Humans/Boss/H_BoneStalkerBoss_skill.png"));
+    }
+
+    [TestCase("goblin_archer", 5, "goblin_archer")]
+    [TestCase("goblin_archer", 6, "goblin_archer_undead")]
+    [TestCase("shield_guard", 6, "shield_guard_undead")]
+    [TestCase("orc_warrior", 6, "orc_warrior_undead")]
+    [TestCase("assassin", 6, "assassin_undead")]
+    [TestCase("goblin_king", 6, "goblin_king")]
+    public void EnemyVisualProfile_ChangesAfterWaveFive(
+        string unitId,
+        int waveNumber,
+        string expectedProfileId)
+    {
+        var resolver = typeof(EnemyUnit).GetMethod(
+            "ResolveVisualProfileId");
+        Assert.That(resolver, Is.Not.Null);
+        Assert.That(
+            resolver.Invoke(null, new object[] { unitId, waveNumber }),
+            Is.EqualTo(expectedProfileId));
+    }
+
+    [Test]
+    public void EnemyBossSkillFeedback_StartsSkillAnimation()
+    {
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(EnemyPrefabPath);
+        var instance = Object.Instantiate(prefab);
+        try
+        {
+            var visual = instance.GetComponent<BattleUnitVisual>();
+            var renderer = instance.GetComponent<SpriteRenderer>();
+            var playSkill = typeof(BattleUnitVisual).GetMethod(
+                "PlaySkillAnimation");
+            Assert.That(playSkill, Is.Not.Null);
+
+            visual.SetUnitId("goblin_king");
+            playSkill.Invoke(visual, null);
+
+            Assert.That(
+                AssetDatabase.GetAssetPath(renderer.sprite),
+                Is.EqualTo(
+                    "Assets/03. Images/Humans/Boss/H_BoneStalkerBoss_skill.png"));
+        }
+        finally
+        {
+            Object.DestroyImmediate(instance);
         }
     }
 

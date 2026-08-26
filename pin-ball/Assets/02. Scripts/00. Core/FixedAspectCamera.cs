@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 [ExecuteAlways]
 [DisallowMultipleComponent]
@@ -6,6 +7,9 @@ using UnityEngine;
 public sealed class FixedAspectCamera : MonoBehaviour
 {
     private const float TargetAspect = 16f / 9f;
+#if UNITY_WEBGL && !UNITY_EDITOR
+    private const float WebGLRenderScale = 0.75f;
+#endif
 
     private Camera _camera;
     private int _lastScreenWidth;
@@ -13,6 +17,9 @@ public sealed class FixedAspectCamera : MonoBehaviour
 
     private void OnEnable()
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        UniversalRenderPipeline.asset.renderScale = WebGLRenderScale;
+#endif
         _camera = GetComponent<Camera>();
         ApplyAspectRatio();
     }

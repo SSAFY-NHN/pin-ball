@@ -22,7 +22,7 @@ public class BattleDataCharacterizationTests
             attackSpeedGrowth = 0.03f
         };
 
-        BattleUnitStats stats = data.CreateStats(3, 5);
+        BattleUnitStats stats = data.CreateStats(3);
 
         Assert.That(stats.MaxHp, Is.EqualTo(342f).Within(0.001f));
         Assert.That(stats.AttackDamage, Is.EqualTo(36f).Within(0.001f));

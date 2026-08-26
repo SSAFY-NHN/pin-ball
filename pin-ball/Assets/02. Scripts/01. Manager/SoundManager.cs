@@ -35,8 +35,8 @@ public static class SoundName
     {
         return unitId switch
         {
-            "archer" or "ranger" => Arrow,
-            "mage" or "frost" or "pyromancer" => MagicSpell,
+            "cat1" or "cat2" or "cat3" or "cat4" or "cat5" => Arrow,
+            "rabbit1" or "rabbit2" or "rabbit3" or "rabbit4" or "rabbit5" => MagicSpell,
             _ => ClassicPunch
         };
     }

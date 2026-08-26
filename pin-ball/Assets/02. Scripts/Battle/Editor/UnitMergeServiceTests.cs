@@ -18,14 +18,16 @@ public class UnitMergeServiceTests
         {
             AllyCommonValue = new AllyCommonData
             {
-                maxLevel = 10,
-                classLevel = 3
+                maxLevel = 30,
+                firstClassLevel = 3,
+                secondClassLevel = 5
             }
         };
         _dataSource.Add("warrior", null);
         _dataSource.Add("ranger", null);
         _dataSource.Add("z_paladin", "warrior");
         _dataSource.Add("a_knight", "warrior");
+        _dataSource.Add("a_paladin", "a_knight");
         _service = new UnitMergeService(_dataSource);
     }
 
@@ -67,8 +69,8 @@ public class UnitMergeServiceTests
     [Test]
     public void TryBegin_RejectsMaximumLevel()
     {
-        AllyUnit source = CreateAlly("warrior", 10, Vector3.zero);
-        AllyUnit target = CreateAlly("warrior", 9, Vector3.right);
+        AllyUnit source = CreateAlly("warrior", 30, Vector3.zero);
+        AllyUnit target = CreateAlly("warrior", 29, Vector3.right);
 
         UnitMergeDecision decision = _service.TryBegin(source, target);
 
@@ -119,6 +121,19 @@ public class UnitMergeServiceTests
     }
 
     [Test]
+    public void TryBegin_ReturnsOnlySecondEvolutionAutomatically()
+    {
+        AllyUnit source = CreateAlly("a_knight", 4, Vector3.zero);
+        AllyUnit target = CreateAlly("a_knight", 4, Vector3.right);
+
+        UnitMergeDecision decision = _service.TryBegin(source, target);
+
+        Assert.That(decision.Type, Is.EqualTo(UnitMergeDecisionType.Immediate));
+        Assert.That(decision.ResultUnitId, Is.EqualTo("a_paladin"));
+        Assert.That(decision.ResultLevel, Is.EqualTo(5));
+    }
+
+    [Test]
     public void TryBegin_InvalidEvolutionCountRejectsAndReleasesReservations()
     {
         _dataSource.Allies.Remove("z_paladin");
@@ -134,16 +149,16 @@ public class UnitMergeServiceTests
     }
 
     [Test]
-    public void TryBegin_AdvancedUnitKeepsAdvancedJobId()
+    public void TryBegin_DifferentJobsInSameLineageKeepsTargetJob()
     {
-        AllyUnit source = CreateAlly("a_knight", 4, Vector3.zero);
-        AllyUnit target = CreateAlly("warrior", 4, Vector3.right);
+        AllyUnit source = CreateAlly("a_knight", 3, Vector3.zero);
+        AllyUnit target = CreateAlly("z_paladin", 3, Vector3.right);
 
         UnitMergeDecision decision = _service.TryBegin(source, target);
 
         Assert.That(decision.Type, Is.EqualTo(UnitMergeDecisionType.Immediate));
-        Assert.That(decision.ResultUnitId, Is.EqualTo("a_knight"));
-        Assert.That(decision.ResultLevel, Is.EqualTo(5));
+        Assert.That(decision.ResultUnitId, Is.EqualTo("z_paladin"));
+        Assert.That(decision.ResultLevel, Is.EqualTo(4));
     }
 
     [Test]

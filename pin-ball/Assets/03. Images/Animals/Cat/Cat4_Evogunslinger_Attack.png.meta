@@ -1,0 +1,468 @@
+fileFormatVersion: 2
+guid: df648b6fb899bf44b93d8ff64a950339
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1334724456344866454
+    second: Cat4_Evogunslinger_Attack_0
+  - first:
+      213: 7242539889731483005
+    second: Cat4_Evogunslinger_Attack_1
+  - first:
+      213: -7780078088474902082
+    second: Cat4_Evogunslinger_Attack_2
+  - first:
+      213: 158213112693111384
+    second: Cat4_Evogunslinger_Attack_3
+  - first:
+      213: 6730728376146509216
+    second: Cat4_Evogunslinger_Attack_4
+  - first:
+      213: -6215007753098392770
+    second: Cat4_Evogunslinger_Attack_5
+  - first:
+      213: -3212787974368325749
+    second: Cat4_Evogunslinger_Attack_6
+  - first:
+      213: 4653021886355669401
+    second: Cat4_Evogunslinger_Attack_7
+  - first:
+      213: 8221181200719715046
+    second: Cat4_Evogunslinger_Attack_8
+  - first:
+      213: 2230989583489332130
+    second: Cat4_Evogunslinger_Attack_9
+  - first:
+      213: -2542225243020743867
+    second: Cat4_Evogunslinger_Attack_10
+  - first:
+      213: 839725328383276475
+    second: Cat4_Evogunslinger_Attack_11
+  - first:
+      213: -9177253825593485351
+    second: Cat4_Evogunslinger_Attack_12
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Cat4_Evogunslinger_Attack_0
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 8
+        width: 27
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69e467542d4e58210800000000000000
+      internalID: 1334724456344866454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat4_Evogunslinger_Attack_1
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 8
+        width: 30
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d75ba0738aba28460800000000000000
+      internalID: 7242539889731483005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat4_Evogunslinger_Attack_2
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 8
+        width: 31
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb147abf23c970490800000000000000
+      internalID: -7780078088474902082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat4_Evogunslinger_Attack_3
+      rect:
+        serializedVersion: 2
+        x: 155
+        y: 8
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85ab1ecdcf5123200800000000000000
+      internalID: 158213112693111384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat4_Evogunslinger_Attack_4
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 8
+        width: 33
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0adbad31cc9586d50800000000000000
+      internalID: 6730728376146509216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat4_Evogunslinger_Attack_5
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 8
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3b8548806bdfb9a0800000000000000
+      internalID: -6215007753098392770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat4_Evogunslinger_Attack_6
+      rect:
+        serializedVersion: 2
+        x: 299
+        y: 8
+        width: 31
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8f01210c52e963d0800000000000000
+      internalID: -3212787974368325749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat4_Evogunslinger_Attack_7
+      rect:
+        serializedVersion: 2
+        x: 347
+        y: 8
+        width: 31
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 991095cb0cad29040800000000000000
+      internalID: 4653021886355669401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat4_Evogunslinger_Attack_8
+      rect:
+        serializedVersion: 2
+        x: 395
+        y: 8
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ea940f8eb0871270800000000000000
+      internalID: 8221181200719715046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat4_Evogunslinger_Attack_9
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 8
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a37a75b43116fe10800000000000000
+      internalID: 2230989583489332130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat4_Evogunslinger_Attack_10
+      rect:
+        serializedVersion: 2
+        x: 493
+        y: 8
+        width: 30
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54ba7ba5c9338bcd0800000000000000
+      internalID: -2542225243020743867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat4_Evogunslinger_Attack_11
+      rect:
+        serializedVersion: 2
+        x: 542
+        y: 8
+        width: 29
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb5fe23bcbd47ab00800000000000000
+      internalID: 839725328383276475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat4_Evogunslinger_Attack_12
+      rect:
+        serializedVersion: 2
+        x: 593
+        y: 8
+        width: 26
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d7d7efc448d3a080800000000000000
+      internalID: -9177253825593485351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Cat4_Evogunslinger_Attack_0: 1334724456344866454
+      Cat4_Evogunslinger_Attack_1: 7242539889731483005
+      Cat4_Evogunslinger_Attack_10: -2542225243020743867
+      Cat4_Evogunslinger_Attack_11: 839725328383276475
+      Cat4_Evogunslinger_Attack_12: -9177253825593485351
+      Cat4_Evogunslinger_Attack_2: -7780078088474902082
+      Cat4_Evogunslinger_Attack_3: 158213112693111384
+      Cat4_Evogunslinger_Attack_4: 6730728376146509216
+      Cat4_Evogunslinger_Attack_5: -6215007753098392770
+      Cat4_Evogunslinger_Attack_6: -3212787974368325749
+      Cat4_Evogunslinger_Attack_7: 4653021886355669401
+      Cat4_Evogunslinger_Attack_8: 8221181200719715046
+      Cat4_Evogunslinger_Attack_9: 2230989583489332130
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

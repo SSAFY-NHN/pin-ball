@@ -32,17 +32,19 @@ public sealed class UnitAttackEffectPlayer : MonoBehaviour
             return;
         }
 
-        if (Contains(arrowUnitIds, unitId))
+        if (Contains(arrowUnitIds, unitId) ||
+            unitId is "cat1" or "cat3" or "cat5")
         {
             PlayProjectile(arrowEffectPrefab, target.transform.position);
         }
 
-        if (Contains(fireUnitIds, unitId))
+        if (Contains(fireUnitIds, unitId) || unitId.StartsWith("rabbit"))
         {
             PlayProjectile(fireEffectPrefab, target.transform.position);
         }
 
-        if (Contains(muzzleFlashUnitIds, unitId))
+        if (Contains(muzzleFlashUnitIds, unitId) ||
+            unitId is "cat2" or "cat4")
         {
             PlayMuzzleFlash(target.transform.position);
         }

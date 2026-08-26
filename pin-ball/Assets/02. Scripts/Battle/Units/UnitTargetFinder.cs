@@ -53,6 +53,25 @@ public sealed class UnitTargetFinder
         return result;
     }
 
+    public UnitBase FindFarthestAliveEnemy(Vector3 fromPosition)
+    {
+        return FindFarthest(fromPosition, _roster.ActiveEnemies);
+    }
+
+    public UnitBase FindLowestHpAliveAlly()
+    {
+        UnitBase result = null;
+        float lowestRatio = float.MaxValue;
+        foreach (var ally in _roster.ActiveAllies)
+        {
+            if (ally == null || !ally.IsAlive) continue;
+            if (ally.HpRatio >= lowestRatio) continue;
+            result = ally;
+            lowestRatio = ally.HpRatio;
+        }
+        return result;
+    }
+
     public UnitBase FindHighestHpAliveAlly()
     {
         UnitBase result = null;
@@ -175,6 +194,23 @@ public sealed class UnitTargetFinder
             bestDistance = distance;
         }
 
+        return best;
+    }
+
+    private static UnitBase FindFarthest(
+        Vector3 fromPosition,
+        IReadOnlyList<UnitBase> candidates)
+    {
+        UnitBase best = null;
+        float bestDistance = float.MinValue;
+        foreach (var candidate in candidates)
+        {
+            if (candidate == null || !candidate.IsAlive) continue;
+            float distance = Vector2.Distance(fromPosition, candidate.transform.position);
+            if (distance <= bestDistance) continue;
+            best = candidate;
+            bestDistance = distance;
+        }
         return best;
     }
 }
