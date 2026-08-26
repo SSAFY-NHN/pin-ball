@@ -35,11 +35,6 @@ public sealed class SceneManager : AppService
 
         UnityEngine.SceneManagement.SceneManager.LoadScene(GetSceneName(eSceneName));
 
-        if (eSceneName == ESceneName.Game)
-        {
-            _gameRunController.InitializeLoadedScene();
-        }
-
         PlaySceneBgm(eSceneName);
 
         _isTransitioning = false;
