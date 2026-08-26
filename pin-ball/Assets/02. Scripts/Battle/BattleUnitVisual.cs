@@ -39,6 +39,7 @@ public sealed class BattleUnitVisual : MonoBehaviour
             Sprite[] idle,
             Sprite[] moving,
             Sprite[] attacking,
+            Sprite[] skill,
             float movingFramesPerSecond,
             float attackingFramesPerSecond,
             bool spritesFaceRight)
@@ -47,6 +48,7 @@ public sealed class BattleUnitVisual : MonoBehaviour
             idleFrames = idle;
             moveFrames = moving;
             attackFrames = attacking;
+            skillFrames = skill;
             moveFramesPerSecond = Mathf.Max(1f, movingFramesPerSecond);
             attackFramesPerSecond = Mathf.Max(1f, attackingFramesPerSecond);
             sourceFacesRight = spritesFaceRight;
@@ -245,6 +247,27 @@ public sealed class BattleUnitVisual : MonoBehaviour
         float attackingFramesPerSecond,
         bool spritesFaceRight)
     {
+        ConfigureUnitAnimation(
+            unitId,
+            idle,
+            moving,
+            attacking,
+            attacking,
+            movingFramesPerSecond,
+            attackingFramesPerSecond,
+            spritesFaceRight);
+    }
+
+    public void ConfigureUnitAnimation(
+        string unitId,
+        Sprite[] idle,
+        Sprite[] moving,
+        Sprite[] attacking,
+        Sprite[] skill,
+        float movingFramesPerSecond,
+        float attackingFramesPerSecond,
+        bool spritesFaceRight)
+    {
         var profiles = unitAnimations != null
             ? new List<UnitAnimationProfile>(unitAnimations)
             : new List<UnitAnimationProfile>();
@@ -262,6 +285,7 @@ public sealed class BattleUnitVisual : MonoBehaviour
             idle,
             moving,
             attacking,
+            skill,
             movingFramesPerSecond,
             attackingFramesPerSecond,
             spritesFaceRight);
