@@ -73,6 +73,7 @@ public class StatusPanel : UIBase
     private StatusFeedbackController feedbackController;
     private StatusWaveHudController waveHudController;
     private bool isWaveHudValid;
+    private int lastAssaultCountdownUpdateKey = int.MinValue;
 
     public override bool IsDefaultPanel => true;
 
@@ -120,21 +121,41 @@ public class StatusPanel : UIBase
         if (battleManager == null || assaultCountdownText == null ||
             battleManager.State != EWaveState.Active) return;
 
-        assaultCountdownText.text = AssaultCountdownFormatter.Format(
+        int updateKey = GetAssaultCountdownUpdateKey(
             battleManager.AssaultElapsedTime);
+        if (lastAssaultCountdownUpdateKey == updateKey) return;
+
+        lastAssaultCountdownUpdateKey = updateKey;
+        UiRefreshUtility.SetTextIfChanged(
+            assaultCountdownText,
+            AssaultCountdownFormatter.Format(
+                battleManager.AssaultElapsedTime));
     }
 
     private void OnStateChanged(EWaveState state)
     {
         if (assaultCountdownText == null) return;
         bool isActive = state == EWaveState.Active;
-        assaultCountdownText.gameObject.SetActive(isActive);
+        UiRefreshUtility.SetActiveIfChanged(
+            assaultCountdownText.gameObject,
+            isActive);
         if (isActive)
         {
-            assaultCountdownText.text = AssaultCountdownFormatter.Format(
+            lastAssaultCountdownUpdateKey = GetAssaultCountdownUpdateKey(
                 battleManager.AssaultElapsedTime);
+            UiRefreshUtility.SetTextIfChanged(
+                assaultCountdownText,
+                AssaultCountdownFormatter.Format(
+                    battleManager.AssaultElapsedTime));
+        }
+        else
+        {
+            lastAssaultCountdownUpdateKey = int.MinValue;
         }
     }
+
+    public static int GetAssaultCountdownUpdateKey(float elapsedTime) =>
+        Mathf.FloorToInt(Mathf.Max(0f, elapsedTime));
 
     private void OnAssaultPhaseChanged(EBattleAssaultPhase phase)
     {

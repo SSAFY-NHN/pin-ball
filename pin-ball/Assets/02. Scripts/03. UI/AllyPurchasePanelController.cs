@@ -33,6 +33,10 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
 
     private BattleManager battleManager;
     private UnitManager unitManager;
+    private int warriorCooldownSecond = int.MinValue;
+    private int archerCooldownSecond = int.MinValue;
+    private int mageCooldownSecond = int.MinValue;
+    private int spearmanCooldownSecond = int.MinValue;
 
     private void Start()
     {
@@ -55,7 +59,32 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
 
     private void Update()
     {
-        Refresh();
+        if (battleManager == null || unitManager == null) return;
+
+        RefreshCooldown(
+            WarriorId,
+            warriorPurchaseButton,
+            warriorCooldownMask,
+            warriorCooldownText,
+            ref warriorCooldownSecond);
+        RefreshCooldown(
+            ArcherId,
+            archerPurchaseButton,
+            archerCooldownMask,
+            archerCooldownText,
+            ref archerCooldownSecond);
+        RefreshCooldown(
+            MageId,
+            magePurchaseButton,
+            mageCooldownMask,
+            mageCooldownText,
+            ref mageCooldownSecond);
+        RefreshCooldown(
+            SpearmanId,
+            spearmanPurchaseButton,
+            spearmanCooldownMask,
+            spearmanCooldownText,
+            ref spearmanCooldownSecond);
     }
 
     private void PurchaseWarrior()
@@ -111,7 +140,8 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
             warriorDisplayText,
             warriorCooldownMask,
             warriorCooldownText,
-            isFree);
+            isFree,
+            ref warriorCooldownSecond);
         RefreshCard(
             ArcherId,
             "궁수",
@@ -120,7 +150,8 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
             archerDisplayText,
             archerCooldownMask,
             archerCooldownText,
-            isFree);
+            isFree,
+            ref archerCooldownSecond);
         RefreshCard(
             MageId,
             "마법사",
@@ -129,7 +160,8 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
             mageDisplayText,
             mageCooldownMask,
             mageCooldownText,
-            isFree);
+            isFree,
+            ref mageCooldownSecond);
         RefreshCard(
             SpearmanId,
             "창병",
@@ -138,10 +170,15 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
             spearmanDisplayText,
             spearmanCooldownMask,
             spearmanCooldownText,
-            isFree);
+            isFree,
+            ref spearmanCooldownSecond);
 
-        reinforcementNotice.text = FormatReinforcementNotice(isFree);
-        reinforcementNotice.gameObject.SetActive(isFree);
+        UiRefreshUtility.SetTextIfChanged(
+            reinforcementNotice,
+            FormatReinforcementNotice(isFree));
+        UiRefreshUtility.SetActiveIfChanged(
+            reinforcementNotice.gameObject,
+            isFree);
     }
 
     private void RefreshCard(
@@ -152,19 +189,51 @@ public sealed class AllyPurchasePanelController : MonoBehaviour
         TextMeshProUGUI displayText,
         Image cooldownMask,
         TextMeshProUGUI cooldownText,
-        bool isFree)
+        bool isFree,
+        ref int displayedCooldownSecond)
     {
-        displayText.text = FormatCard(
-            unitName,
-            role,
-            battleManager.GetAllyPurchaseCost(unitId),
-            unitManager.GetOwnedAllyCount(unitId),
-            isFree);
-        purchaseButton.interactable = battleManager.CanPurchaseAlly(unitId);
+        UiRefreshUtility.SetTextIfChanged(
+            displayText,
+            FormatCard(
+                unitName,
+                role,
+                battleManager.GetAllyPurchaseCost(unitId),
+                unitManager.GetOwnedAllyCount(unitId),
+                isFree));
+        RefreshCooldown(
+            unitId,
+            purchaseButton,
+            cooldownMask,
+            cooldownText,
+            ref displayedCooldownSecond);
+    }
+
+    private void RefreshCooldown(
+        string unitId,
+        Button purchaseButton,
+        Image cooldownMask,
+        TextMeshProUGUI cooldownText,
+        ref int displayedCooldownSecond)
+    {
+        bool canPurchase = battleManager.CanPurchaseAlly(unitId);
+        if (purchaseButton.interactable != canPurchase)
+        {
+            purchaseButton.interactable = canPurchase;
+        }
+
         float remaining = battleManager.GetAllyRemainingCooldown(unitId);
-        bool isCoolingDown = remaining > 0f;
-        cooldownMask.gameObject.SetActive(isCoolingDown);
-        cooldownText.text = FormatCooldown(remaining);
+        int cooldownSecond = remaining > 0f
+            ? Mathf.CeilToInt(remaining)
+            : 0;
+        if (displayedCooldownSecond == cooldownSecond) return;
+
+        displayedCooldownSecond = cooldownSecond;
+        UiRefreshUtility.SetActiveIfChanged(
+            cooldownMask.gameObject,
+            cooldownSecond > 0);
+        UiRefreshUtility.SetTextIfChanged(
+            cooldownText,
+            cooldownSecond > 0 ? cooldownSecond.ToString() : string.Empty);
     }
 
     public static string FormatCooldown(float remainingSeconds)
