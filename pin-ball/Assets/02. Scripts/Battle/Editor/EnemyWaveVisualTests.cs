@@ -32,7 +32,7 @@ public class EnemyWaveVisualTests
             Wave(("goblin", 2), ("goblin_archer", 2), ("shield_guard", 1)),
             Wave(("goblin", 2), ("goblin_archer", 1), ("shield_guard", 2)),
             Wave(("goblin", 2), ("goblin_archer", 1), ("shield_guard", 1), ("orc_warrior", 1)),
-            Wave(("goblin", 1), ("goblin_archer", 2), ("shield_guard", 1), ("orc_warrior", 1)),
+            Wave(("goblin", 1), ("goblin_archer", 2), ("shield_guard", 1), ("orc_warrior", 1), ("assassin", 1)),
             Wave(("goblin", 1), ("goblin_archer", 1), ("shield_guard", 1), ("orc_warrior", 2)),
             Wave(("goblin", 1), ("goblin_archer", 1), ("shield_guard", 1), ("goblin_king", 1))
         };
