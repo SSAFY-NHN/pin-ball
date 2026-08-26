@@ -47,12 +47,9 @@ public sealed class UnitMergeService
         }
 
         int resultLevel = highestLevel + 1;
-        if (sourceJob.id != targetJob.id)
-        {
-            return UnitMergeDecision.Rejected(false);
-        }
-
-        string resultJobId = sourceJob.id;
+        string resultJobId = GetJobDepth(sourceJob) > GetJobDepth(targetJob)
+            ? sourceJob.id
+            : targetJob.id;
         _reservations.Add(source);
         _reservations.Add(target);
 
@@ -72,7 +69,7 @@ public sealed class UnitMergeService
                 target.transform.position);
         }
 
-        _dataSource.GetNextAllyJobs(sourceJob.id, _evolutionCandidates);
+        _dataSource.GetNextAllyJobs(resultJobId, _evolutionCandidates);
         _evolutionCandidates.Sort((left, right) =>
             string.CompareOrdinal(left?.id, right?.id));
         int expectedCount = resultLevel == firstClassLevel ? 2 : 1;
@@ -171,5 +168,17 @@ public sealed class UnitMergeService
     {
         _pendingEvolution = null;
         _evolutionCandidates.Clear();
+    }
+
+    private int GetJobDepth(AllyUnitData job)
+    {
+        int depth = 0;
+        while (job != null && !string.IsNullOrEmpty(job.previousJob) &&
+               _dataSource.TryGetAllyUnit(job.previousJob, out job))
+        {
+            depth++;
+        }
+
+        return depth;
     }
 }

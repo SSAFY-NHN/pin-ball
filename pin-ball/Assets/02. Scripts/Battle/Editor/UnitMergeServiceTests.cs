@@ -149,14 +149,16 @@ public class UnitMergeServiceTests
     }
 
     [Test]
-    public void TryBegin_RejectsDifferentJobsInSameLineage()
+    public void TryBegin_DifferentJobsInSameLineageKeepsTargetJob()
     {
-        AllyUnit source = CreateAlly("a_knight", 4, Vector3.zero);
-        AllyUnit target = CreateAlly("warrior", 4, Vector3.right);
+        AllyUnit source = CreateAlly("a_knight", 3, Vector3.zero);
+        AllyUnit target = CreateAlly("z_paladin", 3, Vector3.right);
 
         UnitMergeDecision decision = _service.TryBegin(source, target);
 
-        Assert.That(decision.Type, Is.EqualTo(UnitMergeDecisionType.Rejected));
+        Assert.That(decision.Type, Is.EqualTo(UnitMergeDecisionType.Immediate));
+        Assert.That(decision.ResultUnitId, Is.EqualTo("z_paladin"));
+        Assert.That(decision.ResultLevel, Is.EqualTo(4));
     }
 
     [Test]
