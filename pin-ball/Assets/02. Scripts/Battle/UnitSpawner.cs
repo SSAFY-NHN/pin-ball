@@ -7,8 +7,6 @@ using UnityEngine;
 //금지: 리스트 등록, 승패/보상 처리
 public class UnitSpawner : MonoBehaviour
 {
-    private const float FormationSpacing = 0.75f;
-
     [SerializeField] private GameObject allyPrefab;
     [SerializeField] private GameObject enemyPrefab;
     
@@ -112,13 +110,17 @@ public class UnitSpawner : MonoBehaviour
         var spawnPoint = team == EBattleTeam.Ally
             ? allySpawnPoint
             : enemySpawnPoint;
-        var position = overridePosition ??
-            (spawnPoint != null ? spawnPoint.position : transform.position);
-        position.x += Random.Range(-0.15f, 0.15f);
-        if (team == EBattleTeam.Enemy)
-        {
-            position.y += GetFormationOffset(spawnIndex);
-        }
+        Vector3 sourcePosition = spawnPoint != null
+            ? spawnPoint.position
+            : transform.position;
+        float battleLineY = allySpawnPoint != null
+            ? allySpawnPoint.position.y
+            : sourcePosition.y;
+        Vector3 position = ResolveSpawnPosition(
+            team,
+            sourcePosition,
+            overridePosition,
+            battleLineY);
         
         unit.transform.SetParent(null, true);
         unit.transform.SetPositionAndRotation(position, Quaternion.identity);
@@ -165,13 +167,13 @@ public class UnitSpawner : MonoBehaviour
         return Instantiate(enemyPrefab).GetComponent<EnemyUnit>();
     }
 
-    private float GetFormationOffset(int spawnIndex)
+    public static Vector3 ResolveSpawnPosition(
+        EBattleTeam team,
+        Vector3 teamSpawnPosition,
+        Vector3? overridePosition,
+        float battleLineY)
     {
-        if (spawnIndex <= 0)
-        {
-            return 0f;
-        }
-
-        return -spawnIndex * FormationSpacing;
+        teamSpawnPosition.y = battleLineY;
+        return teamSpawnPosition;
     }
 }

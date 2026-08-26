@@ -202,14 +202,6 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             return null;
         }
 
-        if (!_preparationController.TryPlaceInFreeGridSlot(spawnedUnit))
-        {
-            Debug.LogWarning(
-                "[UnitManager] No available ally preparation grid slot.");
-            _spawner.ReturnUnit(spawnedUnit);
-            return null;
-        }
-
         AddOwnedAlly(spawnedUnit);
         SoundManager.PlaySFXIfAvailable(SoundName.UnitSpawn);
         return spawnedUnit;

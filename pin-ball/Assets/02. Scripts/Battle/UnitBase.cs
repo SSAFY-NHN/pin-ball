@@ -43,6 +43,7 @@ public abstract class UnitBase : MonoBehaviour
     private float _forcedTargetUntil;
     private float _hitUntilTime;
     private bool _isBattleActive;
+    private float _battleLineY;
 
     protected virtual Color IdleColor => new(0.8f, 0.8f, 0.8f, 1f);
     protected virtual string BasicAttackSoundName => SoundName.ClassicPunch;
@@ -53,6 +54,7 @@ public abstract class UnitBase : MonoBehaviour
     public void Initialize(BattleUnitStats stats, UnitCombatContext context)
     {
         _context = context;
+        _battleLineY = transform.position.y;
         _stats = stats;
         _initialStats = stats;
         IsInPool = false;
@@ -148,6 +150,9 @@ public abstract class UnitBase : MonoBehaviour
     public void StartBattle()
     {
         if (!IsAlive) return;
+        var position = transform.position;
+        position.y = _battleLineY;
+        transform.position = position;
         _isBattleActive = true;
     }
 
@@ -289,7 +294,8 @@ public abstract class UnitBase : MonoBehaviour
             transform.position,
             direction,
             distance,
-            _statusEffects.IsKnockbackImmune(Time.time));
+            _statusEffects.IsKnockbackImmune(Time.time),
+            _battleLineY);
     }
 
     public bool TryApplyBaseKnockback(Vector3 direction, float distance)
@@ -302,7 +308,8 @@ public abstract class UnitBase : MonoBehaviour
             transform.position,
             direction,
             distance,
-            false);
+            false,
+            _battleLineY);
         HasReachedDefenseLine = false;
         _currentTarget = null;
         _forcedTarget = null;
@@ -449,7 +456,8 @@ public abstract class UnitBase : MonoBehaviour
             transform.position,
             targetPosition,
             moveSpeed,
-            Time.deltaTime);
+            Time.deltaTime,
+            _battleLineY);
         if (_context?.BattleArea != null)
         {
             nextPosition = _context.BattleArea.Clamp(
