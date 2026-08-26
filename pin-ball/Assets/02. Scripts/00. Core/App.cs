@@ -13,7 +13,8 @@ public class App : Singleton<App>
         base.Awake();
 
         QualitySettings.vSyncCount = 1;
-        Application.targetFrameRate = 120;
+        Application.targetFrameRate =
+            FullscreenRenderScalePolicy.TargetFrameRate;
 
         DOTween.safeModeLogBehaviour = DG.Tweening.Core.Enums.SafeModeLogBehaviour.Error;
     }
