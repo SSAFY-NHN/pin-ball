@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 2e624e973599db449a6e788303097c23
+guid: ae91828e8370d1c408c7ad4a9354681e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3840916011361215700
-    second: pinball_board_arcane_0
+      213: -2663934235396642520
+    second: Dog3_Lancer_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: pinball_board_arcane_0
+      name: Dog3_Lancer_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1125
-        height: 1537
+        x: 8
+        y: 15
+        width: 43
+        height: 33
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4d4ab4523ccad4530800000000000000
-      internalID: 3840916011361215700
+      spriteID: 8296e225dedc70bd0800000000000000
+      internalID: -2663934235396642520
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      pinball_board_arcane_0: 3840916011361215700
+      Dog3_Lancer_0: -2663934235396642520
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

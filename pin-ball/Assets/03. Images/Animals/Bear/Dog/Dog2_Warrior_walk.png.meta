@@ -1,10 +1,28 @@
 fileFormatVersion: 2
-guid: 2e624e973599db449a6e788303097c23
+guid: 0050fd51878af8d44ad849ce924824e7
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3840916011361215700
-    second: pinball_board_arcane_0
+      213: 4945630688743248849
+    second: dog2_Warrior_Walk_0
+  - first:
+      213: 1412841561910611765
+    second: dog2_Warrior_Walk_1
+  - first:
+      213: -8924045417054727546
+    second: dog2_Warrior_Walk_2
+  - first:
+      213: 2349600222523530193
+    second: dog2_Warrior_Walk_3
+  - first:
+      213: 5697838025397069002
+    second: dog2_Warrior_Walk_4
+  - first:
+      213: 1825301872586531592
+    second: dog2_Warrior_Walk_5
+  - first:
+      213: -5209024771817580387
+    second: dog2_Warrior_Walk_6
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +64,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -113,23 +131,111 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: pinball_board_arcane_0
+      name: dog2_Warrior_Walk_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 1
         y: 0
-        width: 1125
-        height: 1537
+        width: 31
+        height: 30
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4d4ab4523ccad4530800000000000000
-      internalID: 3840916011361215700
+      spriteID: 53f079d3aeb6b9310800000000000000
+      internalID: 1412841561910611765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dog2_Warrior_Walk_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 682100d89fb672480800000000000000
+      internalID: -8924045417054727546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dog2_Warrior_Walk_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1db91b324f47b9020800000000000000
+      internalID: 2349600222523530193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dog2_Warrior_Walk_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 31
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 803206bd166c45910800000000000000
+      internalID: 1825301872586531592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dog2_Warrior_Walk_4
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 0
+        width: 31
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d985a919193d5b7b0800000000000000
+      internalID: -5209024771817580387
       vertices: []
       indices: 
       edges: []
@@ -138,7 +244,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: ef888ac7f8f22014fae4f7c3cafc0f47
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +254,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      pinball_board_arcane_0: 3840916011361215700
+      dog2_Warrior_Walk_0: 1412841561910611765
+      dog2_Warrior_Walk_1: -8924045417054727546
+      dog2_Warrior_Walk_2: 2349600222523530193
+      dog2_Warrior_Walk_3: 1825301872586531592
+      dog2_Warrior_Walk_4: -5209024771817580387
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

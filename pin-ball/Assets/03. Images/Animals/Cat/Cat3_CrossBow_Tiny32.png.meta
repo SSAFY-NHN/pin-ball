@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 2e624e973599db449a6e788303097c23
+guid: 81266128d1c18444aa2925c95e5700a3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3840916011361215700
-    second: pinball_board_arcane_0
+      213: 5299315408379827663
+    second: Cat3_CrossBow_Tiny32_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: pinball_board_arcane_0
+      name: Cat3_CrossBow_Tiny32_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1125
-        height: 1537
+        x: 15
+        y: 12
+        width: 27
+        height: 29
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4d4ab4523ccad4530800000000000000
-      internalID: 3840916011361215700
+      spriteID: fc5db357943fa8940800000000000000
+      internalID: 5299315408379827663
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      pinball_board_arcane_0: 3840916011361215700
+      Cat3_CrossBow_Tiny32_0: 5299315408379827663
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

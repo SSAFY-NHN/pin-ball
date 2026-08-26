@@ -1,10 +1,22 @@
 fileFormatVersion: 2
-guid: 2e624e973599db449a6e788303097c23
+guid: 40e609a20f046a640b264ddf368d891e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3840916011361215700
-    second: pinball_board_arcane_0
+      213: -2998690533428182169
+    second: Rabbit4_EvoHealer_Walk_0
+  - first:
+      213: 5325626031330941456
+    second: Rabbit4_EvoHealer_Walk_1
+  - first:
+      213: 6148791120424880534
+    second: Rabbit4_EvoHealer_Walk_2
+  - first:
+      213: 5821623447547573606
+    second: Rabbit4_EvoHealer_Walk_3
+  - first:
+      213: -2778482665067278725
+    second: Rabbit4_EvoHealer_Walk_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +49,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -46,7 +58,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -75,7 +87,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -113,13 +125,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: pinball_board_arcane_0
+      name: Rabbit4_EvoHealer_Walk_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1125
-        height: 1537
+        x: 6
+        y: 8
+        width: 36
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +140,96 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4d4ab4523ccad4530800000000000000
-      internalID: 3840916011361215700
+      spriteID: 763cfabf8d28266d0800000000000000
+      internalID: -2998690533428182169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_Walk_1
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 8
+        width: 37
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01add0cb8ac68e940800000000000000
+      internalID: 5325626031330941456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_Walk_2
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 8
+        width: 36
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 699400342f4e45550800000000000000
+      internalID: 6148791120424880534
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_Walk_3
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 8
+        width: 37
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66578276eaf8ac050800000000000000
+      internalID: 5821623447547573606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit4_EvoHealer_Walk_4
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 8
+        width: 36
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7e8516bcb8d079d0800000000000000
+      internalID: -2778482665067278725
       vertices: []
       indices: 
       edges: []
@@ -138,7 +238,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +248,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      pinball_board_arcane_0: 3840916011361215700
+      Rabbit4_EvoHealer_Walk_0: -2998690533428182169
+      Rabbit4_EvoHealer_Walk_1: 5325626031330941456
+      Rabbit4_EvoHealer_Walk_2: 6148791120424880534
+      Rabbit4_EvoHealer_Walk_3: 5821623447547573606
+      Rabbit4_EvoHealer_Walk_4: -2778482665067278725
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
