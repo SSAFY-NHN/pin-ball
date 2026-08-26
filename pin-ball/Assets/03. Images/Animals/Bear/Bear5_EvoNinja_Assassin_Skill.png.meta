@@ -1,0 +1,728 @@
+fileFormatVersion: 2
+guid: bb965569d8e546b46884a2f8dbe4fb72
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7702165796129914506
+    second: Bear5_EvoNinja_Assassin_Skill_0
+  - first:
+      213: 4302663266566912450
+    second: Bear5_EvoNinja_Assassin_Skill_1
+  - first:
+      213: -7745349346575673673
+    second: Bear5_EvoNinja_Assassin_Skill_2
+  - first:
+      213: -8614393324053134391
+    second: Bear5_EvoNinja_Assassin_Skill_3
+  - first:
+      213: -5424904784199129477
+    second: Bear5_EvoNinja_Assassin_Skill_4
+  - first:
+      213: 3644331115715247856
+    second: Bear5_EvoNinja_Assassin_Skill_5
+  - first:
+      213: -8814616805158777073
+    second: Bear5_EvoNinja_Assassin_Skill_6
+  - first:
+      213: -8473080386579701995
+    second: Bear5_EvoNinja_Assassin_Skill_7
+  - first:
+      213: 3763522585960455884
+    second: Bear5_EvoNinja_Assassin_Skill_8
+  - first:
+      213: -4924684695051997821
+    second: Bear5_EvoNinja_Assassin_Skill_9
+  - first:
+      213: 5144423238774422293
+    second: Bear5_EvoNinja_Assassin_Skill_10
+  - first:
+      213: -6782150829154618517
+    second: Bear5_EvoNinja_Assassin_Skill_11
+  - first:
+      213: 946980752288204767
+    second: Bear5_EvoNinja_Assassin_Skill_12
+  - first:
+      213: -8913706716103331088
+    second: Bear5_EvoNinja_Assassin_Skill_13
+  - first:
+      213: -6996236994224172832
+    second: Bear5_EvoNinja_Assassin_Skill_14
+  - first:
+      213: 7229642566490109604
+    second: Bear5_EvoNinja_Assassin_Skill_15
+  - first:
+      213: -2932547587217899707
+    second: Bear5_EvoNinja_Assassin_Skill_16
+  - first:
+      213: 8572946539065100068
+    second: Bear5_EvoNinja_Assassin_Skill_17
+  - first:
+      213: -4354194716450049211
+    second: Bear5_EvoNinja_Assassin_Skill_18
+  - first:
+      213: -2162270184851337965
+    second: Bear5_EvoNinja_Assassin_Skill_19
+  - first:
+      213: 3256589292317024113
+    second: Bear5_EvoNinja_Assassin_Skill_20
+  - first:
+      213: -2042971884541768891
+    second: Bear5_EvoNinja_Assassin_Skill_21
+  - first:
+      213: -1749534297514792005
+    second: Bear5_EvoNinja_Assassin_Skill_22
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_0
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 9
+        width: 25
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8ebc77dbf693ea60800000000000000
+      internalID: 7702165796129914506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_1
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 9
+        width: 25
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c9b7d7c17126bb30800000000000000
+      internalID: 4302663266566912450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_2
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 9
+        width: 26
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b69d005ecdf28490800000000000000
+      internalID: -7745349346575673673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_3
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 10
+        width: 25
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c3015ca9e6837880800000000000000
+      internalID: -8614393324053134391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_4
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 14
+        width: 25
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b766e7557ddd6b4b0800000000000000
+      internalID: -5424904784199129477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_5
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 10
+        width: 35
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fe3c1c57d3439230800000000000000
+      internalID: 3644331115715247856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_6
+      rect:
+        serializedVersion: 2
+        x: 293
+        y: 12
+        width: 37
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0f8251b7b03ca580800000000000000
+      internalID: -8814616805158777073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_7
+      rect:
+        serializedVersion: 2
+        x: 301
+        y: 6
+        width: 24
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51f569cd742996a80800000000000000
+      internalID: -8473080386579701995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_8
+      rect:
+        serializedVersion: 2
+        x: 342
+        y: 5
+        width: 38
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cce15581ad7ba3430800000000000000
+      internalID: 3763522585960455884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_9
+      rect:
+        serializedVersion: 2
+        x: 389
+        y: 6
+        width: 38
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38d6f98ac5108abb0800000000000000
+      internalID: -4924684695051997821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_10
+      rect:
+        serializedVersion: 2
+        x: 436
+        y: 6
+        width: 38
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51bf969eda9a46740800000000000000
+      internalID: 5144423238774422293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_11
+      rect:
+        serializedVersion: 2
+        x: 487
+        y: 5
+        width: 34
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b633e1711c5f0e1a0800000000000000
+      internalID: -6782150829154618517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_12
+      rect:
+        serializedVersion: 2
+        x: 532
+        y: 5
+        width: 38
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd745451af9542d00800000000000000
+      internalID: 946980752288204767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_13
+      rect:
+        serializedVersion: 2
+        x: 580
+        y: 6
+        width: 39
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f2b5a2f7f62c4480800000000000000
+      internalID: -8913706716103331088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_14
+      rect:
+        serializedVersion: 2
+        x: 629
+        y: 8
+        width: 37
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e052da758f58ee90800000000000000
+      internalID: -6996236994224172832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_15
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 6
+        width: 21
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a6bfa42c99d45460800000000000000
+      internalID: 7229642566490109604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_16
+      rect:
+        serializedVersion: 2
+        x: 676
+        y: 6
+        width: 37
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54fb2f8b18f7d47d0800000000000000
+      internalID: -2932547587217899707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_17
+      rect:
+        serializedVersion: 2
+        x: 726
+        y: 6
+        width: 34
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 427c363b47939f670800000000000000
+      internalID: 8572946539065100068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_18
+      rect:
+        serializedVersion: 2
+        x: 774
+        y: 6
+        width: 35
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 543bc1399fac293c0800000000000000
+      internalID: -4354194716450049211
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_19
+      rect:
+        serializedVersion: 2
+        x: 821
+        y: 12
+        width: 37
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31d848b19b21ef1e0800000000000000
+      internalID: -2162270184851337965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_20
+      rect:
+        serializedVersion: 2
+        x: 829
+        y: 6
+        width: 24
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17f95eb05bab13d20800000000000000
+      internalID: 3256589292317024113
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_21
+      rect:
+        serializedVersion: 2
+        x: 876
+        y: 14
+        width: 25
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54b07c725e7e5a3e0800000000000000
+      internalID: -2042971884541768891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear5_EvoNinja_Assassin_Skill_22
+      rect:
+        serializedVersion: 2
+        x: 927
+        y: 10
+        width: 25
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbba44a63d768b7e0800000000000000
+      internalID: -1749534297514792005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Bear5_EvoNinja_Assassin_Skill_0: 7702165796129914506
+      Bear5_EvoNinja_Assassin_Skill_1: 4302663266566912450
+      Bear5_EvoNinja_Assassin_Skill_10: 5144423238774422293
+      Bear5_EvoNinja_Assassin_Skill_11: -6782150829154618517
+      Bear5_EvoNinja_Assassin_Skill_12: 946980752288204767
+      Bear5_EvoNinja_Assassin_Skill_13: -8913706716103331088
+      Bear5_EvoNinja_Assassin_Skill_14: -6996236994224172832
+      Bear5_EvoNinja_Assassin_Skill_15: 7229642566490109604
+      Bear5_EvoNinja_Assassin_Skill_16: -2932547587217899707
+      Bear5_EvoNinja_Assassin_Skill_17: 8572946539065100068
+      Bear5_EvoNinja_Assassin_Skill_18: -4354194716450049211
+      Bear5_EvoNinja_Assassin_Skill_19: -2162270184851337965
+      Bear5_EvoNinja_Assassin_Skill_2: -7745349346575673673
+      Bear5_EvoNinja_Assassin_Skill_20: 3256589292317024113
+      Bear5_EvoNinja_Assassin_Skill_21: -2042971884541768891
+      Bear5_EvoNinja_Assassin_Skill_22: -1749534297514792005
+      Bear5_EvoNinja_Assassin_Skill_3: -8614393324053134391
+      Bear5_EvoNinja_Assassin_Skill_4: -5424904784199129477
+      Bear5_EvoNinja_Assassin_Skill_5: 3644331115715247856
+      Bear5_EvoNinja_Assassin_Skill_6: -8814616805158777073
+      Bear5_EvoNinja_Assassin_Skill_7: -8473080386579701995
+      Bear5_EvoNinja_Assassin_Skill_8: 3763522585960455884
+      Bear5_EvoNinja_Assassin_Skill_9: -4924684695051997821
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,400 @@
+fileFormatVersion: 2
+guid: ac5f8e6695dc2ed40b5ae8c13a1375b2
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6519434100293539829
+    second: Dog1_Farmer_Sword_Tiny32_Walk_0
+  - first:
+      213: 1176729292400850966
+    second: Dog1_Farmer_Sword_Tiny32_Walk_1
+  - first:
+      213: -3220127775327041757
+    second: Dog1_Farmer_Sword_Tiny32_Walk_2
+  - first:
+      213: -1688126393485306891
+    second: Dog1_Farmer_Sword_Tiny32_Walk_3
+  - first:
+      213: 8913758378526771767
+    second: Dog1_Farmer_Sword_Tiny32_Walk_4
+  - first:
+      213: -2168357937298135162
+    second: Dog1_Farmer_Sword_Tiny32_Walk_5
+  - first:
+      213: -1195919943714921615
+    second: Dog1_Farmer_Sword_Tiny32_Walk_6
+  - first:
+      213: 3615629015224105849
+    second: Dog1_Farmer_Sword_Tiny32_Walk_7
+  - first:
+      213: 962744597523850105
+    second: Dog1_Farmer_Sword_Tiny32_Walk_8
+  - first:
+      213: -7304631221458959075
+    second: Dog1_Farmer_Sword_Tiny32_Walk_00
+  - first:
+      213: 2427981267384735135
+    second: Dog1_Farmer_Sword_Tiny32_Walk_01
+  - first:
+      213: 6759067342343036600
+    second: Dog1_Farmer_Sword_Tiny32_Walk_02
+  - first:
+      213: 1043620177936796028
+    second: Dog1_Farmer_Sword_Tiny32_Walk_03
+  - first:
+      213: 5227987139759675323
+    second: Dog1_Farmer_Sword_Tiny32_Walk_04
+  - first:
+      213: -2185185167658449184
+    second: Dog1_Farmer_Sword_Tiny32_Walk_05
+  - first:
+      213: 6399683922524675405
+    second: Dog1_Farmer_Sword_Tiny32_Walk_06
+  - first:
+      213: 3575933092888741944
+    second: Dog1_Farmer_Sword_Tiny32_Walk_07
+  - first:
+      213: 8657364398923495670
+    second: Dog1_Farmer_Sword_Tiny32_Walk_08
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Dog1_Farmer_Sword_Tiny32_Walk_00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1506bd0b9cb0aa90800000000000000
+      internalID: -7304631221458959075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog1_Farmer_Sword_Tiny32_Walk_01
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9515c3491ce1b120800000000000000
+      internalID: 2427981267384735135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog1_Farmer_Sword_Tiny32_Walk_02
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bedc41dfe70dcd50800000000000000
+      internalID: 6759067342343036600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog1_Farmer_Sword_Tiny32_Walk_03
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c794a52c50fab7e00800000000000000
+      internalID: 1043620177936796028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog1_Farmer_Sword_Tiny32_Walk_04
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb79fa3ca9a8d8840800000000000000
+      internalID: 5227987139759675323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog1_Farmer_Sword_Tiny32_Walk_05
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e60449eaa9aca1e0800000000000000
+      internalID: -2185185167658449184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog1_Farmer_Sword_Tiny32_Walk_06
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4d9cdcde9e30d850800000000000000
+      internalID: 6399683922524675405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog1_Farmer_Sword_Tiny32_Walk_07
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 838823ea33440a130800000000000000
+      internalID: 3575933092888741944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dog1_Farmer_Sword_Tiny32_Walk_08
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f8b2f85d03252870800000000000000
+      internalID: 8657364398923495670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Dog1_Farmer_Sword_Tiny32_Walk_0: -6519434100293539829
+      Dog1_Farmer_Sword_Tiny32_Walk_00: -7304631221458959075
+      Dog1_Farmer_Sword_Tiny32_Walk_01: 2427981267384735135
+      Dog1_Farmer_Sword_Tiny32_Walk_02: 6759067342343036600
+      Dog1_Farmer_Sword_Tiny32_Walk_03: 1043620177936796028
+      Dog1_Farmer_Sword_Tiny32_Walk_04: 5227987139759675323
+      Dog1_Farmer_Sword_Tiny32_Walk_05: -2185185167658449184
+      Dog1_Farmer_Sword_Tiny32_Walk_06: 6399683922524675405
+      Dog1_Farmer_Sword_Tiny32_Walk_07: 3575933092888741944
+      Dog1_Farmer_Sword_Tiny32_Walk_08: 8657364398923495670
+      Dog1_Farmer_Sword_Tiny32_Walk_1: 1176729292400850966
+      Dog1_Farmer_Sword_Tiny32_Walk_2: -3220127775327041757
+      Dog1_Farmer_Sword_Tiny32_Walk_3: -1688126393485306891
+      Dog1_Farmer_Sword_Tiny32_Walk_4: 8913758378526771767
+      Dog1_Farmer_Sword_Tiny32_Walk_5: -2168357937298135162
+      Dog1_Farmer_Sword_Tiny32_Walk_6: -1195919943714921615
+      Dog1_Farmer_Sword_Tiny32_Walk_7: 3615629015224105849
+      Dog1_Farmer_Sword_Tiny32_Walk_8: 962744597523850105
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

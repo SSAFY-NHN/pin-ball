@@ -1,0 +1,364 @@
+fileFormatVersion: 2
+guid: 782fc364e7d8ce345827059c70f3de3a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4837581967109775065
+    second: H_Archer_EvoSkeleton_Attack_0
+  - first:
+      213: -7851156880536760116
+    second: H_Archer_EvoSkeleton_Attack_1
+  - first:
+      213: -1359911547272155905
+    second: H_Archer_EvoSkeleton_Attack_2
+  - first:
+      213: 7574429025711527479
+    second: H_Archer_EvoSkeleton_Attack_3
+  - first:
+      213: -3903462145571187502
+    second: H_Archer_EvoSkeleton_Attack_4
+  - first:
+      213: 3393354115846925614
+    second: H_Archer_EvoSkeleton_Attack_5
+  - first:
+      213: 5180662931641641154
+    second: H_Archer_EvoSkeleton_Attack_6
+  - first:
+      213: -2686586593289360918
+    second: H_Archer_EvoSkeleton_Attack_7
+  - first:
+      213: -3688906742320776397
+    second: H_Archer_EvoSkeleton_Attack_8
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: H_Archer_EvoSkeleton_Attack_0
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 20
+        width: 32
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ded9612b2b822340800000000000000
+      internalID: 4837581967109775065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Archer_EvoSkeleton_Attack_1
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 20
+        width: 32
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc01eb31a661b0390800000000000000
+      internalID: -7851156880536760116
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Archer_EvoSkeleton_Attack_2
+      rect:
+        serializedVersion: 2
+        x: 197
+        y: 20
+        width: 34
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffc24e227af902de0800000000000000
+      internalID: -1359911547272155905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Archer_EvoSkeleton_Attack_3
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 20
+        width: 35
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73691fd5117cd1960800000000000000
+      internalID: 7574429025711527479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Archer_EvoSkeleton_Attack_4
+      rect:
+        serializedVersion: 2
+        x: 365
+        y: 20
+        width: 35
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d49b0b2cdd14d9c0800000000000000
+      internalID: -3903462145571187502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Archer_EvoSkeleton_Attack_5
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 20
+        width: 37
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2d6a20f69d971f20800000000000000
+      internalID: 3393354115846925614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Archer_EvoSkeleton_Attack_6
+      rect:
+        serializedVersion: 2
+        x: 529
+        y: 20
+        width: 41
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c8a88dec7965e740800000000000000
+      internalID: 5180662931641641154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Archer_EvoSkeleton_Attack_7
+      rect:
+        serializedVersion: 2
+        x: 610
+        y: 20
+        width: 43
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae929a04ab357bad0800000000000000
+      internalID: -2686586593289360918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_Archer_EvoSkeleton_Attack_8
+      rect:
+        serializedVersion: 2
+        x: 701
+        y: 20
+        width: 32
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33b3d6eccde5eccc0800000000000000
+      internalID: -3688906742320776397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      H_Archer_EvoSkeleton_Attack_0: 4837581967109775065
+      H_Archer_EvoSkeleton_Attack_1: -7851156880536760116
+      H_Archer_EvoSkeleton_Attack_2: -1359911547272155905
+      H_Archer_EvoSkeleton_Attack_3: 7574429025711527479
+      H_Archer_EvoSkeleton_Attack_4: -3903462145571187502
+      H_Archer_EvoSkeleton_Attack_5: 3393354115846925614
+      H_Archer_EvoSkeleton_Attack_6: 5180662931641641154
+      H_Archer_EvoSkeleton_Attack_7: -2686586593289360918
+      H_Archer_EvoSkeleton_Attack_8: -3688906742320776397
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

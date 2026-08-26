@@ -1,0 +1,494 @@
+fileFormatVersion: 2
+guid: 433f4a64f5af93a4a8889d2065eae747
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8700834328676986404
+    second: Rabbit5_EvoMage2_skill_0
+  - first:
+      213: -8620795874664881335
+    second: Rabbit5_EvoMage2_skill_1
+  - first:
+      213: -5801689592594443694
+    second: Rabbit5_EvoMage2_skill_2
+  - first:
+      213: -7380353411504122304
+    second: Rabbit5_EvoMage2_skill_3
+  - first:
+      213: -2435099625041457126
+    second: Rabbit5_EvoMage2_skill_4
+  - first:
+      213: -1637534209641129828
+    second: Rabbit5_EvoMage2_skill_5
+  - first:
+      213: 6242948748678779131
+    second: Rabbit5_EvoMage2_skill_6
+  - first:
+      213: 1227628109078033110
+    second: Rabbit5_EvoMage2_skill_7
+  - first:
+      213: 1625239376016376736
+    second: Rabbit5_EvoMage2_skill_8
+  - first:
+      213: -7461272484072408471
+    second: Rabbit5_EvoMage2_skill_9
+  - first:
+      213: 5459734257183664519
+    second: Rabbit5_EvoMage2_skill_10
+  - first:
+      213: -7685822889900365799
+    second: Rabbit5_EvoMage2_skill_11
+  - first:
+      213: -6995982039700666260
+    second: Rabbit5_EvoMage2_skill_12
+  - first:
+      213: -5073496892114918611
+    second: Rabbit5_EvoMage2_skill_13
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_skill_0
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 9
+        width: 30
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42ee05219b29fb870800000000000000
+      internalID: 8700834328676986404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_skill_1
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 9
+        width: 42
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9436271b3d7cc5880800000000000000
+      internalID: -8620795874664881335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_skill_2
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 9
+        width: 42
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 252d350ed024c7fa0800000000000000
+      internalID: -5801689592594443694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_skill_3
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 9
+        width: 41
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 046547ecca7b39990800000000000000
+      internalID: -7380353411504122304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_skill_4
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 9
+        width: 41
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1097b0fac9c43ed0800000000000000
+      internalID: -2435099625041457126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_skill_5
+      rect:
+        serializedVersion: 2
+        x: 244
+        y: 9
+        width: 41
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c985ac6ff4f4649e0800000000000000
+      internalID: -1637534209641129828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_skill_6
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 9
+        width: 41
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf0d7f37fc863a650800000000000000
+      internalID: 6242948748678779131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_skill_7
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 9
+        width: 41
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d271edc249690110800000000000000
+      internalID: 1227628109078033110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_skill_8
+      rect:
+        serializedVersion: 2
+        x: 389
+        y: 9
+        width: 40
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a30f620a920e8610800000000000000
+      internalID: 1625239376016376736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_skill_9
+      rect:
+        serializedVersion: 2
+        x: 437
+        y: 9
+        width: 40
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96ab77e053c347890800000000000000
+      internalID: -7461272484072408471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_skill_10
+      rect:
+        serializedVersion: 2
+        x: 484
+        y: 9
+        width: 41
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 789a677416fd4cb40800000000000000
+      internalID: 5459734257183664519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_skill_11
+      rect:
+        serializedVersion: 2
+        x: 532
+        y: 9
+        width: 41
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9182ce88dc8765590800000000000000
+      internalID: -7685822889900365799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_skill_12
+      rect:
+        serializedVersion: 2
+        x: 580
+        y: 9
+        width: 41
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6801a4b66749ee90800000000000000
+      internalID: -6995982039700666260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rabbit5_EvoMage2_skill_13
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 9
+        width: 39
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d23217805715799b0800000000000000
+      internalID: -5073496892114918611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Rabbit5_EvoMage2_skill_0: 8700834328676986404
+      Rabbit5_EvoMage2_skill_1: -8620795874664881335
+      Rabbit5_EvoMage2_skill_10: 5459734257183664519
+      Rabbit5_EvoMage2_skill_11: -7685822889900365799
+      Rabbit5_EvoMage2_skill_12: -6995982039700666260
+      Rabbit5_EvoMage2_skill_13: -5073496892114918611
+      Rabbit5_EvoMage2_skill_2: -5801689592594443694
+      Rabbit5_EvoMage2_skill_3: -7380353411504122304
+      Rabbit5_EvoMage2_skill_4: -2435099625041457126
+      Rabbit5_EvoMage2_skill_5: -1637534209641129828
+      Rabbit5_EvoMage2_skill_6: 6242948748678779131
+      Rabbit5_EvoMage2_skill_7: 1227628109078033110
+      Rabbit5_EvoMage2_skill_8: 1625239376016376736
+      Rabbit5_EvoMage2_skill_9: -7461272484072408471
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

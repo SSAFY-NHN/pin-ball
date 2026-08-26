@@ -1,0 +1,520 @@
+fileFormatVersion: 2
+guid: 78fe9d22f21cee9418731c8fc97a732e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1513772607586857696
+    second: Bear4_EvoFighter_Attack_0
+  - first:
+      213: 3869227888143208308
+    second: Bear4_EvoFighter_Attack_1
+  - first:
+      213: -4581796659728642189
+    second: Bear4_EvoFighter_Attack_2
+  - first:
+      213: -1370839561613344249
+    second: Bear4_EvoFighter_Attack_3
+  - first:
+      213: -6202093664128467251
+    second: Bear4_EvoFighter_Attack_4
+  - first:
+      213: 8532124756374761174
+    second: Bear4_EvoFighter_Attack_5
+  - first:
+      213: -5862797705476353897
+    second: Bear4_EvoFighter_Attack_6
+  - first:
+      213: -3129160065428824679
+    second: Bear4_EvoFighter_Attack_7
+  - first:
+      213: 3637356454587012258
+    second: Bear4_EvoFighter_Attack_8
+  - first:
+      213: 2704687394777147005
+    second: Bear4_EvoFighter_Attack_9
+  - first:
+      213: -6698352228397876666
+    second: Bear4_EvoFighter_Attack_10
+  - first:
+      213: 541821462549015930
+    second: Bear4_EvoFighter_Attack_11
+  - first:
+      213: -328146785058128762
+    second: Bear4_EvoFighter_Attack_12
+  - first:
+      213: -5842361086528795027
+    second: Bear4_EvoFighter_Attack_13
+  - first:
+      213: -2638156391031614713
+    second: Bear4_EvoFighter_Attack_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Bear4_EvoFighter_Attack_0
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 7
+        width: 31
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02d811e65dffdfae0800000000000000
+      internalID: -1513772607586857696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear4_EvoFighter_Attack_1
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 7
+        width: 28
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47f8fc3a34242b530800000000000000
+      internalID: 3869227888143208308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear4_EvoFighter_Attack_2
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 7
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37f8dcf96303a60c0800000000000000
+      internalID: -4581796659728642189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear4_EvoFighter_Attack_3
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 7
+        width: 26
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7020cf58eacc9fce0800000000000000
+      internalID: -1370839561613344249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear4_EvoFighter_Attack_4
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 7
+        width: 36
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcefbed2cacbde9a0800000000000000
+      internalID: -6202093664128467251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear4_EvoFighter_Attack_5
+      rect:
+        serializedVersion: 2
+        x: 246
+        y: 6
+        width: 38
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6dea803c242386670800000000000000
+      internalID: 8532124756374761174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear4_EvoFighter_Attack_6
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 24
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7905b1f9c8823aea0800000000000000
+      internalID: -5862797705476353897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear4_EvoFighter_Attack_7
+      rect:
+        serializedVersion: 2
+        x: 254
+        y: 30
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99dd6cedf7df294d0800000000000000
+      internalID: -3129160065428824679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear4_EvoFighter_Attack_8
+      rect:
+        serializedVersion: 2
+        x: 297
+        y: 7
+        width: 35
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a412258c6c7a7230800000000000000
+      internalID: 3637356454587012258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear4_EvoFighter_Attack_9
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 7
+        width: 29
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d762b220bdaf88520800000000000000
+      internalID: 2704687394777147005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear4_EvoFighter_Attack_10
+      rect:
+        serializedVersion: 2
+        x: 389
+        y: 7
+        width: 39
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64af5ed332caa03a0800000000000000
+      internalID: -6698352228397876666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear4_EvoFighter_Attack_11
+      rect:
+        serializedVersion: 2
+        x: 433
+        y: 7
+        width: 44
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7daaeedfbfe48700800000000000000
+      internalID: 541821462549015930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear4_EvoFighter_Attack_12
+      rect:
+        serializedVersion: 2
+        x: 491
+        y: 7
+        width: 34
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68c7c62dc30327bf0800000000000000
+      internalID: -328146785058128762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear4_EvoFighter_Attack_13
+      rect:
+        serializedVersion: 2
+        x: 541
+        y: 7
+        width: 32
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6ec2e3cb83cbeea0800000000000000
+      internalID: -5842361086528795027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bear4_EvoFighter_Attack_14
+      rect:
+        serializedVersion: 2
+        x: 591
+        y: 7
+        width: 30
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70352aa6db2636bd0800000000000000
+      internalID: -2638156391031614713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Bear4_EvoFighter_Attack_0: -1513772607586857696
+      Bear4_EvoFighter_Attack_1: 3869227888143208308
+      Bear4_EvoFighter_Attack_10: -6698352228397876666
+      Bear4_EvoFighter_Attack_11: 541821462549015930
+      Bear4_EvoFighter_Attack_12: -328146785058128762
+      Bear4_EvoFighter_Attack_13: -5842361086528795027
+      Bear4_EvoFighter_Attack_14: -2638156391031614713
+      Bear4_EvoFighter_Attack_2: -4581796659728642189
+      Bear4_EvoFighter_Attack_3: -1370839561613344249
+      Bear4_EvoFighter_Attack_4: -6202093664128467251
+      Bear4_EvoFighter_Attack_5: 8532124756374761174
+      Bear4_EvoFighter_Attack_6: -5862797705476353897
+      Bear4_EvoFighter_Attack_7: -3129160065428824679
+      Bear4_EvoFighter_Attack_8: 3637356454587012258
+      Bear4_EvoFighter_Attack_9: 2704687394777147005
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

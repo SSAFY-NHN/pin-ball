@@ -1,0 +1,572 @@
+fileFormatVersion: 2
+guid: 4b03ac3478f32a5419ed76abf6422877
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3279114459654001956
+    second: Cat5_EvoBow_Attack_0
+  - first:
+      213: -1156882511457084239
+    second: Cat5_EvoBow_Attack_1
+  - first:
+      213: -4369263910391232763
+    second: Cat5_EvoBow_Attack_2
+  - first:
+      213: -2849250771662153194
+    second: Cat5_EvoBow_Attack_3
+  - first:
+      213: 3643813773563540171
+    second: Cat5_EvoBow_Attack_4
+  - first:
+      213: 2629214691196444174
+    second: Cat5_EvoBow_Attack_5
+  - first:
+      213: 5402608009570246833
+    second: Cat5_EvoBow_Attack_6
+  - first:
+      213: 8904919499707973718
+    second: Cat5_EvoBow_Attack_7
+  - first:
+      213: -1038783142214220506
+    second: Cat5_EvoBow_Attack_8
+  - first:
+      213: 3368046984517128262
+    second: Cat5_EvoBow_Attack_9
+  - first:
+      213: 6596154937160590739
+    second: Cat5_EvoBow_Attack_10
+  - first:
+      213: 7399715878451901333
+    second: Cat5_EvoBow_Attack_11
+  - first:
+      213: -7914990398739827259
+    second: Cat5_EvoBow_Attack_12
+  - first:
+      213: 1666255644275380545
+    second: Cat5_EvoBow_Attack_13
+  - first:
+      213: -8581543668108548895
+    second: Cat5_EvoBow_Attack_14
+  - first:
+      213: -6716589198457779152
+    second: Cat5_EvoBow_Attack_15
+  - first:
+      213: -7536076602077301266
+    second: Cat5_EvoBow_Attack_16
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Cat5_EvoBow_Attack_0
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 8
+        width: 27
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdae97eb5ce3e72d0800000000000000
+      internalID: -3279114459654001956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat5_EvoBow_Attack_1
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 8
+        width: 27
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bc1db93c7de1ffe0800000000000000
+      internalID: -1156882511457084239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat5_EvoBow_Attack_2
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 8
+        width: 26
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50742337f914d53c0800000000000000
+      internalID: -4369263910391232763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat5_EvoBow_Attack_3
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 8
+        width: 26
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61ad117e48d6578d0800000000000000
+      internalID: -2849250771662153194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat5_EvoBow_Attack_4
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 8
+        width: 26
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc23ee0425d619230800000000000000
+      internalID: 3643813773563540171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat5_EvoBow_Attack_5
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 8
+        width: 26
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0e900bd4d8dc7420800000000000000
+      internalID: 2629214691196444174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat5_EvoBow_Attack_6
+      rect:
+        serializedVersion: 2
+        x: 305
+        y: 8
+        width: 26
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b06d174c5be9fa40800000000000000
+      internalID: 5402608009570246833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat5_EvoBow_Attack_7
+      rect:
+        serializedVersion: 2
+        x: 353
+        y: 8
+        width: 26
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6500b8dca11a49b70800000000000000
+      internalID: 8904919499707973718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat5_EvoBow_Attack_8
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 8
+        width: 36
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62548a16c308591f0800000000000000
+      internalID: -1038783142214220506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat5_EvoBow_Attack_9
+      rect:
+        serializedVersion: 2
+        x: 439
+        y: 8
+        width: 37
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64018f243e4bdbe20800000000000000
+      internalID: 3368046984517128262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat5_EvoBow_Attack_10
+      rect:
+        serializedVersion: 2
+        x: 487
+        y: 14
+        width: 9
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39565e8a7ff3a8b50800000000000000
+      internalID: 6596154937160590739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat5_EvoBow_Attack_11
+      rect:
+        serializedVersion: 2
+        x: 497
+        y: 8
+        width: 27
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59371f5d26211b660800000000000000
+      internalID: 7399715878451901333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat5_EvoBow_Attack_12
+      rect:
+        serializedVersion: 2
+        x: 534
+        y: 19
+        width: 10
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c53c72fa2e482290800000000000000
+      internalID: -7914990398739827259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat5_EvoBow_Attack_13
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 8
+        width: 31
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14116062eaabf1710800000000000000
+      internalID: 1666255644275380545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat5_EvoBow_Attack_14
+      rect:
+        serializedVersion: 2
+        x: 593
+        y: 8
+        width: 38
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e423e5308b38e880800000000000000
+      internalID: -8581543668108548895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat5_EvoBow_Attack_15
+      rect:
+        serializedVersion: 2
+        x: 642
+        y: 8
+        width: 25
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03cc2b3c5b1e9c2a0800000000000000
+      internalID: -6716589198457779152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cat5_EvoBow_Attack_16
+      rect:
+        serializedVersion: 2
+        x: 689
+        y: 8
+        width: 27
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee5bc0d124a7a6790800000000000000
+      internalID: -7536076602077301266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Cat5_EvoBow_Attack_0: -3279114459654001956
+      Cat5_EvoBow_Attack_1: -1156882511457084239
+      Cat5_EvoBow_Attack_10: 6596154937160590739
+      Cat5_EvoBow_Attack_11: 7399715878451901333
+      Cat5_EvoBow_Attack_12: -7914990398739827259
+      Cat5_EvoBow_Attack_13: 1666255644275380545
+      Cat5_EvoBow_Attack_14: -8581543668108548895
+      Cat5_EvoBow_Attack_15: -6716589198457779152
+      Cat5_EvoBow_Attack_16: -7536076602077301266
+      Cat5_EvoBow_Attack_2: -4369263910391232763
+      Cat5_EvoBow_Attack_3: -2849250771662153194
+      Cat5_EvoBow_Attack_4: 3643813773563540171
+      Cat5_EvoBow_Attack_5: 2629214691196444174
+      Cat5_EvoBow_Attack_6: 5402608009570246833
+      Cat5_EvoBow_Attack_7: 8904919499707973718
+      Cat5_EvoBow_Attack_8: -1038783142214220506
+      Cat5_EvoBow_Attack_9: 3368046984517128262
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

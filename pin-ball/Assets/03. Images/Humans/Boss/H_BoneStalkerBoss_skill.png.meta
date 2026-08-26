@@ -1,0 +1,364 @@
+fileFormatVersion: 2
+guid: 5478df05294c15245a4d1c8cb860babc
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5696013807808658280
+    second: H_BoneStalkerBoss_skill_0
+  - first:
+      213: 8957206863002646190
+    second: H_BoneStalkerBoss_skill_1
+  - first:
+      213: 4070415086044268297
+    second: H_BoneStalkerBoss_skill_2
+  - first:
+      213: 4391999523420706209
+    second: H_BoneStalkerBoss_skill_3
+  - first:
+      213: -8178350099413535147
+    second: H_BoneStalkerBoss_skill_4
+  - first:
+      213: 4547575474573319218
+    second: H_BoneStalkerBoss_skill_5
+  - first:
+      213: 1737371635627594408
+    second: H_BoneStalkerBoss_skill_6
+  - first:
+      213: 5508254113891044038
+    second: H_BoneStalkerBoss_skill_7
+  - first:
+      213: -8754662474475932460
+    second: H_BoneStalkerBoss_skill_8
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: H_BoneStalkerBoss_skill_0
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 14
+        width: 134
+        height: 172
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89448ddde91b3f0b0800000000000000
+      internalID: -5696013807808658280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_BoneStalkerBoss_skill_1
+      rect:
+        serializedVersion: 2
+        x: 297
+        y: 14
+        width: 121
+        height: 175
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea6b6f04f246e4c70800000000000000
+      internalID: 8957206863002646190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_BoneStalkerBoss_skill_2
+      rect:
+        serializedVersion: 2
+        x: 557
+        y: 14
+        width: 120
+        height: 182
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9074f0c64f40d7830800000000000000
+      internalID: 4070415086044268297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_BoneStalkerBoss_skill_3
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 14
+        width: 139
+        height: 194
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a51d27fb4483fc30800000000000000
+      internalID: 4391999523420706209
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_BoneStalkerBoss_skill_4
+      rect:
+        serializedVersion: 2
+        x: 1062
+        y: 16
+        width: 158
+        height: 214
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 556fca35ae9a08e80800000000000000
+      internalID: -8178350099413535147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_BoneStalkerBoss_skill_5
+      rect:
+        serializedVersion: 2
+        x: 1312
+        y: 16
+        width: 170
+        height: 216
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23c983fcccb3c1f30800000000000000
+      internalID: 4547575474573319218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_BoneStalkerBoss_skill_6
+      rect:
+        serializedVersion: 2
+        x: 1565
+        y: 16
+        width: 176
+        height: 217
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a21c603c426c1810800000000000000
+      internalID: 1737371635627594408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_BoneStalkerBoss_skill_7
+      rect:
+        serializedVersion: 2
+        x: 1825
+        y: 16
+        width: 172
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ca4f0fbeef317c40800000000000000
+      internalID: 5508254113891044038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: H_BoneStalkerBoss_skill_8
+      rect:
+        serializedVersion: 2
+        x: 2087
+        y: 16
+        width: 157
+        height: 177
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d47b681dd0318680800000000000000
+      internalID: -8754662474475932460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      H_BoneStalkerBoss_skill_0: -5696013807808658280
+      H_BoneStalkerBoss_skill_1: 8957206863002646190
+      H_BoneStalkerBoss_skill_2: 4070415086044268297
+      H_BoneStalkerBoss_skill_3: 4391999523420706209
+      H_BoneStalkerBoss_skill_4: -8178350099413535147
+      H_BoneStalkerBoss_skill_5: 4547575474573319218
+      H_BoneStalkerBoss_skill_6: 1737371635627594408
+      H_BoneStalkerBoss_skill_7: 5508254113891044038
+      H_BoneStalkerBoss_skill_8: -8754662474475932460
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
