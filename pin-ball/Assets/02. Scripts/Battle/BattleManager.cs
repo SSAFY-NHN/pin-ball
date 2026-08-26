@@ -7,6 +7,8 @@ using UnityEngine;
 // 금지: 유닛 탐색/이동/공격, Instantiate 직접 처리
 public class BattleManager : AppService, IItemEventListener
 {
+    public const float BaseKnockbackDistance = 3f;
+
     [Header("Run Chances")]
     [SerializeField, Min(1)] public int playerMaxHp = 3;
     [Header("Defense Lines")]
@@ -52,6 +54,16 @@ public class BattleManager : AppService, IItemEventListener
     public float AssaultElapsedTime => assaultController?.ElapsedTime ?? 0f;
     public EBattleAssaultPhase AssaultPhase =>
         assaultController?.Phase ?? EBattleAssaultPhase.Initial;
+    public EBaseKnockbackSkillState BaseKnockbackSkillState =>
+        baseKnockbackSkillController?.State ??
+        EBaseKnockbackSkillState.Locked;
+    public float BaseKnockbackRemainingTime =>
+        baseKnockbackSkillController?.RemainingTime ??
+        BaseKnockbackSkillController.UnlockSeconds;
+    public bool CanUseBaseKnockbackSkill =>
+        IsInitialized && State == EWaveState.Active &&
+        baseKnockbackSkillController?.CanUse == true &&
+        unitManager?.HasAliveActiveEnemy == true;
 
     public event Action<EWaveState> OnStateChanged;
     public event Action OnInitialized;
@@ -68,6 +80,7 @@ public class BattleManager : AppService, IItemEventListener
     public event Action<UnitPurchaseResult> OnAllyPurchased;
     public event Action<bool> OnTacticalReinforcementChanged;
     public event Action<EBattleAssaultPhase> OnAssaultPhaseChanged;
+    public event Action OnBaseKnockbackSkillDisplayChanged;
     public event Action<int> OnBossDefeated;
     public event Action<int> OnRunEnded;
 
@@ -81,6 +94,7 @@ public class BattleManager : AppService, IItemEventListener
     private UnitPurchaseController unitPurchaseController;
     private TacticalReinforcementController tacticalReinforcementController;
     private BattleAssaultController assaultController;
+    private BaseKnockbackSkillController baseKnockbackSkillController = new();
     private int barrierDamageReduction;
     private int minimumBarrierDamage = 1;
     private Coroutine waveResolutionCoroutine;
@@ -100,7 +114,10 @@ public class BattleManager : AppService, IItemEventListener
         if (!IsInitialized) return;
 
         unitPurchaseController?.Advance(Time.deltaTime);
-        if (State != EWaveState.Active || assaultController == null) return;
+        if (State != EWaveState.Active) return;
+
+        AdvanceBaseKnockbackSkill(Time.deltaTime);
+        if (assaultController == null) return;
 
         assaultController.Advance(
             Time.deltaTime,
@@ -119,6 +136,7 @@ public class BattleManager : AppService, IItemEventListener
         unitManager.InitializeNewRun();
         unitManager.OnEnemyDefeated += OnEnemyDefeated;
         unitManager.OnDefenseLineAttackRequested += TryApplyDefenseLineAttack;
+        unitManager.OnBattleRosterChanged += OnBattleRosterChanged;
 
         var titleData = App.Get<TitleData>();
         runState = new BattleRunState(
@@ -186,13 +204,44 @@ public class BattleManager : AppService, IItemEventListener
         currentWaveStartedAt = Time.time;
         currentBossDefeated = false;
         currentWaveAllyDefenseDamage = 0;
+        baseKnockbackSkillController.StartWave();
         ChangeState(EWaveState.Active);
+        OnBaseKnockbackSkillDisplayChanged?.Invoke();
         OnWaveStarted?.Invoke(new BattleWaveStartedData(
             CurrentWaveNumber,
             IsCurrentWaveBoss,
             spawnedCount));
         SoundManager.PlaySFXIfAvailable(SoundName.WaveStart);
         return true;
+    }
+
+    internal void AdvanceBaseKnockbackSkill(float deltaTime)
+    {
+        if (baseKnockbackSkillController == null) return;
+        if (baseKnockbackSkillController.Advance(
+                deltaTime,
+                State == EWaveState.Active))
+        {
+            OnBaseKnockbackSkillDisplayChanged?.Invoke();
+        }
+    }
+
+    public bool TryUseBaseKnockbackSkill()
+    {
+        if (!CanUseBaseKnockbackSkill) return false;
+
+        int appliedCount = unitManager.TryApplyBaseKnockback(
+            BaseKnockbackDistance);
+        if (appliedCount <= 0 ||
+            !baseKnockbackSkillController.TryConfirmUse(true)) return false;
+
+        OnBaseKnockbackSkillDisplayChanged?.Invoke();
+        return true;
+    }
+
+    private void OnBattleRosterChanged()
+    {
+        OnBaseKnockbackSkillDisplayChanged?.Invoke();
     }
 
     private void OnEnemyDefeated(string enemyId)
@@ -567,6 +616,7 @@ public class BattleManager : AppService, IItemEventListener
         {
             unitManager.OnEnemyDefeated -= OnEnemyDefeated;
             unitManager.OnDefenseLineAttackRequested -= TryApplyDefenseLineAttack;
+            unitManager.OnBattleRosterChanged -= OnBattleRosterChanged;
         }
 
         if (pinballManager != null)
