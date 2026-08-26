@@ -36,9 +36,7 @@ public sealed class ArcaneGameLook : MonoBehaviour
     private void Start()
     {
         ConfigureCamera();
-#if !UNITY_WEBGL || UNITY_EDITOR
         ConfigureVolume();
-#endif
         ApplyScenePalette();
     }
 
@@ -51,14 +49,9 @@ public sealed class ArcaneGameLook : MonoBehaviour
             return;
         }
 
-        var cameraData = camera.GetUniversalAdditionalCameraData();
-#if UNITY_WEBGL && !UNITY_EDITOR
-        camera.allowHDR = false;
-        cameraData.renderPostProcessing = false;
-#else
         camera.allowHDR = true;
+        var cameraData = camera.GetUniversalAdditionalCameraData();
         cameraData.renderPostProcessing = true;
-#endif
         cameraData.requiresColorOption = CameraOverrideOption.Off;
         cameraData.requiresDepthOption = CameraOverrideOption.Off;
     }

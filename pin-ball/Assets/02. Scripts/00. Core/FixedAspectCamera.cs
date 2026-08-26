@@ -8,7 +8,7 @@ public sealed class FixedAspectCamera : MonoBehaviour
 {
     private const float TargetAspect = 16f / 9f;
 #if UNITY_WEBGL && !UNITY_EDITOR
-    private const float WebGLRenderScale = 0.6f;
+    private const float WebGLRenderScale = 0.75f;
 #endif
 
     private Camera _camera;
