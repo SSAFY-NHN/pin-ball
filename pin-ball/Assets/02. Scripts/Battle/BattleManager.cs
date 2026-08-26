@@ -7,6 +7,7 @@ using UnityEngine;
 // 금지: 유닛 탐색/이동/공격, Instantiate 직접 처리
 public class BattleManager : AppService, IItemEventListener
 {
+    public const float PreparationDuration = 60f;
     [Header("Run Chances")]
     [SerializeField, Min(1)] public int playerMaxHp = 3;
     [Header("Defense Lines")]
@@ -47,6 +48,8 @@ public class BattleManager : AppService, IItemEventListener
         unitManager != null && unitManager.CanStartWaveWithCurrentRoster;
     public bool HasTacticalReinforcement =>
         tacticalReinforcementController?.HasTicket ?? false;
+    public float PreparationRemainingTime =>
+        preparationCountdown?.RemainingTime ?? PreparationDuration;
 
     public event Action<EWaveState> OnStateChanged;
     public event Action OnInitialized;
@@ -79,6 +82,8 @@ public class BattleManager : AppService, IItemEventListener
     private Coroutine waveResolutionCoroutine;
     private bool isRunInitialized;
     private bool isPreparationLocked;
+    private PreparationCountdown preparationCountdown;
+    private GameObject tutorialOverlay;
     private float currentWaveStartedAt;
     private bool currentBossDefeated;
     private int currentWaveAllyDefenseDamage;
@@ -88,12 +93,22 @@ public class BattleManager : AppService, IItemEventListener
         InitializeNewRun();
     }
 
+    private void Update()
+    {
+        if (!IsInitialized) return;
+
+        float preparationDeltaTime = Time.timeScale > 0f
+            ? Time.unscaledDeltaTime
+            : 0f;
+        AdvancePreparationCountdown(preparationDeltaTime, TryStartWave);
+    }
     internal void InitializeNewRun()
     {
         if (isRunInitialized) return;
         isRunInitialized = true;
 
         unitManager = App.Get<UnitManager>();
+        tutorialOverlay = FindTutorialOverlay();
         unitManager.InitializeNewRun();
         unitManager.OnEnemyDefeated += OnEnemyDefeated;
         unitManager.OnDefenseLineAttackRequested += TryApplyDefenseLineAttack;
@@ -107,6 +122,7 @@ public class BattleManager : AppService, IItemEventListener
             allyDefenseLineMaxHp,
             enemyDefenseLineMaxHp);
         waveResolution = new WaveResolutionState();
+        preparationCountdown = new PreparationCountdown(PreparationDuration);
         economy = new BattleEconomy(
             titleData.BattleRunCommon?.StartingGold ?? 0);
         battleUpgradeController = new BattleUpgradeController(
@@ -160,6 +176,36 @@ public class BattleManager : AppService, IItemEventListener
         return true;
     }
 
+    internal void AdvancePreparationCountdown(
+        float deltaTime,
+        Func<bool> tryStartWave)
+    {
+        if (!IsInitialized || State != EWaveState.Pending ||
+            preparationCountdown == null || IsTutorialActive)
+        {
+            return;
+        }
+
+        if (preparationCountdown.Advance(deltaTime))
+        {
+            tryStartWave?.Invoke();
+        }
+    }
+
+    internal bool IsTutorialActive =>
+        tutorialOverlay != null && tutorialOverlay.activeInHierarchy;
+
+    private static GameObject FindTutorialOverlay()
+    {
+        foreach (Transform candidate in FindObjectsByType<Transform>(
+                     FindObjectsInactive.Include,
+                     FindObjectsSortMode.None))
+        {
+            if (candidate.name == "TutorialOverlay") return candidate.gameObject;
+        }
+
+        return null;
+    }
     private void OnEnemyDefeated(string enemyId)
     {
         if (!IsCurrentWaveBoss || currentBossDefeated ||
@@ -296,6 +342,10 @@ public class BattleManager : AppService, IItemEventListener
     private void ChangeState(EWaveState nextState)
     {
         if (!runState.ChangeState(nextState)) return;
+        if (nextState == EWaveState.Pending)
+        {
+            preparationCountdown?.Reset();
+        }
         OnStateChanged?.Invoke(State);
         OnPreparationAvailabilityChanged?.Invoke(CanUsePreparationActions);
     }
