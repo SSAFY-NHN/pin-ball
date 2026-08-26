@@ -177,6 +177,7 @@ public abstract class UnitBase : MonoBehaviour
 
     public void PlayEnemySkillFeedback(string skillId, UnitBase target, bool strong)
     {
+        GetComponent<BattleUnitVisual>()?.PlaySkillAnimation();
         _combatFeedback?.PlayEnemySkill(skillId, target, strong);
     }
 

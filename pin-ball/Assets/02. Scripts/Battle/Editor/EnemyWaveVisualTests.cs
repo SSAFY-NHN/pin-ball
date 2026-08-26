@@ -60,12 +60,13 @@ public class EnemyWaveVisualTests
 
         var expectedIdlePaths = new Dictionary<string, string>
         {
-            ["goblin"] = "Assets/03. Images/Humans/Rogue/H_Rogue.png",
+            ["goblin"] = "Assets/03. Images/Humans/Patrolman/H_Patrolman.png",
             ["wolf"] = "Assets/03. Images/Humans/Rogue/H_Rogue.png",
-            ["goblin_archer"] = "Assets/03. Images/Humans/Archer/H_Archer.png",
-            ["shield_guard"] = "Assets/03. Images/Humans/MaceWarrior/H_MaceWarrior.png",
-            ["orc_warrior"] = "Assets/03. Images/Humans/Knights/H_Warrior.png",
-            ["goblin_king"] = "Assets/03. Images/Humans/Boss/H_MountedMageBoss.png"
+            ["goblin_archer"] = "Assets/03. Images/Humans/Archer/H_Archer_EvoSkeleton.png",
+            ["shield_guard"] = "Assets/03. Images/Humans/MaceWarrior/H_MaceWarrior_Undead.png",
+            ["orc_warrior"] = "Assets/03. Images/Humans/Knights/H_Warrior_Undead.png",
+            ["assassin"] = "Assets/03. Images/Humans/Rogue/H_Rogue_EvoSkeleton.png",
+            ["goblin_king"] = "Assets/03. Images/Humans/Boss/H_BoneStalkerBoss.png"
         };
 
         var serializedVisual = new SerializedObject(visual);
@@ -90,6 +91,41 @@ public class EnemyWaveVisualTests
             Assert.That(
                 profile.FindPropertyRelative("sourceFacesRight").boolValue,
                 Is.True);
+        }
+
+        var bossProfile = FindProfile(profiles, "goblin_king");
+        var skillFrames = bossProfile.FindPropertyRelative("skillFrames");
+        Assert.That(skillFrames.arraySize, Is.GreaterThanOrEqualTo(2));
+        Assert.That(
+            AssetDatabase.GetAssetPath(
+                skillFrames.GetArrayElementAtIndex(0).objectReferenceValue),
+            Is.EqualTo("Assets/03. Images/Humans/Boss/H_BoneStalkerBoss_skill.png"));
+    }
+
+    [Test]
+    public void EnemyBossSkillFeedback_StartsSkillAnimation()
+    {
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(EnemyPrefabPath);
+        var instance = Object.Instantiate(prefab);
+        try
+        {
+            var visual = instance.GetComponent<BattleUnitVisual>();
+            var renderer = instance.GetComponent<SpriteRenderer>();
+            var playSkill = typeof(BattleUnitVisual).GetMethod(
+                "PlaySkillAnimation");
+            Assert.That(playSkill, Is.Not.Null);
+
+            visual.SetUnitId("goblin_king");
+            playSkill.Invoke(visual, null);
+
+            Assert.That(
+                AssetDatabase.GetAssetPath(renderer.sprite),
+                Is.EqualTo(
+                    "Assets/03. Images/Humans/Boss/H_BoneStalkerBoss_skill.png"));
+        }
+        finally
+        {
+            Object.DestroyImmediate(instance);
         }
     }
 
