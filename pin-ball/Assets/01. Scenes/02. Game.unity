@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   unitData:
-    UnitId: mage
+    UnitId: rabbit1
     Level: 1
     Modifier:
       MergeTier: 0
@@ -2128,7 +2128,7 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   unitData:
-    UnitId: archer
+    UnitId: cat1
     Level: 1
     Modifier:
       MergeTier: 0
@@ -9975,7 +9975,7 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   unitData:
-    UnitId: warrior
+    UnitId: bear1
     Level: 1
     Modifier:
       MergeTier: 0
@@ -13276,7 +13276,7 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   unitData:
-    UnitId: spearman
+    UnitId: dog1
     Level: 1
     Modifier:
       MergeTier: 0

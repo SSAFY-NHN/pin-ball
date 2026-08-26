@@ -26,15 +26,9 @@ public sealed class UnitCreationService
         }
 
         int maxLevel = Mathf.Max(1, _dataSource.AllyCommon.maxLevel);
-        int classLevel = Mathf.Clamp(
-            _dataSource.AllyCommon.classLevel,
-            1,
-            maxLevel);
-        int minLevel = string.IsNullOrEmpty(allyData.previousJob)
-            ? 1
-            : classLevel;
+        int minLevel = Mathf.Clamp(allyData.requiredLevel, 1, maxLevel);
         spawnData.Level = Mathf.Clamp(spawnData.Level, minLevel, maxLevel);
-        stats = allyData.CreateStats(spawnData.Level, classLevel);
+        stats = allyData.CreateStats(spawnData.Level);
         if (!UnitStatsValidator.IsValid(stats)) return false;
 
         float attackMultiplier = 1f +

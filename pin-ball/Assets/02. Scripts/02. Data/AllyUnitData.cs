@@ -4,7 +4,8 @@ using System;
 public class AllyCommonData
 {
     public int maxLevel;
-    public int classLevel;
+    public int firstClassLevel;
+    public int secondClassLevel;
     public float startMana;
     public float basicAttackManaGain;
     public float hitManaGain;
@@ -37,6 +38,7 @@ public class AllyUnitData
 
     public string id;
     public string previousJob;
+    public int requiredLevel = 1;
     public string name;
     public string role;
     public int health;
@@ -52,9 +54,9 @@ public class AllyUnitData
     public float attackSpeedGrowth;
     public AllySkillData skill;
 
-    public BattleUnitStats CreateStats(int level, int classLevel)
+    public BattleUnitStats CreateStats(int level)
     {
-        int startLevel = string.IsNullOrEmpty(previousJob) ? 1 : classLevel;
+        int startLevel = Math.Max(1, requiredLevel);
         int growthLevel = Math.Max(0, level - startLevel);
 
         return new BattleUnitStats

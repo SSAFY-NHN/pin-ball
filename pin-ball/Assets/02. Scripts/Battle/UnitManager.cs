@@ -451,11 +451,21 @@ public class UnitManager : AppService, IItemEventListener, IEnemyBattleActions
             return true;
         }
 
-        if (!ChooseAutomaticEvolution())
+        if (OnEvolutionRequested == null)
         {
-            source.transform.position = sourceOriginalPosition;
-            _mergeService.CancelPendingEvolution();
-            return false;
+            if (!ChooseAutomaticEvolution())
+            {
+                source.transform.position = sourceOriginalPosition;
+                _mergeService.CancelPendingEvolution();
+                return false;
+            }
+        }
+        else
+        {
+            _battleManager.SetPreparationLock(true);
+            OnEvolutionRequested.Invoke(
+                decision.FirstChoice,
+                decision.SecondChoice);
         }
 
         OnAlliesMerged?.Invoke(decision.ResultLevel);
