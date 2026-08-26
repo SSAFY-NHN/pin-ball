@@ -77,7 +77,7 @@ public sealed class BattleUnitVisual : MonoBehaviour
 
         if (_spriteRenderer != null)
         {
-            _spriteRenderer.sortingOrder = 10;
+            _spriteRenderer.sortingOrder = 20;
         }
     }
 
