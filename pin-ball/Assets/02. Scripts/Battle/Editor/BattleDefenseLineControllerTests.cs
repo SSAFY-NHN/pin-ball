@@ -28,6 +28,18 @@ public sealed class BattleDefenseLineControllerTests
     }
 
     [Test]
+    public void ApplyDamage_RequiresFullThreeHundredDamageToDestroyLine()
+    {
+        var controller = new BattleDefenseLineController(300, 300);
+
+        Assert.That(controller.ApplyDamage(EBattleTeam.Enemy, 299), Is.True);
+        Assert.That(controller.IsDestroyed(EBattleTeam.Enemy), Is.False);
+        Assert.That(controller.GetCurrentHp(EBattleTeam.Enemy), Is.EqualTo(1));
+        Assert.That(controller.ApplyDamage(EBattleTeam.Enemy, 1), Is.True);
+        Assert.That(controller.IsDestroyed(EBattleTeam.Enemy), Is.True);
+    }
+
+    [Test]
     public void IncreaseAllyMaximumHp_DoesNotChangeEnemyMaximum()
     {
         var controller = new BattleDefenseLineController(20, 20);

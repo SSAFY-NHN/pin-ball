@@ -1,8 +1,54 @@
 #if UNITY_EDITOR
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
+using UnityEngine;
 
 public class BattleDataCharacterizationTests
 {
+    [Test]
+    public void RuntimeUnitData_UsesHalfSpeedBalanceValues()
+    {
+        var expectedAllySpeeds = new Dictionary<string, float>
+        {
+            ["warrior"] = 1.25f, ["archer"] = 1.4f,
+            ["mage"] = 1.25f, ["spearman"] = 1.35f,
+            ["knight"] = 1.2f, ["berserker"] = 1.3f,
+            ["ranger"] = 1.5f, ["marksman"] = 1.3f,
+            ["pyromancer"] = 1.2f, ["frost"] = 1.25f,
+            ["lancer"] = 1.55f, ["guard"] = 1.15f
+        };
+        var expectedEnemySpeeds = new Dictionary<string, float>
+        {
+            ["goblin"] = 0.6f, ["wolf"] = 1.9f,
+            ["goblin_archer"] = 1.1f, ["shield_guard"] = 0.9f,
+            ["orc_warrior"] = 1.05f, ["shaman"] = 1f,
+            ["assassin"] = 1.6f, ["troll"] = 0.75f,
+            ["ogre_elite"] = 0.7f, ["dark_mage_elite"] = 0.9f,
+            ["goblin_king"] = 0.75f
+        };
+
+        AllyUnitDataCollection allies = JsonUtility.FromJson<AllyUnitDataCollection>(
+            Resources.Load<TextAsset>("Data/AllyUnitData").text);
+        EnemyUnitDataCollection enemies = JsonUtility.FromJson<EnemyUnitDataCollection>(
+            Resources.Load<TextAsset>("Data/EnemyUnitData").text);
+
+        CollectionAssert.AreEquivalent(
+            expectedAllySpeeds.Keys, allies.units.Select(unit => unit.id));
+        CollectionAssert.AreEquivalent(
+            expectedEnemySpeeds.Keys, enemies.units.Select(unit => unit.id));
+        foreach (AllyUnitData unit in allies.units)
+        {
+            Assert.That(unit.moveSpeed,
+                Is.EqualTo(expectedAllySpeeds[unit.id]).Within(0.0001f), unit.id);
+        }
+        foreach (EnemyUnitData unit in enemies.units)
+        {
+            Assert.That(unit.moveSpeed,
+                Is.EqualTo(expectedEnemySpeeds[unit.id]).Within(0.0001f), unit.id);
+        }
+    }
+
     [Test]
     public void AllyCreateStats_AppliesGrowthFromBaseLevel()
     {

@@ -34,6 +34,15 @@ public sealed class DefenseLineSceneTests
         UnitManager manager = Object.FindFirstObjectByType<UnitManager>();
         AssertReference(manager, "allyDefenseLine");
         AssertReference(manager, "enemyDefenseLine");
+
+        BattleManager battleManager = Object.FindFirstObjectByType<BattleManager>();
+        var serializedManager = new SerializedObject(battleManager);
+        Assert.That(
+            serializedManager.FindProperty("allyDefenseLineMaxHp").intValue,
+            Is.EqualTo(300));
+        Assert.That(
+            serializedManager.FindProperty("enemyDefenseLineMaxHp").intValue,
+            Is.EqualTo(300));
     }
 
     private static void AssertReference(Object target, string propertyName)

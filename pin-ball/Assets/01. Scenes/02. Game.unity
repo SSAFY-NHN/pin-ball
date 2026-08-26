@@ -4251,8 +4251,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerMaxHp: 3
-  allyDefenseLineMaxHp: 20
-  enemyDefenseLineMaxHp: 20
+  allyDefenseLineMaxHp: 300
+  enemyDefenseLineMaxHp: 300
   waveResolutionDuration: 2
   warriorPurchaseSettings:
     UnitId: warrior
