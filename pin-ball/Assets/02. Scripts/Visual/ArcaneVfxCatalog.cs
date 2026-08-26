@@ -56,9 +56,9 @@ public sealed class ArcaneVfxCatalog : ScriptableObject
     {
         return unitId switch
         {
-            "archer" => rangerRuneMask,
-            "mage" => mageRuneMask,
-            "lancer" => lancerRuneMask,
+            "cat1" or "cat2" or "cat3" or "cat4" or "cat5" => rangerRuneMask,
+            "rabbit1" or "rabbit2" or "rabbit3" or "rabbit4" or "rabbit5" => mageRuneMask,
+            "dog1" or "dog2" or "dog3" or "dog4" or "dog5" => lancerRuneMask,
             _ => guardianRuneMask
         };
     }

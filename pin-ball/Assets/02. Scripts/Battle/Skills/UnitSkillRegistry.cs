@@ -28,9 +28,12 @@ public sealed class UnitSkillRegistry
 
     public static UnitSkillRegistry CreateDefault() => new(new Func<IUnitSkill>[]
     {
-        () => new ShieldJudgmentSkill(), () => new BloodWhirlwindSkill(), () => new ArrowRainSkill(),
-        () => new PiercingShotSkill(), () => new ExplosiveFireballSkill(), () => new FrostStormSkill(),
-        () => new PiercingChargeSkill(), () => new PhalanxFormationSkill(), () => new WolfSprintSkill(),
+        () => new IronFistSkill(), () => new FeralRampageSkill(), () => new ShadowSlashSkill(),
+        () => new CloneFlurrySkill(), () => new BattleCrySkill(), () => new IronFormationSkill(),
+        () => new PiercingChargeSkill(), () => new TranscendentChargeSkill(), () => new RapidFireSkill(),
+        () => new ExplosiveBarrageSkill(), () => new PiercingShotSkill(), () => new FinishingPierceSkill(),
+        () => new HealingLightSkill(), () => new PrayerOfLifeSkill(), () => new ExplosiveFireballSkill(),
+        () => new ManaStormSkill(), () => new WolfSprintSkill(),
         () => new FocusedFireSkill(), () => new ShieldBlockSkill(), () => new OrcRageSkill(),
         () => new DarkBlastSkill(), () => new ShadowLeapSkill(), () => new TrollRegenerationSkill(),
         () => new GroundSlamSkill(), () => new WeakeningCurseSkill(), () => new SummonMinionsSkill(),

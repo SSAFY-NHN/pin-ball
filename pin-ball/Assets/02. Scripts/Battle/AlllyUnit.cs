@@ -64,6 +64,7 @@ public class AllyUnit : UnitBase
                     MaxMana,
                     Debug.LogWarning))
             {
+                GetComponent<BattleUnitVisual>()?.PlaySkillAnimation();
                 SoundManager.PlaySFXIfAvailable(BasicAttackSoundName);
                 PlaySkillFeedback(_skill?.id, _currentTarget);
             }
