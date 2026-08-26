@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,9 @@ public class WavePanel : UIBase
     [SerializeField] private Button startButton;
 
     private BattleManager battleManager;
+    private TMP_Text startButtonText;
+    private int displayedRemainingSecond = -1;
+    private Color normalLabelColor;
 
     public override void Initialize(UIManager manager)
     {
@@ -15,7 +19,14 @@ public class WavePanel : UIBase
         battleManager = App.Get<BattleManager>();
         battleManager.OnStateChanged += OnBattleStateChanged;
         startButton.onClick.AddListener(OnStartButtonClicked);
+        startButtonText = startButton.GetComponentInChildren<TMP_Text>(true);
+        if (startButtonText != null) normalLabelColor = startButtonText.color;
         Refresh();
+    }
+
+    private void Update()
+    {
+        RefreshCountdownLabel();
     }
 
     private void OnStartButtonClicked()
@@ -39,7 +50,37 @@ public class WavePanel : UIBase
             startButton.interactable = show &&
                                        battleManager.CanStartCurrentWave;
         }
+        RefreshCountdownLabel();
     }
+
+    private void RefreshCountdownLabel()
+    {
+        if (battleManager == null || startButtonText == null ||
+            battleManager.State != EWaveState.Pending)
+        {
+            return;
+        }
+
+        int remainingSecond = Mathf.CeilToInt(
+            battleManager.PreparationRemainingTime);
+        if (remainingSecond == displayedRemainingSecond) return;
+
+        displayedRemainingSecond = remainingSecond;
+        startButtonText.text = FormatStartButtonLabel(
+            battleManager.PreparationRemainingTime);
+        startButtonText.color = remainingSecond <= 5
+            ? new Color32(255, 92, 92, 255)
+            : remainingSecond <= 10
+                ? new Color32(255, 196, 92, 255)
+                : normalLabelColor;
+        if (remainingSecond is > 0 and <= 5)
+        {
+            SoundManager.PlaySFXIfAvailable(SoundName.ButtonClick);
+        }
+    }
+
+    public static string FormatStartButtonLabel(float remainingTime) =>
+        $"전투 시작 ({Mathf.Max(0, Mathf.CeilToInt(remainingTime))})";
 
     private void OnDestroy()
     {
